@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinSight Intelligence - Command Centre</title>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>FinSight Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/icons@^4.0.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <style>
         /* Blueprint Design System CSS Variables */
         :root {
@@ -342,117 +344,266 @@
             background-color: var(--bp3-gray1);
         }
 
-        .theme-toggle {
-            position: fixed;
-            top: calc(var(--bp3-grid-size) * 2);
-            right: calc(var(--bp3-grid-size) * 2);
-            z-index: 100;
+        /* Blueprint Application Layout */
+        .bp3-app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .bp3-navbar {
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .app-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .bp3-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bp3-light-gray5);
+            border-right: 1px solid var(--bp3-divider-color);
+            overflow-y: auto;
+        }
+
+        .bp3-dark .bp3-sidebar {
+            background-color: var(--bp3-dark-gray3);
+            border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-menu-item.bp3-active {
+            background-color: var(--bp3-intent-primary);
+            color: white;
+        }
+
+        .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bp3-gray3);
+        }
+
+        .status-dot.connected {
+            background-color: var(--bp3-intent-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .content-header {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+            padding-bottom: calc(var(--bp3-grid-size) * 2);
+            border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .quick-actions-section {
+            margin-top: calc(var(--bp3-grid-size) * 3);
+            padding-top: calc(var(--bp3-grid-size) * 3);
+            border-top: 1px solid var(--bp3-divider-color);
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 1);
         }
     </style>
 </head>
-<body>
-    <div class="theme-toggle">
-        <button class="bp3-button" onclick="toggleTheme()">🌙 Dark Mode</button>
-    </div>
-
-    <div class="container">
-        <div class="header">
-            <h1 class="bp3-heading">FinSight Intelligence</h1>
-            <p class="subtitle">Enterprise-grade financial analytics platform powered by real-time intelligence</p>
-        </div>
-
-        <div class="status-bar">
-            <div class="status-indicator">
-                <span class="status-dot" id="status-dot"></span>
-                <span id="status-text">Checking system status...</span>
-            </div>
-            <div>
-                <span id="function-count">0/32</span> functions active
-            </div>
-        </div>
-
-        <div class="main-grid">
-            <!-- Analytics Section -->
-            <div class="bp3-card bp3-interactive">
-                <h2 class="section-title">🎯 Analytics Hub</h2>
-                <p class="section-description">Real-time financial analytics and intelligence dashboards with live data processing</p>
-                <div class="action-grid">
-                    <a href="/command-centre.html" class="bp3-button">
-                        <span class="action-icon">📊</span>
-                        Command Centre
-                    </a>
-                    <a href="/portfolio-analyser.html" class="bp3-button">
-                        <span class="action-icon">📈</span>
-                        Portfolio Analyser
-                    </a>
-                    <a href="/treasury-insights.html" class="bp3-button">
-                        <span class="action-icon">💰</span>
-                        Treasury Insights
-                    </a>
-                    <a href="/scenario-analyser-config.html" class="bp3-button">
-                        <span class="action-icon">🎲</span>
-                        Scenario Analysis (MCTS)
-                    </a>
+<body class="bp3-dark">
+    <div class="bp3-app">
+        <!-- Top Navigation Bar -->
+        <nav class="bp3-navbar bp3-dark">
+            <div class="bp3-navbar-group bp3-align-left">
+                <div class="bp3-navbar-heading">FinSight Intelligence</div>
+                <span class="bp3-navbar-divider"></span>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">System Online</span>
                 </div>
             </div>
+            <div class="bp3-navbar-group bp3-align-right">
+                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
+            </div>
+        </nav>
 
-            <!-- Configuration Section -->
-            <div class="bp3-card bp3-interactive">
-                <h2 class="section-title">⚙️ Configuration</h2>
-                <p class="section-description">Configure data sources, models, and system parameters for optimal performance</p>
-                <div class="action-grid">
-                    <a href="/news-market-data-config.html" class="bp3-button">
-                        <span class="action-icon">📰</span>
-                        News & Market Data
-                    </a>
-                    <a href="/calculation-manager-config.html" class="bp3-button">
-                        <span class="action-icon">🧮</span>
-                        Calculations
-                    </a>
-                    <a href="/ml-models-config.html" class="bp3-button">
-                        <span class="action-icon">🤖</span>
-                        ML Models
-                    </a>
+        <!-- Application Content -->
+        <div class="app-content">
+            <!-- Left Sidebar -->
+            <div class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-dashboard"></span>
+                            Command Centre
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            Portfolio Analyser
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            Treasury Insights
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            Scenario Analysis
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            News & Market Data
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            Calculations
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            ML Models
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            Deploy Functions
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <div class="content-header">
+                    <h1 class="bp3-heading">Dashboard</h1>
+                    <p class="bp3-text-muted">Overview of your financial analytics platform</p>
                 </div>
-            </div>
 
-            <!-- System Status -->
-            <div class="bp3-card bp3-interactive">
-                <h2 class="section-title">🔧 System Monitor</h2>
-                <p class="section-description">Monitor system health, deployment status, and performance metrics</p>
-                <div class="action-grid">
-                    <a href="/deployment.html" class="bp3-button">
-                        <span class="action-icon">🚀</span>
-                        Deploy Functions
-                    </a>
-                    <button class="bp3-button" onclick="runSystemTest()">
-                        <span class="action-icon">🧪</span>
-                        System Test
-                    </button>
-                    <button class="bp3-button" onclick="refreshStatus()">
-                        <span class="action-icon">🔄</span>
-                        Refresh Status
-                    </button>
+                <!-- Dashboard Cards -->
+                <div class="dashboard-grid">
+                    <div class="bp3-card bp3-elevation-2">
+                        <h3 class="bp3-heading">Analytics Hub</h3>
+                        <p class="bp3-text-muted">Real-time financial analytics and intelligence dashboards</p>
+                        <div class="bp3-button-group bp3-fill" style="margin-top: 15px;">
+                            <a class="bp3-button bp3-intent-primary" href="/command-centre.html">
+                                <span class="bp3-icon bp3-icon-dashboard"></span>
+                                Command Centre
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bp3-card bp3-elevation-2">
+                        <h3 class="bp3-heading">Portfolio Analysis</h3>
+                        <p class="bp3-text-muted">Advanced portfolio performance and risk analysis</p>
+                        <div class="bp3-button-group bp3-fill" style="margin-top: 15px;">
+                            <a class="bp3-button" href="/portfolio-analyser.html">
+                                <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                                Open Analyser
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bp3-card bp3-elevation-2">
+                        <h3 class="bp3-heading">Treasury Operations</h3>
+                        <p class="bp3-text-muted">Treasury management and insights dashboard</p>
+                        <div class="bp3-button-group bp3-fill" style="margin-top: 15px;">
+                            <a class="bp3-button" href="/treasury-insights.html">
+                                <span class="bp3-icon bp3-icon-bank-account"></span>
+                                View Insights
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bp3-card bp3-elevation-2">
+                        <h3 class="bp3-heading">System Health</h3>
+                        <p class="bp3-text-muted">Monitor system performance and function deployment</p>
+                        <div class="bp3-button-group bp3-fill" style="margin-top: 15px;">
+                            <button class="bp3-button bp3-intent-success" onclick="runSystemTest()">
+                                <span class="bp3-icon bp3-icon-pulse"></span>
+                                System Test
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="quick-actions">
-            <h3>Quick Actions</h3>
-            <div class="quick-grid">
-                <button class="quick-btn" onclick="testCorrelation()">
-                    📊 Test Correlation
-                </button>
-                <button class="quick-btn" onclick="testVaR()">
-                    📉 Test VaR
-                </button>
-                <button class="quick-btn" onclick="testBlackScholes()">
-                    📈 Test Black-Scholes
-                </button>
-                <button class="quick-btn" onclick="viewLogs()">
-                    📋 View Logs
-                </button>
-            </div>
+                <!-- Quick Actions Section -->
+                <div class="quick-actions-section">
+                    <h3 class="bp3-heading">Quick Actions</h3>
+                    <div class="quick-actions-grid">
+                        <button class="bp3-button bp3-outlined" onclick="testCorrelation()">
+                            <span class="bp3-icon bp3-icon-scatter-plot"></span>
+                            Test Correlation
+                        </button>
+                        <button class="bp3-button bp3-outlined" onclick="testVaR()">
+                            <span class="bp3-icon bp3-icon-trending-down"></span>
+                            Test VaR
+                        </button>
+                        <button class="bp3-button bp3-outlined" onclick="testBlackScholes()">
+                            <span class="bp3-icon bp3-icon-function"></span>
+                            Test Black-Scholes
+                        </button>
+                        <button class="bp3-button bp3-outlined" onclick="viewLogs()">
+                            <span class="bp3-icon bp3-icon-console"></span>
+                            View Logs
+                        </button>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
@@ -576,11 +727,11 @@
 
         function toggleTheme() {
             document.body.classList.toggle('bp3-dark');
-            const button = document.querySelector('.theme-toggle .bp3-button');
+            const button = document.getElementById('theme-toggle');
             if (document.body.classList.contains('bp3-dark')) {
-                button.textContent = '☀️ Light Mode';
+                button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
-                button.textContent = '🌙 Dark Mode';
+                button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
         }
 
