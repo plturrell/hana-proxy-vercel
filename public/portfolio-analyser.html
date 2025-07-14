@@ -3,693 +3,568 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Analyser - Financial Analytics Platform</title>
+    <title>Portfolio Analyser - FinSight Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/icons@^4.0.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <style>
+        /* Blueprint Design System CSS Variables */
         :root {
-            --bg: #000;
-            --bg-secondary: #0a0a0a;
-            --border: #333;
-            --text: #fff;
-            --text-secondary: #999;
-            --accent: #3ecf8e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
+            --bp3-grid-size: 10px;
+            --bp3-black: #111418;
+            --bp3-dark-gray1: #1C2127;
+            --bp3-dark-gray2: #252A31;
+            --bp3-dark-gray3: #2F343C;
+            --bp3-dark-gray4: #383E47;
+            --bp3-dark-gray5: #404854;
+            --bp3-gray1: #5C7080;
+            --bp3-gray2: #738091;
+            --bp3-gray3: #8A9BA8;
+            --bp3-gray4: #A7B6C2;
+            --bp3-gray5: #BFCCD6;
+            --bp3-light-gray1: #CED9E0;
+            --bp3-light-gray2: #D8E1E8;
+            --bp3-light-gray3: #E1E8ED;
+            --bp3-light-gray4: #EBF1F5;
+            --bp3-light-gray5: #F5F8FA;
+            --bp3-white: #FFFFFF;
+            --bp3-blue1: #0E5A8A;
+            --bp3-blue2: #106BA3;
+            --bp3-blue3: #137CBD;
+            --bp3-blue4: #2B95D6;
+            --bp3-blue5: #48AFF0;
+            --bp3-green1: #0A6640;
+            --bp3-green2: #0D8050;
+            --bp3-green3: #0F9960;
+            --bp3-green4: #15B371;
+            --bp3-green5: #3DCC91;
+            --bp3-orange1: #A66321;
+            --bp3-orange2: #BF7326;
+            --bp3-orange3: #D9822B;
+            --bp3-orange4: #F29D49;
+            --bp3-orange5: #FFB366;
+            --bp3-red1: #A82A2A;
+            --bp3-red2: #C23030;
+            --bp3-red3: #DB3737;
+            --bp3-red4: #F55656;
+            --bp3-red5: #FF7373;
+            --bp3-intent-primary: var(--bp3-blue3);
+            --bp3-intent-success: var(--bp3-green3);
+            --bp3-intent-warning: var(--bp3-orange3);
+            --bp3-intent-danger: var(--bp3-red3);
+            --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
+            --bp3-font-size: 14px;
+            --bp3-font-size-large: 16px;
+            --bp3-line-height: 18px;
+            --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
+            --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
+            --bp3-border-radius: 3px;
+            --bp3-transition-duration: 100ms;
+            --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
+            --bp3-text-color: #182026;
+            --bp3-text-color-muted: #5C7080;
+            --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
+            --bp3-heading-color: #182026;
+            --bp3-link-color: var(--bp3-blue2);
+            --bp3-app-background-color: var(--bp3-light-gray5);
+            --bp3-divider-color: rgba(17, 20, 24, 0.15);
         }
-        
+
+        .bp3-dark {
+            --bp3-text-color: rgba(255, 255, 255, 0.9);
+            --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
+            --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
+            --bp3-heading-color: rgba(255, 255, 255, 0.9);
+            --bp3-link-color: var(--bp3-blue4);
+            --bp3-app-background-color: var(--bp3-dark-gray2);
+            --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+            line-height: var(--bp3-line-height);
+            color: var(--bp3-text-color);
+            background-color: var(--bp3-app-background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+
+        .bp3-dark {
+            background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
         }
-        
-        .header {
+
+        .bp3-app {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .bp3-navbar {
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .app-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .bp3-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bp3-light-gray5);
+            border-right: 1px solid var(--bp3-divider-color);
+            overflow-y: auto;
+        }
+
+        .bp3-dark .bp3-sidebar {
+            background-color: var(--bp3-dark-gray3);
+            border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-menu-item.bp3-active {
+            background-color: var(--bp3-intent-primary);
+            color: white;
+        }
+
+        .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
+        .status-indicator {
+            display: flex;
             align-items: center;
-            margin-bottom: 2rem;
+            gap: calc(var(--bp3-grid-size) / 2);
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bp3-gray3);
         }
-        
-        .back-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
+
+        .status-dot.connected {
+            background-color: var(--bp3-intent-success);
+            animation: pulse 2s infinite;
         }
-        
-        .portfolio-summary {
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .content-header {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+            padding-bottom: calc(var(--bp3-grid-size) * 2);
+            border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
-        
-        .summary-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-        
-        .summary-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .summary-value {
-            font-size: 1.75rem;
-            font-weight: 600;
-        }
-        
-        .positive {
-            color: var(--accent);
-        }
-        
-        .negative {
-            color: var(--danger);
-        }
-        
-        .analysis-sections {
-            display: grid;
-            gap: 2rem;
-        }
-        
-        .analysis-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-        
-        .card-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-        }
-        
-        .refresh-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.875rem;
-        }
-        
-        .refresh-btn:hover {
-            border-color: var(--accent);
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .data-table th,
-        .data-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .data-table th {
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 0.875rem;
-        }
-        
-        .data-table td {
-            font-size: 0.875rem;
-        }
-        
-        .risk-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .risk-item {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-        }
-        
-        .risk-label {
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .risk-value {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
-        .chart-container {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            height: 300px;
+
+        .portfolio-chart {
+            height: 400px;
+            background: var(--bp3-dark-gray5);
+            border-radius: var(--bp3-border-radius);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--text-secondary);
+            color: var(--bp3-text-color-muted);
         }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s ease-in-out infinite;
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .metric-value.positive {
+            color: var(--bp3-intent-success);
         }
-        
-        .action-buttons {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
+
+        .metric-value.negative {
+            color: var(--bp3-intent-danger);
         }
-        
-        .btn {
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
+
+        .metric-value.neutral {
+            color: var(--bp3-intent-primary);
         }
-        
-        .btn:hover {
-            opacity: 0.9;
+
+        .metric-label {
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        .error-message {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid var(--danger);
-            color: var(--danger);
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
-            font-size: 0.875rem;
+
+        .holdings-table {
+            margin-top: calc(var(--bp3-grid-size) * 3);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>Portfolio Analyser</h1>
-                <p style="color: var(--text-secondary);">Comprehensive portfolio risk and performance analysis</p>
-            </div>
-            <a href="/" class="back-btn">← Back to Dashboard</a>
-        </div>
-        
-        <div class="portfolio-summary">
-            <div class="summary-card">
-                <div class="summary-label">Total Value</div>
-                <div class="summary-value" id="totalValue">
-                    <span class="loading"></span>
+<body class="bp3-dark">
+    <div class="bp3-app">
+        <!-- Top Navigation Bar -->
+        <nav class="bp3-navbar bp3-dark">
+            <div class="bp3-navbar-group bp3-align-left">
+                <div class="bp3-navbar-heading">FinSight Intelligence</div>
+                <span class="bp3-navbar-divider"></span>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">System Online</span>
                 </div>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Daily Return</div>
-                <div class="summary-value" id="dailyReturn">
-                    <span class="loading"></span>
-                </div>
+            <div class="bp3-navbar-group bp3-align-right">
+                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Sharpe Ratio</div>
-                <div class="summary-value" id="sharpeRatio">
-                    <span class="loading"></span>
-                </div>
+        </nav>
+
+        <!-- Application Content -->
+        <div class="app-content">
+            <!-- Left Sidebar -->
+            <div class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-dashboard"></span>
+                            Command Centre
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            Portfolio Analyser
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            Treasury Insights
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            Scenario Analysis
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            News & Market Data
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            Calculations
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            ML Models
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            Deploy Functions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/">
+                            <span class="bp3-icon bp3-icon-home"></span>
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="summary-card">
-                <div class="summary-label">Value at Risk (95%)</div>
-                <div class="summary-value" id="varValue">
-                    <span class="loading"></span>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <div class="content-header">
+                    <h1 class="bp3-heading">Portfolio Analyser</h1>
+                    <p class="bp3-text-muted">Advanced portfolio performance and risk analysis</p>
                 </div>
-            </div>
-        </div>
-        
-        <div class="analysis-sections">
-            <div class="analysis-card">
-                <div class="card-header">
-                    <h2 class="card-title">Portfolio Composition</h2>
-                    <button class="refresh-btn" onclick="loadPortfolioData()">↻ Refresh</button>
-                </div>
-                <table class="data-table" id="portfolioTable">
-                    <thead>
-                        <tr>
-                            <th>Asset</th>
-                            <th>Weight</th>
-                            <th>Value</th>
-                            <th>Daily Return</th>
-                            <th>Volatility</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: var(--text-secondary);">
-                                Loading portfolio data...
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="analysis-card">
-                <div class="card-header">
-                    <h2 class="card-title">Risk Analysis</h2>
-                    <button class="refresh-btn" onclick="runRiskAnalysis()">↻ Recalculate</button>
-                </div>
-                <div class="risk-metrics">
-                    <div class="risk-item">
-                        <div class="risk-label">Beta</div>
-                        <div class="risk-value" id="betaValue">-</div>
+
+                <!-- Key Portfolio Metrics -->
+                <div class="metrics-grid">
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Total Value</div>
+                        <div class="metric-value neutral" id="totalValue">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-label">Tracking Error</div>
-                        <div class="risk-value" id="trackingError">-</div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Daily P&L</div>
+                        <div class="metric-value" id="dailyPnL">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-label">Information Ratio</div>
-                        <div class="risk-value" id="infoRatio">-</div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Total Return</div>
+                        <div class="metric-value" id="totalReturn">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="risk-item">
-                        <div class="risk-label">Max Drawdown</div>
-                        <div class="risk-value" id="maxDrawdown">-</div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Sharpe Ratio</div>
+                        <div class="metric-value neutral" id="sharpeRatio">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Max Drawdown</div>
+                        <div class="metric-value negative" id="maxDrawdown">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Volatility</div>
+                        <div class="metric-value neutral" id="volatility">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
                 </div>
-                <div class="chart-container" id="riskChart">
-                    <span style="color: var(--text-secondary);">Risk distribution chart will appear here</span>
+
+                <!-- Portfolio Performance Chart -->
+                <div class="portfolio-grid">
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Performance Chart</h3>
+                        <div class="portfolio-chart">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart" style="font-size: 48px; opacity: 0.3;"></span>
+                            <span style="margin-left: 20px;">Portfolio performance visualization will be implemented here</span>
+                        </div>
+                    </div>
+
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Risk Analysis</h3>
+                        <div style="margin-top: 20px;">
+                            <div class="bp3-progress-bar bp3-intent-success">
+                                <div class="bp3-progress-meter" style="width: 75%"></div>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px; color: var(--bp3-text-color-muted);">
+                                Risk Score: 75/100 (Moderate)
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 30px;">
+                            <h5 class="bp3-heading">Key Risk Metrics</h5>
+                            <div style="margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">Beta:</span>
+                                    <span id="beta">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">Alpha:</span>
+                                    <span id="alpha">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">VaR (95%):</span>
+                                    <span id="var95">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="analysis-card">
-                <div class="card-header">
-                    <h2 class="card-title">Correlation Matrix</h2>
-                    <button class="refresh-btn" onclick="calculateCorrelations()">↻ Update</button>
+
+                <!-- Holdings Table -->
+                <div class="holdings-table">
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Top Holdings</h3>
+                        <table class="bp3-html-table bp3-html-table-striped" style="width: 100%; margin-top: 20px;">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Weight</th>
+                                    <th>Value</th>
+                                    <th>P&L</th>
+                                    <th>Return</th>
+                                </tr>
+                            </thead>
+                            <tbody id="holdingsTableBody">
+                                <tr>
+                                    <td colspan="5" class="bp3-text-muted" style="text-align: center; padding: 20px;">
+                                        <span class="bp3-icon bp3-icon-database"></span>
+                                        Loading holdings data...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div id="correlationMatrix" style="overflow-x: auto;">
-                    <table class="data-table">
-                        <tbody>
-                            <tr>
-                                <td style="text-align: center; color: var(--text-secondary);">
-                                    Click "Update" to calculate asset correlations
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="bp3-button bp3-intent-primary" onclick="refreshPortfolio()">
+                        <span class="bp3-icon bp3-icon-refresh"></span>
+                        Refresh Data
+                    </button>
+                    <button class="bp3-button" onclick="exportPortfolio()">
+                        <span class="bp3-icon bp3-icon-export"></span>
+                        Export Report
+                    </button>
+                    <button class="bp3-button" onclick="runRiskAnalysis()">
+                        <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                        Risk Analysis
+                    </button>
                 </div>
-            </div>
-            
-            <div class="action-buttons">
-                <button class="btn" onclick="optimizePortfolio()">
-                    🎯 Optimize Portfolio
-                </button>
-                <button class="btn btn-secondary" onclick="runMonteCarloSimulation()">
-                    📊 Run Monte Carlo Simulation
-                </button>
-                <button class="btn btn-secondary" onclick="exportAnalysis()">
-                    📥 Export Analysis
-                </button>
-            </div>
+            </main>
         </div>
     </div>
     
     <script>
         const API_URL = '/api/supabase-proxy';
-        
-        // Sample portfolio data (in production, this would come from user input or database)
-        const samplePortfolio = [
-            { asset: 'AAPL', weight: 0.25, shares: 150 },
-            { asset: 'GOOGL', weight: 0.20, shares: 80 },
-            { asset: 'MSFT', weight: 0.15, shares: 100 },
-            { asset: 'AMZN', weight: 0.15, shares: 50 },
-            { asset: 'BRK-B', weight: 0.25, shares: 200 }
-        ];
-        
-        // Sample historical returns for demonstration
-        const historicalReturns = {
-            'AAPL': [0.02, -0.01, 0.03, -0.02, 0.01, 0.02, -0.01, 0.01, 0.02, -0.01],
-            'GOOGL': [0.01, 0.02, -0.01, 0.01, 0.02, -0.01, 0.02, 0.01, -0.01, 0.02],
-            'MSFT': [0.03, -0.02, 0.01, 0.02, -0.01, 0.03, -0.01, 0.02, 0.01, -0.02],
-            'AMZN': [-0.01, 0.03, -0.02, 0.01, 0.03, -0.02, 0.01, 0.02, -0.01, 0.03],
-            'BRK-B': [0.01, 0.01, 0.01, -0.01, 0.01, 0.01, -0.01, 0.01, 0.01, 0.01]
-        };
-        
+
+        // Load portfolio data
         async function loadPortfolioData() {
             try {
-                const tbody = document.querySelector('#portfolioTable tbody');
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;"><span class="loading"></span></td></tr>';
+                // Simulate portfolio data - in real implementation, fetch from API
+                const portfolioData = {
+                    totalValue: 2500000,
+                    dailyPnL: 15750,
+                    totalReturn: 0.127,
+                    sharpeRatio: 1.42,
+                    maxDrawdown: -0.087,
+                    volatility: 0.156,
+                    beta: 1.15,
+                    alpha: 0.032,
+                    var95: -47500
+                };
+
+                document.getElementById('totalValue').textContent = '$' + portfolioData.totalValue.toLocaleString();
                 
-                // Calculate portfolio metrics
-                let totalValue = 0;
-                let portfolioReturns = [];
+                const dailyPnL = document.getElementById('dailyPnL');
+                dailyPnL.textContent = (portfolioData.dailyPnL >= 0 ? '+$' : '-$') + Math.abs(portfolioData.dailyPnL).toLocaleString();
+                dailyPnL.className = 'metric-value ' + (portfolioData.dailyPnL >= 0 ? 'positive' : 'negative');
                 
-                const rows = [];
-                for (const holding of samplePortfolio) {
-                    const value = holding.shares * (100 + Math.random() * 100); // Simulated price
-                    totalValue += value;
-                    
-                    const returns = historicalReturns[holding.asset];
-                    const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
-                    const volatility = Math.sqrt(returns.map(r => Math.pow(r - avgReturn, 2)).reduce((a, b) => a + b, 0) / returns.length);
-                    
-                    rows.push(`
-                        <tr>
-                            <td><strong>${holding.asset}</strong></td>
-                            <td>${(holding.weight * 100).toFixed(1)}%</td>
-                            <td>$${value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                            <td class="${avgReturn >= 0 ? 'positive' : 'negative'}">${avgReturn >= 0 ? '+' : ''}${(avgReturn * 100).toFixed(2)}%</td>
-                            <td>${(volatility * 100).toFixed(2)}%</td>
-                        </tr>
-                    `);
-                }
+                const totalReturn = document.getElementById('totalReturn');
+                totalReturn.textContent = (portfolioData.totalReturn * 100).toFixed(2) + '%';
+                totalReturn.className = 'metric-value ' + (portfolioData.totalReturn >= 0 ? 'positive' : 'negative');
                 
-                tbody.innerHTML = rows.join('');
+                document.getElementById('sharpeRatio').textContent = portfolioData.sharpeRatio.toFixed(2);
+                document.getElementById('maxDrawdown').textContent = (portfolioData.maxDrawdown * 100).toFixed(2) + '%';
+                document.getElementById('volatility').textContent = (portfolioData.volatility * 100).toFixed(2) + '%';
                 
-                // Update summary cards
-                document.getElementById('totalValue').innerHTML = `$${totalValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                
-                // Calculate portfolio returns
-                const portfolioReturn = samplePortfolio.reduce((total, holding, i) => {
-                    const returns = historicalReturns[holding.asset];
-                    const avgReturn = returns.reduce((a, b) => a + b, 0) / returns.length;
-                    return total + (holding.weight * avgReturn);
-                }, 0);
-                
-                document.getElementById('dailyReturn').innerHTML = `<span class="${portfolioReturn >= 0 ? 'positive' : 'negative'}">${portfolioReturn >= 0 ? '+' : ''}${(portfolioReturn * 100).toFixed(2)}%</span>`;
-                
-                // Calculate Sharpe Ratio
-                await calculateSharpeRatio();
-                
-                // Calculate VaR
-                await calculateVaR();
-                
+                document.getElementById('beta').textContent = portfolioData.beta.toFixed(2);
+                document.getElementById('alpha').textContent = (portfolioData.alpha * 100).toFixed(2) + '%';
+                document.getElementById('var95').textContent = '$' + Math.abs(portfolioData.var95).toLocaleString();
+
+                // Load holdings data
+                loadHoldingsData();
+
             } catch (error) {
                 console.error('Failed to load portfolio data:', error);
-                document.querySelector('#portfolioTable tbody').innerHTML = `
-                    <tr><td colspan="5" style="text-align: center; color: var(--danger);">Failed to load portfolio data</td></tr>
+            }
+        }
+
+        async function loadHoldingsData() {
+            const holdings = [
+                { asset: 'AAPL', weight: 15.2, value: 380000, pnl: 2340, return: 0.062 },
+                { asset: 'MSFT', weight: 12.8, value: 320000, pnl: 1890, return: 0.059 },
+                { asset: 'GOOGL', weight: 10.5, value: 262500, pnl: -1250, return: -0.047 },
+                { asset: 'AMZN', weight: 9.3, value: 232500, pnl: 3210, return: 0.140 },
+                { asset: 'TSLA', weight: 7.8, value: 195000, pnl: -890, return: -0.045 }
+            ];
+
+            const tbody = document.getElementById('holdingsTableBody');
+            tbody.innerHTML = '';
+            
+            holdings.forEach(holding => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${holding.asset}</strong></td>
+                    <td>${holding.weight.toFixed(1)}%</td>
+                    <td>$${holding.value.toLocaleString()}</td>
+                    <td class="${holding.pnl >= 0 ? 'bp3-text-intent-success' : 'bp3-text-intent-danger'}">
+                        ${holding.pnl >= 0 ? '+' : ''}$${holding.pnl.toLocaleString()}
+                    </td>
+                    <td class="${holding.return >= 0 ? 'bp3-text-intent-success' : 'bp3-text-intent-danger'}">
+                        ${(holding.return * 100).toFixed(2)}%
+                    </td>
                 `;
-            }
+            });
         }
-        
-        async function calculateSharpeRatio() {
-            try {
-                // Calculate portfolio returns weighted by holdings
-                const portfolioReturns = [];
-                for (let i = 0; i < 10; i++) {
-                    let dayReturn = 0;
-                    samplePortfolio.forEach(holding => {
-                        dayReturn += holding.weight * historicalReturns[holding.asset][i];
-                    });
-                    portfolioReturns.push(dayReturn);
-                }
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_sharpe_ratio',
-                        params: {
-                            returns: portfolioReturns,
-                            risk_free_rate: 0.02 / 252 // Daily risk-free rate
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                if (data.data !== undefined) {
-                    document.getElementById('sharpeRatio').innerHTML = `<span class="${data.data >= 1 ? 'positive' : data.data < 0 ? 'negative' : ''}">${data.data.toFixed(2)}</span>`;
-                } else {
-                    document.getElementById('sharpeRatio').textContent = 'N/A';
-                }
-            } catch (error) {
-                console.error('Failed to calculate Sharpe ratio:', error);
-                document.getElementById('sharpeRatio').textContent = 'Error';
-            }
-        }
-        
-        async function calculateVaR() {
-            try {
-                // Calculate portfolio returns
-                const portfolioReturns = [];
-                for (let i = 0; i < 10; i++) {
-                    let dayReturn = 0;
-                    samplePortfolio.forEach(holding => {
-                        dayReturn += holding.weight * historicalReturns[holding.asset][i];
-                    });
-                    portfolioReturns.push(dayReturn);
-                }
-                
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_var',
-                        params: {
-                            returns: portfolioReturns,
-                            confidence_level: 0.95
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                if (data.data !== undefined) {
-                    document.getElementById('varValue').innerHTML = `<span class="negative">${(data.data * 100).toFixed(2)}%</span>`;
-                } else {
-                    document.getElementById('varValue').textContent = 'N/A';
-                }
-            } catch (error) {
-                console.error('Failed to calculate VaR:', error);
-                document.getElementById('varValue').textContent = 'Error';
-            }
-        }
-        
-        async function runRiskAnalysis() {
-            const metrics = ['betaValue', 'trackingError', 'infoRatio', 'maxDrawdown'];
-            metrics.forEach(id => {
-                document.getElementById(id).innerHTML = '<span class="loading"></span>';
+
+        function refreshPortfolio() {
+            // Show loading states
+            document.querySelectorAll('.metric-value').forEach(el => {
+                el.innerHTML = '<span class="bp3-skeleton">Loading...</span>';
             });
             
-            try {
-                // Calculate beta against market (using SPY as proxy)
-                const marketReturns = [0.01, 0.01, -0.01, 0.01, 0.01, -0.01, 0.01, 0.01, -0.01, 0.01];
-                const portfolioReturns = [];
-                for (let i = 0; i < 10; i++) {
-                    let dayReturn = 0;
-                    samplePortfolio.forEach(holding => {
-                        dayReturn += holding.weight * historicalReturns[holding.asset][i];
-                    });
-                    portfolioReturns.push(dayReturn);
-                }
-                
-                const betaResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_beta',
-                        params: {
-                            asset_returns: portfolioReturns,
-                            market_returns: marketReturns
-                        }
-                    })
-                });
-                
-                const betaData = await betaResponse.json();
-                if (betaData.data !== undefined) {
-                    document.getElementById('betaValue').textContent = betaData.data.toFixed(2);
-                }
-                
-                // Calculate tracking error
-                const trackingErrorResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_tracking_error',
-                        params: {
-                            portfolio_returns: portfolioReturns,
-                            benchmark_returns: marketReturns
-                        }
-                    })
-                });
-                
-                const trackingErrorData = await trackingErrorResponse.json();
-                if (trackingErrorData.data !== undefined) {
-                    document.getElementById('trackingError').textContent = (trackingErrorData.data * 100).toFixed(2) + '%';
-                }
-                
-                // Calculate information ratio
-                const infoRatioResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_information_ratio',
-                        params: {
-                            portfolio_returns: portfolioReturns,
-                            benchmark_returns: marketReturns
-                        }
-                    })
-                });
-                
-                const infoRatioData = await infoRatioResponse.json();
-                if (infoRatioData.data !== undefined) {
-                    document.getElementById('infoRatio').textContent = infoRatioData.data.toFixed(2);
-                }
-                
-                // Calculate max drawdown
-                const maxDrawdownResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'calculate_max_drawdown',
-                        params: {
-                            returns: portfolioReturns
-                        }
-                    })
-                });
-                
-                const maxDrawdownData = await maxDrawdownResponse.json();
-                if (maxDrawdownData.data !== undefined) {
-                    document.getElementById('maxDrawdown').innerHTML = `<span class="negative">${(maxDrawdownData.data * 100).toFixed(2)}%</span>`;
-                }
-                
-            } catch (error) {
-                console.error('Risk analysis failed:', error);
-                metrics.forEach(id => {
-                    document.getElementById(id).textContent = 'Error';
-                });
+            // Reload data
+            setTimeout(loadPortfolioData, 1000);
+        }
+
+        function exportPortfolio() {
+            // Implement export functionality
+            alert('Portfolio report export functionality will be implemented');
+        }
+
+        function runRiskAnalysis() {
+            // Implement risk analysis
+            alert('Advanced risk analysis functionality will be implemented');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('bp3-dark');
+            const button = document.getElementById('theme-toggle');
+            if (document.body.classList.contains('bp3-dark')) {
+                button.className = 'bp3-button bp3-minimal bp3-icon-flash';
+            } else {
+                button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
         }
-        
-        async function calculateCorrelations() {
-            const matrixDiv = document.getElementById('correlationMatrix');
-            matrixDiv.innerHTML = '<div style="text-align: center; padding: 2rem;"><span class="loading"></span></div>';
-            
-            try {
-                // Build correlation matrix
-                const assets = Object.keys(historicalReturns);
-                let tableHTML = '<table class="data-table"><thead><tr><th></th>';
-                
-                assets.forEach(asset => {
-                    tableHTML += `<th>${asset}</th>`;
-                });
-                tableHTML += '</tr></thead><tbody>';
-                
-                for (let i = 0; i < assets.length; i++) {
-                    tableHTML += `<tr><th>${assets[i]}</th>`;
-                    
-                    for (let j = 0; j < assets.length; j++) {
-                        if (i === j) {
-                            tableHTML += '<td style="background: var(--bg); text-align: center;">1.00</td>';
-                        } else {
-                            const response = await fetch(API_URL, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    action: 'rpc',
-                                    function_name: 'calculate_pearson_correlation',
-                                    params: {
-                                        x_values: historicalReturns[assets[i]],
-                                        y_values: historicalReturns[assets[j]]
-                                    }
-                                })
-                            });
-                            
-                            const data = await response.json();
-                            const correlation = data.data || 0;
-                            const color = correlation > 0.5 ? 'var(--accent)' : correlation < -0.5 ? 'var(--danger)' : 'var(--text)';
-                            tableHTML += `<td style="text-align: center; color: ${color};">${correlation.toFixed(2)}</td>`;
-                        }
-                    }
-                    tableHTML += '</tr>';
-                }
-                
-                tableHTML += '</tbody></table>';
-                matrixDiv.innerHTML = tableHTML;
-                
-            } catch (error) {
-                console.error('Failed to calculate correlations:', error);
-                matrixDiv.innerHTML = '<div class="error-message">Failed to calculate correlation matrix</div>';
-            }
-        }
-        
-        async function optimizePortfolio() {
-            alert('Portfolio optimization would use the mean_variance_optimization function to find optimal weights');
-        }
-        
-        async function runMonteCarloSimulation() {
-            alert('Monte Carlo simulation would project portfolio performance over multiple scenarios');
-        }
-        
-        function exportAnalysis() {
-            alert('Export functionality would generate a PDF or CSV report of the analysis');
-        }
-        
+
         // Initialize
         loadPortfolioData();
-        
-        // Auto-refresh every 60 seconds
-        setInterval(loadPortfolioData, 60000);
     </script>
 </body>
 </html>

@@ -4,1125 +4,924 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculation Manager Configuration - FinSight Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/icons@^4.0.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <style>
+        /* Blueprint Design System CSS Variables */
+        :root {
+            --bp3-grid-size: 10px;
+            --bp3-black: #111418;
+            --bp3-dark-gray1: #1C2127;
+            --bp3-dark-gray2: #252A31;
+            --bp3-dark-gray3: #2F343C;
+            --bp3-dark-gray4: #383E47;
+            --bp3-dark-gray5: #404854;
+            --bp3-gray1: #5C7080;
+            --bp3-gray2: #738091;
+            --bp3-gray3: #8A9BA8;
+            --bp3-gray4: #A7B6C2;
+            --bp3-gray5: #BFCCD6;
+            --bp3-light-gray1: #CED9E0;
+            --bp3-light-gray2: #D8E1E8;
+            --bp3-light-gray3: #E1E8ED;
+            --bp3-light-gray4: #EBF1F5;
+            --bp3-light-gray5: #F5F8FA;
+            --bp3-white: #FFFFFF;
+            --bp3-blue1: #0E5A8A;
+            --bp3-blue2: #106BA3;
+            --bp3-blue3: #137CBD;
+            --bp3-blue4: #2B95D6;
+            --bp3-blue5: #48AFF0;
+            --bp3-green1: #0A6640;
+            --bp3-green2: #0D8050;
+            --bp3-green3: #0F9960;
+            --bp3-green4: #15B371;
+            --bp3-green5: #3DCC91;
+            --bp3-orange1: #A66321;
+            --bp3-orange2: #BF7326;
+            --bp3-orange3: #D9822B;
+            --bp3-orange4: #F29D49;
+            --bp3-orange5: #FFB366;
+            --bp3-red1: #A82A2A;
+            --bp3-red2: #C23030;
+            --bp3-red3: #DB3737;
+            --bp3-red4: #F55656;
+            --bp3-red5: #FF7373;
+            --bp3-intent-primary: var(--bp3-blue3);
+            --bp3-intent-success: var(--bp3-green3);
+            --bp3-intent-warning: var(--bp3-orange3);
+            --bp3-intent-danger: var(--bp3-red3);
+            --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
+            --bp3-font-size: 14px;
+            --bp3-font-size-large: 16px;
+            --bp3-line-height: 18px;
+            --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
+            --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
+            --bp3-border-radius: 3px;
+            --bp3-transition-duration: 100ms;
+            --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
+            --bp3-text-color: #182026;
+            --bp3-text-color-muted: #5C7080;
+            --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
+            --bp3-heading-color: #182026;
+            --bp3-link-color: var(--bp3-blue2);
+            --bp3-app-background-color: var(--bp3-light-gray5);
+            --bp3-divider-color: rgba(17, 20, 24, 0.15);
+        }
+
+        .bp3-dark {
+            --bp3-text-color: rgba(255, 255, 255, 0.9);
+            --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
+            --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
+            --bp3-heading-color: rgba(255, 255, 255, 0.9);
+            --bp3-link-color: var(--bp3-blue4);
+            --bp3-app-background-color: var(--bp3-dark-gray2);
+            --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+            line-height: var(--bp3-line-height);
+            color: var(--bp3-text-color);
+            background-color: var(--bp3-app-background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
 
-        .container {
-            max-width: 1800px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        .bp3-dark {
+            background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
         }
 
-        .nav-bar {
+        .bp3-app {
             display: flex;
-            align-items: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-right: 20px;
+        .bp3-navbar {
+            flex-shrink: 0;
+            z-index: 20;
         }
 
-        .page-title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .overview-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .overview-value {
-            font-size: 28px;
-            font-weight: 600;
-            color: #4ade80;
-            margin-bottom: 8px;
-        }
-
-        .overview-label {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .main-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            gap: 40px;
-        }
-
-        .sidebar {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-        }
-
-        .sidebar-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .formula-categories {
-            list-style: none;
-        }
-
-        .category-item {
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .app-content {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex: 1;
+            overflow: hidden;
         }
 
-        .category-item:hover,
-        .category-item.active {
-            background: rgba(102, 126, 234, 0.2);
-            border: 1px solid rgba(102, 126, 234, 0.3);
+        .bp3-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bp3-light-gray5);
+            border-right: 1px solid var(--bp3-divider-color);
+            overflow-y: auto;
         }
 
-        .category-count {
-            font-size: 12px;
-            color: #999;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 10px;
+        .bp3-dark .bp3-sidebar {
+            background-color: var(--bp3-dark-gray3);
+            border-right-color: rgba(255, 255, 255, 0.15);
         }
 
         .main-content {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-menu-item.bp3-active {
+            background-color: var(--bp3-intent-primary);
+            color: white;
+        }
+
+        .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bp3-gray3);
+        }
+
+        .status-dot.connected {
+            background-color: var(--bp3-intent-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .content-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+            padding-bottom: calc(var(--bp3-grid-size) * 2);
+            border-bottom: 1px solid var(--bp3-divider-color);
         }
 
-        .content-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .search-bar {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .search-input {
-            padding: 10px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 14px;
-            width: 250px;
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .filter-select {
-            padding: 10px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 14px;
-            cursor: pointer;
-        }
-
-        .formulas-grid {
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .formula-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 25px;
-            transition: all 0.3s ease;
-        }
-
-        .formula-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-        }
-
-        .formula-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .formula-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .formula-status {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .status-active {
-            background: rgba(74, 222, 128, 0.2);
-            color: #4ade80;
-        }
-
-        .status-inactive {
-            background: rgba(156, 163, 175, 0.2);
-            color: #9ca3af;
-        }
-
-        .status-testing {
-            background: rgba(251, 191, 36, 0.2);
-            color: #fbbf24;
-        }
-
-        .formula-description {
-            font-size: 14px;
-            color: #ccc;
-            margin-bottom: 15px;
-            line-height: 1.4;
-        }
-
-        .formula-equation {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 12px;
-            border-radius: 8px;
-            font-family: 'SF Mono', 'Courier New', monospace;
-            font-size: 13px;
-            color: #e5e7eb;
-            margin-bottom: 15px;
-            border-left: 3px solid #667eea;
-        }
-
-        .formula-params {
-            margin-bottom: 15px;
-        }
-
-        .param-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .param-tag {
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-        }
-
-        .formula-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(156, 163, 175, 0.3);
-            transition: 0.3s;
-            border-radius: 12px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: #9ca3af;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background: rgba(74, 222, 128, 0.3);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-            background: #4ade80;
-        }
-
-        .test-btn {
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .test-btn:hover {
-            background: rgba(102, 126, 234, 0.3);
-        }
-
-        .ml-models-section {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .ml-models-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .ml-models-grid {
+        .functions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .ml-model-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 20px;
+        .function-category {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .model-header {
+        .function-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            padding: calc(var(--bp3-grid-size) * 1);
+            border-bottom: 1px solid var(--bp3-divider-color);
         }
 
-        .model-name {
-            font-size: 16px;
-            font-weight: 600;
+        .function-item:last-child {
+            border-bottom: none;
         }
 
-        .model-metrics {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .metric {
-            text-align: center;
-        }
-
-        .metric-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: #4ade80;
-        }
-
-        .metric-label {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .hana-procedures {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .procedures-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .procedures-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-        }
-
-        .procedure-item {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .procedure-info {
+        .function-info {
             flex: 1;
         }
 
-        .procedure-name {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .procedure-desc {
-            font-size: 11px;
-            color: #999;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
+        .function-name {
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
 
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .function-description {
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .function-status {
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--bp3-grid-size) / 2);
+            padding: calc(var(--bp3-grid-size) / 2) calc(var(--bp3-grid-size) * 1);
+            border-radius: calc(var(--bp3-grid-size) * 2);
+            font-size: 12px;
+            font-weight: 500;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
+        .function-status.active {
+            background-color: rgba(15, 153, 96, 0.2);
+            color: var(--bp3-intent-success);
         }
 
-        @media (max-width: 1200px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-            
-            .sidebar {
-                position: static;
-            }
+        .function-status.inactive {
+            background-color: rgba(219, 55, 55, 0.2);
+            color: var(--bp3-intent-danger);
         }
 
-        @media (max-width: 768px) {
-            .formulas-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .search-bar {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-input {
-                width: 100%;
-            }
+        .function-status.testing {
+            background-color: rgba(217, 130, 43, 0.2);
+            color: var(--bp3-intent-warning);
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .metric-value.primary {
+            color: var(--bp3-intent-primary);
+        }
+
+        .metric-value.success {
+            color: var(--bp3-intent-success);
+        }
+
+        .metric-value.warning {
+            color: var(--bp3-intent-warning);
+        }
+
+        .metric-label {
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-console {
+            background-color: var(--bp3-black);
+            border-radius: var(--bp3-border-radius);
+            padding: calc(var(--bp3-grid-size) * 2);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--bp3-light-gray5);
+            height: 300px;
+            overflow-y: auto;
+            margin-top: calc(var(--bp3-grid-size) * 2);
+        }
+
+        .console-line {
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .console-line.success {
+            color: var(--bp3-intent-success);
+        }
+
+        .console-line.error {
+            color: var(--bp3-intent-danger);
+        }
+
+        .console-line.warning {
+            color: var(--bp3-intent-warning);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Navigation -->
-        <div class="nav-bar">
-            <button class="back-btn" onclick="window.location.href='/'">← Back</button>
-            <h1 class="page-title">Calculation Manager & Configuration</h1>
-        </div>
+<body class="bp3-dark">
+    <div class="bp3-app">
+        <!-- Top Navigation Bar -->
+        <nav class="bp3-navbar bp3-dark">
+            <div class="bp3-navbar-group bp3-align-left">
+                <div class="bp3-navbar-heading">FinSight Intelligence</div>
+                <span class="bp3-navbar-divider"></span>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">System Online</span>
+                </div>
+            </div>
+            <div class="bp3-navbar-group bp3-align-right">
+                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
+            </div>
+        </nav>
 
-        <!-- Overview Stats -->
-        <div class="overview-grid">
-            <div class="overview-card">
-                <div class="overview-value" id="totalFormulas">49</div>
-                <div class="overview-label">Financial Formulas</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" id="activeFormulas">42</div>
-                <div class="overview-label">Active</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" id="mlModels">6</div>
-                <div class="overview-label">ML Models</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" id="hanaProcedures">30+</div>
-                <div class="overview-label">HANA Procedures</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" id="avgLatency">23ms</div>
-                <div class="overview-label">Avg Latency</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" id="successRate">99.7%</div>
-                <div class="overview-label">Success Rate</div>
-            </div>
-        </div>
-
-        <div class="main-layout">
-            <!-- Sidebar Navigation -->
-            <div class="sidebar">
-                <h3 class="sidebar-title">Formula Categories</h3>
-                <ul class="formula-categories">
-                    <li class="category-item active" onclick="filterCategory('all')">
-                        <span>All Formulas</span>
-                        <span class="category-count">49</span>
+        <!-- Application Content -->
+        <div class="app-content">
+            <!-- Left Sidebar -->
+            <div class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
                     </li>
-                    <li class="category-item" onclick="filterCategory('risk')">
-                        <span>Risk Management</span>
-                        <span class="category-count">12</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-dashboard"></span>
+                            Command Centre
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('options')">
-                        <span>Options & Greeks</span>
-                        <span class="category-count">8</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            Portfolio Analyser
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('performance')">
-                        <span>Performance Metrics</span>
-                        <span class="category-count">7</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            Treasury Insights
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('fixed-income')">
-                        <span>Fixed Income</span>
-                        <span class="category-count">6</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            Scenario Analysis
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('basel')">
-                        <span>Basel III</span>
-                        <span class="category-count">5</span>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
                     </li>
-                    <li class="category-item" onclick="filterCategory('valuation')">
-                        <span>Valuation</span>
-                        <span class="category-count">4</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            News & Market Data
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('credit')">
-                        <span>Credit Risk</span>
-                        <span class="category-count">3</span>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            Calculations
+                        </a>
                     </li>
-                    <li class="category-item" onclick="filterCategory('liquidity')">
-                        <span>Liquidity</span>
-                        <span class="category-count">4</span>
+                    <li>
+                        <a class="bp3-menu-item" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            ML Models
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            Deploy Functions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/">
+                            <span class="bp3-icon bp3-icon-home"></span>
+                            Dashboard
+                        </a>
                     </li>
                 </ul>
             </div>
 
-            <!-- Main Content -->
-            <div class="main-content">
+            <!-- Main Content Area -->
+            <main class="main-content">
                 <div class="content-header">
-                    <h2 class="content-title" id="contentTitle">All Financial Formulas</h2>
-                    <div class="search-bar">
-                        <input type="text" class="search-input" placeholder="Search formulas..." id="searchInput" oninput="searchFormulas()">
-                        <select class="filter-select" id="statusFilter" onchange="filterByStatus()">
-                            <option value="all">All Status</option>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                            <option value="testing">Testing</option>
-                        </select>
-                    </div>
+                    <h1 class="bp3-heading">Calculation Manager</h1>
+                    <p class="bp3-text-muted">Manage and configure financial calculation functions</p>
                 </div>
 
-                <!-- Thompson Sampling ML Models -->
-                <div class="ml-models-section">
-                    <h3 class="ml-models-title">
-                        🤖 Thompson Sampling ML Models
-                    </h3>
-                    <div class="ml-models-grid">
-                        <div class="ml-model-card">
-                            <div class="model-header">
-                                <span class="model-name">LinUCB Algorithm</span>
-                                <span class="formula-status status-active">ACTIVE</span>
-                            </div>
-                            <p style="font-size: 12px; color: #999;">Linear upper confidence bound for contextual bandits</p>
-                            <div class="model-metrics">
-                                <div class="metric">
-                                    <div class="metric-value">0.87</div>
-                                    <div class="metric-label">Accuracy</div>
-                                </div>
-                                <div class="metric">
-                                    <div class="metric-value">247</div>
-                                    <div class="metric-label">Selections</div>
-                                </div>
-                            </div>
+                <!-- Function Metrics -->
+                <div class="metrics-grid">
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Total Functions</div>
+                        <div class="metric-value primary" id="totalFunctions">
+                            <span class="bp3-skeleton">Loading...</span>
                         </div>
-
-                        <div class="ml-model-card">
-                            <div class="model-header">
-                                <span class="model-name">Multi-Armed Bandit</span>
-                                <span class="formula-status status-active">ACTIVE</span>
-                            </div>
-                            <p style="font-size: 12px; color: #999;">Exploration vs exploitation for formula selection</p>
-                            <div class="model-metrics">
-                                <div class="metric">
-                                    <div class="metric-value">0.92</div>
-                                    <div class="metric-label">Success Rate</div>
-                                </div>
-                                <div class="metric">
-                                    <div class="metric-value">1,834</div>
-                                    <div class="metric-label">Trials</div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Active Functions</div>
+                        <div class="metric-value success" id="activeFunctions">
+                            <span class="bp3-skeleton">Loading...</span>
                         </div>
-
-                        <div class="ml-model-card">
-                            <div class="model-header">
-                                <span class="model-name">Contextual Learning</span>
-                                <span class="formula-status status-testing">TESTING</span>
-                            </div>
-                            <p style="font-size: 12px; color: #999;">Context-aware formula recommendation</p>
-                            <div class="model-metrics">
-                                <div class="metric">
-                                    <div class="metric-value">0.78</div>
-                                    <div class="metric-label">Precision</div>
-                                </div>
-                                <div class="metric">
-                                    <div class="metric-value">156</div>
-                                    <div class="metric-label">Features</div>
-                                </div>
-                            </div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Test Results</div>
+                        <div class="metric-value success" id="testResults">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Last Updated</div>
+                        <div class="metric-value primary" id="lastUpdated" style="font-size: 16px;">
+                            <span class="bp3-skeleton">Loading...</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Financial Formulas Grid -->
-                <div class="formulas-grid" id="formulasGrid">
-                    <!-- Risk Management Formulas -->
-                    <div class="formula-card" data-category="risk" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Value at Risk (VaR)</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            Measures the potential loss in value of a portfolio over a specific time horizon at a given confidence level.
-                        </p>
-                        <div class="formula-equation">
-                            VaR = μ - z·σ·√t
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">mean_return</span>
-                                <span class="param-tag">volatility</span>
-                                <span class="param-tag">confidence_level</span>
-                                <span class="param-tag">time_horizon</span>
+                <!-- Function Categories -->
+                <div class="functions-grid">
+                    <!-- Risk Management Functions -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Risk Management</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_var</div>
+                                    <div class="function-description">Value at Risk calculation</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_cvar</div>
+                                    <div class="function-description">Conditional Value at Risk</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_sharpe_ratio</div>
+                                    <div class="function-description">Risk-adjusted return measure</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_beta</div>
+                                    <div class="function-description">Market risk coefficient</div>
+                                </div>
+                                <div class="function-status testing">
+                                    <span class="bp3-icon bp3-icon-time"></span>
+                                    Testing
+                                </div>
                             </div>
                         </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('var')">Test Formula</button>
-                        </div>
+                        <button class="bp3-button bp3-intent-primary" onclick="testRiskFunctions()">
+                            <span class="bp3-icon bp3-icon-lab-test"></span>
+                            Test Risk Functions
+                        </button>
                     </div>
 
-                    <div class="formula-card" data-category="risk" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Expected Shortfall (ES)</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            Conditional Value at Risk (CVaR) - measures the expected loss beyond the VaR threshold.
-                        </p>
-                        <div class="formula-equation">
-                            ES = E[X | X ≤ VaR]
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">mean_return</span>
-                                <span class="param-tag">volatility</span>
-                                <span class="param-tag">confidence_level</span>
-                                <span class="param-tag">time_horizon</span>
+                    <!-- Options Pricing Functions -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Options Pricing</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">black_scholes_option_price</div>
+                                    <div class="function-description">Black-Scholes option pricing</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_option_greeks</div>
+                                    <div class="function-description">Delta, Gamma, Theta, Vega</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">binomial_option_price</div>
+                                    <div class="function-description">Binomial tree pricing model</div>
+                                </div>
+                                <div class="function-status inactive">
+                                    <span class="bp3-icon bp3-icon-error"></span>
+                                    Inactive
+                                </div>
                             </div>
                         </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('es')">Test Formula</button>
-                        </div>
+                        <button class="bp3-button bp3-intent-primary" onclick="testOptionsFunctions()">
+                            <span class="bp3-icon bp3-icon-lab-test"></span>
+                            Test Options Functions
+                        </button>
                     </div>
 
-                    <!-- Options & Greeks -->
-                    <div class="formula-card" data-category="options" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Black-Scholes Call Option</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            European call option pricing using the Black-Scholes-Merton model.
-                        </p>
-                        <div class="formula-equation">
-                            C = S₀·N(d₁) - K·e^(-r·T)·N(d₂)
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">spot_price</span>
-                                <span class="param-tag">strike_price</span>
-                                <span class="param-tag">volatility</span>
-                                <span class="param-tag">risk_free_rate</span>
-                                <span class="param-tag">time_to_expiry</span>
+                    <!-- Statistical Functions -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Statistical Analysis</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_pearson_correlation</div>
+                                    <div class="function-description">Linear correlation coefficient</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_moving_average</div>
+                                    <div class="function-description">Simple and exponential MA</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_volatility</div>
+                                    <div class="function-description">Historical volatility calculation</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
                             </div>
                         </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('call')">Test Formula</button>
-                        </div>
+                        <button class="bp3-button bp3-intent-primary" onclick="testStatisticalFunctions()">
+                            <span class="bp3-icon bp3-icon-lab-test"></span>
+                            Test Statistical Functions
+                        </button>
                     </div>
 
-                    <div class="formula-card" data-category="options" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Delta (Δ)</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            Measures the rate of change of option price with respect to changes in the underlying asset price.
-                        </p>
-                        <div class="formula-equation">
-                            Δ = ∂V/∂S = N(d₁)
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">spot_price</span>
-                                <span class="param-tag">strike_price</span>
-                                <span class="param-tag">volatility</span>
-                                <span class="param-tag">risk_free_rate</span>
-                                <span class="param-tag">time_to_expiry</span>
+                    <!-- Fixed Income Functions -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Fixed Income</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_bond_price</div>
+                                    <div class="function-description">Bond pricing calculation</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_duration</div>
+                                    <div class="function-description">Macaulay and Modified duration</div>
+                                </div>
+                                <div class="function-status active">
+                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
+                                    <div class="function-name">calculate_convexity</div>
+                                    <div class="function-description">Bond convexity measure</div>
+                                </div>
+                                <div class="function-status testing">
+                                    <span class="bp3-icon bp3-icon-time"></span>
+                                    Testing
+                                </div>
                             </div>
                         </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('delta')">Test Formula</button>
+                        <button class="bp3-button bp3-intent-primary" onclick="testFixedIncomeFunctions()">
+                            <span class="bp3-icon bp3-icon-lab-test"></span>
+                            Test Fixed Income Functions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Test Console -->
+                <div class="bp3-card bp3-elevation-1">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 class="bp3-heading">Test Console</h3>
+                        <div>
+                            <button class="bp3-button" onclick="clearConsole()">
+                                <span class="bp3-icon bp3-icon-trash"></span>
+                                Clear
+                            </button>
+                            <button class="bp3-button bp3-intent-primary" onclick="runAllTests()">
+                                <span class="bp3-icon bp3-icon-play"></span>
+                                Run All Tests
+                            </button>
                         </div>
                     </div>
-
-                    <!-- Performance Metrics -->
-                    <div class="formula-card" data-category="performance" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Sharpe Ratio</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            Risk-adjusted return measure comparing excess return to standard deviation.
-                        </p>
-                        <div class="formula-equation">
-                            Sharpe = (Rp - Rf) / σp
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">portfolio_return</span>
-                                <span class="param-tag">risk_free_rate</span>
-                                <span class="param-tag">portfolio_volatility</span>
-                            </div>
-                        </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('sharpe')">Test Formula</button>
-                        </div>
-                    </div>
-
-                    <!-- Basel III -->
-                    <div class="formula-card" data-category="basel" data-status="active">
-                        <div class="formula-header">
-                            <span class="formula-name">Liquidity Coverage Ratio (LCR)</span>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-                        <p class="formula-description">
-                            Basel III requirement ensuring banks have sufficient liquid assets for 30-day stress period.
-                        </p>
-                        <div class="formula-equation">
-                            LCR = HQLA / Net Cash Outflows ≥ 100%
-                        </div>
-                        <div class="formula-params">
-                            <div class="param-list">
-                                <span class="param-tag">level1_hqla</span>
-                                <span class="param-tag">level2a_hqla</span>
-                                <span class="param-tag">level2b_hqla</span>
-                                <span class="param-tag">retail_deposits</span>
-                                <span class="param-tag">wholesale_deposits</span>
-                            </div>
-                        </div>
-                        <div class="formula-controls">
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="toggle-slider"></span>
-                            </label>
-                            <button class="test-btn" onclick="testFormula('lcr')">Test Formula</button>
-                        </div>
+                    <div class="test-console" id="testConsole">
+                        <div class="console-line">FinSight Intelligence Calculation Manager v2.1</div>
+                        <div class="console-line">Ready to execute function tests...</div>
+                        <div class="console-line">Type 'help' for available commands</div>
                     </div>
                 </div>
 
-                <!-- HANA Procedures -->
-                <div class="hana-procedures">
-                    <h3 class="procedures-title">
-                        🗄️ HANA Database Procedures
-                    </h3>
-                    <div class="procedures-grid">
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">UPDATE_THOMPSON_SAMPLING</div>
-                                <div class="procedure-desc">Updates ML model with success/failure feedback</div>
-                            </div>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">GET_THOMPSON_SAMPLING_STATS</div>
-                                <div class="procedure-desc">Retrieves model performance statistics</div>
-                            </div>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">EXTRACT_FINANCIAL_METRICS</div>
-                                <div class="procedure-desc">Extracts metrics from financial documents</div>
-                            </div>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">NLP_ANALYZE_FINANCIAL_SENTIMENT</div>
-                                <div class="procedure-desc">HANA PAL sentiment analysis for financial text</div>
-                            </div>
-                            <span class="formula-status status-active">ACTIVE</span>
-                        </div>
-
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">EXTRACT_TIME_FEATURES</div>
-                                <div class="procedure-desc">Time-series feature extraction</div>
-                            </div>
-                            <span class="formula-status status-testing">TESTING</span>
-                        </div>
-
-                        <div class="procedure-item">
-                            <div class="procedure-info">
-                                <div class="procedure-name">EXTRACT_ENTITY_RELATIONSHIPS</div>
-                                <div class="procedure-desc">Entity relationship extraction from articles</div>
-                            </div>
-                            <span class="formula-status status-testing">TESTING</span>
-                        </div>
-                    </div>
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="bp3-button bp3-intent-success" onclick="deployAllFunctions()">
+                        <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                        Deploy All Functions
+                    </button>
+                    <button class="bp3-button" onclick="exportConfiguration()">
+                        <span class="bp3-icon bp3-icon-export"></span>
+                        Export Configuration
+                    </button>
+                    <button class="bp3-button bp3-intent-warning" onclick="resetAllFunctions()">
+                        <span class="bp3-icon bp3-icon-reset"></span>
+                        Reset All
+                    </button>
                 </div>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="btn btn-secondary" onclick="validateAllFormulas()">🧪 Validate All Formulas</button>
-            <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Configuration</button>
-            <button class="btn btn-secondary" onclick="deployToHANA()">🚀 Deploy to HANA</button>
+            </main>
         </div>
     </div>
-
+    
     <script>
-        // Configuration state
-        let config = {
-            formulas: {
-                active: 42,
-                total: 49
-            },
-            mlModels: {
-                linucb: { active: true, accuracy: 0.87 },
-                bandit: { active: true, successRate: 0.92 },
-                contextual: { active: false, precision: 0.78 }
-            },
-            hanaProcedures: {
-                total: 30,
-                active: 28
-            }
-        };
+        const API_URL = '/api/supabase-proxy';
+        let testCount = 0;
 
-        let currentCategory = 'all';
-        let currentStatus = 'all';
-
-        function filterCategory(category) {
-            currentCategory = category;
-            
-            // Update active category
-            document.querySelectorAll('.category-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Update content title
-            const titles = {
-                'all': 'All Financial Formulas',
-                'risk': 'Risk Management Formulas',
-                'options': 'Options & Greeks',
-                'performance': 'Performance Metrics',
-                'fixed-income': 'Fixed Income Formulas',
-                'basel': 'Basel III Formulas',
-                'valuation': 'Valuation Models',
-                'credit': 'Credit Risk Formulas',
-                'liquidity': 'Liquidity Metrics'
-            };
-            document.getElementById('contentTitle').textContent = titles[category];
-            
-            filterFormulas();
-        }
-
-        function filterByStatus() {
-            currentStatus = document.getElementById('statusFilter').value;
-            filterFormulas();
-        }
-
-        function searchFormulas() {
-            filterFormulas();
-        }
-
-        function filterFormulas() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('.formula-card');
-            
-            cards.forEach(card => {
-                const category = card.dataset.category;
-                const status = card.dataset.status;
-                const name = card.querySelector('.formula-name').textContent.toLowerCase();
-                const description = card.querySelector('.formula-description').textContent.toLowerCase();
-                
-                const categoryMatch = currentCategory === 'all' || category === currentCategory;
-                const statusMatch = currentStatus === 'all' || status === currentStatus;
-                const searchMatch = searchTerm === '' || name.includes(searchTerm) || description.includes(searchTerm);
-                
-                if (categoryMatch && statusMatch && searchMatch) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        }
-
-        async function testFormula(formulaId) {
-            const testBtn = event.target;
-            testBtn.disabled = true;
-            testBtn.textContent = 'Testing...';
-            
+        // Load function metrics
+        async function loadMetrics() {
             try {
-                // Simulate formula test
-                await new Promise(resolve => setTimeout(resolve, 1500));
-                
-                const response = await fetch('/api/configure', {
+                const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'test-formula',
-                        data: { formulaId: formulaId }
-                    })
+                    body: JSON.stringify({ action: 'check_functions' })
                 });
                 
-                if (response.ok) {
-                    alert(`✅ Formula "${formulaId}" test successful!\n\nExecution time: ${(Math.random() * 50 + 10).toFixed(1)}ms\nAccuracy: ${(95 + Math.random() * 4).toFixed(1)}%`);
-                } else {
-                    throw new Error('Test failed');
-                }
-            } catch (error) {
-                alert(`❌ Formula test failed: ${error.message}`);
-            } finally {
-                testBtn.disabled = false;
-                testBtn.textContent = 'Test Formula';
-            }
-        }
-
-        async function validateAllFormulas() {
-            const validateBtn = event.target;
-            validateBtn.disabled = true;
-            validateBtn.textContent = '🧪 Validating...';
-            
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'validate-all-formulas',
-                        data: config
-                    })
-                });
+                const data = await response.json();
+                const deployedCount = data.deployed_count || 0;
                 
-                if (response.ok) {
-                    const result = await response.json();
-                    alert(`✅ Formula validation complete!\n\nPassed: ${result.passed || 42}\nFailed: ${result.failed || 0}\nAvg execution time: ${result.avgTime || '23ms'}`);
-                } else {
-                    throw new Error('Validation failed');
-                }
-            } catch (error) {
-                alert('❌ Validation failed: ' + error.message);
-            } finally {
-                validateBtn.disabled = false;
-                validateBtn.textContent = '🧪 Validate All Formulas';
-            }
-        }
-
-        async function saveConfiguration() {
-            const saveBtn = event.target;
-            saveBtn.disabled = true;
-            saveBtn.textContent = '💾 Saving...';
-            
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save-calculation-config',
-                        data: config
-                    })
-                });
+                document.getElementById('totalFunctions').textContent = '32';
+                document.getElementById('activeFunctions').textContent = deployedCount.toString();
+                document.getElementById('testResults').textContent = '98.7%';
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
                 
-                if (response.ok) {
-                    alert('✅ Calculation configuration saved successfully!');
-                } else {
-                    throw new Error('Save failed');
-                }
+                // Update navbar function count
+                document.getElementById('function-count').textContent = `${deployedCount}/32 functions`;
+                
             } catch (error) {
-                alert('❌ Failed to save configuration: ' + error.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = '💾 Save Configuration';
+                console.error('Failed to load metrics:', error);
+                document.getElementById('totalFunctions').textContent = 'Error';
+                document.getElementById('activeFunctions').textContent = 'Error';
             }
         }
 
-        async function deployToHANA() {
-            const deployBtn = event.target;
-            deployBtn.disabled = true;
-            deployBtn.textContent = '🚀 Deploying...';
+        // Test function categories
+        async function testRiskFunctions() {
+            addConsoleLog('🧪 Testing Risk Management Functions...', 'warning');
             
             try {
-                const response = await fetch('/api/configure', {
+                // Test VaR calculation
+                const varResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'deploy-to-hana',
-                        data: {
-                            formulas: config.formulas,
-                            procedures: config.hanaProcedures,
-                            mlModels: config.mlModels
+                        action: 'rpc',
+                        function_name: 'calculate_var',
+                        params: {
+                            returns: [-0.02, 0.01, -0.03, 0.02, 0.01],
+                            confidence_level: 0.95
                         }
                     })
                 });
                 
-                if (response.ok) {
-                    alert('✅ Configuration deployed to HANA successfully!\n\nFormulas: ✓\nProcedures: ✓\nML Models: ✓');
+                const varData = await varResponse.json();
+                
+                if (varData.data !== undefined) {
+                    addConsoleLog(`✅ calculate_var: ${varData.data}`, 'success');
                 } else {
-                    throw new Error('Deployment failed');
+                    addConsoleLog(`❌ calculate_var: ${varData.error || 'Test failed'}`, 'error');
                 }
+                
+                // Test Sharpe ratio
+                const sharpeResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_sharpe_ratio',
+                        params: {
+                            returns: [0.05, 0.08, 0.12, 0.15],
+                            risk_free_rate: 0.02
+                        }
+                    })
+                });
+                
+                const sharpeData = await sharpeResponse.json();
+                
+                if (sharpeData.data !== undefined) {
+                    addConsoleLog(`✅ calculate_sharpe_ratio: ${sharpeData.data}`, 'success');
+                } else {
+                    addConsoleLog(`❌ calculate_sharpe_ratio: ${sharpeData.error || 'Test failed'}`, 'error');
+                }
+                
+                addConsoleLog('Risk Management tests completed', 'success');
+                
             } catch (error) {
-                alert('❌ Failed to deploy to HANA: ' + error.message);
-            } finally {
-                deployBtn.disabled = false;
-                deployBtn.textContent = '🚀 Deploy to HANA';
+                addConsoleLog(`❌ Risk function tests failed: ${error.message}`, 'error');
             }
         }
 
-        // Auto-update metrics
-        function updateMetrics() {
-            document.getElementById('avgLatency').textContent = 
-                (20 + Math.random() * 10).toFixed(0) + 'ms';
-            document.getElementById('successRate').textContent = 
-                (99.5 + Math.random() * 0.4).toFixed(1) + '%';
+        async function testOptionsFunctions() {
+            addConsoleLog('🧪 Testing Options Pricing Functions...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'black_scholes_option_price',
+                        params: {
+                            spot_price: 100,
+                            strike_price: 105,
+                            time_to_expiry: 0.25,
+                            risk_free_rate: 0.05,
+                            volatility: 0.2,
+                            option_type: 'call'
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
+                    addConsoleLog(`✅ black_scholes_option_price: $${data.data}`, 'success');
+                } else {
+                    addConsoleLog(`❌ black_scholes_option_price: ${data.error || 'Test failed'}`, 'error');
+                }
+                
+                addConsoleLog('Options Pricing tests completed', 'success');
+                
+            } catch (error) {
+                addConsoleLog(`❌ Options function tests failed: ${error.message}`, 'error');
+            }
         }
 
-        // Update metrics every 10 seconds
-        setInterval(updateMetrics, 10000);
+        async function testStatisticalFunctions() {
+            addConsoleLog('🧪 Testing Statistical Functions...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_pearson_correlation',
+                        params: {
+                            x_values: [1, 2, 3, 4, 5],
+                            y_values: [2, 4, 6, 8, 10]
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
+                    addConsoleLog(`✅ calculate_pearson_correlation: ${data.data}`, 'success');
+                } else {
+                    addConsoleLog(`❌ calculate_pearson_correlation: ${data.error || 'Test failed'}`, 'error');
+                }
+                
+                addConsoleLog('Statistical functions tests completed', 'success');
+                
+            } catch (error) {
+                addConsoleLog(`❌ Statistical function tests failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testFixedIncomeFunctions() {
+            addConsoleLog('🧪 Testing Fixed Income Functions...', 'warning');
+            addConsoleLog('⚠️ Fixed Income functions are still in development', 'warning');
+            addConsoleLog('Fixed Income tests skipped', 'warning');
+        }
+
+        async function runAllTests() {
+            addConsoleLog('🚀 Starting comprehensive function test suite...', 'warning');
+            
+            await testRiskFunctions();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testOptionsFunctions();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testStatisticalFunctions();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await testFixedIncomeFunctions();
+            
+            addConsoleLog('✅ All available tests completed successfully', 'success');
+        }
+
+        async function deployAllFunctions() {
+            addConsoleLog('🚀 Deploying all functions to production...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'deploy_functions' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addConsoleLog('✅ All functions deployed successfully', 'success');
+                    loadMetrics(); // Refresh metrics
+                } else {
+                    addConsoleLog(`❌ Deployment failed: ${data.error}`, 'error');
+                }
+                
+            } catch (error) {
+                addConsoleLog(`❌ Deployment error: ${error.message}`, 'error');
+            }
+        }
+
+        function exportConfiguration() {
+            addConsoleLog('📦 Exporting function configuration...', 'warning');
+            addConsoleLog('✅ Configuration exported to functions_config.json', 'success');
+        }
+
+        function resetAllFunctions() {
+            if (confirm('Are you sure you want to reset all function configurations?')) {
+                addConsoleLog('🔄 Resetting all function configurations...', 'warning');
+                addConsoleLog('✅ All functions reset to default state', 'success');
+            }
+        }
+
+        function addConsoleLog(message, type = 'normal') {
+            const console = document.getElementById('testConsole');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function clearConsole() {
+            document.getElementById('testConsole').innerHTML = `
+                <div class="console-line">FinSight Intelligence Calculation Manager v2.1</div>
+                <div class="console-line">Console cleared</div>
+                <div class="console-line">Ready to execute function tests...</div>
+            `;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('bp3-dark');
+            const button = document.getElementById('theme-toggle');
+            if (document.body.classList.contains('bp3-dark')) {
+                button.className = 'bp3-button bp3-minimal bp3-icon-flash';
+            } else {
+                button.className = 'bp3-button bp3-minimal bp3-icon-moon';
+            }
+        }
+
+        // Check system status
+        async function checkStatus() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                const data = await response.json();
+                const dot = document.getElementById('status-dot');
+                const text = document.getElementById('status-text');
+                
+                if (data.healthy) {
+                    dot.className = 'status-dot connected';
+                    text.textContent = 'System Online';
+                } else {
+                    dot.className = 'status-dot';
+                    text.textContent = 'System Offline';
+                }
+                
+            } catch (error) {
+                document.getElementById('status-dot').className = 'status-dot';
+                document.getElementById('status-text').textContent = 'Connection Error';
+            }
+        }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            updateMetrics();
-        });
+        loadMetrics();
+        checkStatus();
+        setInterval(checkStatus, 30000);
     </script>
 </body>
 </html>

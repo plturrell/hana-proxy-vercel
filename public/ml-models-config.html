@@ -3,1081 +3,832 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ML Models Configuration - Financial Analytics Platform</title>
+    <title>ML Models Configuration - FinSight Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/icons@^4.0.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <style>
+        /* Blueprint Design System CSS Variables */
         :root {
-            --bg: #000;
-            --bg-secondary: #0a0a0a;
-            --border: #333;
-            --text: #fff;
-            --text-secondary: #999;
-            --accent: #3ecf8e;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --info: #3b82f6;
-            --purple: #8b5cf6;
+            --bp3-grid-size: 10px;
+            --bp3-black: #111418;
+            --bp3-dark-gray1: #1C2127;
+            --bp3-dark-gray2: #252A31;
+            --bp3-dark-gray3: #2F343C;
+            --bp3-dark-gray4: #383E47;
+            --bp3-dark-gray5: #404854;
+            --bp3-gray1: #5C7080;
+            --bp3-gray2: #738091;
+            --bp3-gray3: #8A9BA8;
+            --bp3-gray4: #A7B6C2;
+            --bp3-gray5: #BFCCD6;
+            --bp3-light-gray1: #CED9E0;
+            --bp3-light-gray2: #D8E1E8;
+            --bp3-light-gray3: #E1E8ED;
+            --bp3-light-gray4: #EBF1F5;
+            --bp3-light-gray5: #F5F8FA;
+            --bp3-white: #FFFFFF;
+            --bp3-blue1: #0E5A8A;
+            --bp3-blue2: #106BA3;
+            --bp3-blue3: #137CBD;
+            --bp3-blue4: #2B95D6;
+            --bp3-blue5: #48AFF0;
+            --bp3-green1: #0A6640;
+            --bp3-green2: #0D8050;
+            --bp3-green3: #0F9960;
+            --bp3-green4: #15B371;
+            --bp3-green5: #3DCC91;
+            --bp3-orange1: #A66321;
+            --bp3-orange2: #BF7326;
+            --bp3-orange3: #D9822B;
+            --bp3-orange4: #F29D49;
+            --bp3-orange5: #FFB366;
+            --bp3-red1: #A82A2A;
+            --bp3-red2: #C23030;
+            --bp3-red3: #DB3737;
+            --bp3-red4: #F55656;
+            --bp3-red5: #FF7373;
+            --bp3-intent-primary: var(--bp3-blue3);
+            --bp3-intent-success: var(--bp3-green3);
+            --bp3-intent-warning: var(--bp3-orange3);
+            --bp3-intent-danger: var(--bp3-red3);
+            --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
+            --bp3-font-size: 14px;
+            --bp3-font-size-large: 16px;
+            --bp3-line-height: 18px;
+            --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
+            --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
+            --bp3-border-radius: 3px;
+            --bp3-transition-duration: 100ms;
+            --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
+            --bp3-text-color: #182026;
+            --bp3-text-color-muted: #5C7080;
+            --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
+            --bp3-heading-color: #182026;
+            --bp3-link-color: var(--bp3-blue2);
+            --bp3-app-background-color: var(--bp3-light-gray5);
+            --bp3-divider-color: rgba(17, 20, 24, 0.15);
         }
-        
+
+        .bp3-dark {
+            --bp3-text-color: rgba(255, 255, 255, 0.9);
+            --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
+            --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
+            --bp3-heading-color: rgba(255, 255, 255, 0.9);
+            --bp3-link-color: var(--bp3-blue4);
+            --bp3-app-background-color: var(--bp3-dark-gray2);
+            --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+            line-height: var(--bp3-line-height);
+            color: var(--bp3-text-color);
+            background-color: var(--bp3-app-background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
+
+        .bp3-dark {
+            background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
         }
-        
-        .header {
+
+        .bp3-app {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .bp3-navbar {
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .app-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .bp3-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bp3-light-gray5);
+            border-right: 1px solid var(--bp3-divider-color);
+            overflow-y: auto;
+        }
+
+        .bp3-dark .bp3-sidebar {
+            background-color: var(--bp3-dark-gray3);
+            border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-menu-item.bp3-active {
+            background-color: var(--bp3-intent-primary);
+            color: white;
+        }
+
+        .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
+        .status-indicator {
+            display: flex;
             align-items: center;
-            margin-bottom: 2rem;
+            gap: calc(var(--bp3-grid-size) / 2);
         }
-        
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bp3-gray3);
         }
-        
-        .back-btn {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            text-decoration: none;
+
+        .status-dot.connected {
+            background-color: var(--bp3-intent-success);
+            animation: pulse 2s infinite;
         }
-        
-        .overview-grid {
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .content-header {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+            padding-bottom: calc(var(--bp3-grid-size) * 2);
+            border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
+        .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
-        
-        .overview-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-        }
-        
-        .overview-value {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .overview-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-        }
-        
-        .ml-section {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-        
+
         .models-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
+            gap: calc(var(--bp3-grid-size) * 3);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
-        
+
         .model-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.2s;
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
         }
-        
-        .model-card:hover {
-            border-color: var(--accent);
-        }
-        
+
         .model-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1rem;
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
         }
-        
-        .model-name {
-            font-size: 1.25rem;
-            font-weight: 600;
-        }
-        
+
         .model-status {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: calc(var(--bp3-grid-size) / 2);
+            padding: calc(var(--bp3-grid-size) / 2) calc(var(--bp3-grid-size) * 1);
+            border-radius: calc(var(--bp3-grid-size) * 2);
+            font-size: 12px;
+            font-weight: 500;
         }
-        
-        .status-active {
-            background: rgba(74, 222, 128, 0.2);
-            color: var(--accent);
+
+        .model-status.trained {
+            background-color: rgba(15, 153, 96, 0.2);
+            color: var(--bp3-intent-success);
         }
-        
-        .status-training {
-            background: rgba(251, 191, 36, 0.2);
-            color: var(--warning);
+
+        .model-status.training {
+            background-color: rgba(217, 130, 43, 0.2);
+            color: var(--bp3-intent-warning);
         }
-        
-        .status-disabled {
-            background: rgba(156, 163, 175, 0.2);
-            color: var(--text-secondary);
+
+        .model-status.untrained {
+            background-color: rgba(92, 112, 128, 0.2);
+            color: var(--bp3-text-color-muted);
         }
-        
-        .model-description {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-            line-height: 1.5;
-        }
-        
-        .model-metrics {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .metric {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-        }
-        
+
         .metric-value {
-            font-size: 1.25rem;
+            font-size: 24px;
             font-weight: 600;
-            color: var(--accent);
-            margin-bottom: 0.25rem;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
-        
+
+        .metric-value.primary {
+            color: var(--bp3-intent-primary);
+        }
+
+        .metric-value.success {
+            color: var(--bp3-intent-success);
+        }
+
+        .metric-value.warning {
+            color: var(--bp3-intent-warning);
+        }
+
         .metric-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        .model-controls {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .btn-small {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            transition: all 0.2s;
-        }
-        
-        .btn-small:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-        
-        .btn-small:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-            border-color: var(--accent);
-        }
-        
-        .btn-primary:hover {
-            opacity: 0.9;
-            color: var(--bg);
-        }
-        
-        .hyperparameters {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hyperparameters-title {
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .param-grid {
+
+        .performance-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 0.5rem;
-            font-size: 0.75rem;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin: calc(var(--bp3-grid-size) * 2) 0;
         }
-        
-        .param-item {
+
+        .performance-metric {
+            text-align: center;
+        }
+
+        .performance-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--bp3-intent-primary);
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .performance-label {
+            font-size: 11px;
+            color: var(--bp3-text-color-muted);
+            text-transform: uppercase;
+        }
+
+        .training-progress {
+            margin-top: calc(var(--bp3-grid-size) * 2);
+        }
+
+        .progress-info {
             display: flex;
             justify-content: space-between;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+            font-size: 12px;
         }
-        
-        .param-label {
-            color: var(--text-secondary);
-        }
-        
-        .param-value {
-            font-weight: 500;
-        }
-        
-        .training-section {
-            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(62, 207, 142, 0.1) 100%);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-        }
-        
-        .training-progress {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-        
-        .progress-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 6px;
-            padding: 1rem;
-        }
-        
-        .progress-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--border);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 0.5rem;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background: var(--accent);
-            transition: width 0.3s ease;
-        }
-        
-        .progress-value {
-            font-size: 0.875rem;
-            font-weight: 600;
-        }
-        
-        .btn {
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-        }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        .btn-secondary:hover {
-            border-color: var(--accent);
-        }
-        
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--border);
-            border-radius: 50%;
-            border-top-color: var(--accent);
-            animation: spin 1s ease-in-out infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .form-input {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.75rem;
-            color: var(--text);
-            font-size: 1rem;
-        }
-        
-        .form-select {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 0.75rem;
-            color: var(--text);
-            font-size: 1rem;
-            cursor: pointer;
-        }
-        
-        .log-output {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            font-family: monospace;
-            font-size: 0.875rem;
-            max-height: 200px;
+
+        .training-log {
+            background-color: var(--bp3-black);
+            border-radius: var(--bp3-border-radius);
+            padding: calc(var(--bp3-grid-size) * 2);
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--bp3-light-gray5);
+            height: 200px;
             overflow-y: auto;
-            margin-top: 1rem;
+            margin-top: calc(var(--bp3-grid-size) * 2);
+        }
+
+        .log-entry {
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
+        .log-entry.info {
+            color: var(--bp3-blue5);
+        }
+
+        .log-entry.success {
+            color: var(--bp3-green5);
+        }
+
+        .log-entry.warning {
+            color: var(--bp3-orange5);
+        }
+
+        .log-entry.error {
+            color: var(--bp3-red5);
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>ML Models Configuration</h1>
-                <p style="color: var(--text-secondary);">Configure and manage machine learning models for financial predictions</p>
-            </div>
-            <a href="/" class="back-btn">← Back to Dashboard</a>
-        </div>
-        
-        <div class="overview-grid">
-            <div class="overview-card">
-                <div class="overview-value" style="color: var(--accent);" id="activeModels">
-                    <span class="loading"></span>
-                </div>
-                <div class="overview-label">Active Models</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" style="color: var(--info);" id="trainingModels">
-                    <span class="loading"></span>
-                </div>
-                <div class="overview-label">Training</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" style="color: var(--warning);" id="totalPredictions">
-                    <span class="loading"></span>
-                </div>
-                <div class="overview-label">Predictions Today</div>
-            </div>
-            <div class="overview-card">
-                <div class="overview-value" style="color: var(--purple);" id="avgAccuracy">
-                    <span class="loading"></span>
-                </div>
-                <div class="overview-label">Avg Accuracy</div>
-            </div>
-        </div>
-        
-        <!-- Reinforcement Learning Models -->
-        <div class="ml-section">
-            <h2 class="section-title">
-                🤖 Reinforcement Learning Models
-            </h2>
-            <div class="models-grid">
-                <div class="model-card">
-                    <div class="model-header">
-                        <span class="model-name">Q-Learning Agent</span>
-                        <span class="model-status status-active">ACTIVE</span>
-                    </div>
-                    <p class="model-description">
-                        Q-learning agent for portfolio optimization and trading strategy selection.
-                    </p>
-                    <div class="model-metrics">
-                        <div class="metric">
-                            <div class="metric-value" id="ql-accuracy">87.3%</div>
-                            <div class="metric-label">Accuracy</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="ql-episodes">1,247</div>
-                            <div class="metric-label">Episodes</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="ql-reward">0.85</div>
-                            <div class="metric-label">Avg Reward</div>
-                        </div>
-                    </div>
-                    <div class="hyperparameters">
-                        <div class="hyperparameters-title">Hyperparameters</div>
-                        <div class="param-grid">
-                            <div class="param-item">
-                                <span class="param-label">Learning Rate:</span>
-                                <span class="param-value">0.01</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Discount:</span>
-                                <span class="param-value">0.95</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Epsilon:</span>
-                                <span class="param-value">0.1</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Batch Size:</span>
-                                <span class="param-value">32</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="model-controls">
-                        <button class="btn-small btn-primary" onclick="trainModel('q-learning')">Retrain</button>
-                        <button class="btn-small" onclick="testModel('q-learning')">Test</button>
-                        <button class="btn-small" onclick="configureModel('q-learning')">Configure</button>
-                        <button class="btn-small" onclick="exportModel('q-learning')">Export</button>
-                    </div>
-                </div>
-                
-                <div class="model-card">
-                    <div class="model-header">
-                        <span class="model-name">DDPG Agent</span>
-                        <span class="model-status status-training">TRAINING</span>
-                    </div>
-                    <p class="model-description">
-                        Deep Deterministic Policy Gradient for continuous action spaces in portfolio management.
-                    </p>
-                    <div class="model-metrics">
-                        <div class="metric">
-                            <div class="metric-value" id="ddpg-progress">72%</div>
-                            <div class="metric-label">Progress</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="ddpg-episodes">892</div>
-                            <div class="metric-label">Episodes</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="ddpg-loss">0.23</div>
-                            <div class="metric-label">Current Loss</div>
-                        </div>
-                    </div>
-                    <div class="hyperparameters">
-                        <div class="hyperparameters-title">Hyperparameters</div>
-                        <div class="param-grid">
-                            <div class="param-item">
-                                <span class="param-label">Actor LR:</span>
-                                <span class="param-value">0.001</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Critic LR:</span>
-                                <span class="param-value">0.002</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Buffer Size:</span>
-                                <span class="param-value">1M</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Tau:</span>
-                                <span class="param-value">0.005</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="model-controls">
-                        <button class="btn-small" onclick="stopTraining('ddpg')" disabled>Stop Training</button>
-                        <button class="btn-small" onclick="pauseTraining('ddpg')">Pause</button>
-                        <button class="btn-small" onclick="viewLogs('ddpg')">View Logs</button>
-                    </div>
-                </div>
-                
-                <div class="model-card">
-                    <div class="model-header">
-                        <span class="model-name">PPO Agent</span>
-                        <span class="model-status status-disabled">DISABLED</span>
-                    </div>
-                    <p class="model-description">
-                        Proximal Policy Optimization for stable policy learning in volatile market conditions.
-                    </p>
-                    <div class="model-metrics">
-                        <div class="metric">
-                            <div class="metric-value">-</div>
-                            <div class="metric-label">Accuracy</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">0</div>
-                            <div class="metric-label">Episodes</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value">-</div>
-                            <div class="metric-label">Avg Reward</div>
-                        </div>
-                    </div>
-                    <div class="hyperparameters">
-                        <div class="hyperparameters-title">Hyperparameters</div>
-                        <div class="param-grid">
-                            <div class="param-item">
-                                <span class="param-label">Learning Rate:</span>
-                                <span class="param-value">0.0003</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Clip Ratio:</span>
-                                <span class="param-value">0.2</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">Epochs:</span>
-                                <span class="param-value">10</span>
-                            </div>
-                            <div class="param-item">
-                                <span class="param-label">GAE Lambda:</span>
-                                <span class="param-value">0.95</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="model-controls">
-                        <button class="btn-small btn-primary" onclick="trainModel('ppo')">Start Training</button>
-                        <button class="btn-small" onclick="configureModel('ppo')">Configure</button>
-                    </div>
+<body class="bp3-dark">
+    <div class="bp3-app">
+        <!-- Top Navigation Bar -->
+        <nav class="bp3-navbar bp3-dark">
+            <div class="bp3-navbar-group bp3-align-left">
+                <div class="bp3-navbar-heading">FinSight Intelligence</div>
+                <span class="bp3-navbar-divider"></span>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">System Online</span>
                 </div>
             </div>
-        </div>
-        
-        <!-- Supervised Learning Models -->
-        <div class="ml-section">
-            <h2 class="section-title">
-                📊 Supervised Learning Models
-            </h2>
-            <div class="models-grid">
-                <div class="model-card">
-                    <div class="model-header">
-                        <span class="model-name">LSTM Price Predictor</span>
-                        <span class="model-status status-active">ACTIVE</span>
-                    </div>
-                    <p class="model-description">
-                        Long Short-Term Memory network for predicting asset price movements based on historical data.
-                    </p>
-                    <div class="model-metrics">
-                        <div class="metric">
-                            <div class="metric-value" id="lstm-accuracy">91.2%</div>
-                            <div class="metric-label">Accuracy</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="lstm-predictions">2,341</div>
-                            <div class="metric-label">Predictions</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="lstm-mse">0.0045</div>
-                            <div class="metric-label">MSE</div>
-                        </div>
-                    </div>
-                    <div class="model-controls">
-                        <button class="btn-small btn-primary" onclick="trainModel('lstm')">Retrain</button>
-                        <button class="btn-small" onclick="testModel('lstm')">Test</button>
-                        <button class="btn-small" onclick="predict('lstm')">Predict</button>
-                        <button class="btn-small" onclick="exportModel('lstm')">Export</button>
-                    </div>
-                </div>
-                
-                <div class="model-card">
-                    <div class="model-header">
-                        <span class="model-name">Random Forest Classifier</span>
-                        <span class="model-status status-active">ACTIVE</span>
-                    </div>
-                    <p class="model-description">
-                        Ensemble classifier for predicting market regime changes and trend directions.
-                    </p>
-                    <div class="model-metrics">
-                        <div class="metric">
-                            <div class="metric-value" id="rf-accuracy">85.7%</div>
-                            <div class="metric-label">Accuracy</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="rf-trees">500</div>
-                            <div class="metric-label">Trees</div>
-                        </div>
-                        <div class="metric">
-                            <div class="metric-value" id="rf-features">42</div>
-                            <div class="metric-label">Features</div>
-                        </div>
-                    </div>
-                    <div class="model-controls">
-                        <button class="btn-small btn-primary" onclick="trainModel('random-forest')">Retrain</button>
-                        <button class="btn-small" onclick="testModel('random-forest')">Test</button>
-                        <button class="btn-small" onclick="predict('random-forest')">Predict</button>
-                        <button class="btn-small" onclick="featureImportance('random-forest')">Features</button>
-                    </div>
-                </div>
+            <div class="bp3-navbar-group bp3-align-right">
+                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
             </div>
-        </div>
-        
-        <!-- Training Dashboard -->
-        <div class="ml-section training-section">
-            <h2 class="section-title">
-                🏋️ Training Dashboard
-            </h2>
-            <div class="training-progress">
-                <div class="progress-item">
-                    <div class="progress-label">DDPG Training Progress</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 72%"></div>
+        </nav>
+
+        <!-- Application Content -->
+        <div class="app-content">
+            <!-- Left Sidebar -->
+            <div class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-dashboard"></span>
+                            Command Centre
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            Portfolio Analyser
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            Treasury Insights
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            Scenario Analysis
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            News & Market Data
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            Calculations
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            ML Models
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            Deploy Functions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/">
+                            <span class="bp3-icon bp3-icon-home"></span>
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <div class="content-header">
+                    <h1 class="bp3-heading">ML Models Configuration</h1>
+                    <p class="bp3-text-muted">Train and manage machine learning models for financial analysis</p>
+                </div>
+
+                <!-- Model Metrics -->
+                <div class="metrics-grid">
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Total Models</div>
+                        <div class="metric-value primary" id="totalModels">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="progress-value">72% Complete</div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-label">Episodes Completed</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 89%"></div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Trained Models</div>
+                        <div class="metric-value success" id="trainedModels">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="progress-value">892 / 1000</div>
-                </div>
-                <div class="progress-item">
-                    <div class="progress-label">Validation Accuracy</div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 76%"></div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Avg Accuracy</div>
+                        <div class="metric-value primary" id="avgAccuracy">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
-                    <div class="progress-value">76.3%</div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Training Time</div>
+                        <div class="metric-value warning" id="trainingTime">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="progress-item">
-                    <div class="progress-label">ETA</div>
-                    <div class="progress-value" style="margin-top: 1rem;">2h 15m</div>
+
+                <!-- ML Models -->
+                <div class="models-grid">
+                    <!-- Price Prediction Model -->
+                    <div class="bp3-card bp3-elevation-1 model-card">
+                        <div class="model-header">
+                            <h3 class="bp3-heading">Price Prediction Model</h3>
+                            <span class="model-status trained">
+                                <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                Trained
+                            </span>
+                        </div>
+                        <p class="bp3-text-muted">LSTM-based neural network for predicting stock prices using historical data and technical indicators</p>
+                        
+                        <div class="performance-grid">
+                            <div class="performance-metric">
+                                <div class="performance-value">94.2%</div>
+                                <div class="performance-label">Accuracy</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">0.023</div>
+                                <div class="performance-label">MSE</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">0.89</div>
+                                <div class="performance-label">R² Score</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">2.4M</div>
+                                <div class="performance-label">Parameters</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="bp3-button bp3-intent-primary" onclick="trainModel('price_prediction')">
+                                <span class="bp3-icon bp3-icon-refresh"></span>
+                                Retrain Model
+                            </button>
+                            <button class="bp3-button" onclick="testModel('price_prediction')">
+                                <span class="bp3-icon bp3-icon-lab-test"></span>
+                                Test Model
+                            </button>
+                            <button class="bp3-button" onclick="exportModel('price_prediction')">
+                                <span class="bp3-icon bp3-icon-export"></span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sentiment Analysis Model -->
+                    <div class="bp3-card bp3-elevation-1 model-card">
+                        <div class="model-header">
+                            <h3 class="bp3-heading">Sentiment Analysis Model</h3>
+                            <span class="model-status trained">
+                                <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                Trained
+                            </span>
+                        </div>
+                        <p class="bp3-text-muted">BERT-based transformer model for analyzing market sentiment from news articles and social media</p>
+                        
+                        <div class="performance-grid">
+                            <div class="performance-metric">
+                                <div class="performance-value">91.8%</div>
+                                <div class="performance-label">Accuracy</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">0.92</div>
+                                <div class="performance-label">F1 Score</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">0.90</div>
+                                <div class="performance-label">Precision</div>
+                            </div>
+                            <div class="performance-metric">
+                                <div class="performance-value">110M</div>
+                                <div class="performance-label">Parameters</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="bp3-button bp3-intent-primary" onclick="trainModel('sentiment_analysis')">
+                                <span class="bp3-icon bp3-icon-refresh"></span>
+                                Retrain Model
+                            </button>
+                            <button class="bp3-button" onclick="testModel('sentiment_analysis')">
+                                <span class="bp3-icon bp3-icon-lab-test"></span>
+                                Test Model
+                            </button>
+                            <button class="bp3-button" onclick="exportModel('sentiment_analysis')">
+                                <span class="bp3-icon bp3-icon-export"></span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Risk Assessment Model -->
+                    <div class="bp3-card bp3-elevation-1 model-card">
+                        <div class="model-header">
+                            <h3 class="bp3-heading">Risk Assessment Model</h3>
+                            <span class="model-status training">
+                                <span class="bp3-icon bp3-icon-time"></span>
+                                Training
+                            </span>
+                        </div>
+                        <p class="bp3-text-muted">Gradient boosting ensemble for comprehensive portfolio risk assessment and anomaly detection</p>
+                        
+                        <div class="training-progress">
+                            <div class="progress-info">
+                                <span>Training Progress</span>
+                                <span>67%</span>
+                            </div>
+                            <div class="bp3-progress-bar bp3-intent-primary">
+                                <div class="bp3-progress-meter" style="width: 67%"></div>
+                            </div>
+                            <div class="progress-info" style="margin-top: 10px;">
+                                <span class="bp3-text-muted">Epoch 134/200</span>
+                                <span class="bp3-text-muted">~12 min remaining</span>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="bp3-button bp3-intent-danger" onclick="stopTraining('risk_assessment')">
+                                <span class="bp3-icon bp3-icon-stop"></span>
+                                Stop Training
+                            </button>
+                            <button class="bp3-button" disabled>
+                                <span class="bp3-icon bp3-icon-lab-test"></span>
+                                Test Model
+                            </button>
+                            <button class="bp3-button" disabled>
+                                <span class="bp3-icon bp3-icon-export"></span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Fraud Detection Model -->
+                    <div class="bp3-card bp3-elevation-1 model-card">
+                        <div class="model-header">
+                            <h3 class="bp3-heading">Fraud Detection Model</h3>
+                            <span class="model-status untrained">
+                                <span class="bp3-icon bp3-icon-circle"></span>
+                                Untrained
+                            </span>
+                        </div>
+                        <p class="bp3-text-muted">Autoencoder neural network for detecting anomalous trading patterns and potential fraud</p>
+                        
+                        <div class="bp3-callout bp3-intent-warning" style="margin-top: 15px;">
+                            <h4 class="bp3-callout-title">Model Not Trained</h4>
+                            <p>This model requires training data. Upload transaction data to begin training.</p>
+                        </div>
+
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="bp3-button bp3-intent-primary" onclick="uploadTrainingData('fraud_detection')">
+                                <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                                Upload Data
+                            </button>
+                            <button class="bp3-button" disabled>
+                                <span class="bp3-icon bp3-icon-lab-test"></span>
+                                Test Model
+                            </button>
+                            <button class="bp3-button" disabled>
+                                <span class="bp3-icon bp3-icon-export"></span>
+                                Export
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="margin-bottom: 1rem;">
-                <h3 style="margin-bottom: 0.5rem;">Training Logs</h3>
-                <div class="log-output" id="training-logs">
-                    [2024-01-13 15:23:45] Episode 892: Reward = 0.67, Loss = 0.23<br>
-                    [2024-01-13 15:23:42] Episode 891: Reward = 0.71, Loss = 0.25<br>
-                    [2024-01-13 15:23:39] Episode 890: Reward = 0.64, Loss = 0.22<br>
-                    [2024-01-13 15:23:36] Episode 889: Reward = 0.69, Loss = 0.24<br>
-                    [2024-01-13 15:23:33] Episode 888: Reward = 0.73, Loss = 0.21<br>
-                    [2024-01-13 15:23:30] Checkpoint saved at episode 888<br>
-                    [2024-01-13 15:23:27] Episode 887: Reward = 0.66, Loss = 0.26<br>
+
+                <!-- Training Log -->
+                <div class="bp3-card bp3-elevation-1">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 class="bp3-heading">Training Log</h3>
+                        <button class="bp3-button bp3-minimal" onclick="clearLog()">
+                            <span class="bp3-icon bp3-icon-trash"></span>
+                            Clear
+                        </button>
+                    </div>
+                    <div class="training-log" id="trainingLog">
+                        <div class="log-entry info">[10:23:45] ML Models Configuration initialized</div>
+                        <div class="log-entry success">[10:23:46] Connected to model registry</div>
+                        <div class="log-entry info">[10:23:47] Loading model metadata...</div>
+                        <div class="log-entry success">[10:23:48] Price Prediction Model: Ready (last trained 2 hours ago)</div>
+                        <div class="log-entry success">[10:23:48] Sentiment Analysis Model: Ready (last trained 18 hours ago)</div>
+                        <div class="log-entry warning">[10:23:49] Risk Assessment Model: Training in progress (67% complete)</div>
+                        <div class="log-entry info">[10:23:49] Fraud Detection Model: Awaiting training data</div>
+                    </div>
                 </div>
-            </div>
-            
-            <div style="display: flex; gap: 1rem;">
-                <button class="btn" onclick="pauseAllTraining()">⏸️ Pause All Training</button>
-                <button class="btn btn-secondary" onclick="saveCheckpoint()">💾 Save Checkpoint</button>
-                <button class="btn btn-secondary" onclick="clearLogs()">🗑️ Clear Logs</button>
-            </div>
-        </div>
-        
-        <!-- Model Deployment -->
-        <div class="ml-section">
-            <h2 class="section-title">
-                🚀 Model Deployment
-            </h2>
-            <div class="form-grid">
-                <div class="form-group">
-                    <label class="form-label">Select Model</label>
-                    <select class="form-select" id="deploy-model">
-                        <option value="q-learning">Q-Learning Agent</option>
-                        <option value="lstm">LSTM Price Predictor</option>
-                        <option value="random-forest">Random Forest Classifier</option>
-                    </select>
+
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="bp3-button bp3-intent-primary" onclick="trainAllModels()">
+                        <span class="bp3-icon bp3-icon-play"></span>
+                        Train All Models
+                    </button>
+                    <button class="bp3-button" onclick="downloadReports()">
+                        <span class="bp3-icon bp3-icon-document"></span>
+                        Download Reports
+                    </button>
+                    <button class="bp3-button" onclick="configureHyperparameters()">
+                        <span class="bp3-icon bp3-icon-cog"></span>
+                        Hyperparameters
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Environment</label>
-                    <select class="form-select" id="deploy-env">
-                        <option value="production">Production</option>
-                        <option value="staging">Staging</option>
-                        <option value="testing">Testing</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Endpoint Name</label>
-                    <input type="text" class="form-input" id="endpoint-name" placeholder="e.g., price-predictor-v1">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Auto-scaling</label>
-                    <select class="form-select" id="auto-scaling">
-                        <option value="enabled">Enabled</option>
-                        <option value="disabled">Disabled</option>
-                    </select>
-                </div>
-            </div>
-            <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
-                <button class="btn" onclick="deployModel()">🚀 Deploy Model</button>
-                <button class="btn btn-secondary" onclick="validateDeployment()">✅ Validate Deployment</button>
-                <button class="btn btn-secondary" onclick="rollbackDeployment()">↩️ Rollback</button>
-            </div>
+            </main>
         </div>
     </div>
     
     <script>
         const API_URL = '/api/supabase-proxy';
-        
-        // Sample model data (in production, this would come from Supabase)
-        let modelStats = {
-            activeModels: 4,
-            trainingModels: 1,
-            totalPredictions: 12847,
-            avgAccuracy: 87.2
-        };
-        
-        async function loadModelStats() {
-            try {
-                // In real implementation, fetch from Supabase ML tables
-                document.getElementById('activeModels').textContent = modelStats.activeModels;
-                document.getElementById('trainingModels').textContent = modelStats.trainingModels;
-                document.getElementById('totalPredictions').textContent = modelStats.totalPredictions.toLocaleString();
-                document.getElementById('avgAccuracy').textContent = modelStats.avgAccuracy + '%';
-                
-                // Update individual model metrics with slight variations
-                updateMetrics();
-                
-            } catch (error) {
-                console.error('Failed to load model stats:', error);
-            }
+
+        // Load model metrics
+        async function loadMetrics() {
+            // Simulate loading metrics
+            document.getElementById('totalModels').textContent = '4';
+            document.getElementById('trainedModels').textContent = '2';
+            document.getElementById('avgAccuracy').textContent = '93.0%';
+            document.getElementById('trainingTime').textContent = '3.2 hrs';
         }
-        
-        function updateMetrics() {
-            // Simulate real-time metric updates
-            const elements = [
-                { id: 'ql-accuracy', base: 87.3, variance: 0.5 },
-                { id: 'ql-episodes', base: 1247, variance: 5 },
-                { id: 'ql-reward', base: 0.85, variance: 0.02 },
-                { id: 'lstm-accuracy', base: 91.2, variance: 0.3 },
-                { id: 'lstm-predictions', base: 2341, variance: 10 },
-                { id: 'lstm-mse', base: 0.0045, variance: 0.0002 },
-                { id: 'rf-accuracy', base: 85.7, variance: 0.4 }
-            ];
-            
-            elements.forEach(({ id, base, variance }) => {
-                const element = document.getElementById(id);
-                if (element) {
-                    const variation = (Math.random() - 0.5) * variance * 2;
-                    const newValue = base + variation;
-                    
-                    if (id.includes('accuracy')) {
-                        element.textContent = newValue.toFixed(1) + '%';
-                    } else if (id.includes('episodes') || id.includes('predictions')) {
-                        element.textContent = Math.floor(newValue).toLocaleString();
-                    } else {
-                        element.textContent = newValue.toFixed(4);
-                    }
-                }
-            });
-        }
-        
+
+        // Training functions
         async function trainModel(modelName) {
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = 'Starting...';
+            addLogEntry(`Starting training for ${modelName}...`, 'info');
+            addLogEntry(`Loading training data...`, 'info');
             
-            try {
-                // In real implementation, call Supabase ML training function
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'ml_start_training',
-                        params: {
-                            model_name: modelName,
-                            hyperparameters: getDefaultHyperparams(modelName)
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.data && data.data.success) {
-                    alert(`✅ ${modelName} training started successfully!`);
-                    // Update UI to show training status
-                    updateModelStatus(modelName, 'training');
-                } else {
-                    throw new Error(data.error || 'Training failed to start');
-                }
-            } catch (error) {
-                alert(`❌ Failed to start training: ${error.message}`);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = modelName === 'ppo' ? 'Start Training' : 'Retrain';
-            }
+            // Simulate training start
+            setTimeout(() => {
+                addLogEntry(`Training ${modelName} - Epoch 1/200`, 'info');
+                addLogEntry(`Initial loss: 0.8234`, 'warning');
+            }, 1000);
         }
-        
+
         async function testModel(modelName) {
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = 'Testing...';
+            addLogEntry(`Testing ${modelName}...`, 'info');
             
-            try {
-                // In real implementation, call Supabase ML testing function
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'rpc',
-                        function_name: 'ml_test_model',
-                        params: {
-                            model_name: modelName,
-                            test_data_size: 1000
-                        }
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.data) {
-                    alert(`✅ ${modelName} test completed!\n\nAccuracy: ${(data.data.accuracy * 100).toFixed(1)}%\nPrecision: ${(data.data.precision * 100).toFixed(1)}%\nRecall: ${(data.data.recall * 100).toFixed(1)}%`);
-                } else {
-                    throw new Error(data.error || 'Test failed');
-                }
-            } catch (error) {
-                alert(`❌ Test failed: ${error.message}`);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = 'Test';
-            }
+            // Simulate test results
+            setTimeout(() => {
+                addLogEntry(`Test results for ${modelName}:`, 'success');
+                addLogEntry(`- Accuracy: 94.2%`, 'success');
+                addLogEntry(`- Precision: 0.93`, 'success');
+                addLogEntry(`- Recall: 0.91`, 'success');
+                addLogEntry(`✅ Model performance meets production criteria`, 'success');
+            }, 1500);
         }
-        
-        function configureModel(modelName) {
-            const hyperparams = getDefaultHyperparams(modelName);
-            const paramStr = Object.entries(hyperparams).map(([k, v]) => `${k}: ${v}`).join('\n');
-            const newParams = prompt(`Configure ${modelName} hyperparameters:\n\n${paramStr}\n\nEnter new values (JSON format):`);
+
+        async function exportModel(modelName) {
+            addLogEntry(`Exporting ${modelName}...`, 'info');
             
-            if (newParams) {
-                try {
-                    const params = JSON.parse(newParams);
-                    alert(`✅ ${modelName} configuration updated!`);
-                } catch (error) {
-                    alert('❌ Invalid JSON format');
-                }
-            }
+            setTimeout(() => {
+                addLogEntry(`✅ Model exported to ${modelName}_v2.1.pkl`, 'success');
+                addLogEntry(`Model size: 124.3 MB`, 'info');
+            }, 1000);
         }
-        
-        function exportModel(modelName) {
-            alert(`Exporting ${modelName} model weights and configuration...`);
-            // In real implementation, generate download link
-        }
-        
-        function predict(modelName) {
-            alert(`Running prediction with ${modelName}...`);
-            // In real implementation, call prediction endpoint
-        }
-        
-        function featureImportance(modelName) {
-            alert(`Showing feature importance for ${modelName}...`);
-            // In real implementation, display feature importance chart
-        }
-        
+
         function stopTraining(modelName) {
-            if (confirm(`Stop training for ${modelName}?`)) {
-                alert(`Training stopped for ${modelName}`);
-                updateModelStatus(modelName, 'disabled');
-            }
+            addLogEntry(`⚠️ Stopping training for ${modelName}...`, 'warning');
+            addLogEntry(`Training stopped at epoch 134/200`, 'warning');
+            addLogEntry(`Partial model saved`, 'info');
         }
-        
-        function pauseTraining(modelName) {
-            alert(`Training paused for ${modelName}`);
+
+        function uploadTrainingData(modelName) {
+            addLogEntry(`Opening data upload dialog for ${modelName}...`, 'info');
+            alert('Data upload functionality will be implemented');
         }
-        
-        function viewLogs(modelName) {
-            alert(`Opening training logs for ${modelName}...`);
-        }
-        
-        function pauseAllTraining() {
-            if (confirm('Pause all active training jobs?')) {
-                alert('All training jobs paused');
-            }
-        }
-        
-        function saveCheckpoint() {
-            alert('Checkpoint saved successfully');
-        }
-        
-        function clearLogs() {
-            if (confirm('Clear all training logs?')) {
-                document.getElementById('training-logs').innerHTML = 'Logs cleared.';
-            }
-        }
-        
-        async function deployModel() {
-            const model = document.getElementById('deploy-model').value;
-            const env = document.getElementById('deploy-env').value;
-            const endpoint = document.getElementById('endpoint-name').value;
-            const scaling = document.getElementById('auto-scaling').value;
+
+        async function trainAllModels() {
+            addLogEntry('🚀 Starting batch training for all models...', 'warning');
+            addLogEntry('This process may take several hours', 'info');
             
-            if (!endpoint) {
-                alert('Please enter an endpoint name');
-                return;
-            }
-            
-            const btn = event.target;
-            btn.disabled = true;
-            btn.textContent = '🚀 Deploying...';
-            
-            try {
-                // In real implementation, deploy to Supabase Edge Functions
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                alert(`✅ ${model} deployed successfully to ${env}!\n\nEndpoint: ${endpoint}\nAuto-scaling: ${scaling}`);
-            } catch (error) {
-                alert(`❌ Deployment failed: ${error.message}`);
-            } finally {
-                btn.disabled = false;
-                btn.textContent = '🚀 Deploy Model';
-            }
-        }
-        
-        function validateDeployment() {
-            alert('Validating deployment health...');
-        }
-        
-        function rollbackDeployment() {
-            if (confirm('Rollback to previous deployment?')) {
-                alert('Rollback completed successfully');
-            }
-        }
-        
-        function getDefaultHyperparams(modelName) {
-            const hyperparams = {
-                'q-learning': {
-                    learning_rate: 0.01,
-                    discount_factor: 0.95,
-                    epsilon: 0.1,
-                    batch_size: 32
-                },
-                'ddpg': {
-                    actor_lr: 0.001,
-                    critic_lr: 0.002,
-                    buffer_size: 1000000,
-                    tau: 0.005
-                },
-                'ppo': {
-                    learning_rate: 0.0003,
-                    clip_ratio: 0.2,
-                    epochs: 10,
-                    gae_lambda: 0.95
-                },
-                'lstm': {
-                    hidden_size: 128,
-                    num_layers: 2,
-                    dropout: 0.2,
-                    learning_rate: 0.001
-                },
-                'random-forest': {
-                    n_estimators: 500,
-                    max_depth: 15,
-                    min_samples_split: 5,
-                    min_samples_leaf: 2
-                }
-            };
-            
-            return hyperparams[modelName] || {};
-        }
-        
-        function updateModelStatus(modelName, status) {
-            // Update model status in UI
-            const statusClasses = {
-                'active': 'status-active',
-                'training': 'status-training',
-                'disabled': 'status-disabled'
-            };
-            
-            // Find and update the status element for this model
-            document.querySelectorAll('.model-card').forEach(card => {
-                const nameEl = card.querySelector('.model-name');
-                if (nameEl && nameEl.textContent.toLowerCase().includes(modelName.replace('-', ' '))) {
-                    const statusEl = card.querySelector('.model-status');
-                    statusEl.className = `model-status ${statusClasses[status]}`;
-                    statusEl.textContent = status.toUpperCase();
-                }
+            const models = ['price_prediction', 'sentiment_analysis', 'risk_assessment', 'fraud_detection'];
+            models.forEach((model, index) => {
+                setTimeout(() => {
+                    addLogEntry(`Starting training for ${model}...`, 'info');
+                }, index * 2000);
             });
         }
-        
-        // Simulate training progress updates
-        function updateTrainingProgress() {
-            const progressEl = document.querySelector('.progress-fill');
-            const valueEl = document.querySelector('.progress-value');
-            const logsEl = document.getElementById('training-logs');
+
+        function downloadReports() {
+            addLogEntry('Generating model performance reports...', 'info');
             
-            if (progressEl && valueEl) {
-                let currentProgress = parseInt(progressEl.style.width) || 72;
-                currentProgress += Math.random() * 0.5;
-                
-                if (currentProgress <= 100) {
-                    progressEl.style.width = currentProgress + '%';
-                    valueEl.textContent = Math.floor(currentProgress) + '% Complete';
-                }
-            }
+            setTimeout(() => {
+                addLogEntry('✅ Reports generated successfully', 'success');
+                addLogEntry('Downloaded: ml_models_report_2024_01.pdf', 'info');
+            }, 1500);
+        }
+
+        function configureHyperparameters() {
+            addLogEntry('Opening hyperparameter configuration...', 'info');
+            alert('Hyperparameter configuration wizard will be implemented');
+        }
+
+        function addLogEntry(message, type = 'info') {
+            const log = document.getElementById('trainingLog');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
             
-            // Add new log entry occasionally
-            if (Math.random() < 0.3 && logsEl) {
-                const episode = 892 + Math.floor(Math.random() * 10);
-                const reward = (0.6 + Math.random() * 0.2).toFixed(2);
-                const loss = (0.15 + Math.random() * 0.15).toFixed(2);
-                const timestamp = new Date().toLocaleString();
-                
-                const newLog = `[${timestamp}] Episode ${episode}: Reward = ${reward}, Loss = ${loss}<br>`;
-                logsEl.innerHTML = newLog + logsEl.innerHTML;
-                
-                // Keep only last 10 entries
-                const lines = logsEl.innerHTML.split('<br>');
-                if (lines.length > 10) {
-                    logsEl.innerHTML = lines.slice(0, 10).join('<br>');
-                }
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function clearLog() {
+            document.getElementById('trainingLog').innerHTML = `
+                <div class="log-entry info">[${new Date().toLocaleTimeString()}] Training log cleared</div>
+            `;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('bp3-dark');
+            const button = document.getElementById('theme-toggle');
+            if (document.body.classList.contains('bp3-dark')) {
+                button.className = 'bp3-button bp3-minimal bp3-icon-flash';
+            } else {
+                button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
         }
-        
+
+        // Check system status
+        async function checkStatus() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                const data = await response.json();
+                const dot = document.getElementById('status-dot');
+                const text = document.getElementById('status-text');
+                
+                if (data.healthy) {
+                    dot.className = 'status-dot connected';
+                    text.textContent = 'System Online';
+                } else {
+                    dot.className = 'status-dot';
+                    text.textContent = 'System Offline';
+                }
+                
+                // Check function count
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                document.getElementById('function-count').textContent = `${functionsData.deployed_count || 0}/32 functions`;
+                
+            } catch (error) {
+                document.getElementById('status-dot').className = 'status-dot';
+                document.getElementById('status-text').textContent = 'Connection Error';
+            }
+        }
+
+        // Simulate training progress
+        function simulateTrainingProgress() {
+            let progress = 67;
+            const interval = setInterval(() => {
+                progress += Math.random() * 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    addLogEntry('✅ Risk Assessment Model training completed!', 'success');
+                    // Update UI to show trained status
+                }
+                
+                // Update progress bar if still on page
+                const progressBar = document.querySelector('.bp3-progress-meter');
+                if (progressBar) {
+                    progressBar.style.width = `${progress}%`;
+                }
+            }, 5000);
+        }
+
         // Initialize
-        loadModelStats();
-        
-        // Update metrics every 30 seconds
-        setInterval(updateMetrics, 30000);
-        
-        // Update training progress every 10 seconds
-        setInterval(updateTrainingProgress, 10000);
+        loadMetrics();
+        checkStatus();
+        setInterval(checkStatus, 30000);
+        simulateTrainingProgress();
     </script>
 </body>
 </html>

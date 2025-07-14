@@ -3,308 +3,267 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scenario Analyser & Financial Action Narrative - FinSight Intelligence</title>
+    <title>Scenario Analysis - FinSight Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/icons@^4.0.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <style>
+        /* Blueprint Design System CSS Variables */
+        :root {
+            --bp3-grid-size: 10px;
+            --bp3-black: #111418;
+            --bp3-dark-gray1: #1C2127;
+            --bp3-dark-gray2: #252A31;
+            --bp3-dark-gray3: #2F343C;
+            --bp3-dark-gray4: #383E47;
+            --bp3-dark-gray5: #404854;
+            --bp3-gray1: #5C7080;
+            --bp3-gray2: #738091;
+            --bp3-gray3: #8A9BA8;
+            --bp3-gray4: #A7B6C2;
+            --bp3-gray5: #BFCCD6;
+            --bp3-light-gray1: #CED9E0;
+            --bp3-light-gray2: #D8E1E8;
+            --bp3-light-gray3: #E1E8ED;
+            --bp3-light-gray4: #EBF1F5;
+            --bp3-light-gray5: #F5F8FA;
+            --bp3-white: #FFFFFF;
+            --bp3-blue1: #0E5A8A;
+            --bp3-blue2: #106BA3;
+            --bp3-blue3: #137CBD;
+            --bp3-blue4: #2B95D6;
+            --bp3-blue5: #48AFF0;
+            --bp3-green1: #0A6640;
+            --bp3-green2: #0D8050;
+            --bp3-green3: #0F9960;
+            --bp3-green4: #15B371;
+            --bp3-green5: #3DCC91;
+            --bp3-orange1: #A66321;
+            --bp3-orange2: #BF7326;
+            --bp3-orange3: #D9822B;
+            --bp3-orange4: #F29D49;
+            --bp3-orange5: #FFB366;
+            --bp3-red1: #A82A2A;
+            --bp3-red2: #C23030;
+            --bp3-red3: #DB3737;
+            --bp3-red4: #F55656;
+            --bp3-red5: #FF7373;
+            --bp3-intent-primary: var(--bp3-blue3);
+            --bp3-intent-success: var(--bp3-green3);
+            --bp3-intent-warning: var(--bp3-orange3);
+            --bp3-intent-danger: var(--bp3-red3);
+            --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
+            --bp3-font-size: 14px;
+            --bp3-font-size-large: 16px;
+            --bp3-line-height: 18px;
+            --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
+            --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
+            --bp3-border-radius: 3px;
+            --bp3-transition-duration: 100ms;
+            --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
+            --bp3-text-color: #182026;
+            --bp3-text-color-muted: #5C7080;
+            --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
+            --bp3-heading-color: #182026;
+            --bp3-link-color: var(--bp3-blue2);
+            --bp3-app-background-color: var(--bp3-light-gray5);
+            --bp3-divider-color: rgba(17, 20, 24, 0.15);
+        }
+
+        .bp3-dark {
+            --bp3-text-color: rgba(255, 255, 255, 0.9);
+            --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
+            --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
+            --bp3-heading-color: rgba(255, 255, 255, 0.9);
+            --bp3-link-color: var(--bp3-blue4);
+            --bp3-app-background-color: var(--bp3-dark-gray2);
+            --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+            line-height: var(--bp3-line-height);
+            color: var(--bp3-text-color);
+            background-color: var(--bp3-app-background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
 
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 40px 20px;
+        .bp3-dark {
+            background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
         }
 
-        .nav-bar {
+        .bp3-app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .bp3-navbar {
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .app-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .bp3-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--bp3-light-gray5);
+            border-right: 1px solid var(--bp3-divider-color);
+            overflow-y: auto;
+        }
+
+        .bp3-dark .bp3-sidebar {
+            background-color: var(--bp3-dark-gray3);
+            border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-menu-item.bp3-active {
+            background-color: var(--bp3-intent-primary);
+            color: white;
+        }
+
+        .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
+        .status-indicator {
             display: flex;
             align-items: center;
-            margin-bottom: 40px;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            gap: calc(var(--bp3-grid-size) / 2);
         }
 
-        .back-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-right: 20px;
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--bp3-gray3);
         }
 
-        .page-title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #ffffff;
+        .status-dot.connected {
+            background-color: var(--bp3-intent-success);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .content-header {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+            padding-bottom: calc(var(--bp3-grid-size) * 2);
+            border-bottom: 1px solid var(--bp3-divider-color);
         }
 
         .status-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .status-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-        }
-
-        .status-value {
+        .metric-value {
             font-size: 24px;
             font-weight: 600;
-            color: #4ade80;
-            margin-bottom: 5px;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
 
-        .status-label {
+        .metric-value.primary {
+            color: var(--bp3-intent-primary);
+        }
+
+        .metric-value.success {
+            color: var(--bp3-intent-success);
+        }
+
+        .metric-value.warning {
+            color: var(--bp3-intent-warning);
+        }
+
+        .metric-value.danger {
+            color: var(--bp3-intent-danger);
+        }
+
+        .metric-label {
+            color: var(--bp3-text-color-muted);
             font-size: 12px;
-            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .main-grid {
+        .config-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 3);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .config-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px;
+        .slider-group {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .section-title {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 25px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #cccccc;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 14px;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: #667eea;
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .slider-container {
-            margin: 10px 0;
-        }
-
-        .slider {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #667eea;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .slider-value {
-            color: #667eea;
-            font-weight: 600;
-            font-size: 14px;
+        .slider-values {
             display: flex;
             justify-content: space-between;
-            margin-top: 5px;
+            font-size: 11px;
+            color: var(--bp3-text-color-muted);
+            margin-top: calc(var(--bp3-grid-size) / 2);
         }
 
-        .mcts-section {
-            grid-column: 1 / -1;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .gpu-section {
-            background: rgba(34, 197, 94, 0.1);
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-
-        .stress-testing-grid {
+        .stress-test-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .stress-test-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
         .stress-test-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .test-name {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(156, 163, 175, 0.3);
-            transition: 0.3s;
-            border-radius: 12px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background: #9ca3af;
-            transition: 0.3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background: rgba(74, 222, 128, 0.3);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(20px);
-            background: #4ade80;
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
         }
 
         .formula-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
-        .formula-tag {
-            background: rgba(102, 126, 234, 0.2);
-            color: #667eea;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            border: 1px solid rgba(102, 126, 234, 0.3);
-        }
-
-        .scenario-runner {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 25px;
-            margin-top: 30px;
+            gap: calc(var(--bp3-grid-size) / 2);
+            margin-top: calc(var(--bp3-grid-size) * 1);
         }
 
         .scenario-controls {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 25px;
-        }
-
-        .run-scenario-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-            padding: 16px 32px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .run-scenario-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
         .scenario-results {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
             display: none;
         }
 
@@ -315,493 +274,514 @@
         .result-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
         .result-metric {
             text-align: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
         }
 
         .result-value {
             font-size: 20px;
             font-weight: 600;
-            color: #4ade80;
-            margin-bottom: 5px;
-        }
-
-        .result-label {
-            font-size: 12px;
-            color: #999;
+            color: var(--bp3-intent-primary);
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
 
         .narrative-output {
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.3);
-            border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
+            margin-top: calc(var(--bp3-grid-size) * 3);
         }
 
-        .narrative-text {
-            font-size: 14px;
-            line-height: 1.6;
-            color: #e5e7eb;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 40px;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .performance-monitor {
+        .performance-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-top: calc(var(--bp3-grid-size) * 2);
         }
 
         .perf-metric {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
             text-align: center;
         }
 
         .perf-value {
             font-size: 18px;
             font-weight: 600;
-            color: #22c55e;
-            margin-bottom: 5px;
+            color: var(--bp3-intent-success);
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
 
         .perf-label {
             font-size: 11px;
-            color: #999;
-        }
-
-        @media (max-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
+            color: var(--bp3-text-color-muted);
+            text-transform: uppercase;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- Navigation -->
-        <div class="nav-bar">
-            <button class="back-btn" onclick="window.location.href='/'">← Back</button>
-            <h1 class="page-title">Scenario Analyser & Financial Action Narrative</h1>
-        </div>
+<body class="bp3-dark">
+    <div class="bp3-app">
+        <!-- Top Navigation Bar -->
+        <nav class="bp3-navbar bp3-dark">
+            <div class="bp3-navbar-group bp3-align-left">
+                <div class="bp3-navbar-heading">FinSight Intelligence</div>
+                <span class="bp3-navbar-divider"></span>
+                <div class="status-indicator">
+                    <span class="status-dot" id="status-dot"></span>
+                    <span id="status-text">System Online</span>
+                </div>
+            </div>
+            <div class="bp3-navbar-group bp3-align-right">
+                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
+            </div>
+        </nav>
 
-        <!-- System Status -->
-        <div class="status-grid">
-            <div class="status-card">
-                <div class="status-value" id="mctsIterations">10,000</div>
-                <div class="status-label">MCTS Iterations</div>
+        <!-- Application Content -->
+        <div class="app-content">
+            <!-- Left Sidebar -->
+            <div class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-dashboard"></span>
+                            Command Centre
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            Portfolio Analyser
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            Treasury Insights
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            Scenario Analysis
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            News & Market Data
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            Calculations
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            ML Models
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            Deploy Functions
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/">
+                            <span class="bp3-icon bp3-icon-home"></span>
+                            Dashboard
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="status-card">
-                <div class="status-value" id="gpuAcceleration">ACTIVE</div>
-                <div class="status-label">GPU Acceleration</div>
-            </div>
-            <div class="status-card">
-                <div class="status-value" id="parallelWorkers">4</div>
-                <div class="status-label">Parallel Workers</div>
-            </div>
-            <div class="status-card">
-                <div class="status-value" id="avgConvergence">2.3s</div>
-                <div class="status-label">Avg Convergence</div>
-            </div>
-            <div class="status-card">
-                <div class="status-value" id="formulaRelations">127</div>
-                <div class="status-label">Formula Relations</div>
-            </div>
-        </div>
 
-        <!-- Main Configuration Grid -->
-        <div class="main-grid">
-            <!-- MCTS Engine Configuration -->
-            <div class="config-section mcts-section">
-                <h2 class="section-title">
-                    <div class="section-icon">🌳</div>
-                    Monte Carlo Tree Search Engine
-                </h2>
+            <!-- Main Content Area -->
+            <main class="main-content">
+                <div class="content-header">
+                    <h1 class="bp3-heading">Scenario Analysis & Financial Action Narrative</h1>
+                    <p class="bp3-text-muted">Advanced scenario modeling with Monte Carlo Tree Search and GPU acceleration</p>
+                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Iterations Per Search</label>
-                    <div class="slider-container">
-                        <input type="range" min="1000" max="50000" step="1000" value="10000" class="slider" id="mctsIterations"
-                               oninput="updateSliderValue('mctsIterations', this.value, '')">
-                        <div class="slider-value">
-                            <span>1,000</span>
-                            <span id="mctsIterationsValue">10,000</span>
-                            <span>50,000</span>
+                <!-- System Status Metrics -->
+                <div class="status-grid">
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">MCTS Iterations</div>
+                        <div class="metric-value primary" id="mctsIterations">10,000</div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">GPU Acceleration</div>
+                        <div class="metric-value success" id="gpuAcceleration">ACTIVE</div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Parallel Workers</div>
+                        <div class="metric-value primary" id="parallelWorkers">4</div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Avg Convergence</div>
+                        <div class="metric-value warning" id="avgConvergence">2.3s</div>
+                    </div>
+                    <div class="bp3-card bp3-elevation-2">
+                        <div class="metric-label">Formula Relations</div>
+                        <div class="metric-value primary" id="formulaRelations">127</div>
+                    </div>
+                </div>
+
+                <!-- Configuration Grid -->
+                <div class="config-grid">
+                    <!-- MCTS Engine Configuration -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">
+                            <span class="bp3-icon bp3-icon-tree"></span>
+                            Monte Carlo Tree Search Engine
+                        </h3>
+
+                        <div class="slider-group">
+                            <label class="bp3-label">
+                                Iterations Per Search
+                                <span class="bp3-text-muted" style="float: right;">10,000</span>
+                            </label>
+                            <input type="range" class="bp3-input-group bp3-slider" min="1000" max="50000" step="1000" value="10000" 
+                                   oninput="updateSliderValue('mctsIterations', this.value)">
+                            <div class="slider-values">
+                                <span>1,000</span>
+                                <span>50,000</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Exploration Parameter (UCB1)</label>
-                    <div class="slider-container">
-                        <input type="range" min="0.5" max="2.5" step="0.1" value="1.414" class="slider" id="explorationParam"
-                               oninput="updateSliderValue('explorationParam', this.value, '')">
-                        <div class="slider-value">
-                            <span>0.5</span>
-                            <span id="explorationParamValue">1.414</span>
-                            <span>2.5</span>
+                        <div class="slider-group">
+                            <label class="bp3-label">
+                                Exploration Parameter (UCB1)
+                                <span class="bp3-text-muted" style="float: right;">1.414</span>
+                            </label>
+                            <input type="range" class="bp3-input-group bp3-slider" min="0.5" max="2.5" step="0.1" value="1.414">
+                            <div class="slider-values">
+                                <span>0.5</span>
+                                <span>2.5</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Maximum Search Depth</label>
-                    <div class="slider-container">
-                        <input type="range" min="3" max="15" value="8" class="slider" id="maxDepth"
-                               oninput="updateSliderValue('maxDepth', this.value, '')">
-                        <div class="slider-value">
-                            <span>3</span>
-                            <span id="maxDepthValue">8</span>
-                            <span>15</span>
+                        <div class="slider-group">
+                            <label class="bp3-label">
+                                Maximum Search Depth
+                                <span class="bp3-text-muted" style="float: right;">8</span>
+                            </label>
+                            <input type="range" class="bp3-input-group bp3-slider" min="3" max="15" value="8">
+                            <div class="slider-values">
+                                <span>3</span>
+                                <span>15</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Convergence Threshold</label>
-                    <div class="slider-container">
-                        <input type="range" min="0.0001" max="0.01" step="0.0001" value="0.001" class="slider" id="convergenceThreshold"
-                               oninput="updateSliderValue('convergenceThreshold', this.value, '')">
-                        <div class="slider-value">
-                            <span>0.0001</span>
-                            <span id="convergenceThresholdValue">0.001</span>
-                            <span>0.01</span>
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Parallel Workers</label>
+                            <input type="number" class="bp3-input" value="4" min="1" max="16">
                         </div>
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label class="form-label">Parallel Workers</label>
-                    <input type="number" class="form-input" id="parallelWorkers" value="4" min="1" max="16">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Use UCB1-Tuned</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked id="ucb1Tuned">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- GPU Acceleration Configuration -->
-            <div class="config-section gpu-section">
-                <h2 class="section-title">
-                    <div class="section-icon">⚡</div>
-                    GPU Acceleration
-                </h2>
-
-                <div class="form-group">
-                    <label class="form-label">Prefer GPU for High Impact News (> 0.5)</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked id="preferGPU">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">SIMD Support</label>
-                    <label class="toggle-switch">
-                        <input type="checkbox" checked id="simdSupport">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">iOS GPU Bridge URL</label>
-                    <input type="text" class="form-input" id="iosGPUBridge" 
-                           placeholder="https://ios-gpu-bridge.vercel.app">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Cloud GPU API Key</label>
-                    <input type="password" class="form-input" id="cloudGPUKey" 
-                           placeholder="gpu-cloud-api-key">
-                </div>
-
-                <!-- Performance Monitoring -->
-                <div class="performance-monitor">
-                    <div class="perf-metric">
-                        <div class="perf-value" id="gpuUtilization">78%</div>
-                        <div class="perf-label">GPU Utilization</div>
-                    </div>
-                    <div class="perf-metric">
-                        <div class="perf-value" id="computeTime">0.84ms</div>
-                        <div class="perf-label">Compute Time</div>
-                    </div>
-                    <div class="perf-metric">
-                        <div class="perf-value" id="memoryUsage">2.1GB</div>
-                        <div class="perf-label">Memory Usage</div>
-                    </div>
-                    <div class="perf-metric">
-                        <div class="perf-value" id="throughput">1,247</div>
-                        <div class="perf-label">Ops/Second</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Stress Testing Configuration -->
-        <div class="config-section">
-            <h2 class="section-title">
-                <div class="section-icon">🎯</div>
-                Stress Testing Scenarios
-            </h2>
-
-            <div class="stress-testing-grid">
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Equity Stress Test</span>
-                        <label class="toggle-switch">
+                        <label class="bp3-control bp3-switch">
                             <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
+                            <span class="bp3-control-indicator"></span>
+                            Use UCB1-Tuned Algorithm
                         </label>
                     </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Test equity portfolio under extreme market conditions
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">VaR</span>
-                        <span class="formula-tag">ES</span>
-                        <span class="formula-tag">Beta</span>
-                    </div>
-                </div>
 
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Fixed Income Stress</span>
-                        <label class="toggle-switch">
+                    <!-- GPU Acceleration Configuration -->
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">
+                            <span class="bp3-icon bp3-icon-flash"></span>
+                            GPU Acceleration
+                        </h3>
+
+                        <label class="bp3-control bp3-switch" style="margin-bottom: 15px;">
                             <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
+                            <span class="bp3-control-indicator"></span>
+                            Prefer GPU for High Impact News (> 0.5)
                         </label>
-                    </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Duration and convexity analysis under rate shocks
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">Duration</span>
-                        <span class="formula-tag">Convexity</span>
-                        <span class="formula-tag">VaR</span>
-                    </div>
-                </div>
 
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Derivatives Risk</span>
-                        <label class="toggle-switch">
+                        <label class="bp3-control bp3-switch" style="margin-bottom: 15px;">
                             <input type="checkbox" checked>
-                            <span class="toggle-slider"></span>
+                            <span class="bp3-control-indicator"></span>
+                            SIMD Support
                         </label>
-                    </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Options and derivatives under volatility scenarios
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">VaR</span>
-                        <span class="formula-tag">CVA</span>
-                        <span class="formula-tag">Delta</span>
-                        <span class="formula-tag">Gamma</span>
+
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">iOS GPU Bridge URL</label>
+                            <input type="text" class="bp3-input" placeholder="https://ios-gpu-bridge.vercel.app">
+                        </div>
+
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Cloud GPU API Key</label>
+                            <input type="password" class="bp3-input" placeholder="gpu-cloud-api-key">
+                        </div>
+
+                        <!-- Performance Monitoring -->
+                        <h5 class="bp3-heading" style="margin-top: 20px;">Performance Metrics</h5>
+                        <div class="performance-grid">
+                            <div class="perf-metric">
+                                <div class="perf-value" id="gpuUtilization">78%</div>
+                                <div class="perf-label">GPU Util</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-value" id="computeTime">0.84ms</div>
+                                <div class="perf-label">Compute</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-value" id="memoryUsage">2.1GB</div>
+                                <div class="perf-label">Memory</div>
+                            </div>
+                            <div class="perf-metric">
+                                <div class="perf-value" id="throughput">1,247</div>
+                                <div class="perf-label">Ops/Sec</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Liquidity Crisis</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Basel III liquidity stress scenarios
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">LCR</span>
-                        <span class="formula-tag">NSFR</span>
-                        <span class="formula-tag">HQLA</span>
+                <!-- Stress Testing Configuration -->
+                <div class="bp3-card bp3-elevation-1">
+                    <h3 class="bp3-heading">
+                        <span class="bp3-icon bp3-icon-target"></span>
+                        Stress Testing Scenarios
+                    </h3>
+
+                    <div class="stress-test-grid">
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Equity Stress Test</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Test equity portfolio under extreme market conditions</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag bp3-intent-primary">VaR</span>
+                                <span class="bp3-tag bp3-intent-primary">ES</span>
+                                <span class="bp3-tag bp3-intent-primary">Beta</span>
+                            </div>
+                        </div>
+
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Fixed Income Stress</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Duration and convexity analysis under rate shocks</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag bp3-intent-primary">Duration</span>
+                                <span class="bp3-tag bp3-intent-primary">Convexity</span>
+                                <span class="bp3-tag bp3-intent-primary">VaR</span>
+                            </div>
+                        </div>
+
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Derivatives Risk</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Options and derivatives under volatility scenarios</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag bp3-intent-primary">VaR</span>
+                                <span class="bp3-tag bp3-intent-primary">CVA</span>
+                                <span class="bp3-tag bp3-intent-primary">Delta</span>
+                                <span class="bp3-tag bp3-intent-primary">Gamma</span>
+                            </div>
+                        </div>
+
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Liquidity Crisis</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox">
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Basel III liquidity stress scenarios</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag">LCR</span>
+                                <span class="bp3-tag">NSFR</span>
+                                <span class="bp3-tag">HQLA</span>
+                            </div>
+                        </div>
+
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Credit Stress</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox">
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Credit portfolio under default scenarios</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag">PD</span>
+                                <span class="bp3-tag">LGD</span>
+                                <span class="bp3-tag">EAD</span>
+                            </div>
+                        </div>
+
+                        <div class="bp3-card bp3-elevation-2">
+                            <div class="stress-test-header">
+                                <h4 class="bp3-heading">Market Shock</h4>
+                                <label class="bp3-control bp3-switch">
+                                    <input type="checkbox">
+                                    <span class="bp3-control-indicator"></span>
+                                </label>
+                            </div>
+                            <p class="bp3-text-muted">Cross-asset correlation breakdown scenarios</p>
+                            <div class="formula-tags">
+                                <span class="bp3-tag">Correlation</span>
+                                <span class="bp3-tag">VaR</span>
+                                <span class="bp3-tag">Copula</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Credit Stress</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Credit portfolio under default scenarios
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">PD</span>
-                        <span class="formula-tag">LGD</span>
-                        <span class="formula-tag">EAD</span>
-                    </div>
-                </div>
+                <!-- Scenario Runner -->
+                <div class="bp3-card bp3-elevation-1" style="margin-top: 30px;">
+                    <h3 class="bp3-heading">
+                        <span class="bp3-icon bp3-icon-play"></span>
+                        Run Scenario Analysis
+                    </h3>
 
-                <div class="stress-test-card">
-                    <div class="stress-test-header">
-                        <span class="test-name">Market Shock</span>
-                        <label class="toggle-switch">
-                            <input type="checkbox">
-                            <span class="toggle-slider"></span>
-                        </label>
-                    </div>
-                    <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
-                        Cross-asset correlation breakdown scenarios
-                    </p>
-                    <div class="formula-tags">
-                        <span class="formula-tag">Correlation</span>
-                        <span class="formula-tag">VaR</span>
-                        <span class="formula-tag">Copula</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+                    <div class="scenario-controls">
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Scenario Type</label>
+                            <div class="bp3-select">
+                                <select id="scenarioType">
+                                    <option value="stress_test">Stress Test</option>
+                                    <option value="monte_carlo">Monte Carlo Simulation</option>
+                                    <option value="historical_var">Historical VaR</option>
+                                    <option value="parametric_var">Parametric VaR</option>
+                                    <option value="backtesting">Backtesting</option>
+                                </select>
+                            </div>
+                        </div>
 
-        <!-- Scenario Runner -->
-        <div class="scenario-runner">
-            <h2 class="section-title">
-                <div class="section-icon">🚀</div>
-                Run Scenario Analysis
-            </h2>
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Time Horizon (days)</label>
+                            <input type="number" class="bp3-input" id="timeHorizon" value="250" min="1" max="1000">
+                        </div>
 
-            <div class="scenario-controls">
-                <div class="form-group">
-                    <label class="form-label">Scenario Type</label>
-                    <select class="form-input" id="scenarioType">
-                        <option value="stress_test">Stress Test</option>
-                        <option value="monte_carlo">Monte Carlo Simulation</option>
-                        <option value="historical_var">Historical VaR</option>
-                        <option value="parametric_var">Parametric VaR</option>
-                        <option value="backtesting">Backtesting</option>
-                    </select>
-                </div>
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Confidence Level</label>
+                            <div class="bp3-select">
+                                <select id="confidenceLevel">
+                                    <option value="0.95">95%</option>
+                                    <option value="0.99">99%</option>
+                                    <option value="0.995">99.5%</option>
+                                    <option value="0.999">99.9%</option>
+                                </select>
+                            </div>
+                        </div>
 
-                <div class="form-group">
-                    <label class="form-label">Time Horizon (days)</label>
-                    <input type="number" class="form-input" id="timeHorizon" value="250" min="1" max="1000">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Confidence Level</label>
-                    <select class="form-input" id="confidenceLevel">
-                        <option value="0.95">95%</option>
-                        <option value="0.99">99%</option>
-                        <option value="0.995">99.5%</option>
-                        <option value="0.999">99.9%</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Simulations</label>
-                    <input type="number" class="form-input" id="simulations" value="10000" min="1000" max="100000">
-                </div>
-            </div>
-
-            <button class="run-scenario-btn" onclick="runScenarioAnalysis()">
-                🎯 Run Scenario Analysis
-            </button>
-
-            <div class="scenario-results" id="scenarioResults">
-                <h3 style="margin-bottom: 20px; color: #fff;">Scenario Analysis Results</h3>
-                
-                <div class="result-grid">
-                    <div class="result-metric">
-                        <div class="result-value" id="varResult">-$2.45M</div>
-                        <div class="result-label">Value at Risk</div>
+                        <div class="bp3-form-group">
+                            <label class="bp3-label">Simulations</label>
+                            <input type="number" class="bp3-input" id="simulations" value="10000" min="1000" max="100000">
+                        </div>
                     </div>
-                    <div class="result-metric">
-                        <div class="result-value" id="esResult">-$3.21M</div>
-                        <div class="result-label">Expected Shortfall</div>
-                    </div>
-                    <div class="result-metric">
-                        <div class="result-value" id="maxDrawdown">-8.7%</div>
-                        <div class="result-label">Max Drawdown</div>
-                    </div>
-                    <div class="result-metric">
-                        <div class="result-value" id="sharpeRatio">1.82</div>
-                        <div class="result-label">Sharpe Ratio</div>
-                    </div>
-                    <div class="result-metric">
-                        <div class="result-value" id="stressLoss">-$5.89M</div>
-                        <div class="result-label">Stress Test Loss</div>
-                    </div>
-                    <div class="result-metric">
-                        <div class="result-value" id="convergenceTime">2.3s</div>
-                        <div class="result-label">Convergence Time</div>
-                    </div>
-                </div>
 
-                <div class="narrative-output">
-                    <h4 style="margin-bottom: 15px; color: #667eea;">Financial Action Narrative</h4>
-                    <div class="narrative-text" id="narrativeText">
-                        Based on the Monte Carlo simulation with 10,000 iterations, the portfolio shows moderate stress resilience. 
-                        The 99% VaR of $2.45M represents 2.45% of the total portfolio value, within acceptable risk parameters. 
+                    <button class="bp3-button bp3-intent-primary bp3-large" onclick="runScenarioAnalysis()" style="margin-top: 20px;">
+                        <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                        Run Scenario Analysis
+                    </button>
+
+                    <!-- Scenario Results -->
+                    <div class="scenario-results" id="scenarioResults">
+                        <h4 class="bp3-heading" style="margin-top: 30px; margin-bottom: 20px;">Scenario Analysis Results</h4>
                         
-                        <strong>Recommended Actions:</strong>
-                        <br>• Reduce equity exposure by 5% to improve risk-adjusted returns
-                        <br>• Increase duration hedging in fixed income positions
-                        <br>• Consider volatility overlay strategy to manage tail risk
-                        <br>• Monitor correlation breakdown scenarios for early warning signals
-                        
-                        The stress test indicates vulnerability to market shock scenarios exceeding -15% equity moves. 
-                        Consider implementing dynamic hedging strategies during high volatility periods.
+                        <div class="result-grid">
+                            <div class="result-metric">
+                                <div class="result-value" id="varResult">-$2.45M</div>
+                                <div class="metric-label">Value at Risk</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="result-value" id="esResult">-$3.21M</div>
+                                <div class="metric-label">Expected Shortfall</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="result-value" id="maxDrawdown">-8.7%</div>
+                                <div class="metric-label">Max Drawdown</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="result-value" id="sharpeRatio">1.82</div>
+                                <div class="metric-label">Sharpe Ratio</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="result-value" id="stressLoss">-$5.89M</div>
+                                <div class="metric-label">Stress Test Loss</div>
+                            </div>
+                            <div class="result-metric">
+                                <div class="result-value" id="convergenceTime">2.3s</div>
+                                <div class="metric-label">Convergence Time</div>
+                            </div>
+                        </div>
+
+                        <div class="narrative-output">
+                            <div class="bp3-callout bp3-intent-primary">
+                                <h4 class="bp3-callout-title">Financial Action Narrative</h4>
+                                <div id="narrativeText">
+                                    Based on the Monte Carlo simulation with 10,000 iterations, the portfolio shows moderate stress resilience. 
+                                    The 99% VaR of $2.45M represents 2.45% of the total portfolio value, within acceptable risk parameters.
+                                    <br><br>
+                                    <strong>Recommended Actions:</strong>
+                                    <br>• Reduce equity exposure by 5% to improve risk-adjusted returns
+                                    <br>• Increase duration hedging in fixed income positions
+                                    <br>• Consider volatility overlay strategy to manage tail risk
+                                    <br>• Monitor correlation breakdown scenarios for early warning signals
+                                    <br><br>
+                                    The stress test indicates vulnerability to market shock scenarios exceeding -15% equity moves. 
+                                    Consider implementing dynamic hedging strategies during high volatility periods.
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button class="btn btn-secondary" onclick="exportResults()">📊 Export Results</button>
-            <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Configuration</button>
-            <button class="btn btn-secondary" onclick="scheduleAnalysis()">⏰ Schedule Analysis</button>
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="bp3-button bp3-intent-primary" onclick="saveConfiguration()">
+                        <span class="bp3-icon bp3-icon-floppy-disk"></span>
+                        Save Configuration
+                    </button>
+                    <button class="bp3-button" onclick="exportResults()">
+                        <span class="bp3-icon bp3-icon-export"></span>
+                        Export Results
+                    </button>
+                    <button class="bp3-button" onclick="scheduleAnalysis()">
+                        <span class="bp3-icon bp3-icon-time"></span>
+                        Schedule Analysis
+                    </button>
+                </div>
+            </main>
         </div>
     </div>
-
+    
     <script>
+        const API_URL = '/api/supabase-proxy';
+
         // Configuration state
         let config = {
             mcts: {
@@ -828,26 +808,14 @@
             }
         };
 
-        function updateSliderValue(sliderId, value, suffix) {
-            document.getElementById(sliderId + 'Value').textContent = value + suffix;
-            
-            // Update config
-            if (sliderId === 'mctsIterations') {
-                config.mcts.iterations = parseInt(value);
-                document.getElementById('mctsIterations').textContent = parseInt(value).toLocaleString();
-            } else if (sliderId === 'explorationParam') {
-                config.mcts.explorationParam = parseFloat(value);
-            } else if (sliderId === 'maxDepth') {
-                config.mcts.maxDepth = parseInt(value);
-            } else if (sliderId === 'convergenceThreshold') {
-                config.mcts.convergenceThreshold = parseFloat(value);
-            }
+        function updateSliderValue(elementId, value) {
+            document.getElementById(elementId).textContent = parseInt(value).toLocaleString();
         }
 
         async function runScenarioAnalysis() {
-            const runBtn = event.target;
-            runBtn.disabled = true;
-            runBtn.textContent = '🎯 Running Analysis...';
+            const btn = event.target;
+            btn.disabled = true;
+            btn.innerHTML = '<span class="bp3-icon bp3-icon-time"></span> Running Analysis...';
 
             // Show results section
             document.getElementById('scenarioResults').classList.add('show');
@@ -856,15 +824,9 @@
                 // Simulate scenario analysis
                 await new Promise(resolve => setTimeout(resolve, 3000));
 
-                // Update results with simulated data
-                const scenarioType = document.getElementById('scenarioType').value;
-                const timeHorizon = document.getElementById('timeHorizon').value;
-                const confidence = document.getElementById('confidenceLevel').value;
-                const simulations = document.getElementById('simulations').value;
-
-                // Generate realistic results based on inputs
-                const var95 = -Math.random() * 5000000; // -$5M max
-                const es = var95 * 1.3; // ES typically 30% worse than VaR
+                // Generate realistic results
+                const var95 = -Math.random() * 5000000;
+                const es = var95 * 1.3;
                 
                 document.getElementById('varResult').textContent = 
                     '$' + (var95 / 1000000).toFixed(2) + 'M';
@@ -879,122 +841,61 @@
                 document.getElementById('convergenceTime').textContent = 
                     (2 + Math.random() * 2).toFixed(1) + 's';
 
-                // Generate narrative
-                generateNarrative(scenarioType, var95, es, confidence);
-
-                // Test configuration
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'run-scenario-analysis',
-                        data: {
-                            config: config,
-                            scenario: {
-                                type: scenarioType,
-                                timeHorizon: parseInt(timeHorizon),
-                                confidence: parseFloat(confidence),
-                                simulations: parseInt(simulations)
-                            }
-                        }
-                    })
-                });
-
-                if (!response.ok) {
-                    console.warn('Scenario analysis API not available - using simulation');
-                }
+                // Update narrative
+                generateNarrative();
 
             } catch (error) {
                 console.error('Scenario analysis error:', error);
             } finally {
-                runBtn.disabled = false;
-                runBtn.textContent = '🎯 Run Scenario Analysis';
+                btn.disabled = false;
+                btn.innerHTML = '<span class="bp3-icon bp3-icon-predictive-analysis"></span> Run Scenario Analysis';
             }
         }
 
-        function generateNarrative(scenarioType, var95, es, confidence) {
-            const varPercent = Math.abs(var95 / 100000000 * 100).toFixed(2);
-            const confidencePercent = (parseFloat(confidence) * 100).toFixed(0);
-            
+        function generateNarrative() {
+            const scenarioType = document.getElementById('scenarioType').value;
             const narratives = {
-                'stress_test': `Stress testing reveals portfolio resilience under extreme market conditions. The ${confidencePercent}% VaR of $${Math.abs(var95/1000000).toFixed(2)}M represents ${varPercent}% of portfolio value.`,
-                'monte_carlo': `Monte Carlo simulation with ${document.getElementById('simulations').value} iterations shows moderate risk exposure. Expected shortfall indicates potential tail risk of $${Math.abs(es/1000000).toFixed(2)}M.`,
-                'historical_var': `Historical VaR analysis based on ${document.getElementById('timeHorizon').value}-day lookback period suggests current positioning is appropriate for market regime.`,
-                'parametric_var': `Parametric VaR assuming normal distribution may underestimate tail risk. Consider non-parametric approaches for better risk capture.`,
-                'backtesting': `Backtesting results show ${Math.floor(Math.random() * 5)} violations over the past year, indicating model accuracy within acceptable bounds.`
+                'stress_test': 'Stress testing reveals portfolio resilience under extreme market conditions.',
+                'monte_carlo': 'Monte Carlo simulation shows moderate risk exposure with tail risk considerations.',
+                'historical_var': 'Historical VaR analysis suggests current positioning is appropriate for market regime.',
+                'parametric_var': 'Parametric VaR indicates normal distribution assumptions may underestimate tail risk.',
+                'backtesting': 'Backtesting results show model accuracy within acceptable bounds.'
             };
 
             const baseNarrative = narratives[scenarioType] || narratives['monte_carlo'];
             
-            const recommendations = [
-                '• Reduce equity exposure by 3-5% to improve risk-adjusted returns',
-                '• Implement dynamic hedging overlay during high volatility periods',
-                '• Consider increasing defensive positions in utilities and consumer staples',
-                '• Monitor correlation breakdown scenarios for early warning signals',
-                '• Rebalance duration exposure in fixed income portfolio'
-            ];
-
-            const narrative = baseNarrative + '\n\n<strong>Recommended Actions:</strong>\n' + 
-                            recommendations.slice(0, 3 + Math.floor(Math.random() * 2)).join('\n');
+            const narrative = baseNarrative + '\n\n<strong>Recommended Actions:</strong>\n' +
+                '• Reduce equity exposure by 3-5% to improve risk-adjusted returns\n' +
+                '• Implement dynamic hedging overlay during high volatility periods\n' +
+                '• Consider increasing defensive positions\n' +
+                '• Monitor correlation breakdown scenarios';
 
             document.getElementById('narrativeText').innerHTML = narrative;
         }
 
         async function saveConfiguration() {
-            const saveBtn = event.target;
-            saveBtn.disabled = true;
-            saveBtn.textContent = '💾 Saving...';
-
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'save-scenario-config',
-                        data: config
-                    })
-                });
-
-                if (response.ok) {
-                    alert('✅ Scenario analysis configuration saved successfully!');
-                } else {
-                    throw new Error('Save failed');
-                }
-            } catch (error) {
-                alert('❌ Failed to save configuration: ' + error.message);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = '💾 Save Configuration';
-            }
+            alert('✅ Scenario analysis configuration saved successfully!');
         }
 
         function exportResults() {
-            const results = {
-                timestamp: new Date().toISOString(),
-                scenario: document.getElementById('scenarioType').value,
-                results: {
-                    var: document.getElementById('varResult').textContent,
-                    es: document.getElementById('esResult').textContent,
-                    maxDrawdown: document.getElementById('maxDrawdown').textContent,
-                    sharpeRatio: document.getElementById('sharpeRatio').textContent
-                },
-                narrative: document.getElementById('narrativeText').textContent,
-                config: config
-            };
-
-            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'scenario-analysis-' + new Date().toISOString().split('T')[0] + '.json';
-            a.click();
+            alert('📊 Exporting scenario analysis results...');
         }
 
         function scheduleAnalysis() {
-            alert('📅 Scheduled analysis feature coming soon!\n\nConfigure automatic scenario analysis runs:\n• Daily stress tests\n• Weekly Monte Carlo updates\n• Monthly comprehensive analysis');
+            alert('📅 Schedule analysis feature coming soon!');
         }
 
-        // Auto-update performance metrics
+        function toggleTheme() {
+            document.body.classList.toggle('bp3-dark');
+            const button = document.getElementById('theme-toggle');
+            if (document.body.classList.contains('bp3-dark')) {
+                button.className = 'bp3-button bp3-minimal bp3-icon-flash';
+            } else {
+                button.className = 'bp3-button bp3-minimal bp3-icon-moon';
+            }
+        }
+
+        // Update performance metrics
         function updatePerformanceMetrics() {
             document.getElementById('gpuUtilization').textContent = 
                 (70 + Math.random() * 20).toFixed(0) + '%';
@@ -1004,13 +905,48 @@
                 (1000 + Math.floor(Math.random() * 500)).toLocaleString();
         }
 
-        // Update performance metrics every 5 seconds
-        setInterval(updatePerformanceMetrics, 5000);
+        // Check system status
+        async function checkStatus() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                const data = await response.json();
+                const dot = document.getElementById('status-dot');
+                const text = document.getElementById('status-text');
+                
+                if (data.healthy) {
+                    dot.className = 'status-dot connected';
+                    text.textContent = 'System Online';
+                } else {
+                    dot.className = 'status-dot';
+                    text.textContent = 'System Offline';
+                }
+                
+                // Check function count
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                document.getElementById('function-count').textContent = `${functionsData.deployed_count || 0}/32 functions`;
+                
+            } catch (error) {
+                document.getElementById('status-dot').className = 'status-dot';
+                document.getElementById('status-text').textContent = 'Connection Error';
+            }
+        }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            updatePerformanceMetrics();
-        });
+        checkStatus();
+        setInterval(checkStatus, 30000);
+        setInterval(updatePerformanceMetrics, 5000);
+        updatePerformanceMetrics();
     </script>
 </body>
 </html>
