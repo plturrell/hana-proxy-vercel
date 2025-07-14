@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Deployment - FinSight Intelligence</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .deploy-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .deploy-steps {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--border);
+            color: var(--text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step.completed .step-number {
+            background: var(--accent);
+            color: var(--bg);
+        }
+        
+        .step.error .step-number {
+            background: var(--danger);
+        }
+        
+        .step.in-progress .step-number {
+            background: var(--warning);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .result.success {
+            border-color: var(--accent);
+        }
+        
+        .result.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>System Deployment</h1>
+                <p style="color: var(--text-secondary);">Deploy 32 financial functions to Supabase</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="deploy-card">
+            <h2>Deployment Pipeline</h2>
+            <div class="deploy-steps">
+                <div class="step" id="step-1">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Create Schema</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Creates app_data schema and required tables
+                        </p>
+                    </div>
+                </div>
+                <div class="step" id="step-2">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Deploy Functions</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Installs all 32 production functions
+                        </p>
+                    </div>
+                </div>
+                <div class="step" id="step-3">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Verify Deployment</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Tests functions are working correctly
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="deployAll()" id="deploy-btn">
+                Deploy All Functions
+            </button>
+            
+            <div id="deploy-result" class="result hidden"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        
+        async function deployAll() {
+            const btn = document.getElementById('deploy-btn');
+            const result = document.getElementById('deploy-result');
+            
+            btn.disabled = true;
+            btn.textContent = 'Initializing deployment...';
+            result.className = 'result';
+            result.textContent = 'Starting automated deployment process...\n';
+            
+            try {
+                // Step 1: Deploy schema
+                updateStep(1, 'in-progress');
+                addLog('Creating schema and tables...');
+                
+                const schemaResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy_schema'
+                    })
+                });
+                
+                const schemaData = await schemaResponse.json();
+                if (!schemaData.success) {
+                    throw new Error(schemaData.error || 'Schema deployment failed');
+                }
+                
+                updateStep(1, 'completed');
+                addLog('✅ Schema created successfully');
+                
+                // Step 2: Deploy functions
+                updateStep(2, 'in-progress');
+                addLog('Deploying 32 production functions...');
+                
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy_functions'
+                    })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                if (!functionsData.success) {
+                    throw new Error(functionsData.error || 'Functions deployment failed');
+                }
+                
+                updateStep(2, 'completed');
+                addLog('✅ Functions deployed successfully');
+                
+                // Step 3: Verify deployment
+                updateStep(3, 'in-progress');
+                addLog('Verifying deployment...');
+                
+                const verifyResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'verify_deployment'
+                    })
+                });
+                
+                const verifyData = await verifyResponse.json();
+                if (!verifyData.success) {
+                    throw new Error(verifyData.error || 'Verification failed');
+                }
+                
+                updateStep(3, 'completed');
+                
+                // Success!
+                result.className = 'result success';
+                addLog('✅ Deployment complete!');
+                addLog(`${verifyData.deployed_count || 32} functions deployed successfully`);
+                addLog(verifyData.test_results || 'All tests passed');
+                
+                btn.textContent = 'Deployment Complete';
+                
+            } catch (error) {
+                result.className = 'result error';
+                addLog(`❌ Deployment failed: ${error.message}`);
+                
+                // Reset steps
+                ['step-1', 'step-2', 'step-3'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el.className.includes('in-progress')) {
+                        el.className = 'step error';
+                    }
+                });
+                
+                btn.disabled = false;
+                btn.textContent = 'Retry Deployment';
+            }
+        }
+        
+        function updateStep(stepNum, status) {
+            const step = document.getElementById(`step-${stepNum}`);
+            step.className = `step ${status}`;
+        }
+        
+        function addLog(message) {
+            const result = document.getElementById('deploy-result');
+            const timestamp = new Date().toLocaleTimeString();
+            result.textContent += `[${timestamp}] ${message}\n`;
+            result.scrollTop = result.scrollHeight;
+        }
+        
+        // Check initial status
+        async function checkStatus() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const data = await response.json();
+                const deployedCount = data.deployed_count || 0;
+                
+                if (deployedCount === 32) {
+                    document.getElementById('step-1').className = 'step completed';
+                    document.getElementById('step-2').className = 'step completed';
+                    document.getElementById('step-3').className = 'step completed';
+                    document.getElementById('deploy-btn').textContent = 'Redeploy All Functions';
+                } else if (deployedCount > 0) {
+                    document.getElementById('step-1').className = 'step completed';
+                    document.getElementById('deploy-btn').textContent = `Deploy Remaining ${32 - deployedCount} Functions`;
+                }
+            } catch (error) {
+                console.error('Status check failed:', error);
+            }
+        }
+        
+        // Initialize
+        checkStatus();
+    </script>
+</body>
+</html>

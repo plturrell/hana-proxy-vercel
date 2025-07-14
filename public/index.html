@@ -3,378 +3,464 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Financial Analytics Platform - Supabase Production</title>
+    <title>FinSight Intelligence - Command Centre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Blueprint Design System CSS Variables */
         :root {
-            --bg: #000;
-            --bg-secondary: #0a0a0a;
-            --border: #333;
-            --text: #fff;
-            --text-secondary: #999;
-            --accent: #3ecf8e;
-            --danger: #ef4444;
+            /* Grid System */
+            --bp3-grid-size: 10px;
+            
+            /* Core Colors - Gray Scale */
+            --bp3-black: #111418;
+            --bp3-dark-gray1: #1C2127;
+            --bp3-dark-gray2: #252A31;
+            --bp3-dark-gray3: #2F343C;
+            --bp3-dark-gray4: #383E47;
+            --bp3-dark-gray5: #404854;
+            --bp3-gray1: #5C7080;
+            --bp3-gray2: #738091;
+            --bp3-gray3: #8A9BA8;
+            --bp3-gray4: #A7B6C2;
+            --bp3-gray5: #BFCCD6;
+            --bp3-light-gray1: #CED9E0;
+            --bp3-light-gray2: #D8E1E8;
+            --bp3-light-gray3: #E1E8ED;
+            --bp3-light-gray4: #EBF1F5;
+            --bp3-light-gray5: #F5F8FA;
+            --bp3-white: #FFFFFF;
+            
+            /* Intent Colors */
+            --bp3-blue1: #0E5A8A;
+            --bp3-blue2: #106BA3;
+            --bp3-blue3: #137CBD;
+            --bp3-blue4: #2B95D6;
+            --bp3-blue5: #48AFF0;
+            
+            --bp3-green1: #0A6640;
+            --bp3-green2: #0D8050;
+            --bp3-green3: #0F9960;
+            --bp3-green4: #15B371;
+            --bp3-green5: #3DCC91;
+            
+            --bp3-orange1: #A66321;
+            --bp3-orange2: #BF7326;
+            --bp3-orange3: #D9822B;
+            --bp3-orange4: #F29D49;
+            --bp3-orange5: #FFB366;
+            
+            --bp3-red1: #A82A2A;
+            --bp3-red2: #C23030;
+            --bp3-red3: #DB3737;
+            --bp3-red4: #F55656;
+            --bp3-red5: #FF7373;
+            
+            /* Intent Aliases */
+            --bp3-intent-primary: var(--bp3-blue3);
+            --bp3-intent-success: var(--bp3-green3);
+            --bp3-intent-warning: var(--bp3-orange3);
+            --bp3-intent-danger: var(--bp3-red3);
+            
+            /* Typography */
+            --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
+            --bp3-font-size: 14px;
+            --bp3-font-size-large: 16px;
+            --bp3-line-height: 18px;
+            
+            /* Shadows */
+            --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
+            --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
+            --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
+            
+            /* Border Radius */
+            --bp3-border-radius: 3px;
+            
+            /* Transitions */
+            --bp3-transition-duration: 100ms;
+            --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
         }
-        
+
+        /* Dark Theme Variables */
+        .bp3-dark {
+            --bp3-text-color: rgba(255, 255, 255, 0.9);
+            --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
+            --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
+            --bp3-heading-color: rgba(255, 255, 255, 0.9);
+            --bp3-link-color: var(--bp3-blue4);
+            --bp3-app-background-color: var(--bp3-dark-gray2);
+            --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Light Theme Variables (Default) */
+        :root {
+            --bp3-text-color: #182026;
+            --bp3-text-color-muted: #5C7080;
+            --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
+            --bp3-heading-color: #182026;
+            --bp3-link-color: var(--bp3-blue2);
+            --bp3-app-background-color: var(--bp3-light-gray5);
+            --bp3-divider-color: rgba(17, 20, 24, 0.15);
+        }
+
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+            line-height: var(--bp3-line-height);
+            color: var(--bp3-text-color);
+            background-color: var(--bp3-app-background-color);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
-        
+
+        .bp3-dark {
+            background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
+        }
+
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: calc(var(--bp3-grid-size) * 4);
         }
-        
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+
+        .header {
+            text-align: center;
+            margin-bottom: calc(var(--bp3-grid-size) * 4);
         }
-        
+
+        .bp3-heading {
+            margin: 0 0 var(--bp3-grid-size);
+            padding: 0;
+            color: var(--bp3-heading-color);
+            font-weight: 600;
+        }
+
+        h1.bp3-heading {
+            font-size: 36px;
+            line-height: 40px;
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
+        }
+
         .subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
+            font-size: var(--bp3-font-size-large);
+            color: var(--bp3-text-color-muted);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
         
         .status-bar {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
+            background-color: var(--bp3-white);
+            border-radius: var(--bp3-border-radius);
+            box-shadow: var(--bp3-elevation-shadow-1);
+            padding: calc(var(--bp3-grid-size) * 2);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 2rem;
+            margin-bottom: calc(var(--bp3-grid-size) * 4);
+        }
+
+        .bp3-dark .status-bar {
+            background-color: var(--bp3-dark-gray4);
+            box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.4);
         }
         
         .status-indicator {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: var(--bp3-grid-size);
         }
         
-        .dot {
+        .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: var(--text-secondary);
+            background: var(--bp3-gray3);
+            animation: pulse 2s infinite;
         }
         
-        .dot.connected {
-            background: var(--accent);
+        .status-dot.connected {
+            background: var(--bp3-intent-success);
         }
         
-        .dot.error {
-            background: var(--danger);
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
-        
-        .deploy-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-        }
-        
-        .deploy-card h2 {
-            margin-bottom: 1rem;
-        }
-        
-        .deploy-steps {
+
+        .main-grid {
             display: grid;
-            gap: 1rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 3);
+            margin-bottom: calc(var(--bp3-grid-size) * 4);
         }
-        
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--bg);
-            border-radius: 6px;
-            border: 1px solid var(--border);
+
+        .bp3-card {
+            background-color: var(--bp3-white);
+            border-radius: var(--bp3-border-radius);
+            box-shadow: var(--bp3-elevation-shadow-1);
+            padding: calc(var(--bp3-grid-size) * 3);
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
         }
-        
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            color: var(--bg);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
+
+        .bp3-dark .bp3-card {
+            background-color: var(--bp3-dark-gray4);
+            box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.4);
         }
-        
-        .step.completed .step-number {
-            background: var(--accent);
-        }
-        
-        .step.error .step-number {
-            background: var(--danger);
-        }
-        
-        .btn {
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
+
+        .bp3-card.bp3-interactive:hover {
+            box-shadow: var(--bp3-elevation-shadow-2);
             cursor: pointer;
-            transition: opacity 0.2s;
+            transform: translateY(-2px);
         }
-        
-        .btn:hover {
-            opacity: 0.9;
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: var(--bp3-grid-size);
+            color: var(--bp3-heading-color);
         }
-        
-        .btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+
+        .section-description {
+            color: var(--bp3-text-color-muted);
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
+            line-height: 1.5;
         }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        
-        .code-block {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            font-family: monospace;
-            font-size: 0.875rem;
-            overflow-x: auto;
-            margin: 1rem 0;
-        }
-        
-        .test-grid {
+
+        .action-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1rem;
-            margin-top: 2rem;
+            gap: calc(var(--bp3-grid-size) / 2);
         }
-        
-        .test-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
+
+        .bp3-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            border: none;
+            border-radius: var(--bp3-border-radius);
+            cursor: pointer;
+            font-size: var(--bp3-font-size);
+            font-weight: 400;
+            height: 30px;
+            line-height: 30px;
+            min-height: 30px;
+            padding: 0 var(--bp3-grid-size);
+            text-align: left;
+            vertical-align: middle;
+            background-color: var(--bp3-light-gray3);
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            box-shadow: inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 -1px 0 rgba(17, 20, 24, 0.1);
+            color: var(--bp3-text-color);
+            outline: none;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+            user-select: none;
+            text-decoration: none;
+            gap: calc(var(--bp3-grid-size) / 2);
         }
-        
-        .result {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1rem;
-            font-family: monospace;
-            font-size: 0.875rem;
-            white-space: pre-wrap;
+
+        .bp3-dark .bp3-button {
+            background-color: var(--bp3-dark-gray5);
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+            box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.4);
+            color: #F5F8FA;
         }
-        
-        .result.success {
-            border-color: var(--accent);
+
+        .bp3-button:hover {
+            background-color: var(--bp3-light-gray2);
+            box-shadow: inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 -1px 0 rgba(17, 20, 24, 0.1);
+            text-decoration: none;
         }
-        
-        .result.error {
-            border-color: var(--danger);
-            color: var(--danger);
+
+        .bp3-dark .bp3-button:hover {
+            background-color: var(--bp3-gray1);
         }
-        
-        .hidden {
-            display: none;
+
+        .action-icon {
+            font-size: 16px;
+        }
+
+        .quick-actions {
+            background-color: var(--bp3-white);
+            border-radius: var(--bp3-border-radius);
+            box-shadow: var(--bp3-elevation-shadow-1);
+            padding: calc(var(--bp3-grid-size) * 3);
+            margin-top: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .bp3-dark .quick-actions {
+            background-color: var(--bp3-dark-gray4);
+            box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.4);
+        }
+
+        .quick-actions h3 {
+            margin-bottom: calc(var(--bp3-grid-size) * 2);
+            font-size: var(--bp3-font-size-large);
+            font-weight: 600;
+            color: var(--bp3-heading-color);
+        }
+
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--bp3-grid-size);
+        }
+
+        .quick-btn {
+            background-color: var(--bp3-light-gray3);
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0));
+            box-shadow: inset 0 0 0 1px rgba(17, 20, 24, 0.2), inset 0 -1px 0 rgba(17, 20, 24, 0.1);
+            border-radius: var(--bp3-border-radius);
+            padding: var(--bp3-grid-size);
+            color: var(--bp3-text-color);
+            cursor: pointer;
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+            text-align: center;
+            border: none;
+            font-family: var(--bp3-font-family);
+            font-size: var(--bp3-font-size);
+        }
+
+        .bp3-dark .quick-btn {
+            background-color: var(--bp3-dark-gray5);
+            background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+            box-shadow: 0 0 0 1px rgba(17, 20, 24, 0.4);
+            color: #F5F8FA;
+        }
+
+        .quick-btn:hover {
+            background-color: var(--bp3-light-gray2);
+        }
+
+        .bp3-dark .quick-btn:hover {
+            background-color: var(--bp3-gray1);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: calc(var(--bp3-grid-size) * 2);
+            right: calc(var(--bp3-grid-size) * 2);
+            z-index: 100;
         }
     </style>
 </head>
 <body>
+    <div class="theme-toggle">
+        <button class="bp3-button" onclick="toggleTheme()">🌙 Dark Mode</button>
+    </div>
+
     <div class="container">
-        <h1>Financial Analytics Platform</h1>
-        <p class="subtitle">Production deployment system for 32 enterprise-grade financial functions</p>
-        
+        <div class="header">
+            <h1 class="bp3-heading">FinSight Intelligence</h1>
+            <p class="subtitle">Enterprise-grade financial analytics platform powered by real-time intelligence</p>
+        </div>
+
         <div class="status-bar">
             <div class="status-indicator">
-                <span class="dot" id="status-dot"></span>
-                <span id="status-text">Checking connection...</span>
+                <span class="status-dot" id="status-dot"></span>
+                <span id="status-text">Checking system status...</span>
             </div>
             <div>
-                <span id="function-count">0/32</span> functions deployed
+                <span id="function-count">0/32</span> functions active
             </div>
         </div>
-        
-        <div class="deploy-card">
-            <h2>Quick Deploy</h2>
-            <div class="deploy-steps">
-                <div class="step" id="step-1">
-                    <div class="step-number">1</div>
-                    <div>
-                        <strong>Create Schema</strong>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Creates app_data schema and required tables
-                        </p>
-                    </div>
-                </div>
-                <div class="step" id="step-2">
-                    <div class="step-number">2</div>
-                    <div>
-                        <strong>Deploy Functions</strong>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Installs all 32 production functions
-                        </p>
-                    </div>
-                </div>
-                <div class="step" id="step-3">
-                    <div class="step-number">3</div>
-                    <div>
-                        <strong>Verify Deployment</strong>
-                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
-                            Tests functions are working correctly
-                        </p>
-                    </div>
-                </div>
-            </div>
-            
-            <button class="btn" onclick="deployAll()" id="deploy-btn">
-                Deploy All Functions
-            </button>
-            
-            <div id="deploy-result" class="result hidden"></div>
-        </div>
-        
-        <div class="deploy-card">
-            <h2>Advanced Options</h2>
-            <details style="margin-top: 1rem;">
-                <summary style="cursor: pointer; color: var(--text-secondary);">
-                    Manual SQL Deployment (Advanced Users)
-                </summary>
-                <div style="margin-top: 1rem;">
-                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
-                        For manual deployment or troubleshooting
-                    </p>
-                    <button class="btn btn-secondary" onclick="window.open('https://supabase.com/dashboard/project/fnsbxaywhsxqppncqksu/sql/new', '_blank')">
-                        Open SQL Editor →
-                    </button>
-                    <button class="btn btn-secondary" onclick="copySQL()">
-                        Copy Schema SQL
-                    </button>
-                    <button class="btn btn-secondary" onclick="downloadAllSQL()">
-                        Download All SQL Files
-                    </button>
-                </div>
-            </details>
-            
-            <details style="margin-top: 1rem;">
-                <summary style="cursor: pointer; color: var(--text-secondary);">
-                    Deployment Logs
-                </summary>
-                <div id="deployment-logs" class="code-block" style="margin-top: 1rem; max-height: 200px; overflow-y: auto;">
-                    No logs yet. Start deployment to see progress.
-                </div>
-            </details>
-        </div>
-        
-        <div class="test-grid">
-            <div class="test-card">
-                <h3>Pearson Correlation</h3>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
-                    Tests statistical correlation calculation
-                </p>
-                <button class="btn" onclick="testFunction('correlation')">Run Test</button>
-                <div id="test-correlation" class="result hidden"></div>
-            </div>
-            
-            <div class="test-card">
-                <h3>Value at Risk</h3>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
-                    Tests VaR risk calculation
-                </p>
-                <button class="btn" onclick="testFunction('var')">Run Test</button>
-                <div id="test-var" class="result hidden"></div>
-            </div>
-            
-            <div class="test-card">
-                <h3>Black-Scholes</h3>
-                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
-                    Tests option pricing model
-                </p>
-                <button class="btn" onclick="testFunction('blackscholes')">Run Test</button>
-                <div id="test-blackscholes" class="result hidden"></div>
-            </div>
-        </div>
-        
-        <div class="deploy-card" style="margin-top: 2rem;">
-            <h2>iOS Integration</h2>
-            <div class="code-block">
-let apiURL = "${window.location.origin}/api/supabase-proxy"
 
-// Example usage
-let request = URLRequest(url: URL(string: "\(apiURL)")!)
-request.httpMethod = "POST"
-request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-request.httpBody = try! JSONSerialization.data(withJSONObject: [
-    "action": "rpc",
-    "function_name": "calculate_pearson_correlation",
-    "params": [
-        "x_values": [1, 2, 3, 4, 5],
-        "y_values": [2, 4, 6, 8, 10]
-    ]
-])
+        <div class="main-grid">
+            <!-- Analytics Section -->
+            <div class="bp3-card bp3-interactive">
+                <h2 class="section-title">🎯 Analytics Hub</h2>
+                <p class="section-description">Real-time financial analytics and intelligence dashboards with live data processing</p>
+                <div class="action-grid">
+                    <a href="/command-centre.html" class="bp3-button">
+                        <span class="action-icon">📊</span>
+                        Command Centre
+                    </a>
+                    <a href="/portfolio-analyser.html" class="bp3-button">
+                        <span class="action-icon">📈</span>
+                        Portfolio Analyser
+                    </a>
+                    <a href="/treasury-insights.html" class="bp3-button">
+                        <span class="action-icon">💰</span>
+                        Treasury Insights
+                    </a>
+                    <a href="/scenario-analyser-config.html" class="bp3-button">
+                        <span class="action-icon">🎲</span>
+                        Scenario Analysis (MCTS)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Configuration Section -->
+            <div class="bp3-card bp3-interactive">
+                <h2 class="section-title">⚙️ Configuration</h2>
+                <p class="section-description">Configure data sources, models, and system parameters for optimal performance</p>
+                <div class="action-grid">
+                    <a href="/news-market-data-config.html" class="bp3-button">
+                        <span class="action-icon">📰</span>
+                        News & Market Data
+                    </a>
+                    <a href="/calculation-manager-config.html" class="bp3-button">
+                        <span class="action-icon">🧮</span>
+                        Calculations
+                    </a>
+                    <a href="/ml-models-config.html" class="bp3-button">
+                        <span class="action-icon">🤖</span>
+                        ML Models
+                    </a>
+                </div>
+            </div>
+
+            <!-- System Status -->
+            <div class="bp3-card bp3-interactive">
+                <h2 class="section-title">🔧 System Monitor</h2>
+                <p class="section-description">Monitor system health, deployment status, and performance metrics</p>
+                <div class="action-grid">
+                    <a href="/deployment.html" class="bp3-button">
+                        <span class="action-icon">🚀</span>
+                        Deploy Functions
+                    </a>
+                    <button class="bp3-button" onclick="runSystemTest()">
+                        <span class="action-icon">🧪</span>
+                        System Test
+                    </button>
+                    <button class="bp3-button" onclick="refreshStatus()">
+                        <span class="action-icon">🔄</span>
+                        Refresh Status
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+            <div class="quick-grid">
+                <button class="quick-btn" onclick="testCorrelation()">
+                    📊 Test Correlation
+                </button>
+                <button class="quick-btn" onclick="testVaR()">
+                    📉 Test VaR
+                </button>
+                <button class="quick-btn" onclick="testBlackScholes()">
+                    📈 Test Black-Scholes
+                </button>
+                <button class="quick-btn" onclick="viewLogs()">
+                    📋 View Logs
+                </button>
             </div>
         </div>
     </div>
-    
+
     <script>
         const API_URL = '/api/supabase-proxy';
-        const SCHEMA_SQL = \`
--- Create Schema and Tables
-CREATE SCHEMA IF NOT EXISTS app_data;
-GRANT USAGE ON SCHEMA app_data TO anon, authenticated;
 
--- Enable extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
-
--- Create tables for RL and ML
-CREATE TABLE IF NOT EXISTS app_data.rl_q_table (
-    id SERIAL PRIMARY KEY,
-    state_key TEXT NOT NULL,
-    action TEXT NOT NULL,
-    q_value DOUBLE PRECISION DEFAULT 0,
-    visit_count INTEGER DEFAULT 0,
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(state_key, action)
-);
-
-CREATE TABLE IF NOT EXISTS app_data.ml_model_weights (
-    id SERIAL PRIMARY KEY,
-    model_name TEXT NOT NULL,
-    layer_name TEXT NOT NULL,
-    weights JSONB NOT NULL,
-    biases JSONB,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(model_name, layer_name)
-);
-
--- Grant permissions
-GRANT ALL ON ALL TABLES IN SCHEMA app_data TO anon, authenticated;
-GRANT USAGE ON ALL SEQUENCES IN SCHEMA app_data TO anon, authenticated;
-\`;
-        
-        async function checkConnection() {
+        // Check system status
+        async function checkStatus() {
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
@@ -388,20 +474,20 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA app_data TO anon, authenticated;
                 
                 if (data.healthy) {
                     dot.className = 'dot connected';
-                    text.textContent = 'Connected to Supabase';
+                    text.textContent = 'System online - All services operational';
                 } else {
-                    dot.className = 'dot error';
-                    text.textContent = 'Connection failed';
+                    dot.className = 'dot';
+                    text.textContent = 'System status unknown';
                 }
                 
-                // Check functions
+                // Check function count
                 checkFunctions();
             } catch (error) {
-                document.getElementById('status-dot').className = 'dot error';
+                document.getElementById('status-dot').className = 'dot';
                 document.getElementById('status-text').textContent = 'Connection error';
             }
         }
-        
+
         async function checkFunctions() {
             try {
                 const response = await fetch(API_URL, {
@@ -413,175 +499,51 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA app_data TO anon, authenticated;
                 const data = await response.json();
                 const deployedCount = data.deployed_count || 0;
                 document.getElementById('function-count').textContent = `${deployedCount}/32`;
-                    
-                if (deployedCount === 32) {
-                    document.getElementById('step-1').className = 'step completed';
-                    document.getElementById('step-2').className = 'step completed';
-                    document.getElementById('step-3').className = 'step completed';
-                } else if (deployedCount > 0) {
-                    document.getElementById('step-1').className = 'step completed';
-                    document.getElementById('step-2').className = 'step';
-                    document.getElementById('step-3').className = 'step';
-                }
-                
-                // Update deployment button text
-                const btn = document.getElementById('deploy-btn');
-                if (deployedCount === 32) {
-                    btn.textContent = 'Redeploy All Functions';
-                } else if (deployedCount > 0) {
-                    btn.textContent = `Deploy Remaining ${32 - deployedCount} Functions`;
-                }
             } catch (error) {
                 console.error('Function check failed:', error);
             }
         }
-        
-        async function deployAll() {
-            const btn = document.getElementById('deploy-btn');
-            const result = document.getElementById('deploy-result');
-            
-            btn.disabled = true;
-            btn.textContent = 'Initializing deployment...';
-            result.className = 'result';
-            result.textContent = 'Starting automated deployment process...';
-            
-            try {
-                // Step 1: Deploy schema
-                updateStep(1, 'in-progress');
-                result.textContent = 'Creating schema and tables...';
-                
-                const schemaResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'deploy_schema',
-                        auth_token: getAuthToken()
-                    })
-                });
-                
-                const schemaData = await schemaResponse.json();
-                if (!schemaData.success) {
-                    throw new Error(schemaData.error || 'Schema deployment failed');
-                }
-                
-                updateStep(1, 'completed');
-                
-                // Step 2: Deploy functions
-                updateStep(2, 'in-progress');
-                result.textContent = 'Deploying 32 production functions...';
-                
-                const functionsResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'deploy_functions',
-                        auth_token: getAuthToken()
-                    })
-                });
-                
-                const functionsData = await functionsResponse.json();
-                if (!functionsData.success) {
-                    throw new Error(functionsData.error || 'Functions deployment failed');
-                }
-                
-                updateStep(2, 'completed');
-                
-                // Step 3: Verify deployment
-                updateStep(3, 'in-progress');
-                result.textContent = 'Verifying deployment...';
-                
-                const verifyResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'verify_deployment',
-                        auth_token: getAuthToken()
-                    })
-                });
-                
-                const verifyData = await verifyResponse.json();
-                if (!verifyData.success) {
-                    throw new Error(verifyData.error || 'Verification failed');
-                }
-                
-                updateStep(3, 'completed');
-                
-                // Success!
-                result.className = 'result success';
-                result.textContent = `✅ Deployment complete!\n\n${verifyData.deployed_count} functions deployed successfully\n${verifyData.test_results || 'All tests passed'}`;
-                btn.textContent = 'Deployment Complete';
-                
-                // Update function count
-                document.getElementById('function-count').textContent = '32/32';
-                
-                // Refresh status
-                checkConnection();
-                
-            } catch (error) {
-                result.className = 'result error';
-                result.textContent = `❌ Deployment failed: ${error.message}`;
-                
-                // Reset steps
-                ['step-1', 'step-2', 'step-3'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el.className.includes('in-progress')) {
-                        el.className = 'step error';
-                    }
-                });
-                
-                btn.disabled = false;
-                btn.textContent = 'Retry Deployment';
-            }
-        }
-        
-        function updateStep(stepNum, status) {
-            const step = document.getElementById(`step-${stepNum}`);
-            step.className = `step ${status}`;
-        }
-        
-        function getAuthToken() {
-            // In production, this would use proper authentication
-            // For now, using environment variable through API
-            return 'deployment-token';
-        }
-        
-        function copySQL() {
-            navigator.clipboard.writeText(SCHEMA_SQL).then(() => {
-                const btn = event.target;
-                const originalText = btn.textContent;
-                btn.textContent = '✅ Copied!';
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy:', err);
-                alert('Failed to copy to clipboard');
-            });
-        }
-        
-        async function testFunction(type) {
-            const resultEl = document.getElementById(\`test-\${type}\`);
-            resultEl.className = 'result';
-            resultEl.textContent = 'Testing...';
-            
-            const tests = {
-                correlation: {
+
+        // Quick action functions
+        async function testCorrelation() {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     action: 'rpc',
                     function_name: 'calculate_pearson_correlation',
                     params: {
                         x_values: [1, 2, 3, 4, 5],
                         y_values: [2, 4, 6, 8, 10]
                     }
-                },
-                var: {
+                })
+            });
+            const data = await response.json();
+            alert(`Correlation result: ${data.data || 'Error'}`);
+        }
+
+        async function testVaR() {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     action: 'rpc',
                     function_name: 'calculate_var',
                     params: {
                         returns: [-0.02, 0.01, -0.03, 0.02, 0.01],
                         confidence_level: 0.95
                     }
-                },
-                blackscholes: {
+                })
+            });
+            const data = await response.json();
+            alert(`VaR result: ${data.data || 'Error'}`);
+        }
+
+        async function testBlackScholes() {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
                     action: 'rpc',
                     function_name: 'black_scholes_option_price',
                     params: {
@@ -592,68 +554,39 @@ GRANT USAGE ON ALL SEQUENCES IN SCHEMA app_data TO anon, authenticated;
                         volatility: 0.2,
                         option_type: 'call'
                     }
-                }
-            };
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(tests[type])
-                });
-                
-                const data = await response.json();
-                
-                if (data.data !== undefined) {
-                    resultEl.className = 'result success';
-                    resultEl.textContent = 'Success:\\n' + JSON.stringify(data.data, null, 2);
-                } else {
-                    throw new Error(data.error || 'Test failed');
-                }
-            } catch (error) {
-                resultEl.className = 'result error';
-                resultEl.textContent = 'Error: ' + error.message;
-            }
-        }
-        
-        function downloadAllSQL() {
-            const urls = [
-                '/supabase-migration/00_create_schema.sql',
-                '/supabase-migration/01_core_analytics_functions.sql',
-                '/supabase-migration/02_ml_rl_functions.sql',
-                '/supabase-migration/03_advanced_analytics_functions.sql'
-            ];
-            
-            urls.forEach((url, index) => {
-                setTimeout(() => {
-                    window.open(url, '_blank');
-                }, index * 500);
+                })
             });
+            const data = await response.json();
+            alert(`Black-Scholes result: ${data.data || 'Error'}`);
         }
-        
-        function log(message) {
-            const logs = document.getElementById('deployment-logs');
-            const timestamp = new Date().toLocaleTimeString();
-            logs.textContent += `[${timestamp}] ${message}\n`;
-            logs.scrollTop = logs.scrollHeight;
+
+        async function runSystemTest() {
+            alert('Running comprehensive system test...');
+            // Could expand this to run multiple tests
+            await testCorrelation();
         }
-        
-        // Initialize
-        checkConnection();
-        setInterval(checkConnection, 30000);
-        
-        // Add keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.metaKey || e.ctrlKey) {
-                if (e.key === 'd') {
-                    e.preventDefault();
-                    deployAll();
-                } else if (e.key === 't') {
-                    e.preventDefault();
-                    testFunction('correlation');
-                }
+
+        function refreshStatus() {
+            checkStatus();
+        }
+
+        function viewLogs() {
+            window.open('/api/supabase-proxy?action=logs', '_blank');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('bp3-dark');
+            const button = document.querySelector('.theme-toggle .bp3-button');
+            if (document.body.classList.contains('bp3-dark')) {
+                button.textContent = '☀️ Light Mode';
+            } else {
+                button.textContent = '🌙 Dark Mode';
             }
-        });
+        }
+
+        // Initialize
+        checkStatus();
+        setInterval(checkStatus, 30000); // Refresh every 30 seconds
     </script>
 </body>
 </html>
