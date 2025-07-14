@@ -1,0 +1,288 @@
+/* 
+ * Jony Ive-inspired Header Design
+ * "Simplicity is the ultimate sophistication"
+ */
+
+/* Header Foundation */
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px; /* Golden ratio precision */
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.bp3-dark .app-header {
+    background: rgba(18, 18, 18, 0.72);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Header Content */
+.header-content {
+    height: 100%;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+/* Logo - Refined Typography */
+.header-logo {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.88);
+    user-select: none;
+    transition: opacity 0.2s ease;
+}
+
+.bp3-dark .header-logo {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.header-logo:hover {
+    opacity: 0.7;
+}
+
+/* System Status - Subtle Indicators */
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: rgba(0, 0, 0, 0.56);
+    margin-left: 24px;
+}
+
+.bp3-dark .system-status {
+    color: rgba(255, 255, 255, 0.56);
+}
+
+.status-indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #34C759; /* iOS System Green */
+    box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.2);
+    animation: gentlePulse 3s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(0.95);
+    }
+}
+
+/* Header Actions - Perfectly Balanced */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Function Count - Subtle Progress */
+.function-count {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.48);
+    letter-spacing: 0.01em;
+}
+
+.bp3-dark .function-count {
+    color: rgba(255, 255, 255, 0.48);
+}
+
+/* Icon Buttons - Refined Interactions */
+.header-icon-button {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: rgba(0, 0, 0, 0.64);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.bp3-dark .header-icon-button {
+    color: rgba(255, 255, 255, 0.64);
+}
+
+.header-icon-button:hover {
+    background: rgba(0, 0, 0, 0.04);
+    color: rgba(0, 0, 0, 0.88);
+}
+
+.bp3-dark .header-icon-button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.header-icon-button:active {
+    transform: scale(0.96);
+}
+
+/* Icon Styling */
+.header-icon-button .bp3-icon {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+}
+
+.header-icon-button:hover .bp3-icon {
+    transform: scale(1.05);
+}
+
+/* Theme Toggle - Day/Night Elegance */
+.theme-toggle {
+    position: relative;
+}
+
+.theme-toggle .bp3-icon-moon,
+.theme-toggle .bp3-icon-flash {
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+/* User Button - Perfect Circle */
+.user-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.bp3-dark .user-button {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.user-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.bp3-dark .user-button:hover {
+    background: rgba(255, 255, 255, 0.16);
+}
+
+/* Divider - Hairline Precision */
+.header-divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.08);
+    margin: 0 4px;
+}
+
+.bp3-dark .header-divider {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Content Adjustment */
+.bp3-app {
+    padding-top: 48px;
+}
+
+/* Remove Blueprint's default navbar styling */
+.bp3-navbar {
+    all: unset;
+    display: contents;
+}
+
+.bp3-navbar-group {
+    all: unset;
+    display: contents;
+}
+
+.bp3-navbar-heading {
+    all: unset;
+    display: contents;
+}
+
+.bp3-navbar-divider {
+    all: unset;
+    display: contents;
+}
+
+/* Responsive Refinements */
+@media (max-width: 768px) {
+    .system-status {
+        display: none;
+    }
+    
+    .function-count {
+        display: none;
+    }
+}
+
+/* High-Resolution Display Optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .app-header {
+        border-bottom-width: 0.5px;
+    }
+}
+
+/* Focus States - Accessibility with Style */
+.header-icon-button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 125, 250, 0.6);
+}
+
+.bp3-dark .header-icon-button:focus-visible {
+    box-shadow: 0 0 0 2px rgba(100, 210, 255, 0.6);
+}
+
+/* Loading State - Subtle Progress */
+.header-loading {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(0, 125, 250, 0.8), 
+        transparent
+    );
+    animation: shimmer 2s ease-in-out infinite;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.header-loading.active {
+    opacity: 1;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Scroll Behavior - Adaptive Header */
+.app-header.scrolled {
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08);
+}
+
+.bp3-dark .app-header.scrolled {
+    background: rgba(18, 18, 18, 0.88);
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
