@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FinSight CFA Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Mobile-optimized container */
+        .mobile-container {
+            width: 100%;
+            min-height: 100vh;
+            padding: 20px;
+            padding-top: 60px;
+            padding-bottom: 100px;
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .status-text {
+            font-size: 14px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Bottom navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+
+        /* Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 17px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 16px;
+        }
+
+        /* CFA badge */
+        .cfa-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* Primary button */
+        .primary-button {
+            width: 100%;
+            padding: 18px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+
+        .primary-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Floating orb */
+        .floating-orb {
+            width: 200px;
+            height: 200px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .orb {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #667eea, #764ba2);
+            border-radius: 50%;
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .orb::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 30%;
+            height: 30%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+        }
+
+        /* Market pulse */
+        .market-pulse {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+        }
+
+        .pulse-bar {
+            flex: 1;
+            height: 60px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pulse-fill {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 8px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { height: 30%; }
+            50% { height: 100%; }
+        }
+
+        /* Input field */
+        .glass-input {
+            width: 100%;
+            padding: 16px;
+            font-size: 17px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .glass-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Success state */
+        .success-animation {
+            width: 100px;
+            height: 100px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .success-circle {
+            width: 100%;
+            height: 100%;
+            border: 3px solid #4ade80;
+            border-radius: 50%;
+            position: relative;
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        .success-check {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 50%;
+        }
+
+        @keyframes scaleIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* List items */
+        .insight-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .insight-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4ade80;
+        }
+
+        /* Screen transitions */
+        .screen {
+            display: none;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from { 
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Haptic feedback simulation */
+        .haptic {
+            animation: haptic 0.1s ease-out;
+        }
+
+        @keyframes haptic {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.97); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar">
+        <span class="status-text">FinSight Intelligence</span>
+    </div>
+
+    <div class="mobile-container">
+        <!-- Screen 1: Welcome -->
+        <div class="screen active" id="mobile-welcome">
+            <div class="cfa-indicator">
+                <span>🏆</span>
+                <span>CFA Professional</span>
+            </div>
+
+            <h1>Financial Intelligence</h1>
+            <h2 style="font-weight: 400; color: rgba(255, 255, 255, 0.7);">In Your Pocket</h2>
+
+            <div class="floating-orb">
+                <div class="orb"></div>
+            </div>
+
+            <div class="glass-card">
+                <h3>Institutional-Grade Analytics</h3>
+                <p>Configure your personal command center in under 60 seconds.</p>
+            </div>
+        </div>
+
+        <!-- Screen 2: Smart Setup -->
+        <div class="screen" id="mobile-setup">
+            <h2>Quick Setup</h2>
+            <p>We've detected your organization's systems.</p>
+
+            <div class="glass-card">
+                <div class="insight-item">
+                    <div class="insight-icon">🏦</div>
+                    <div class="insight-content">
+                        <h3>SAP HANA Cloud</h3>
+                        <p style="font-size: 14px; margin: 0;">Treasury & Risk Analytics</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card">
+                <h3>Your Focus Area</h3>
+                <div class="market-pulse">
+                    <div class="pulse-bar"><div class="pulse-fill" style="animation-delay: 0s;"></div></div>
+                    <div class="pulse-bar"><div class="pulse-fill" style="animation-delay: 0.2s;"></div></div>
+                    <div class="pulse-bar"><div class="pulse-fill" style="animation-delay: 0.4s;"></div></div>
+                    <div class="pulse-bar"><div class="pulse-fill" style="animation-delay: 0.6s;"></div></div>
+                </div>
+                <select class="glass-input" style="appearance: none; background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); background-repeat: no-repeat; background-position: right 10px center; background-size: 24px;">
+                    <option>Portfolio Management</option>
+                    <option>Equity Research</option>
+                    <option>Fixed Income</option>
+                    <option>Derivatives</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Screen 3: Success -->
+        <div class="screen" id="mobile-success">
+            <div class="success-animation">
+                <div class="success-circle">
+                    <svg class="success-check" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3">
+                        <path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+            </div>
+
+            <h2 style="text-align: center;">You're Live!</h2>
+            <p style="text-align: center;">Your first insight is ready.</p>
+
+            <div class="glass-card" style="background: rgba(74, 222, 128, 0.1); border-color: rgba(74, 222, 128, 0.2);">
+                <h3>Market Alert</h3>
+                <div class="insight-value">VIX +15.3%</div>
+                <p style="margin-top: 8px;">Volatility spike detected. Consider hedging strategies for equity positions.</p>
+                <p style="font-size: 14px; color: rgba(255, 255, 255, 0.6); margin: 0;">Generated just now • High confidence</p>
+            </div>
+
+            <div class="glass-card">
+                <div class="insight-item" style="border: none; padding-bottom: 0;">
+                    <div class="insight-icon">📊</div>
+                    <div class="insight-content">
+                        <h3>500+ Data Sources</h3>
+                        <p style="font-size: 14px; margin: 0;">Connected and streaming</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="primary-button" onclick="nextScreen()">
+            <span id="button-text">Start Configuration</span>
+        </button>
+    </div>
+
+    <script>
+        let currentScreen = 0;
+        const screens = ['mobile-welcome', 'mobile-setup', 'mobile-success'];
+        const buttonTexts = ['Start Configuration', 'Deploy System', 'Open Dashboard'];
+
+        function nextScreen() {
+            // Add haptic feedback
+            document.querySelector('.primary-button').classList.add('haptic');
+            setTimeout(() => {
+                document.querySelector('.primary-button').classList.remove('haptic');
+            }, 100);
+
+            if (currentScreen < screens.length - 1) {
+                currentScreen++;
+                showScreen(screens[currentScreen]);
+                document.getElementById('button-text').textContent = buttonTexts[currentScreen];
+                
+                // Simulate processing for deployment
+                if (currentScreen === 1) {
+                    setTimeout(() => {
+                        // Auto-advance to success after "processing"
+                        currentScreen++;
+                        showScreen(screens[currentScreen]);
+                        document.getElementById('button-text').textContent = buttonTexts[currentScreen];
+                    }, 2000);
+                }
+            } else {
+                // Final action - open dashboard
+                alert('Opening dashboard...');
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // Touch feedback for cards
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.glass-card').forEach(card => {
+                card.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                    this.style.transition = 'transform 0.1s';
+                });
+                
+                card.addEventListener('touchend', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Parallax effect on orb
+        window.addEventListener('deviceorientation', (e) => {
+            const orb = document.querySelector('.orb');
+            if (orb) {
+                const x = e.gamma / 90;
+                const y = e.beta / 180;
+                orb.style.transform = `translateX(${x * 10}px) translateY(${y * 10}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

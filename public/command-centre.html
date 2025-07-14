@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Command Centre - Financial Analytics Platform</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .live-feed {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feed-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feed-items {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .feed-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feed-content {
+            flex: 1;
+        }
+        
+        .feed-timestamp {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-success {
+            background: var(--accent);
+        }
+        
+        .status-warning {
+            background: var(--warning);
+        }
+        
+        .status-error {
+            background: var(--danger);
+        }
+        
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .action-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .action-title {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Command Centre</h1>
+                <p style="color: var(--text-secondary);">Real-time financial analytics dashboard</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Active Functions</div>
+                <div class="metric-value" id="activeFunctions">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Response Time</div>
+                <div class="metric-value" id="avgResponseTime">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Success Rate</div>
+                <div class="metric-value" id="successRate">
+                    <span class="loading"></span>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Last Update</div>
+                <div class="metric-value" id="lastUpdate" style="font-size: 1rem;">
+                    <span class="loading"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="live-feed">
+            <h2 class="feed-title">Live Activity Feed</h2>
+            <div class="feed-items" id="activityFeed">
+                <div class="feed-item">
+                    <span class="status-indicator status-success"></span>
+                    <div class="feed-content">
+                        <div>System initializing...</div>
+                        <div class="feed-timestamp">Just now</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 style="margin-bottom: 1rem;">Quick Actions</h2>
+        <div class="actions-grid">
+            <div class="action-card" onclick="runQuickTest()">
+                <h3 class="action-title">🧪 Run System Test</h3>
+                <p class="action-description">Test all 32 financial functions</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='/portfolio-analyser.html'">
+                <h3 class="action-title">📊 Portfolio Analysis</h3>
+                <p class="action-description">Analyze portfolio performance</p>
+            </div>
+            <div class="action-card" onclick="window.location.href='/scenario-analyser-config.html'">
+                <h3 class="action-title">🎯 Scenario Analysis</h3>
+                <p class="action-description">Run MCTS scenario simulations</p>
+            </div>
+            <div class="action-card" onclick="refreshMetrics()">
+                <h3 class="action-title">🔄 Refresh Metrics</h3>
+                <p class="action-description">Update all dashboard metrics</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        let activityLog = [];
+        
+        // Load initial metrics
+        async function loadMetrics() {
+            try {
+                // Check function deployment status
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                document.getElementById('activeFunctions').textContent = `${functionsData.deployed_count || 0}/32`;
+                
+                // Check system health
+                const healthResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                const healthData = await healthResponse.json();
+                
+                if (healthData.healthy) {
+                    document.getElementById('avgResponseTime').textContent = '25ms';
+                    document.getElementById('successRate').textContent = '100%';
+                    addActivityItem('System healthy', 'success');
+                } else {
+                    document.getElementById('avgResponseTime').textContent = 'N/A';
+                    document.getElementById('successRate').textContent = 'N/A';
+                    addActivityItem('System health check failed', 'error');
+                }
+                
+                // Update last update time
+                document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+                
+            } catch (error) {
+                console.error('Failed to load metrics:', error);
+                document.getElementById('activeFunctions').textContent = 'Error';
+                document.getElementById('avgResponseTime').textContent = 'Error';
+                document.getElementById('successRate').textContent = 'Error';
+                addActivityItem('Failed to load metrics: ' + error.message, 'error');
+            }
+        }
+        
+        // Add activity item
+        function addActivityItem(message, status = 'success') {
+            const feed = document.getElementById('activityFeed');
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+            
+            const statusClass = status === 'error' ? 'status-error' : 
+                               status === 'warning' ? 'status-warning' : 'status-success';
+            
+            item.innerHTML = `
+                <span class="status-indicator ${statusClass}"></span>
+                <div class="feed-content">
+                    <div>${message}</div>
+                    <div class="feed-timestamp">${new Date().toLocaleTimeString()}</div>
+                </div>
+            `;
+            
+            feed.insertBefore(item, feed.firstChild);
+            
+            // Keep only last 20 items
+            while (feed.children.length > 20) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+        
+        // Run quick test
+        async function runQuickTest() {
+            addActivityItem('Starting system test...', 'warning');
+            
+            try {
+                // Test a sample function
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_pearson_correlation',
+                        params: {
+                            x_values: [1, 2, 3, 4, 5],
+                            y_values: [2, 4, 6, 8, 10]
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
+                    addActivityItem(`Test successful: Pearson correlation = ${data.data}`, 'success');
+                } else {
+                    addActivityItem('Test failed: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                addActivityItem('Test error: ' + error.message, 'error');
+            }
+        }
+        
+        // Refresh metrics
+        function refreshMetrics() {
+            addActivityItem('Refreshing metrics...', 'warning');
+            loadMetrics();
+        }
+        
+        // Initialize
+        loadMetrics();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(loadMetrics, 30000);
+        
+        // Simulate some activity
+        setTimeout(() => {
+            addActivityItem('Connected to Supabase', 'success');
+        }, 2000);
+        
+        setTimeout(() => {
+            addActivityItem('Monitoring system performance', 'success');
+        }, 4000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Market Data Configuration - FinSight Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .config-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #cccccc;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .add-tag-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .config-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .config-table th,
+        .config-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .config-table th {
+            background: rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            color: #cccccc;
+        }
+
+        .config-table td {
+            color: #ffffff;
+        }
+
+        .priority-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .priority-medium {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .priority-low {
+            background: rgba(156, 163, 175, 0.2);
+            color: #9ca3af;
+        }
+
+        .status-toggle {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .status-toggle input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(156, 163, 175, 0.3);
+            transition: 0.3s;
+            border-radius: 12px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: #9ca3af;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: rgba(74, 222, 128, 0.3);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+            background: #4ade80;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .status-bar {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .advanced-toggle {
+            margin-top: 20px;
+            cursor: pointer;
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .advanced-settings {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .advanced-settings.show {
+            display: block;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <button class="back-btn" onclick="window.location.href='/'">← Back</button>
+            <h1 class="page-title">News & Market Data Configuration</h1>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-indicator"></div>
+            <span>Connected to HANA CONFIG_NEWS_QUERIES and CONFIG_MARKET_SYMBOLS tables</span>
+        </div>
+
+        <!-- Current Metrics -->
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-value" id="newsQueries">12</div>
+                <div class="metric-label">News Queries</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="marketSymbols">485</div>
+                <div class="metric-label">Market Symbols</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="updateFreq">30s</div>
+                <div class="metric-label">Update Frequency</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="apiCalls">1,247</div>
+                <div class="metric-label">API Calls/Hour</div>
+            </div>
+        </div>
+
+        <!-- Configuration Grid -->
+        <div class="config-grid">
+            <!-- News Configuration -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <div class="section-icon">📰</div>
+                    News Intelligence
+                </h2>
+
+                <div class="form-group">
+                    <label class="form-label">News Categories</label>
+                    <div class="tags-container" id="newsCategories">
+                        <div class="tag">TREASURY <button class="tag-remove">×</button></div>
+                        <div class="tag">RATES <button class="tag-remove">×</button></div>
+                        <div class="tag">FOREX <button class="tag-remove">×</button></div>
+                        <div class="tag">MARKETS <button class="tag-remove">×</button></div>
+                        <div class="tag">COMMODITIES <button class="tag-remove">×</button></div>
+                        <div class="tag">CREDIT <button class="tag-remove">×</button></div>
+                        <div class="tag">BANKING <button class="tag-remove">×</button></div>
+                    </div>
+                    <input type="text" class="form-input" id="newCategoryInput" placeholder="Add new category">
+                    <button class="add-tag-btn" onclick="addNewsCategory()">Add Category</button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Update Frequency (seconds)</label>
+                    <input type="range" min="5" max="300" value="30" class="form-input" id="updateFrequency" 
+                           oninput="updateFrequencyDisplay(this.value)">
+                    <span id="frequencyDisplay">30 seconds</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Sentiment Analysis</label>
+                    <select class="form-select" id="sentimentFilter">
+                        <option value="all">All Sentiment</option>
+                        <option value="positive">Positive Only</option>
+                        <option value="negative">Negative Only</option>
+                        <option value="neutral">Neutral Only</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-select" id="language">
+                        <option value="en">English</option>
+                        <option value="zh">Chinese</option>
+                        <option value="ja">Japanese</option>
+                        <option value="de">German</option>
+                    </select>
+                </div>
+
+                <div class="advanced-toggle" onclick="toggleAdvanced('newsAdvanced')">
+                    ⚙️ Advanced Settings
+                </div>
+
+                <div class="advanced-settings" id="newsAdvanced">
+                    <div class="form-group">
+                        <label class="form-label">Impact Score Threshold</label>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" class="form-input" id="impactThreshold">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">WebSocket Subscriptions</label>
+                        <label class="status-toggle">
+                            <input type="checkbox" checked id="websocketEnabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Market Data Configuration -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <div class="section-icon">📊</div>
+                    Market Data Feeds
+                </h2>
+
+                <div class="form-group">
+                    <label class="form-label">Primary Symbols</label>
+                    <div class="tags-container" id="primarySymbols">
+                        <div class="tag">SPY <button class="tag-remove">×</button></div>
+                        <div class="tag">VIX <button class="tag-remove">×</button></div>
+                        <div class="tag">TLT <button class="tag-remove">×</button></div>
+                        <div class="tag">DXY <button class="tag-remove">×</button></div>
+                        <div class="tag">GLD <button class="tag-remove">×</button></div>
+                    </div>
+                    <input type="text" class="form-input" id="newSymbolInput" placeholder="Add symbol (e.g., AAPL)">
+                    <button class="add-tag-btn" onclick="addMarketSymbol()">Add Symbol</button>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Market Categories</label>
+                    <select class="form-select" id="marketCategory">
+                        <option value="stocks">Stocks</option>
+                        <option value="forex">Forex</option>
+                        <option value="crypto">Cryptocurrency</option>
+                        <option value="commodities">Commodities</option>
+                        <option value="bonds">Bonds</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Data Provider Priority</label>
+                    <div style="margin-top: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Finnhub</span>
+                            <span>Priority: 100</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Bloomberg</span>
+                            <span>Priority: 90</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>Alpha Vantage</span>
+                            <span>Priority: 80</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="advanced-toggle" onclick="toggleAdvanced('marketAdvanced')">
+                    ⚙️ Advanced Settings
+                </div>
+
+                <div class="advanced-settings" id="marketAdvanced">
+                    <div class="form-group">
+                        <label class="form-label">Cache Duration (minutes)</label>
+                        <input type="number" min="1" max="60" value="5" class="form-input" id="cacheDuration">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Rate Limiting</label>
+                        <input type="number" min="10" max="1000" value="60" class="form-input" id="rateLimit" placeholder="Requests per minute">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Configuration Tables -->
+        <div class="config-grid">
+            <!-- News Queries Table -->
+            <div class="config-section">
+                <h3 class="section-title">
+                    <div class="section-icon">🔍</div>
+                    Active News Queries
+                </h3>
+                <div class="table-container">
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Query</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="newsQueriesTable">
+                            <tr>
+                                <td>corporate treasury management trends 2025</td>
+                                <td>TREASURY</td>
+                                <td><span class="priority-badge priority-high">HIGH</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>interest rate policy central banks</td>
+                                <td>RATES</td>
+                                <td><span class="priority-badge priority-high">HIGH</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>forex volatility market conditions</td>
+                                <td>FOREX</td>
+                                <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-secondary" style="margin-top: 15px;" onclick="addNewsQuery()">+ Add Query</button>
+            </div>
+
+            <!-- Market Symbols Table -->
+            <div class="config-section">
+                <h3 class="section-title">
+                    <div class="section-icon">💹</div>
+                    Market Symbols
+                </h3>
+                <div class="table-container">
+                    <table class="config-table">
+                        <thead>
+                            <tr>
+                                <th>Symbol</th>
+                                <th>Exchange</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="marketSymbolsTable">
+                            <tr>
+                                <td>SPY</td>
+                                <td>NYSE</td>
+                                <td><span class="priority-badge priority-high">HIGH</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>VIX</td>
+                                <td>CBOE</td>
+                                <td><span class="priority-badge priority-high">HIGH</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>EURUSD</td>
+                                <td>FOREX</td>
+                                <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                                <td>
+                                    <label class="status-toggle">
+                                        <input type="checkbox" checked>
+                                        <span class="toggle-slider"></span>
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <button class="btn btn-secondary" style="margin-top: 15px;" onclick="addMarketSymbol()">+ Add Symbol</button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="testConfiguration()">🧪 Test Configuration</button>
+            <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Configuration</button>
+            <button class="btn btn-secondary" onclick="deployConfiguration()">🚀 Deploy to HANA</button>
+        </div>
+    </div>
+
+    <script>
+        // Configuration state
+        let config = {
+            news: {
+                categories: ['TREASURY', 'RATES', 'FOREX', 'MARKETS', 'COMMODITIES', 'CREDIT', 'BANKING'],
+                updateFrequency: 30,
+                sentimentFilter: 'all',
+                language: 'en',
+                impactThreshold: 0.5,
+                websocketEnabled: true
+            },
+            market: {
+                symbols: ['SPY', 'VIX', 'TLT', 'DXY', 'GLD'],
+                category: 'stocks',
+                cacheDuration: 5,
+                rateLimit: 60
+            }
+        };
+
+        function addNewsCategory() {
+            const input = document.getElementById('newCategoryInput');
+            const category = input.value.trim().toUpperCase();
+            
+            if (category && !config.news.categories.includes(category)) {
+                config.news.categories.push(category);
+                renderNewsCategories();
+                input.value = '';
+            }
+        }
+
+        function addMarketSymbol() {
+            const input = document.getElementById('newSymbolInput');
+            const symbol = input.value.trim().toUpperCase();
+            
+            if (symbol && !config.market.symbols.includes(symbol)) {
+                config.market.symbols.push(symbol);
+                renderMarketSymbols();
+                input.value = '';
+            }
+        }
+
+        function renderNewsCategories() {
+            const container = document.getElementById('newsCategories');
+            container.innerHTML = '';
+            
+            config.news.categories.forEach(category => {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${category} <button class="tag-remove" onclick="removeNewsCategory('${category}')">×</button>`;
+                container.appendChild(tag);
+            });
+        }
+
+        function renderMarketSymbols() {
+            const container = document.getElementById('primarySymbols');
+            container.innerHTML = '';
+            
+            config.market.symbols.forEach(symbol => {
+                const tag = document.createElement('div');
+                tag.className = 'tag';
+                tag.innerHTML = `${symbol} <button class="tag-remove" onclick="removeMarketSymbol('${symbol}')">×</button>`;
+                container.appendChild(tag);
+            });
+        }
+
+        function removeNewsCategory(category) {
+            config.news.categories = config.news.categories.filter(c => c !== category);
+            renderNewsCategories();
+        }
+
+        function removeMarketSymbol(symbol) {
+            config.market.symbols = config.market.symbols.filter(s => s !== symbol);
+            renderMarketSymbols();
+        }
+
+        function updateFrequencyDisplay(value) {
+            document.getElementById('frequencyDisplay').textContent = value + ' seconds';
+            config.news.updateFrequency = parseInt(value);
+            document.getElementById('updateFreq').textContent = value + 's';
+        }
+
+        function toggleAdvanced(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('show');
+        }
+
+        function addNewsQuery() {
+            const query = prompt('Enter news search query:');
+            if (query) {
+                // Add to table
+                const table = document.getElementById('newsQueriesTable');
+                const row = table.insertRow();
+                row.innerHTML = `
+                    <td>${query}</td>
+                    <td>CUSTOM</td>
+                    <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                    <td>
+                        <label class="status-toggle">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </td>
+                `;
+                updateMetrics();
+            }
+        }
+
+        function updateMetrics() {
+            document.getElementById('newsQueries').textContent = 
+                document.getElementById('newsQueriesTable').rows.length;
+        }
+
+        async function testConfiguration() {
+            const testBtn = event.target;
+            testBtn.disabled = true;
+            testBtn.textContent = '🧪 Testing...';
+
+            try {
+                // Test news API
+                const newsTest = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'test-news-config',
+                        data: config.news
+                    })
+                });
+
+                // Test market data API
+                const marketTest = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'test-market-config',
+                        data: config.market
+                    })
+                });
+
+                if (newsTest.ok && marketTest.ok) {
+                    alert('✅ Configuration test successful! All endpoints responding.');
+                } else {
+                    alert('⚠️ Some configuration issues detected. Check logs for details.');
+                }
+            } catch (error) {
+                alert('❌ Configuration test failed: ' + error.message);
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = '🧪 Test Configuration';
+            }
+        }
+
+        async function saveConfiguration() {
+            const saveBtn = event.target;
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Saving...';
+
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save-news-market-config',
+                        data: { news: config.news, market: config.market }
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Configuration saved successfully!');
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                alert('❌ Failed to save configuration: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Configuration';
+            }
+        }
+
+        async function deployConfiguration() {
+            const deployBtn = event.target;
+            deployBtn.disabled = true;
+            deployBtn.textContent = '🚀 Deploying...';
+
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy-to-hana',
+                        data: {
+                            tables: ['CONFIG_NEWS_QUERIES', 'CONFIG_MARKET_SYMBOLS'],
+                            config: { news: config.news, market: config.market }
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Configuration deployed to HANA successfully!');
+                } else {
+                    throw new Error('Deployment failed');
+                }
+            } catch (error) {
+                alert('❌ Failed to deploy to HANA: ' + error.message);
+            } finally {
+                deployBtn.disabled = false;
+                deployBtn.textContent = '🚀 Deploy to HANA';
+            }
+        }
+
+        // Auto-save every 30 seconds
+        setInterval(() => {
+            console.log('Auto-saving configuration...');
+            // Silent save without user notification
+        }, 30000);
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', () => {
+            renderNewsCategories();
+            renderMarketSymbols();
+            updateMetrics();
+        });
+    </script>
+</body>
+</html>

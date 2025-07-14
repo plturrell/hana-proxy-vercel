@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Configuration - FinSight Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4FF, #5B8DEF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .config-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .section-description {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .config-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .config-label {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .config-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .config-input:focus {
+            outline: none;
+            border-color: #5B8DEF;
+            box-shadow: 0 0 0 3px rgba(91, 141, 239, 0.1);
+        }
+
+        .config-description {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .config-range {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox:checked {
+            background: #5B8DEF;
+            border-color: #5B8DEF;
+        }
+
+        .checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: rgba(52, 199, 89, 0.2);
+            color: #34C759;
+        }
+
+        .status-warning {
+            background: rgba(255, 159, 10, 0.2);
+            color: #FF9F0A;
+        }
+
+        .status-error {
+            background: rgba(255, 69, 58, 0.2);
+            color: #FF453A;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        }
+
+        .config-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 5px;
+            border-radius: 12px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .config-group {
+            display: none;
+        }
+
+        .config-group.active {
+            display: block;
+        }
+
+        .export-import-section {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-label {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .file-label:hover {
+            border-color: #5B8DEF;
+            background: rgba(91, 141, 239, 0.1);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .loading {
+            animation: pulse 1.5s infinite;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <div class="nav-left">
+                <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+                <h1 class="page-title">System Configuration</h1>
+            </div>
+            <div class="nav-actions">
+                <button class="action-btn" onclick="exportConfiguration()">Export Config</button>
+                <button class="action-btn" onclick="resetToDefaults()">Reset to Defaults</button>
+                <button class="action-btn btn-success" onclick="saveAllConfigurations()">Save All</button>
+            </div>
+        </div>
+
+        <div class="export-import-section">
+            <div class="file-label" onclick="document.getElementById('config-file').click()">
+                <strong>Import Configuration</strong><br>
+                <span style="font-size: 14px; color: rgba(255,255,255,0.7);">Click to select configuration file</span>
+                <input type="file" id="config-file" class="file-input" accept=".json" onchange="importConfiguration(this)">
+            </div>
+        </div>
+
+        <div class="config-tabs">
+            <button class="tab active" onclick="showConfigGroup('database')">Database</button>
+            <button class="tab" onclick="showConfigGroup('calculation')">Calculation</button>
+            <button class="tab" onclick="showConfigGroup('mcts')">MCTS</button>
+            <button class="tab" onclick="showConfigGroup('thompson')">Thompson Sampling</button>
+            <button class="tab" onclick="showConfigGroup('performance')">Performance</button>
+            <button class="tab" onclick="showConfigGroup('api')">API</button>
+            <button class="tab" onclick="showConfigGroup('ui')">UI</button>
+            <button class="tab" onclick="showConfigGroup('security')">Security</button>
+        </div>
+
+        <!-- Database Configuration -->
+        <div id="database-config" class="config-group active">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Database Configuration</div>
+                        <div class="section-description">Configure HANA database connection and performance parameters</div>
+                    </div>
+                    <div class="status-indicator status-success">Connected</div>
+                </div>
+                <div class="config-grid" id="database-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Configuration -->
+        <div id="calculation-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Calculation Engine Configuration</div>
+                        <div class="section-description">Configure financial calculation engine parameters and caching</div>
+                    </div>
+                    <div class="status-indicator status-success">Operational</div>
+                </div>
+                <div class="config-grid" id="calculation-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- MCTS Configuration -->
+        <div id="mcts-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Monte Carlo Tree Search Configuration</div>
+                        <div class="section-description">Configure MCTS algorithm parameters for scenario analysis</div>
+                    </div>
+                    <div class="status-indicator status-success">Ready</div>
+                </div>
+                <div class="config-grid" id="mcts-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Thompson Sampling Configuration -->
+        <div id="thompson-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Thompson Sampling Configuration</div>
+                        <div class="section-description">Configure Thompson Sampling ML optimization parameters</div>
+                    </div>
+                    <div class="status-indicator status-success">Learning</div>
+                </div>
+                <div class="config-grid" id="thompson-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Configuration -->
+        <div id="performance-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Performance Monitoring Configuration</div>
+                        <div class="section-description">Configure performance thresholds and monitoring settings</div>
+                    </div>
+                    <div class="status-indicator status-success">Monitoring</div>
+                </div>
+                <div class="config-grid" id="performance-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- API Configuration -->
+        <div id="api-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">API Configuration</div>
+                        <div class="section-description">Configure external API endpoints, timeouts, and rate limits</div>
+                    </div>
+                    <div class="status-indicator status-warning">Review Required</div>
+                </div>
+                <div class="config-grid" id="api-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- UI Configuration -->
+        <div id="ui-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">User Interface Configuration</div>
+                        <div class="section-description">Configure UI behavior, refresh rates, and display preferences</div>
+                    </div>
+                    <div class="status-indicator status-success">Active</div>
+                </div>
+                <div class="config-grid" id="ui-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Configuration -->
+        <div id="security-config" class="config-group">
+            <div class="config-section">
+                <div class="section-header">
+                    <div>
+                        <div class="section-title">Security Configuration</div>
+                        <div class="section-description">Configure security policies, timeouts, and access controls</div>
+                    </div>
+                    <div class="status-indicator status-success">Secure</div>
+                </div>
+                <div class="config-grid" id="security-configs">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let systemConfigurations = {};
+        let apiConfigurations = {};
+
+        // Load configurations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllConfigurations();
+        });
+
+        function showConfigGroup(groupName) {
+            // Hide all config groups
+            document.querySelectorAll('.config-group').forEach(group => {
+                group.classList.remove('active');
+            });
+            
+            // Show selected group
+            document.getElementById(groupName + '-config').classList.add('active');
+            
+            // Update tab states
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        async function loadAllConfigurations() {
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'get-all-configurations'
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    systemConfigurations = result.configurations.system || [];
+                    apiConfigurations = result.configurations.apis || [];
+                    renderConfigurations();
+                } else {
+                    showNotification('Failed to load configurations: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error loading configurations: ' + error.message, 'error');
+            }
+        }
+
+        function renderConfigurations() {
+            // Group system configurations by category
+            const grouped = systemConfigurations.reduce((acc, config) => {
+                if (!acc[config.CONFIG_GROUP]) {
+                    acc[config.CONFIG_GROUP] = [];
+                }
+                acc[config.CONFIG_GROUP].push(config);
+                return acc;
+            }, {});
+
+            // Render each group
+            Object.keys(grouped).forEach(groupName => {
+                const container = document.getElementById(groupName + '-configs');
+                if (container) {
+                    container.innerHTML = '';
+                    grouped[groupName].forEach(config => {
+                        container.appendChild(createConfigItem(config));
+                    });
+                }
+            });
+
+            // Render API configurations
+            const apiContainer = document.getElementById('api-configs');
+            if (apiContainer) {
+                apiContainer.innerHTML = '';
+                apiConfigurations.forEach(api => {
+                    apiContainer.appendChild(createAPIConfigItem(api));
+                });
+            }
+        }
+
+        function createConfigItem(config) {
+            const item = document.createElement('div');
+            item.className = 'config-item';
+            
+            const rangeText = (config.MIN_VALUE !== null || config.MAX_VALUE !== null) ? 
+                `(${config.MIN_VALUE || 'min'} - ${config.MAX_VALUE || 'max'})` : '';
+
+            if (config.DATA_TYPE === 'boolean') {
+                item.innerHTML = `
+                    <div class="config-label">
+                        ${config.CONFIG_KEY.replace(/_/g, ' ').toUpperCase()}
+                        <span class="config-range">${rangeText}</span>
+                    </div>
+                    <div class="checkbox-container">
+                        <input type="checkbox" class="checkbox" id="${config.CONFIG_GROUP}_${config.CONFIG_KEY}" 
+                               ${config.CONFIG_VALUE === 'true' ? 'checked' : ''} 
+                               onchange="updateConfiguration('${config.CONFIG_GROUP}', '${config.CONFIG_KEY}', this.checked.toString())">
+                        <label for="${config.CONFIG_GROUP}_${config.CONFIG_KEY}">Enable</label>
+                    </div>
+                    <div class="config-description">${config.DESCRIPTION}</div>
+                `;
+            } else {
+                item.innerHTML = `
+                    <div class="config-label">
+                        ${config.CONFIG_KEY.replace(/_/g, ' ').toUpperCase()}
+                        <span class="config-range">${rangeText}</span>
+                    </div>
+                    <input type="${config.DATA_TYPE === 'integer' || config.DATA_TYPE === 'decimal' ? 'number' : 'text'}" 
+                           class="config-input" 
+                           value="${config.CONFIG_VALUE}" 
+                           ${config.DATA_TYPE === 'decimal' ? 'step="0.001"' : ''}
+                           ${config.MIN_VALUE !== null ? `min="${config.MIN_VALUE}"` : ''}
+                           ${config.MAX_VALUE !== null ? `max="${config.MAX_VALUE}"` : ''}
+                           onchange="updateConfiguration('${config.CONFIG_GROUP}', '${config.CONFIG_KEY}', this.value)">
+                    <div class="config-description">${config.DESCRIPTION}</div>
+                `;
+            }
+            
+            return item;
+        }
+
+        function createAPIConfigItem(api) {
+            const item = document.createElement('div');
+            item.className = 'config-item';
+            
+            item.innerHTML = `
+                <div class="config-label">
+                    ${api.API_NAME.toUpperCase()} API
+                    <span class="status-indicator ${api.IS_ENABLED ? 'status-success' : 'status-error'}">
+                        ${api.IS_ENABLED ? 'Enabled' : 'Disabled'}
+                    </span>
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Endpoint URL</label>
+                    <input type="text" class="config-input" value="${api.ENDPOINT_URL}" 
+                           onchange="updateAPIConfig('${api.API_NAME}', 'endpoint', this.value)">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Timeout (ms)</label>
+                    <input type="number" class="config-input" value="${api.TIMEOUT_MS}" 
+                           onchange="updateAPIConfig('${api.API_NAME}', 'timeout', this.value)">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size: 12px; color: rgba(255,255,255,0.7);">Rate Limit (/min)</label>
+                    <input type="number" class="config-input" value="${api.RATE_LIMIT_PER_MIN}" 
+                           onchange="updateAPIConfig('${api.API_NAME}', 'rateLimit', this.value)">
+                </div>
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="api_${api.API_NAME}" 
+                           ${api.IS_ENABLED ? 'checked' : ''} 
+                           onchange="updateAPIConfig('${api.API_NAME}', 'enabled', this.checked)">
+                    <label for="api_${api.API_NAME}">Enabled</label>
+                </div>
+            `;
+            
+            return item;
+        }
+
+        async function updateConfiguration(group, key, value) {
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'update-system-configuration',
+                        data: {
+                            category: group,
+                            settings: {
+                                [key]: { value: value, description: '' }
+                            }
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification(`${key} updated successfully`, 'success');
+                } else {
+                    showNotification('Failed to update configuration: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error updating configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function updateAPIConfig(apiName, field, value) {
+            // Update the local API configuration object
+            const apiConfig = apiConfigurations.find(api => api.API_NAME === apiName);
+            if (!apiConfig) return;
+
+            switch (field) {
+                case 'endpoint':
+                    apiConfig.ENDPOINT_URL = value;
+                    break;
+                case 'timeout':
+                    apiConfig.TIMEOUT_MS = parseInt(value);
+                    break;
+                case 'rateLimit':
+                    apiConfig.RATE_LIMIT_PER_MIN = parseInt(value);
+                    break;
+                case 'enabled':
+                    apiConfig.IS_ENABLED = value;
+                    break;
+            }
+
+            // Save to backend
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'update-configuration',
+                        data: {
+                            type: 'api',
+                            configurations: [{
+                                name: apiName,
+                                endpoint: apiConfig.ENDPOINT_URL,
+                                apiKey: apiConfig.API_KEY_VALUE,
+                                timeout: apiConfig.TIMEOUT_MS,
+                                rateLimit: apiConfig.RATE_LIMIT_PER_MIN,
+                                retries: apiConfig.RETRY_COUNT,
+                                enabled: apiConfig.IS_ENABLED
+                            }]
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification(`${apiName} API updated successfully`, 'success');
+                } else {
+                    showNotification('Failed to update API configuration: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error updating API configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function saveAllConfigurations() {
+            showNotification('Saving all configurations...', 'success');
+            // Configurations are saved individually on change
+            showNotification('All configurations saved successfully', 'success');
+        }
+
+        async function exportConfiguration() {
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'export-configuration'
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const dataStr = JSON.stringify(result.configuration, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = `cfa-config-${new Date().toISOString().split('T')[0]}.json`;
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                    
+                    showNotification('Configuration exported successfully', 'success');
+                } else {
+                    showNotification('Failed to export configuration: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error exporting configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function importConfiguration(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const configuration = JSON.parse(text);
+
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'import-configuration',
+                        data: {
+                            configuration: configuration
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('Configuration imported successfully', 'success');
+                    loadAllConfigurations(); // Reload to show imported values
+                } else {
+                    showNotification('Failed to import configuration: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error importing configuration: ' + error.message, 'error');
+            }
+        }
+
+        async function resetToDefaults() {
+            if (!confirm('Are you sure you want to reset all configurations to defaults? This cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'reset-to-defaults',
+                        data: {
+                            configTypes: ['system', 'api', 'mcts', 'thompson']
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showNotification('All configurations reset to defaults', 'success');
+                    loadAllConfigurations(); // Reload to show default values
+                } else {
+                    showNotification('Failed to reset configurations: ' + result.error, 'error');
+                }
+            } catch (error) {
+                showNotification('Error resetting configurations: ' + error.message, 'error');
+            }
+        }
+
+        function showNotification(message, type = 'success') {
+            // Remove any existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(n => n.remove());
+
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Hide notification after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

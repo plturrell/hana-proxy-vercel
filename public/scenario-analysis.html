@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario Analysis (MCTS) - Financial Analytics Platform</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .simulation-setup {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .setup-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .input-field {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .scenario-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .scenario-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .scenario-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .scenario-card.selected {
+            border-color: var(--accent);
+            background: rgba(62, 207, 142, 0.1);
+        }
+        
+        .scenario-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .scenario-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .scenario-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .results-section.active {
+            display: block;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .result-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .result-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .metric-value {
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--accent);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .simulation-progress {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .simulation-status {
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+        
+        .path-visualization {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Scenario Analysis</h1>
+                <p style="color: var(--text-secondary);">Monte Carlo Tree Search (MCTS) for advanced scenario modeling</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="simulation-setup">
+            <h2 class="setup-title">Simulation Configuration</h2>
+            
+            <div class="scenario-selector">
+                <div class="scenario-card selected" onclick="selectScenario('market-crash')">
+                    <div class="scenario-icon">📉</div>
+                    <div class="scenario-name">Market Crash</div>
+                    <div class="scenario-desc">Severe market downturn scenario</div>
+                </div>
+                <div class="scenario-card" onclick="selectScenario('rate-hike')">
+                    <div class="scenario-icon">📈</div>
+                    <div class="scenario-name">Rate Hike</div>
+                    <div class="scenario-desc">Aggressive rate increase scenario</div>
+                </div>
+                <div class="scenario-card" onclick="selectScenario('volatility-spike')">
+                    <div class="scenario-icon">⚡</div>
+                    <div class="scenario-name">Volatility Spike</div>
+                    <div class="scenario-desc">High volatility environment</div>
+                </div>
+                <div class="scenario-card" onclick="selectScenario('custom')">
+                    <div class="scenario-icon">⚙️</div>
+                    <div class="scenario-name">Custom</div>
+                    <div class="scenario-desc">Define your own parameters</div>
+                </div>
+            </div>
+            
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">Initial Price ($)</label>
+                    <input type="number" class="input-field" id="initialPrice" value="100" step="1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Volatility (σ)</label>
+                    <input type="number" class="input-field" id="volatility" value="0.25" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Risk-Free Rate</label>
+                    <input type="number" class="input-field" id="riskFreeRate" value="0.05" step="0.01">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Time Horizon (Years)</label>
+                    <input type="number" class="input-field" id="timeHorizon" value="1" step="0.25">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Number of Simulations</label>
+                    <input type="number" class="input-field" id="numSimulations" value="10000" step="1000">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Confidence Level</label>
+                    <select class="input-field" id="confidenceLevel">
+                        <option value="0.90">90%</option>
+                        <option value="0.95" selected>95%</option>
+                        <option value="0.99">99%</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" onclick="runSimulation()">
+                    🚀 Run MCTS Simulation
+                </button>
+                <button class="btn btn-secondary" onclick="resetParameters()">
+                    ↻ Reset Parameters
+                </button>
+            </div>
+        </div>
+        
+        <div class="simulation-progress" id="simulationProgress">
+            <h3>Running Monte Carlo Simulation...</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="simulation-status" id="simulationStatus">
+                Initializing simulation engine...
+            </div>
+        </div>
+        
+        <div class="results-section" id="resultsSection">
+            <h2 style="margin-bottom: 1.5rem;">Simulation Results</h2>
+            
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3 class="result-title">Price Distribution</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Expected Price</span>
+                        <span class="metric-value" id="expectedPrice">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Median Price</span>
+                        <span class="metric-value" id="medianPrice">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">5th Percentile</span>
+                        <span class="metric-value negative" id="percentile5">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">95th Percentile</span>
+                        <span class="metric-value positive" id="percentile95">-</span>
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <h3 class="result-title">Risk Metrics</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Value at Risk (VaR)</span>
+                        <span class="metric-value negative" id="varResult">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Conditional VaR (CVaR)</span>
+                        <span class="metric-value negative" id="cvarResult">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Max Drawdown</span>
+                        <span class="metric-value negative" id="maxDrawdownResult">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Probability of Loss</span>
+                        <span class="metric-value" id="probLoss">-</span>
+                    </div>
+                </div>
+                
+                <div class="result-card">
+                    <h3 class="result-title">Option Pricing</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Call Option (ATM)</span>
+                        <span class="metric-value" id="callPrice">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Put Option (ATM)</span>
+                        <span class="metric-value" id="putPrice">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Implied Volatility</span>
+                        <span class="metric-value" id="impliedVol">-</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Greeks (Δ/Γ/Θ/Ρ)</span>
+                        <span class="metric-value" style="font-size: 0.875rem;" id="greeks">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="result-card" style="margin-bottom: 2rem;">
+                <h3 class="result-title">Price Path Visualization</h3>
+                <div class="path-visualization" id="pathVisualization">
+                    <span>Price paths will be displayed here after simulation</span>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn" onclick="exportResults()">
+                    📥 Export Results
+                </button>
+                <button class="btn btn-secondary" onclick="saveScenario()">
+                    💾 Save Scenario
+                </button>
+                <button class="btn btn-secondary" onclick="compareScenarios()">
+                    📊 Compare Scenarios
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        let currentScenario = 'market-crash';
+        let simulationResults = null;
+        
+        // Scenario presets
+        const scenarioPresets = {
+            'market-crash': {
+                volatility: 0.50,
+                riskFreeRate: 0.02,
+                initialPrice: 100,
+                timeHorizon: 0.25
+            },
+            'rate-hike': {
+                volatility: 0.30,
+                riskFreeRate: 0.08,
+                initialPrice: 100,
+                timeHorizon: 1
+            },
+            'volatility-spike': {
+                volatility: 0.75,
+                riskFreeRate: 0.05,
+                initialPrice: 100,
+                timeHorizon: 0.5
+            }
+        };
+        
+        function selectScenario(scenario) {
+            currentScenario = scenario;
+            
+            // Update UI
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.scenario-card').classList.add('selected');
+            
+            // Load preset values
+            if (scenario !== 'custom' && scenarioPresets[scenario]) {
+                const preset = scenarioPresets[scenario];
+                document.getElementById('volatility').value = preset.volatility;
+                document.getElementById('riskFreeRate').value = preset.riskFreeRate;
+                document.getElementById('initialPrice').value = preset.initialPrice;
+                document.getElementById('timeHorizon').value = preset.timeHorizon;
+            }
+        }
+        
+        async function runSimulation() {
+            const initialPrice = parseFloat(document.getElementById('initialPrice').value);
+            const volatility = parseFloat(document.getElementById('volatility').value);
+            const riskFreeRate = parseFloat(document.getElementById('riskFreeRate').value);
+            const timeHorizon = parseFloat(document.getElementById('timeHorizon').value);
+            const numSimulations = parseInt(document.getElementById('numSimulations').value);
+            const confidenceLevel = parseFloat(document.getElementById('confidenceLevel').value);
+            
+            // Show progress
+            document.getElementById('simulationProgress').style.display = 'block';
+            document.getElementById('resultsSection').classList.remove('active');
+            
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('simulationStatus').textContent = `Processing ${Math.floor(progress * numSimulations / 100).toLocaleString()} paths...`;
+            }, 200);
+            
+            try {
+                // Run Monte Carlo simulation
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'monte_carlo_simulation',
+                        params: {
+                            initial_price: initialPrice,
+                            volatility: volatility,
+                            risk_free_rate: riskFreeRate,
+                            time_horizon: timeHorizon,
+                            num_simulations: numSimulations,
+                            dt: 1/252 // Daily time steps
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data) {
+                    simulationResults = data.data;
+                    
+                    // Calculate statistics
+                    const prices = simulationResults.final_prices;
+                    prices.sort((a, b) => a - b);
+                    
+                    const mean = prices.reduce((a, b) => a + b, 0) / prices.length;
+                    const median = prices[Math.floor(prices.length / 2)];
+                    const p5 = prices[Math.floor(prices.length * 0.05)];
+                    const p95 = prices[Math.floor(prices.length * 0.95)];
+                    
+                    // Update results
+                    document.getElementById('expectedPrice').textContent = `$${mean.toFixed(2)}`;
+                    document.getElementById('medianPrice').textContent = `$${median.toFixed(2)}`;
+                    document.getElementById('percentile5').textContent = `$${p5.toFixed(2)}`;
+                    document.getElementById('percentile95').textContent = `$${p95.toFixed(2)}`;
+                    
+                    // Calculate VaR
+                    const returns = prices.map(p => (p - initialPrice) / initialPrice);
+                    const varResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'calculate_var',
+                            params: {
+                                returns: returns,
+                                confidence_level: confidenceLevel
+                            }
+                        })
+                    });
+                    
+                    const varData = await varResponse.json();
+                    if (varData.data !== undefined) {
+                        document.getElementById('varResult').textContent = `${(varData.data * 100).toFixed(2)}%`;
+                        
+                        // Calculate CVaR
+                        const cvarResponse = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'rpc',
+                                function_name: 'calculate_cvar',
+                                params: {
+                                    returns: returns,
+                                    confidence_level: confidenceLevel
+                                }
+                            })
+                        });
+                        
+                        const cvarData = await cvarResponse.json();
+                        if (cvarData.data !== undefined) {
+                            document.getElementById('cvarResult').textContent = `${(cvarData.data * 100).toFixed(2)}%`;
+                        }
+                    }
+                    
+                    // Calculate max drawdown
+                    const maxDrawdownResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'calculate_max_drawdown',
+                            params: {
+                                returns: returns
+                            }
+                        })
+                    });
+                    
+                    const maxDrawdownData = await maxDrawdownResponse.json();
+                    if (maxDrawdownData.data !== undefined) {
+                        document.getElementById('maxDrawdownResult').textContent = `${(maxDrawdownData.data * 100).toFixed(2)}%`;
+                    }
+                    
+                    // Probability of loss
+                    const probLoss = returns.filter(r => r < 0).length / returns.length;
+                    document.getElementById('probLoss').textContent = `${(probLoss * 100).toFixed(1)}%`;
+                    
+                    // Calculate option prices
+                    const callResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'black_scholes_option_price',
+                            params: {
+                                spot_price: initialPrice,
+                                strike_price: initialPrice, // ATM
+                                time_to_expiry: timeHorizon,
+                                risk_free_rate: riskFreeRate,
+                                volatility: volatility,
+                                option_type: 'call'
+                            }
+                        })
+                    });
+                    
+                    const callData = await callResponse.json();
+                    if (callData.data !== undefined) {
+                        document.getElementById('callPrice').textContent = `$${callData.data.toFixed(2)}`;
+                    }
+                    
+                    // Put option
+                    const putResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'black_scholes_option_price',
+                            params: {
+                                spot_price: initialPrice,
+                                strike_price: initialPrice, // ATM
+                                time_to_expiry: timeHorizon,
+                                risk_free_rate: riskFreeRate,
+                                volatility: volatility,
+                                option_type: 'put'
+                            }
+                        })
+                    });
+                    
+                    const putData = await putResponse.json();
+                    if (putData.data !== undefined) {
+                        document.getElementById('putPrice').textContent = `$${putData.data.toFixed(2)}`;
+                    }
+                    
+                    // Greeks
+                    const greeksResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'calculate_option_greeks',
+                            params: {
+                                spot_price: initialPrice,
+                                strike_price: initialPrice,
+                                time_to_expiry: timeHorizon,
+                                risk_free_rate: riskFreeRate,
+                                volatility: volatility,
+                                option_type: 'call'
+                            }
+                        })
+                    });
+                    
+                    const greeksData = await greeksResponse.json();
+                    if (greeksData.data) {
+                        const g = greeksData.data;
+                        document.getElementById('greeks').textContent = 
+                            `${g.delta.toFixed(3)}/${g.gamma.toFixed(3)}/${g.theta.toFixed(3)}/${g.rho.toFixed(3)}`;
+                    }
+                    
+                    document.getElementById('impliedVol').textContent = `${(volatility * 100).toFixed(1)}%`;
+                    
+                    // Visualize paths (placeholder)
+                    document.getElementById('pathVisualization').innerHTML = `
+                        <div style="text-align: center;">
+                            <p>Simulated ${numSimulations.toLocaleString()} price paths</p>
+                            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-top: 0.5rem;">
+                                Mean path: $${initialPrice.toFixed(2)} → $${mean.toFixed(2)}<br>
+                                95% confidence interval: $${p5.toFixed(2)} - $${p95.toFixed(2)}
+                            </p>
+                        </div>
+                    `;
+                    
+                    // Complete progress
+                    clearInterval(progressInterval);
+                    document.getElementById('progressFill').style.width = '100%';
+                    document.getElementById('simulationStatus').textContent = 'Simulation complete!';
+                    
+                    setTimeout(() => {
+                        document.getElementById('simulationProgress').style.display = 'none';
+                        document.getElementById('resultsSection').classList.add('active');
+                    }, 1000);
+                    
+                } else {
+                    throw new Error(data.error || 'Simulation failed');
+                }
+                
+            } catch (error) {
+                console.error('Simulation error:', error);
+                clearInterval(progressInterval);
+                document.getElementById('simulationStatus').textContent = 'Error: ' + error.message;
+                document.getElementById('simulationStatus').style.color = 'var(--danger)';
+            }
+        }
+        
+        function resetParameters() {
+            document.getElementById('initialPrice').value = '100';
+            document.getElementById('volatility').value = '0.25';
+            document.getElementById('riskFreeRate').value = '0.05';
+            document.getElementById('timeHorizon').value = '1';
+            document.getElementById('numSimulations').value = '10000';
+            document.getElementById('confidenceLevel').value = '0.95';
+        }
+        
+        function exportResults() {
+            if (!simulationResults) {
+                alert('No simulation results to export');
+                return;
+            }
+            alert('Export functionality would download results as CSV/PDF');
+        }
+        
+        function saveScenario() {
+            if (!simulationResults) {
+                alert('No simulation results to save');
+                return;
+            }
+            alert('Scenario saved for future comparison');
+        }
+        
+        function compareScenarios() {
+            alert('Scenario comparison tool would launch here');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set default scenario
+            selectScenario('market-crash');
+        });
+    </script>
+</body>
+</html>

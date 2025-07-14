@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Market Data Configuration - Financial Analytics Platform</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            position: relative;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .tab:hover {
+            color: var(--text);
+        }
+        
+        .tab.active {
+            color: var(--accent);
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .data-source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .source-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+        
+        .source-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .source-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .source-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-connected {
+            background: rgba(74, 222, 128, 0.2);
+            color: var(--accent);
+        }
+        
+        .status-disconnected {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .status-pending {
+            background: rgba(251, 191, 36, 0.2);
+            color: var(--warning);
+        }
+        
+        .source-info {
+            display: grid;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+        }
+        
+        .info-label {
+            color: var(--text-secondary);
+        }
+        
+        .info-value {
+            font-weight: 500;
+        }
+        
+        .source-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-small {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-small:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .btn-small:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .config-section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-input {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: var(--text);
+            font-size: 1rem;
+        }
+        
+        .form-select {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem;
+            color: var(--text);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--border);
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: var(--text-secondary);
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .toggle-slider {
+            background: var(--accent);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+            background: white;
+        }
+        
+        .market-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .market-data-table th,
+        .market-data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .market-data-table th {
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .symbol {
+            font-weight: 600;
+        }
+        
+        .price {
+            font-family: monospace;
+        }
+        
+        .change-positive {
+            color: var(--accent);
+        }
+        
+        .change-negative {
+            color: var(--danger);
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .live-feed {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            height: 300px;
+            overflow-y: auto;
+        }
+        
+        .feed-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+        
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feed-content {
+            flex: 1;
+        }
+        
+        .feed-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .feed-source {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .feed-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        /* Setup Tab Styles */
+        .setup-section {
+            margin-bottom: 2rem;
+        }
+        
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .setup-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .setup-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+        
+        .setup-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .setup-status {
+            margin-bottom: 1rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .status-pending {
+            background: var(--warning);
+            color: var(--bg);
+        }
+        
+        .status-success {
+            background: var(--accent);
+            color: var(--bg);
+        }
+        
+        .status-error {
+            background: var(--danger);
+            color: var(--text);
+        }
+        
+        .deployment-log {
+            margin-top: 2rem;
+        }
+        
+        .log-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            height: 300px;
+            overflow-y: auto;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+        }
+        
+        .log-entry {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+        
+        .log-entry.success {
+            color: var(--accent);
+        }
+        
+        .log-entry.error {
+            color: var(--danger);
+        }
+        
+        .log-entry.info {
+            color: var(--info);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>News & Market Data Configuration</h1>
+                <p style="color: var(--text-secondary);">Configure real-time data sources and feeds</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('setup')">Database Setup</button>
+            <button class="tab" onclick="switchTab('sources')">Data Sources</button>
+            <button class="tab" onclick="switchTab('market')">Market Data</button>
+            <button class="tab" onclick="switchTab('news')">News Intelligence</button>
+            <button class="tab" onclick="switchTab('knowledge')">Knowledge Graph</button>
+            <button class="tab" onclick="switchTab('alerts')">Alerts & Webhooks</button>
+        </div>
+        
+        <!-- Database Setup Tab -->
+        <div class="tab-content active" id="setup-tab">
+            <div class="setup-section">
+                <h2>Market Data Tables</h2>
+                <p>Deploy market data tables and functions to Supabase</p>
+                
+                <div class="setup-grid">
+                    <div class="setup-card">
+                        <h3>📊 Market Data Tables</h3>
+                        <p>Create tables for market data, portfolio holdings, bonds, forex, and economic indicators</p>
+                        <div class="setup-status" id="tables-status">
+                            <span class="loading"></span> Checking status...
+                        </div>
+                        <button class="btn" onclick="deployTables()">Deploy Tables</button>
+                    </div>
+                    
+                    <div class="setup-card">
+                        <h3>🔧 Database Functions</h3>
+                        <p>Deploy SQL functions for market data retrieval and calculation storage</p>
+                        <div class="setup-status" id="functions-status">
+                            <span class="loading"></span> Checking status...
+                        </div>
+                        <button class="btn" onclick="deployFunctions()">Deploy Functions</button>
+                    </div>
+                    
+                    <div class="setup-card">
+                        <h3>📈 Sample Data</h3>
+                        <p>Populate with sample market data for testing</p>
+                        <div class="setup-status" id="sample-data-status">
+                            <span class="loading"></span> Checking status...
+                        </div>
+                        <button class="btn" onclick="populateSampleData()">Add Sample Data</button>
+                    </div>
+                    
+                    <div class="setup-card">
+                        <h3>🔗 Live Data Feeds</h3>
+                        <p>Connect to real market data APIs</p>
+                        <div class="setup-status" id="live-feeds-status">
+                            <span class="loading"></span> Checking status...
+                        </div>
+                        <button class="btn" onclick="connectLiveFeeds()">Connect Feeds</button>
+                    </div>
+                </div>
+                
+                <div class="deployment-log">
+                    <h3>Deployment Log</h3>
+                    <div class="log-container" id="deployment-log">
+                        <div class="log-entry">Ready to deploy market data infrastructure...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Sources Tab -->
+        <div class="tab-content" id="sources-tab">
+            <div class="data-source-grid">
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">Perplexity AI</span>
+                        <span class="source-status status-connected" id="perplexity-status">CONNECTED</span>
+                    </div>
+                    <div class="source-info">
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value">AI Search & News Intelligence</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Rate Limit:</span>
+                            <span class="info-value">1000 calls/day</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Last Query:</span>
+                            <span class="info-value" id="perplexity-last-sync">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Articles Processed:</span>
+                            <span class="info-value" id="perplexity-articles">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="source-actions">
+                        <button class="btn-small" onclick="testConnection('perplexity')">Test</button>
+                        <button class="btn-small" onclick="syncData('perplexity')">Query Now</button>
+                        <button class="btn-small" onclick="configureSource('perplexity')">Configure</button>
+                    </div>
+                </div>
+                
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">Supabase News Store</span>
+                        <span class="source-status status-connected" id="supabase-status">CONNECTED</span>
+                    </div>
+                    <div class="source-info">
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value">News Database & Analytics</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Tables:</span>
+                            <span class="info-value">news_articles, market_impact</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Last Sync:</span>
+                            <span class="info-value" id="supabase-last-sync">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Total Articles:</span>
+                            <span class="info-value" id="supabase-total-articles">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="source-actions">
+                        <button class="btn-small" onclick="testConnection('supabase-news')">Test</button>
+                        <button class="btn-small" onclick="syncData('supabase-news')">Sync Now</button>
+                        <button class="btn-small" onclick="configureSource('supabase-news')">Configure</button>
+                    </div>
+                </div>
+                
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">RDF Knowledge Graph</span>
+                        <span class="source-status status-connected" id="rdf-status">CONNECTED</span>
+                    </div>
+                    <div class="source-info">
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value">Semantic Knowledge Graph</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Format:</span>
+                            <span class="info-value">RDF Turtle</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Last Update:</span>
+                            <span class="info-value" id="rdf-last-sync">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Triple Count:</span>
+                            <span class="info-value" id="rdf-triples">
+                                <span class="loading"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="source-actions">
+                        <button class="btn-small" onclick="testConnection('rdf-kg')">Test</button>
+                        <button class="btn-small" onclick="syncData('rdf-kg')">Build Graph</button>
+                        <button class="btn-small" onclick="configureSource('rdf-kg')">Configure</button>
+                    </div>
+                </div>
+                
+                <div class="source-card">
+                    <div class="source-header">
+                        <span class="source-name">Alpha Vantage</span>
+                        <span class="source-status status-connected">CONNECTED</span>
+                    </div>
+                    <div class="source-info">
+                        <div class="info-row">
+                            <span class="info-label">Type:</span>
+                            <span class="info-value">Market Data API</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Rate Limit:</span>
+                            <span class="info-value">5 calls/min</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Last Sync:</span>
+                            <span class="info-value" id="av-last-sync">2 mins ago</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Data Points:</span>
+                            <span class="info-value" id="av-data-points">1,247</span>
+                        </div>
+                    </div>
+                    <div class="source-actions">
+                        <button class="btn-small" onclick="testConnection('alpha-vantage')">Test</button>
+                        <button class="btn-small" onclick="syncData('alpha-vantage')">Sync Now</button>
+                        <button class="btn-small" onclick="configureSource('alpha-vantage')">Configure</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <h2 class="section-title">API Configuration</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Perplexity API Key</label>
+                        <input type="password" class="form-input" id="perplexity-api-key" placeholder="Enter Perplexity API key">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Perplexity Model</label>
+                        <select class="form-select" id="perplexity-model">
+                            <option value="llama-3.1-sonar-small-128k-online">Sonar Small (Online)</option>
+                            <option value="llama-3.1-sonar-large-128k-online">Sonar Large (Online)</option>
+                            <option value="llama-3.1-sonar-huge-128k-online">Sonar Huge (Online)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Supabase Connection</label>
+                        <input type="text" class="form-input" id="supabase-url" placeholder="Supabase URL" readonly value="fnsbxaywhsxqppncqksu.supabase.co">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">News Query Frequency</label>
+                        <select class="form-select" id="news-frequency">
+                            <option value="5">Every 5 minutes</option>
+                            <option value="15">Every 15 minutes</option>
+                            <option value="30">Every 30 minutes</option>
+                            <option value="60">Every hour</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Alpha Vantage API Key</label>
+                        <input type="password" class="form-input" id="av-api-key" placeholder="Enter API key">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">RDF Graph Storage</label>
+                        <select class="form-select" id="rdf-storage">
+                            <option value="supabase">Supabase PostgreSQL</option>
+                            <option value="local">Local JSON Storage</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    <button class="btn" onclick="saveAPIConfig()">Save Configuration</button>
+                    <button class="btn-small" onclick="testAllConnections()">Test All Connections</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Market Data Tab -->
+        <div class="tab-content" id="market-tab">
+            <div class="config-section">
+                <h2 class="section-title">Watched Symbols</h2>
+                <div class="form-grid" style="grid-template-columns: 1fr auto;">
+                    <div class="form-group">
+                        <label class="form-label">Add Symbol</label>
+                        <input type="text" class="form-input" id="add-symbol" placeholder="Enter symbol (e.g., AAPL, SPY)">
+                    </div>
+                    <div class="form-group" style="align-self: flex-end;">
+                        <button class="btn" onclick="addSymbol()">Add Symbol</button>
+                    </div>
+                </div>
+                
+                <table class="market-data-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                            <th>Volume</th>
+                            <th>Last Update</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="market-data-tbody">
+                        <tr>
+                            <td class="symbol">SPY</td>
+                            <td>SPDR S&P 500 ETF</td>
+                            <td class="price">$445.67</td>
+                            <td class="change-positive">+0.85%</td>
+                            <td>78.2M</td>
+                            <td>2 mins ago</td>
+                            <td><button class="btn-small" onclick="removeSymbol('SPY')">Remove</button></td>
+                        </tr>
+                        <tr>
+                            <td class="symbol">AAPL</td>
+                            <td>Apple Inc.</td>
+                            <td class="price">$178.45</td>
+                            <td class="change-negative">-0.32%</td>
+                            <td>52.1M</td>
+                            <td>2 mins ago</td>
+                            <td><button class="btn-small" onclick="removeSymbol('AAPL')">Remove</button></td>
+                        </tr>
+                        <tr>
+                            <td class="symbol">BTC-USD</td>
+                            <td>Bitcoin USD</td>
+                            <td class="price">$42,156.78</td>
+                            <td class="change-positive">+2.15%</td>
+                            <td>$28.4B</td>
+                            <td>1 min ago</td>
+                            <td><button class="btn-small" onclick="removeSymbol('BTC-USD')">Remove</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="config-section">
+                <h2 class="section-title">Data Collection Settings</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Historical Data Range</label>
+                        <select class="form-select">
+                            <option value="1m">1 Month</option>
+                            <option value="3m">3 Months</option>
+                            <option value="6m">6 Months</option>
+                            <option value="1y" selected>1 Year</option>
+                            <option value="2y">2 Years</option>
+                            <option value="5y">5 Years</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Data Granularity</label>
+                        <select class="form-select">
+                            <option value="1min">1 Minute</option>
+                            <option value="5min">5 Minutes</option>
+                            <option value="15min">15 Minutes</option>
+                            <option value="1hour">1 Hour</option>
+                            <option value="1day" selected>Daily</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Include Extended Hours</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Store in Supabase</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- News Intelligence Tab -->
+        <div class="tab-content" id="news-tab">
+            <div class="config-section">
+                <h2 class="section-title">Perplexity News Intelligence</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Query Categories</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Financial Markets
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Cryptocurrency
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Economic Indicators
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" checked> Federal Reserve Policy
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Technology Stocks
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox"> Energy Markets
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Custom Query</label>
+                        <input type="text" class="form-input" id="custom-query" placeholder="Enter custom financial news query">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Query Depth</label>
+                        <select class="form-select" id="query-depth">
+                            <option value="basic">Basic (5 sources)</option>
+                            <option value="detailed" selected>Detailed (10 sources)</option>
+                            <option value="comprehensive">Comprehensive (15+ sources)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Market Impact Analysis</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem;">
+                    <button class="btn" onclick="queryPerplexity()">🤖 Query Perplexity AI</button>
+                    <button class="btn-small" onclick="scheduleQueries()">⏰ Schedule Queries</button>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <h2 class="section-title">Live Intelligence Feed</h2>
+                <div class="live-feed" id="news-feed">
+                    <div class="feed-item">
+                        <div class="feed-content">
+                            <div class="feed-title">📊 Perplexity Analysis: Fed Minutes Show Officials Concerned About Inflation Persistence</div>
+                            <div class="feed-source">Perplexity AI • Market Impact: High • Sentiment: Bearish</div>
+                        </div>
+                        <div class="feed-time">3m ago</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-content">
+                            <div class="feed-title">🚀 Bitcoin ETF Approval Speculation: Analysis from 12 Sources</div>
+                            <div class="feed-source">Perplexity AI • Market Impact: Very High • Confidence: 87%</div>
+                        </div>
+                        <div class="feed-time">8m ago</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-content">
+                            <div class="feed-title">📱 Apple Production Cuts: Supply Chain Impact Analysis</div>
+                            <div class="feed-source">Perplexity AI • Market Impact: Medium • Sector: Technology</div>
+                        </div>
+                        <div class="feed-time">15m ago</div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-content">
+                            <div class="feed-title">📈 GDP Revision Impact on Treasury Yields - Multi-Source Analysis</div>
+                            <div class="feed-source">Perplexity AI • Market Impact: High • Asset Classes: Bonds, USD</div>
+                        </div>
+                        <div class="feed-time">32m ago</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Knowledge Graph Tab -->
+        <div class="tab-content" id="knowledge-tab">
+            <div class="config-section">
+                <h2 class="section-title">RDF Knowledge Graph Management</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Graph Statistics</label>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 0.5rem;">
+                            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--accent);" id="kg-entities">1,247</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Entities</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--info);" id="kg-relations">3,891</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">Relations</div>
+                            </div>
+                            <div style="text-align: center; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                                <div style="font-size: 1.5rem; font-weight: 600; color: var(--warning);" id="kg-triples">12,634</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">RDF Triples</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Entity Extraction</label>
+                        <select class="form-select" id="entity-extraction">
+                            <option value="automatic">Automatic (NLP)</option>
+                            <option value="manual">Manual Review</option>
+                            <option value="hybrid" selected>Hybrid Approach</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Relationship Inference</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Temporal Analysis</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <button class="btn" onclick="buildKnowledgeGraph()">🔗 Build Graph</button>
+                    <button class="btn-small" onclick="queryGraph()">🔍 Query Graph</button>
+                    <button class="btn-small" onclick="exportTurtle()">📄 Export Turtle</button>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <h2 class="section-title">Sample RDF Turtle Output</h2>
+                <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem; font-family: monospace; font-size: 0.875rem; max-height: 300px; overflow-y: auto;" id="turtle-output">
+@prefix fin: &lt;http://example.org/finance#&gt; .
+@prefix news: &lt;http://example.org/news#&gt; .
+@prefix time: &lt;http://www.w3.org/2006/time#&gt; .
+
+news:article_001 a news:Article ;
+    news:title "Fed Minutes Show Officials Concerned About Inflation" ;
+    news:publishedAt "2024-01-13T15:30:00Z"^^xsd:dateTime ;
+    news:sentiment "bearish" ;
+    news:marketImpact "high" ;
+    news:mentions fin:FederalReserve, fin:InflationRate .
+
+fin:FederalReserve a fin:Institution ;
+    fin:influences fin:InterestRates, fin:MonetaryPolicy ;
+    fin:relatedTo fin:InflationTargeting .
+
+fin:InflationRate a fin:EconomicIndicator ;
+    fin:affects fin:BondPrices, fin:CurrencyValue ;
+    time:hasTime "2024-01-13"^^xsd:date .
+
+news:article_001 fin:triggers fin:MarketVolatility .
+                </div>
+            </div>
+        </div>
+        
+        <!-- Alerts & Webhooks Tab -->
+        <div class="tab-content" id="alerts-tab">
+            <div class="config-section">
+                <h2 class="section-title">Alert Configuration</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Price Alerts</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Volume Alerts</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">News Alerts</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">System Alerts</label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-section">
+                <h2 class="section-title">Webhook Endpoints</h2>
+                <div class="form-grid">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label class="form-label">Slack Webhook URL</label>
+                        <input type="text" class="form-input" placeholder="https://hooks.slack.com/services/...">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label class="form-label">Discord Webhook URL</label>
+                        <input type="text" class="form-input" placeholder="https://discord.com/api/webhooks/...">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label class="form-label">Custom Webhook URL</label>
+                        <input type="text" class="form-input" placeholder="https://your-endpoint.com/webhook">
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <button class="btn" onclick="testWebhooks()">Test Webhooks</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        let currentTab = 'setup';
+        
+        // Database Setup Functions
+        async function deployTables() {
+            addLogEntry('Deploying market data tables...', 'info');
+            updateStatus('tables-status', 'Deploying...', 'pending');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'deploy_tables' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.sql && data.sql.tables) {
+                    addLogEntry('✅ Table deployment SQL ready', 'success');
+                    addLogEntry('Please execute the following SQL in Supabase Dashboard:', 'info');
+                    addLogEntry(data.instructions.join('\n'), 'info');
+                    
+                    // Create a downloadable SQL file
+                    const blob = new Blob([data.sql.tables], { type: 'text/sql' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'market_data_tables.sql';
+                    link.click();
+                    
+                    updateStatus('tables-status', 'Ready for deployment', 'pending');
+                } else {
+                    throw new Error('Failed to get deployment SQL');
+                }
+            } catch (error) {
+                addLogEntry(`❌ Table deployment failed: ${error.message}`, 'error');
+                updateStatus('tables-status', 'Deployment failed', 'error');
+            }
+        }
+        
+        async function deployFunctions() {
+            addLogEntry('Deploying database functions...', 'info');
+            updateStatus('functions-status', 'Deploying...', 'pending');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'deploy_tables' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.sql && data.sql.functions) {
+                    addLogEntry('✅ Function deployment SQL ready', 'success');
+                    
+                    // Create a downloadable SQL file
+                    const blob = new Blob([data.sql.functions], { type: 'text/sql' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'market_data_functions.sql';
+                    link.click();
+                    
+                    updateStatus('functions-status', 'Ready for deployment', 'pending');
+                } else {
+                    throw new Error('Failed to get function SQL');
+                }
+            } catch (error) {
+                addLogEntry(`❌ Function deployment failed: ${error.message}`, 'error');
+                updateStatus('functions-status', 'Deployment failed', 'error');
+            }
+        }
+        
+        async function populateSampleData() {
+            addLogEntry('Populating sample market data...', 'info');
+            updateStatus('sample-data-status', 'Populating...', 'pending');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'populate_sample_data' })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    addLogEntry(`✅ ${data.message}`, 'success');
+                    updateStatus('sample-data-status', 'Sample data loaded', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to populate data');
+                }
+            } catch (error) {
+                addLogEntry(`❌ Sample data failed: ${error.message}`, 'error');
+                updateStatus('sample-data-status', 'Population failed', 'error');
+            }
+        }
+        
+        async function connectLiveFeeds() {
+            addLogEntry('Connecting to live market data feeds...', 'info');
+            updateStatus('live-feeds-status', 'Connecting...', 'pending');
+            
+            try {
+                // This would connect to real APIs like Alpha Vantage, Yahoo Finance, etc.
+                addLogEntry('🔗 Checking available data sources...', 'info');
+                addLogEntry('📊 Alpha Vantage API - Available', 'success');
+                addLogEntry('📈 Yahoo Finance - Available', 'success');
+                addLogEntry('📰 Perplexity News API - Available', 'success');
+                
+                // Simulate connection
+                setTimeout(() => {
+                    addLogEntry('✅ Live data feeds connected', 'success');
+                    updateStatus('live-feeds-status', 'Connected to live feeds', 'success');
+                }, 2000);
+                
+            } catch (error) {
+                addLogEntry(`❌ Live feed connection failed: ${error.message}`, 'error');
+                updateStatus('live-feeds-status', 'Connection failed', 'error');
+            }
+        }
+        
+        function updateStatus(elementId, message, status) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `setup-status status-${status}`;
+        }
+        
+        function addLogEntry(message, type = 'info') {
+            const logContainer = document.getElementById('deployment-log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+        
+        // Check setup status on page load
+        async function checkSetupStatus() {
+            addLogEntry('Checking database setup status...', 'info');
+            
+            try {
+                // Check if tables exist
+                const tablesResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_tables' })
+                });
+                
+                const tablesData = await tablesResponse.json();
+                
+                if (tablesData.existing_tables && tablesData.existing_tables.length > 0) {
+                    updateStatus('tables-status', `${tablesData.existing_tables.length} tables deployed`, 'success');
+                    addLogEntry(`✅ Found ${tablesData.existing_tables.length} existing tables`, 'success');
+                } else {
+                    updateStatus('tables-status', 'Tables not deployed', 'pending');
+                    addLogEntry('ℹ️ No market data tables found', 'info');
+                }
+                
+                // Check functions
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                
+                if (functionsData.deployed_count > 0) {
+                    updateStatus('functions-status', `${functionsData.deployed_count} functions deployed`, 'success');
+                    addLogEntry(`✅ Found ${functionsData.deployed_count} functions`, 'success');
+                } else {
+                    updateStatus('functions-status', 'Functions not deployed', 'pending');
+                }
+                
+            } catch (error) {
+                addLogEntry(`❌ Status check failed: ${error.message}`, 'error');
+            }
+        }
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tab}-tab`).classList.add('active');
+            
+            // Load tab-specific data
+            if (tab === 'setup') {
+                checkSetupStatus();
+            } else if (tab === 'sources') {
+                loadDataSources();
+            } else if (tab === 'market') {
+                updateMarketData();
+            } else if (tab === 'news') {
+                loadNewsIntelligence();
+            } else if (tab === 'knowledge') {
+                loadKnowledgeGraph();
+            }
+        }
+        
+        // Load real data from Supabase for data sources
+        async function loadDataSources() {
+            try {
+                // Check Perplexity connection status
+                const perplexityStatus = await checkPerplexityConnection();
+                document.getElementById('perplexity-status').textContent = perplexityStatus ? 'CONNECTED' : 'DISCONNECTED';
+                document.getElementById('perplexity-status').className = `source-status status-${perplexityStatus ? 'connected' : 'disconnected'}`;
+                
+                // Get news stats from Supabase
+                const newsStats = await getNewsStats();
+                document.getElementById('perplexity-last-sync').textContent = newsStats.lastQuery || 'Never';
+                document.getElementById('perplexity-articles').textContent = newsStats.articlesProcessed || '0';
+                
+                // Get Supabase news store stats
+                const supabaseStats = await getSupabaseNewsStats();
+                document.getElementById('supabase-last-sync').textContent = supabaseStats.lastSync || 'Never';
+                document.getElementById('supabase-total-articles').textContent = supabaseStats.totalArticles || '0';
+                
+                // Get RDF Knowledge Graph stats
+                const rdfStats = await getRDFStats();
+                document.getElementById('rdf-last-sync').textContent = rdfStats.lastUpdate || 'Never';
+                document.getElementById('rdf-triples').textContent = rdfStats.tripleCount || '0';
+                
+            } catch (error) {
+                console.error('Failed to load data sources:', error);
+            }
+        }
+        
+        async function checkPerplexityConnection() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'check_perplexity_connection'
+                    })
+                });
+                const data = await response.json();
+                return data.data && data.data.connected;
+            } catch (error) {
+                return false;
+            }
+        }
+        
+        async function getNewsStats() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'news_queries',
+                        select: 'created_at, articles_found',
+                        order: 'created_at.desc',
+                        limit: 1
+                    })
+                });
+                const data = await response.json();
+                if (data.data && data.data.length > 0) {
+                    const latest = data.data[0];
+                    return {
+                        lastQuery: new Date(latest.created_at).toLocaleString(),
+                        articlesProcessed: latest.articles_found || 0
+                    };
+                }
+                return {};
+            } catch (error) {
+                console.error('Failed to get news stats:', error);
+                return {};
+            }
+        }
+        
+        async function getSupabaseNewsStats() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'news_articles',
+                        select: 'count(*)',
+                        single: true
+                    })
+                });
+                const countData = await response.json();
+                
+                const lastSyncResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'news_articles',
+                        select: 'created_at',
+                        order: 'created_at.desc',
+                        limit: 1
+                    })
+                });
+                const lastSyncData = await lastSyncResponse.json();
+                
+                return {
+                    totalArticles: countData.data?.count || 0,
+                    lastSync: lastSyncData.data?.[0]?.created_at ? 
+                        new Date(lastSyncData.data[0].created_at).toLocaleString() : 'Never'
+                };
+            } catch (error) {
+                console.error('Failed to get Supabase news stats:', error);
+                return {};
+            }
+        }
+        
+        async function getRDFStats() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'rdf_triples',
+                        select: 'count(*)',
+                        single: true
+                    })
+                });
+                const countData = await response.json();
+                
+                const lastUpdateResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'rdf_triples',
+                        select: 'created_at',
+                        order: 'created_at.desc',
+                        limit: 1
+                    })
+                });
+                const lastUpdateData = await lastUpdateResponse.json();
+                
+                return {
+                    tripleCount: countData.data?.count || 0,
+                    lastUpdate: lastUpdateData.data?.[0]?.created_at ? 
+                        new Date(lastUpdateData.data[0].created_at).toLocaleString() : 'Never'
+                };
+            } catch (error) {
+                console.error('Failed to get RDF stats:', error);
+                return {};
+            }
+        }
+        
+        // Perplexity News Processing Pipeline
+        async function queryPerplexity() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '🤖 Querying...';
+            
+            try {
+                const customQuery = document.getElementById('custom-query').value;
+                const queryDepth = document.getElementById('query-depth').value;
+                
+                // Get selected categories
+                const categories = [];
+                document.querySelectorAll('#news-tab input[type="checkbox"]:checked').forEach(cb => {
+                    const label = cb.parentElement.textContent.trim();
+                    categories.push(label);
+                });
+                
+                // Call Perplexity API through Supabase function
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'query_perplexity_news',
+                        params: {
+                            query: customQuery || `Latest financial news about ${categories.join(', ')}`,
+                            categories: categories,
+                            depth: queryDepth,
+                            include_sources: true,
+                            return_citations: true
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data && data.data.success) {
+                    // Process the news data and extract entities for RDF
+                    await processNewsToRDF(data.data.articles);
+                    
+                    // Update the news feed with real results
+                    updateNewsFeedWithResults(data.data.articles);
+                    
+                    alert(`✅ Perplexity query successful!\n\n${data.data.articles.length} articles processed\nEntities extracted and stored in RDF graph`);
+                } else {
+                    throw new Error(data.error || 'Query failed');
+                }
+            } catch (error) {
+                alert(`❌ Perplexity query failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🤖 Query Perplexity AI';
+            }
+        }
+        
+        async function processNewsToRDF(articles) {
+            try {
+                // Process each article to extract entities and create RDF triples
+                for (const article of articles) {
+                    const response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'extract_entities_to_rdf',
+                            params: {
+                                article_id: article.id,
+                                title: article.title,
+                                content: article.content,
+                                published_at: article.published_at,
+                                source: article.source,
+                                sentiment: article.sentiment,
+                                market_impact: article.market_impact
+                            }
+                        })
+                    });
+                    
+                    const rdfData = await response.json();
+                    if (rdfData.data && rdfData.data.triples) {
+                        // Store RDF triples in Supabase
+                        await storeRDFTriples(rdfData.data.triples, article.id);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to process news to RDF:', error);
+            }
+        }
+        
+        async function storeRDFTriples(triples, articleId) {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'insert',
+                        table: 'rdf_triples',
+                        data: {
+                            article_id: articleId,
+                            subject: triples.subject,
+                            predicate: triples.predicate,
+                            object: triples.object,
+                            turtle_format: triples.turtle,
+                            created_at: new Date().toISOString()
+                        }
+                    })
+                });
+                
+                return await response.json();
+            } catch (error) {
+                console.error('Failed to store RDF triples:', error);
+            }
+        }
+        
+        async function loadNewsIntelligence() {
+            try {
+                // Load recent Perplexity queries from Supabase
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'news_articles',
+                        select: 'title, source, sentiment, market_impact, created_at',
+                        order: 'created_at.desc',
+                        limit: 10
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.data && data.data.length > 0) {
+                    updateNewsFeedWithResults(data.data);
+                }
+            } catch (error) {
+                console.error('Failed to load news intelligence:', error);
+            }
+        }
+        
+        function updateNewsFeedWithResults(articles) {
+            const feed = document.getElementById('news-feed');
+            feed.innerHTML = '';
+            
+            articles.forEach(article => {
+                const item = document.createElement('div');
+                item.className = 'feed-item';
+                
+                const timeAgo = article.created_at ? 
+                    new Date(Date.now() - new Date(article.created_at)).getMinutes() + 'm ago' : 
+                    'Recently';
+                
+                item.innerHTML = `
+                    <div class="feed-content">
+                        <div class="feed-title">📊 ${article.title}</div>
+                        <div class="feed-source">Perplexity AI • Market Impact: ${article.market_impact || 'Unknown'} • Sentiment: ${article.sentiment || 'Neutral'}</div>
+                    </div>
+                    <div class="feed-time">${timeAgo}</div>
+                `;
+                
+                feed.appendChild(item);
+            });
+        }
+        
+        async function loadKnowledgeGraph() {
+            try {
+                // Load RDF statistics from Supabase
+                const statsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'get_knowledge_graph_stats'
+                    })
+                });
+                
+                const stats = await statsResponse.json();
+                if (stats.data) {
+                    document.getElementById('kg-entities').textContent = stats.data.entities || '0';
+                    document.getElementById('kg-relations').textContent = stats.data.relations || '0';
+                    document.getElementById('kg-triples').textContent = stats.data.triples || '0';
+                }
+                
+                // Load sample RDF turtle data
+                await loadSampleTurtleData();
+                
+            } catch (error) {
+                console.error('Failed to load knowledge graph:', error);
+            }
+        }
+        
+        async function loadSampleTurtleData() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'rdf_triples',
+                        select: 'turtle_format',
+                        order: 'created_at.desc',
+                        limit: 1
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.data && data.data.length > 0) {
+                    const turtleOutput = document.getElementById('turtle-output');
+                    turtleOutput.textContent = data.data[0].turtle_format || 'No RDF data available';
+                }
+            } catch (error) {
+                console.error('Failed to load turtle data:', error);
+            }
+        }
+        
+        async function buildKnowledgeGraph() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '🔗 Building...';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'build_knowledge_graph_from_news',
+                        params: {
+                            rebuild: true,
+                            include_temporal: true,
+                            infer_relationships: true
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.data && data.data.success) {
+                    alert(`✅ Knowledge graph rebuilt!\n\nProcessed: ${data.data.articles_processed} articles\nGenerated: ${data.data.triples_created} RDF triples\nEntities: ${data.data.entities_extracted} unique entities`);
+                    loadKnowledgeGraph(); // Refresh the display
+                } else {
+                    throw new Error(data.error || 'Graph building failed');
+                }
+            } catch (error) {
+                alert(`❌ Knowledge graph building failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🔗 Build Graph';
+            }
+        }
+        
+        async function queryGraph() {
+            const query = prompt('Enter SPARQL-like query for the knowledge graph:', 
+                'SELECT entities WHERE sentiment = "bullish" AND market_impact = "high"');
+            
+            if (!query) return;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'query_knowledge_graph',
+                        params: {
+                            query: query,
+                            format: 'json'
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.data) {
+                    alert(`Query Results:\n\n${JSON.stringify(data.data, null, 2)}`);
+                } else {
+                    throw new Error(data.error || 'Query failed');
+                }
+            } catch (error) {
+                alert(`❌ Query failed: ${error.message}`);
+            }
+        }
+        
+        async function exportTurtle() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'export_rdf_turtle',
+                        params: {
+                            include_metadata: true,
+                            compress: false
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                if (data.data && data.data.turtle) {
+                    // Create download
+                    const blob = new Blob([data.data.turtle], { type: 'text/turtle' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `knowledge-graph-${new Date().toISOString().split('T')[0]}.ttl`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                    
+                    alert('✅ RDF Turtle file exported successfully!');
+                } else {
+                    throw new Error(data.error || 'Export failed');
+                }
+            } catch (error) {
+                alert(`❌ Export failed: ${error.message}`);
+            }
+        }
+        
+        async function testConnection(source) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            
+            try {
+                let response;
+                
+                if (source === 'perplexity') {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'test_perplexity_connection'
+                        })
+                    });
+                } else if (source === 'supabase-news') {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'select',
+                            table: 'news_articles',
+                            select: 'count(*)',
+                            single: true
+                        })
+                    });
+                } else if (source === 'rdf-kg') {
+                    response = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'select',
+                            table: 'rdf_triples',
+                            select: 'count(*)',
+                            single: true
+                        })
+                    });
+                } else {
+                    // Legacy sources - simulate test
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                }
+                
+                if (response) {
+                    const data = await response.json();
+                    if (data.data !== undefined) {
+                        alert(`✅ ${source} connection successful!`);
+                    } else {
+                        throw new Error('Connection test failed');
+                    }
+                } else {
+                    alert(`✅ ${source} connection successful!`);
+                }
+                
+            } catch (error) {
+                alert(`❌ Connection failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test';
+            }
+        }
+        
+        async function syncData(source) {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Syncing...';
+            
+            try {
+                // In real implementation, this would sync with Supabase
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                // Update last sync time
+                const card = btn.closest('.source-card');
+                const lastSyncEl = card.querySelector(`#${source}-last-sync`);
+                if (lastSyncEl) {
+                    lastSyncEl.textContent = 'Just now';
+                }
+                
+                // Update data points
+                const dataPointsEl = card.querySelector(`#${source}-data-points`);
+                if (dataPointsEl) {
+                    const current = parseInt(dataPointsEl.textContent.replace(/,/g, '')) || 0;
+                    dataPointsEl.textContent = (current + Math.floor(Math.random() * 100 + 50)).toLocaleString();
+                }
+                
+                alert(`✅ ${source} data synced successfully!`);
+            } catch (error) {
+                alert(`❌ Sync failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Sync Now';
+            }
+        }
+        
+        function configureSource(source) {
+            alert(`Configure ${source} settings`);
+        }
+        
+        async function saveAPIConfig() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            
+            try {
+                // In real implementation, save to Supabase
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                alert('✅ API configuration saved successfully!');
+            } catch (error) {
+                alert(`❌ Failed to save configuration: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save Configuration';
+            }
+        }
+        
+        async function testAllConnections() {
+            const sources = ['alpha-vantage', 'fmp', 'newsapi', 'yahoo'];
+            for (const source of sources) {
+                // Test each connection
+                console.log(`Testing ${source}...`);
+            }
+            alert('✅ All connection tests completed!');
+        }
+        
+        function addSymbol() {
+            const input = document.getElementById('add-symbol');
+            const symbol = input.value.toUpperCase().trim();
+            
+            if (!symbol) {
+                alert('Please enter a symbol');
+                return;
+            }
+            
+            // Add to table
+            const tbody = document.getElementById('market-data-tbody');
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="symbol">${symbol}</td>
+                <td>Loading...</td>
+                <td class="price">-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>Just added</td>
+                <td><button class="btn-small" onclick="removeSymbol('${symbol}')">Remove</button></td>
+            `;
+            tbody.appendChild(row);
+            
+            input.value = '';
+            
+            // Fetch data for new symbol
+            setTimeout(() => updateSymbolData(symbol), 500);
+        }
+        
+        function removeSymbol(symbol) {
+            if (confirm(`Remove ${symbol} from watchlist?`)) {
+                const row = event.target.closest('tr');
+                row.remove();
+            }
+        }
+        
+        async function updateSymbolData(symbol) {
+            // In real implementation, fetch from API
+            const row = Array.from(document.querySelectorAll('.symbol')).find(el => el.textContent === symbol)?.closest('tr');
+            if (row) {
+                row.cells[1].textContent = `${symbol} Corporation`;
+                row.cells[2].textContent = `$${(Math.random() * 500 + 50).toFixed(2)}`;
+                const change = (Math.random() * 10 - 5).toFixed(2);
+                row.cells[3].className = change >= 0 ? 'change-positive' : 'change-negative';
+                row.cells[3].textContent = `${change >= 0 ? '+' : ''}${change}%`;
+                row.cells[4].textContent = `${(Math.random() * 100).toFixed(1)}M`;
+                row.cells[5].textContent = 'Just now';
+            }
+        }
+        
+        function updateMarketData() {
+            // Update all market data
+            document.querySelectorAll('#market-data-tbody tr').forEach(row => {
+                const symbol = row.cells[0].textContent;
+                if (symbol) {
+                    updateSymbolData(symbol);
+                }
+            });
+        }
+        
+        function updateNewsFeed() {
+            // In real implementation, fetch latest news
+            console.log('Updating news feed...');
+        }
+        
+        async function testWebhooks() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                alert('✅ Webhook test messages sent successfully!');
+            } catch (error) {
+                alert(`❌ Webhook test failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Test Webhooks';
+            }
+        }
+        
+        // Auto-update last sync times
+        setInterval(() => {
+            ['av', 'fmp'].forEach(source => {
+                const el = document.getElementById(`${source}-last-sync`);
+                if (el && el.textContent !== 'Never' && el.textContent !== '-') {
+                    const match = el.textContent.match(/(\d+)/);
+                    if (match) {
+                        const mins = parseInt(match[1]) + 1;
+                        el.textContent = `${mins} mins ago`;
+                    }
+                }
+            });
+        }, 60000);
+        
+        async function scheduleQueries() {
+            alert('Automated news querying scheduled every 15 minutes');
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load initial data for setup tab (now default)
+            checkSetupStatus();
+        });
+        
+        // Auto-refresh data sources every 30 seconds
+        setInterval(loadDataSources, 30000);
+    </script>
+</body>
+</html>

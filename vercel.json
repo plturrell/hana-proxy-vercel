@@ -1,0 +1,25 @@
+{
+  "functions": {
+    "api/supabase-proxy.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/database",
+      "destination": "/api/supabase-proxy"
+    },
+    {
+      "source": "/api/query",
+      "destination": "/api/supabase-proxy"
+    },
+    {
+      "source": "/api/configure",
+      "destination": "/api/supabase-proxy"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
+  ]
+}

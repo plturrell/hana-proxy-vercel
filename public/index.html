@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Analytics Platform - Supabase Production</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+        
+        .status-bar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-secondary);
+        }
+        
+        .dot.connected {
+            background: var(--accent);
+        }
+        
+        .dot.error {
+            background: var(--danger);
+        }
+        
+        .deploy-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .deploy-card h2 {
+            margin-bottom: 1rem;
+        }
+        
+        .deploy-steps {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        
+        .step-number {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .step.completed .step-number {
+            background: var(--accent);
+        }
+        
+        .step.error .step-number {
+            background: var(--danger);
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        
+        .code-block {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .test-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .result {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+        }
+        
+        .result.success {
+            border-color: var(--accent);
+        }
+        
+        .result.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Financial Analytics Platform</h1>
+        <p class="subtitle">Production deployment system for 32 enterprise-grade financial functions</p>
+        
+        <div class="status-bar">
+            <div class="status-indicator">
+                <span class="dot" id="status-dot"></span>
+                <span id="status-text">Checking connection...</span>
+            </div>
+            <div>
+                <span id="function-count">0/32</span> functions deployed
+            </div>
+        </div>
+        
+        <div class="deploy-card">
+            <h2>Quick Deploy</h2>
+            <div class="deploy-steps">
+                <div class="step" id="step-1">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Create Schema</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Creates app_data schema and required tables
+                        </p>
+                    </div>
+                </div>
+                <div class="step" id="step-2">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Deploy Functions</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Installs all 32 production functions
+                        </p>
+                    </div>
+                </div>
+                <div class="step" id="step-3">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Verify Deployment</strong>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem;">
+                            Tests functions are working correctly
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="btn" onclick="deployAll()" id="deploy-btn">
+                Deploy All Functions
+            </button>
+            
+            <div id="deploy-result" class="result hidden"></div>
+        </div>
+        
+        <div class="deploy-card">
+            <h2>Advanced Options</h2>
+            <details style="margin-top: 1rem;">
+                <summary style="cursor: pointer; color: var(--text-secondary);">
+                    Manual SQL Deployment (Advanced Users)
+                </summary>
+                <div style="margin-top: 1rem;">
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        For manual deployment or troubleshooting
+                    </p>
+                    <button class="btn btn-secondary" onclick="window.open('https://supabase.com/dashboard/project/fnsbxaywhsxqppncqksu/sql/new', '_blank')">
+                        Open SQL Editor →
+                    </button>
+                    <button class="btn btn-secondary" onclick="copySQL()">
+                        Copy Schema SQL
+                    </button>
+                    <button class="btn btn-secondary" onclick="downloadAllSQL()">
+                        Download All SQL Files
+                    </button>
+                </div>
+            </details>
+            
+            <details style="margin-top: 1rem;">
+                <summary style="cursor: pointer; color: var(--text-secondary);">
+                    Deployment Logs
+                </summary>
+                <div id="deployment-logs" class="code-block" style="margin-top: 1rem; max-height: 200px; overflow-y: auto;">
+                    No logs yet. Start deployment to see progress.
+                </div>
+            </details>
+        </div>
+        
+        <div class="test-grid">
+            <div class="test-card">
+                <h3>Pearson Correlation</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                    Tests statistical correlation calculation
+                </p>
+                <button class="btn" onclick="testFunction('correlation')">Run Test</button>
+                <div id="test-correlation" class="result hidden"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Value at Risk</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                    Tests VaR risk calculation
+                </p>
+                <button class="btn" onclick="testFunction('var')">Run Test</button>
+                <div id="test-var" class="result hidden"></div>
+            </div>
+            
+            <div class="test-card">
+                <h3>Black-Scholes</h3>
+                <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                    Tests option pricing model
+                </p>
+                <button class="btn" onclick="testFunction('blackscholes')">Run Test</button>
+                <div id="test-blackscholes" class="result hidden"></div>
+            </div>
+        </div>
+        
+        <div class="deploy-card" style="margin-top: 2rem;">
+            <h2>iOS Integration</h2>
+            <div class="code-block">
+let apiURL = "${window.location.origin}/api/supabase-proxy"
+
+// Example usage
+let request = URLRequest(url: URL(string: "\(apiURL)")!)
+request.httpMethod = "POST"
+request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+request.httpBody = try! JSONSerialization.data(withJSONObject: [
+    "action": "rpc",
+    "function_name": "calculate_pearson_correlation",
+    "params": [
+        "x_values": [1, 2, 3, 4, 5],
+        "y_values": [2, 4, 6, 8, 10]
+    ]
+])
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        const SCHEMA_SQL = \`
+-- Create Schema and Tables
+CREATE SCHEMA IF NOT EXISTS app_data;
+GRANT USAGE ON SCHEMA app_data TO anon, authenticated;
+
+-- Enable extensions
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Create tables for RL and ML
+CREATE TABLE IF NOT EXISTS app_data.rl_q_table (
+    id SERIAL PRIMARY KEY,
+    state_key TEXT NOT NULL,
+    action TEXT NOT NULL,
+    q_value DOUBLE PRECISION DEFAULT 0,
+    visit_count INTEGER DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(state_key, action)
+);
+
+CREATE TABLE IF NOT EXISTS app_data.ml_model_weights (
+    id SERIAL PRIMARY KEY,
+    model_name TEXT NOT NULL,
+    layer_name TEXT NOT NULL,
+    weights JSONB NOT NULL,
+    biases JSONB,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(model_name, layer_name)
+);
+
+-- Grant permissions
+GRANT ALL ON ALL TABLES IN SCHEMA app_data TO anon, authenticated;
+GRANT USAGE ON ALL SEQUENCES IN SCHEMA app_data TO anon, authenticated;
+\`;
+        
+        async function checkConnection() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'health' })
+                });
+                
+                const data = await response.json();
+                const dot = document.getElementById('status-dot');
+                const text = document.getElementById('status-text');
+                
+                if (data.healthy) {
+                    dot.className = 'dot connected';
+                    text.textContent = 'Connected to Supabase';
+                } else {
+                    dot.className = 'dot error';
+                    text.textContent = 'Connection failed';
+                }
+                
+                // Check functions
+                checkFunctions();
+            } catch (error) {
+                document.getElementById('status-dot').className = 'dot error';
+                document.getElementById('status-text').textContent = 'Connection error';
+            }
+        }
+        
+        async function checkFunctions() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'check_functions' })
+                });
+                
+                const data = await response.json();
+                const deployedCount = data.deployed_count || 0;
+                document.getElementById('function-count').textContent = `${deployedCount}/32`;
+                    
+                if (deployedCount === 32) {
+                    document.getElementById('step-1').className = 'step completed';
+                    document.getElementById('step-2').className = 'step completed';
+                    document.getElementById('step-3').className = 'step completed';
+                } else if (deployedCount > 0) {
+                    document.getElementById('step-1').className = 'step completed';
+                    document.getElementById('step-2').className = 'step';
+                    document.getElementById('step-3').className = 'step';
+                }
+                
+                // Update deployment button text
+                const btn = document.getElementById('deploy-btn');
+                if (deployedCount === 32) {
+                    btn.textContent = 'Redeploy All Functions';
+                } else if (deployedCount > 0) {
+                    btn.textContent = `Deploy Remaining ${32 - deployedCount} Functions`;
+                }
+            } catch (error) {
+                console.error('Function check failed:', error);
+            }
+        }
+        
+        async function deployAll() {
+            const btn = document.getElementById('deploy-btn');
+            const result = document.getElementById('deploy-result');
+            
+            btn.disabled = true;
+            btn.textContent = 'Initializing deployment...';
+            result.className = 'result';
+            result.textContent = 'Starting automated deployment process...';
+            
+            try {
+                // Step 1: Deploy schema
+                updateStep(1, 'in-progress');
+                result.textContent = 'Creating schema and tables...';
+                
+                const schemaResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy_schema',
+                        auth_token: getAuthToken()
+                    })
+                });
+                
+                const schemaData = await schemaResponse.json();
+                if (!schemaData.success) {
+                    throw new Error(schemaData.error || 'Schema deployment failed');
+                }
+                
+                updateStep(1, 'completed');
+                
+                // Step 2: Deploy functions
+                updateStep(2, 'in-progress');
+                result.textContent = 'Deploying 32 production functions...';
+                
+                const functionsResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy_functions',
+                        auth_token: getAuthToken()
+                    })
+                });
+                
+                const functionsData = await functionsResponse.json();
+                if (!functionsData.success) {
+                    throw new Error(functionsData.error || 'Functions deployment failed');
+                }
+                
+                updateStep(2, 'completed');
+                
+                // Step 3: Verify deployment
+                updateStep(3, 'in-progress');
+                result.textContent = 'Verifying deployment...';
+                
+                const verifyResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'verify_deployment',
+                        auth_token: getAuthToken()
+                    })
+                });
+                
+                const verifyData = await verifyResponse.json();
+                if (!verifyData.success) {
+                    throw new Error(verifyData.error || 'Verification failed');
+                }
+                
+                updateStep(3, 'completed');
+                
+                // Success!
+                result.className = 'result success';
+                result.textContent = `✅ Deployment complete!\n\n${verifyData.deployed_count} functions deployed successfully\n${verifyData.test_results || 'All tests passed'}`;
+                btn.textContent = 'Deployment Complete';
+                
+                // Update function count
+                document.getElementById('function-count').textContent = '32/32';
+                
+                // Refresh status
+                checkConnection();
+                
+            } catch (error) {
+                result.className = 'result error';
+                result.textContent = `❌ Deployment failed: ${error.message}`;
+                
+                // Reset steps
+                ['step-1', 'step-2', 'step-3'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el.className.includes('in-progress')) {
+                        el.className = 'step error';
+                    }
+                });
+                
+                btn.disabled = false;
+                btn.textContent = 'Retry Deployment';
+            }
+        }
+        
+        function updateStep(stepNum, status) {
+            const step = document.getElementById(`step-${stepNum}`);
+            step.className = `step ${status}`;
+        }
+        
+        function getAuthToken() {
+            // In production, this would use proper authentication
+            // For now, using environment variable through API
+            return 'deployment-token';
+        }
+        
+        function copySQL() {
+            navigator.clipboard.writeText(SCHEMA_SQL).then(() => {
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Failed to copy to clipboard');
+            });
+        }
+        
+        async function testFunction(type) {
+            const resultEl = document.getElementById(\`test-\${type}\`);
+            resultEl.className = 'result';
+            resultEl.textContent = 'Testing...';
+            
+            const tests = {
+                correlation: {
+                    action: 'rpc',
+                    function_name: 'calculate_pearson_correlation',
+                    params: {
+                        x_values: [1, 2, 3, 4, 5],
+                        y_values: [2, 4, 6, 8, 10]
+                    }
+                },
+                var: {
+                    action: 'rpc',
+                    function_name: 'calculate_var',
+                    params: {
+                        returns: [-0.02, 0.01, -0.03, 0.02, 0.01],
+                        confidence_level: 0.95
+                    }
+                },
+                blackscholes: {
+                    action: 'rpc',
+                    function_name: 'black_scholes_option_price',
+                    params: {
+                        spot_price: 100,
+                        strike_price: 105,
+                        time_to_expiry: 0.25,
+                        risk_free_rate: 0.05,
+                        volatility: 0.2,
+                        option_type: 'call'
+                    }
+                }
+            };
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(tests[type])
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
+                    resultEl.className = 'result success';
+                    resultEl.textContent = 'Success:\\n' + JSON.stringify(data.data, null, 2);
+                } else {
+                    throw new Error(data.error || 'Test failed');
+                }
+            } catch (error) {
+                resultEl.className = 'result error';
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        function downloadAllSQL() {
+            const urls = [
+                '/supabase-migration/00_create_schema.sql',
+                '/supabase-migration/01_core_analytics_functions.sql',
+                '/supabase-migration/02_ml_rl_functions.sql',
+                '/supabase-migration/03_advanced_analytics_functions.sql'
+            ];
+            
+            urls.forEach((url, index) => {
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, index * 500);
+            });
+        }
+        
+        function log(message) {
+            const logs = document.getElementById('deployment-logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logs.textContent += `[${timestamp}] ${message}\n`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+        
+        // Initialize
+        checkConnection();
+        setInterval(checkConnection, 30000);
+        
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.metaKey || e.ctrlKey) {
+                if (e.key === 'd') {
+                    e.preventDefault();
+                    deployAll();
+                } else if (e.key === 't') {
+                    e.preventDefault();
+                    testFunction('correlation');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

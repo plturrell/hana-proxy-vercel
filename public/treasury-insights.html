@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasury Insights - Financial Analytics Platform</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .treasury-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .overview-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .overview-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .overview-value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .overview-change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        .positive {
+            color: var(--accent);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .analytics-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .time-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .time-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        
+        .yield-curve {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .yield-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+        
+        .yield-maturity {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .yield-rate {
+            font-weight: 600;
+        }
+        
+        .yield-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            margin: 0 1rem;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .yield-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .duration-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .duration-metric {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .bond-pricing {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .input-field {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Treasury Insights</h1>
+                <p style="color: var(--text-secondary);">Fixed income analytics and treasury management</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="treasury-overview">
+            <div class="overview-card">
+                <div class="overview-label">10Y Treasury Yield</div>
+                <div class="overview-value" id="yield10Y">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change" id="yield10YChange"></div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">Yield Spread (10Y-2Y)</div>
+                <div class="overview-value" id="yieldSpread">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change" id="spreadChange"></div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">Portfolio Duration</div>
+                <div class="overview-value" id="portfolioDuration">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change">Modified Duration</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">DV01</div>
+                <div class="overview-value" id="dv01Value">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change">Per $1M notional</div>
+            </div>
+        </div>
+        
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h2 class="card-title">Yield Curve</h2>
+                    <div class="time-selector">
+                        <button class="time-btn active" onclick="updateYieldCurve('current')">Current</button>
+                        <button class="time-btn" onclick="updateYieldCurve('1m')">1M Ago</button>
+                        <button class="time-btn" onclick="updateYieldCurve('3m')">3M Ago</button>
+                    </div>
+                </div>
+                <div class="yield-curve" id="yieldCurve">
+                    <div class="yield-item">
+                        <span class="yield-maturity">3M</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">6M</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">2Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">5Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">10Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">30Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h2 class="card-title">Duration Analysis</h2>
+                </div>
+                <div class="duration-analysis">
+                    <div class="duration-metric">
+                        <div class="metric-label">Macaulay Duration</div>
+                        <div class="metric-value" id="macaulayDuration">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Modified Duration</div>
+                        <div class="metric-value" id="modifiedDuration">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Convexity</div>
+                        <div class="metric-value" id="convexity">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Yield to Maturity</div>
+                        <div class="metric-value" id="ytm">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bond-pricing">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Bond Pricing Calculator</h2>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">Face Value ($)</label>
+                    <input type="number" class="input-field" id="faceValue" value="1000" step="100">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Coupon Rate (%)</label>
+                    <input type="number" class="input-field" id="couponRate" value="5" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Years to Maturity</label>
+                    <input type="number" class="input-field" id="yearsToMaturity" value="10" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Yield to Maturity (%)</label>
+                    <input type="number" class="input-field" id="yieldToMaturity" value="4" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Frequency</label>
+                    <select class="input-field" id="frequency">
+                        <option value="2">Semi-Annual</option>
+                        <option value="1">Annual</option>
+                        <option value="4">Quarterly</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" onclick="calculateBondPrice()">Calculate Bond Price</button>
+            <div id="bondPriceResult" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="analytics-card">
+            <div class="card-header">
+                <h2 class="card-title">Forward Rate Analysis</h2>
+                <button class="btn" onclick="calculateForwardRates()">Calculate Forward Rates</button>
+            </div>
+            <div id="forwardRatesResult" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        
+        // Sample yield curve data (in production, this would come from market data feed)
+        const yieldCurveData = {
+            current: {
+                '3M': 5.25,
+                '6M': 5.30,
+                '2Y': 4.85,
+                '5Y': 4.42,
+                '10Y': 4.51,
+                '30Y': 4.67
+            },
+            '1m': {
+                '3M': 5.15,
+                '6M': 5.20,
+                '2Y': 4.75,
+                '5Y': 4.35,
+                '10Y': 4.45,
+                '30Y': 4.62
+            },
+            '3m': {
+                '3M': 4.95,
+                '6M': 5.00,
+                '2Y': 4.55,
+                '5Y': 4.25,
+                '10Y': 4.35,
+                '30Y': 4.55
+            }
+        };
+        
+        async function loadTreasuryData() {
+            try {
+                // Load current yields
+                const currentYields = yieldCurveData.current;
+                const previousYields = yieldCurveData['1m'];
+                
+                // Update 10Y yield
+                const yield10Y = currentYields['10Y'];
+                const yield10YPrev = previousYields['10Y'];
+                const yield10YChange = yield10Y - yield10YPrev;
+                
+                document.getElementById('yield10Y').textContent = yield10Y.toFixed(2) + '%';
+                document.getElementById('yield10YChange').innerHTML = `
+                    <span class="${yield10YChange >= 0 ? 'positive' : 'negative'}">
+                        ${yield10YChange >= 0 ? '↑' : '↓'} ${Math.abs(yield10YChange).toFixed(2)}bps
+                    </span>
+                `;
+                
+                // Update yield spread
+                const spread = currentYields['10Y'] - currentYields['2Y'];
+                const prevSpread = previousYields['10Y'] - previousYields['2Y'];
+                const spreadChange = spread - prevSpread;
+                
+                document.getElementById('yieldSpread').textContent = spread.toFixed(2) + 'bps';
+                document.getElementById('spreadChange').innerHTML = `
+                    <span class="${spreadChange >= 0 ? 'positive' : 'negative'}">
+                        ${spreadChange >= 0 ? '↑' : '↓'} ${Math.abs(spreadChange).toFixed(2)}bps
+                    </span>
+                `;
+                
+                // Calculate portfolio duration
+                await calculatePortfolioDuration();
+                
+                // Update yield curve
+                updateYieldCurve('current');
+                
+            } catch (error) {
+                console.error('Failed to load treasury data:', error);
+            }
+        }
+        
+        async function calculatePortfolioDuration() {
+            try {
+                // Sample bond portfolio
+                const cashFlows = [50, 50, 50, 50, 50, 50, 50, 50, 50, 1050]; // 10Y bond with 5% coupon
+                const yieldRate = 0.0451; // 4.51% YTM
+                
+                const durationResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_duration',
+                        params: {
+                            cash_flows: cashFlows,
+                            yield_rate: yieldRate,
+                            frequency: 2
+                        }
+                    })
+                });
+                
+                const durationData = await durationResponse.json();
+                if (durationData.data) {
+                    const macaulay = durationData.data.macaulay_duration;
+                    const modified = durationData.data.modified_duration;
+                    
+                    document.getElementById('portfolioDuration').textContent = modified.toFixed(2) + ' years';
+                    document.getElementById('macaulayDuration').textContent = macaulay.toFixed(2);
+                    document.getElementById('modifiedDuration').textContent = modified.toFixed(2);
+                    
+                    // Calculate DV01
+                    const dv01 = modified * 1000000 * 0.0001; // $1M notional, 1bp move
+                    document.getElementById('dv01Value').textContent = '$' + dv01.toFixed(0);
+                }
+                
+                // Calculate convexity
+                const convexityResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_convexity',
+                        params: {
+                            cash_flows: cashFlows,
+                            yield_rate: yieldRate,
+                            frequency: 2
+                        }
+                    })
+                });
+                
+                const convexityData = await convexityResponse.json();
+                if (convexityData.data !== undefined) {
+                    document.getElementById('convexity').textContent = convexityData.data.toFixed(2);
+                }
+                
+                document.getElementById('ytm').textContent = (yieldRate * 100).toFixed(2) + '%';
+                
+            } catch (error) {
+                console.error('Failed to calculate duration:', error);
+                document.getElementById('portfolioDuration').textContent = 'Error';
+            }
+        }
+        
+        function updateYieldCurve(period) {
+            // Update button states
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update yield curve display
+            const yields = yieldCurveData[period];
+            const maxYield = Math.max(...Object.values(yields));
+            
+            const yieldItems = document.querySelectorAll('.yield-item');
+            const maturities = ['3M', '6M', '2Y', '5Y', '10Y', '30Y'];
+            
+            yieldItems.forEach((item, index) => {
+                const maturity = maturities[index];
+                const yield = yields[maturity];
+                const percentage = (yield / maxYield) * 100;
+                
+                item.querySelector('.yield-rate').textContent = yield.toFixed(2) + '%';
+                item.querySelector('.yield-fill').style.width = percentage + '%';
+            });
+        }
+        
+        async function calculateBondPrice() {
+            const faceValue = parseFloat(document.getElementById('faceValue').value);
+            const couponRate = parseFloat(document.getElementById('couponRate').value) / 100;
+            const yearsToMaturity = parseFloat(document.getElementById('yearsToMaturity').value);
+            const yieldToMaturity = parseFloat(document.getElementById('yieldToMaturity').value) / 100;
+            const frequency = parseInt(document.getElementById('frequency').value);
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_bond_price',
+                        params: {
+                            face_value: faceValue,
+                            coupon_rate: couponRate,
+                            years_to_maturity: yearsToMaturity,
+                            yield_to_maturity: yieldToMaturity,
+                            frequency: frequency
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('bondPriceResult');
+                
+                if (data.data !== undefined) {
+                    const price = data.data;
+                    const premium = price > faceValue;
+                    
+                    resultDiv.innerHTML = `
+                        <h3>Bond Valuation Results</h3>
+                        <p><strong>Bond Price:</strong> $${price.toFixed(2)}</p>
+                        <p><strong>Trading at:</strong> <span class="${premium ? 'positive' : 'negative'}">${premium ? 'Premium' : 'Discount'}</span></p>
+                        <p><strong>Price/Par:</strong> ${(price / faceValue * 100).toFixed(2)}%</p>
+                        <p><strong>Accrued Interest:</strong> $${((couponRate * faceValue) / frequency).toFixed(2)}</p>
+                    `;
+                    resultDiv.style.display = 'block';
+                    
+                    // Also calculate duration for this bond
+                    const periods = yearsToMaturity * frequency;
+                    const cashFlows = [];
+                    const couponPayment = (couponRate * faceValue) / frequency;
+                    
+                    for (let i = 0; i < periods; i++) {
+                        cashFlows.push(couponPayment);
+                    }
+                    cashFlows[cashFlows.length - 1] += faceValue;
+                    
+                    const durationResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'calculate_duration',
+                            params: {
+                                cash_flows: cashFlows,
+                                yield_rate: yieldToMaturity,
+                                frequency: frequency
+                            }
+                        })
+                    });
+                    
+                    const durationData = await durationResponse.json();
+                    if (durationData.data) {
+                        resultDiv.innerHTML += `
+                            <hr style="margin: 1rem 0; border-color: var(--border);">
+                            <p><strong>Macaulay Duration:</strong> ${durationData.data.macaulay_duration.toFixed(2)} years</p>
+                            <p><strong>Modified Duration:</strong> ${durationData.data.modified_duration.toFixed(2)} years</p>
+                            <p><strong>DV01:</strong> $${(durationData.data.modified_duration * price * 0.0001).toFixed(2)}</p>
+                        `;
+                    }
+                } else {
+                    resultDiv.innerHTML = '<div class="error-message">Failed to calculate bond price</div>';
+                    resultDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Bond pricing error:', error);
+                document.getElementById('bondPriceResult').innerHTML = '<div class="error-message">Error calculating bond price</div>';
+                document.getElementById('bondPriceResult').style.display = 'block';
+            }
+        }
+        
+        async function calculateForwardRates() {
+            const resultDiv = document.getElementById('forwardRatesResult');
+            resultDiv.innerHTML = '<span class="loading"></span>';
+            
+            try {
+                // Calculate forward rates using the yield curve
+                const spotRates = [
+                    { maturity: 1, rate: yieldCurveData.current['3M'] / 100 },
+                    { maturity: 2, rate: yieldCurveData.current['2Y'] / 100 },
+                    { maturity: 5, rate: yieldCurveData.current['5Y'] / 100 },
+                    { maturity: 10, rate: yieldCurveData.current['10Y'] / 100 }
+                ];
+                
+                let html = '<h3>Implied Forward Rates</h3><table style="width: 100%; margin-top: 1rem;">';
+                html += '<tr><th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border);">Period</th>';
+                html += '<th style="text-align: right; padding: 0.5rem; border-bottom: 1px solid var(--border);">Forward Rate</th></tr>';
+                
+                // Calculate 1y1y, 2y3y, 5y5y forward rates
+                const forwardPairs = [
+                    { from: 1, to: 2, label: '1y1y' },
+                    { from: 2, to: 5, label: '2y3y' },
+                    { from: 5, to: 10, label: '5y5y' }
+                ];
+                
+                for (const pair of forwardPairs) {
+                    const fromRate = spotRates.find(r => r.maturity === pair.from).rate;
+                    const toRate = spotRates.find(r => r.maturity === pair.to).rate;
+                    
+                    // Forward rate = [(1 + R2)^T2 / (1 + R1)^T1]^(1/(T2-T1)) - 1
+                    const forwardRate = Math.pow(
+                        Math.pow(1 + toRate, pair.to) / Math.pow(1 + fromRate, pair.from),
+                        1 / (pair.to - pair.from)
+                    ) - 1;
+                    
+                    html += `<tr>`;
+                    html += `<td style="padding: 0.5rem; border-bottom: 1px solid var(--border);">${pair.label}</td>`;
+                    html += `<td style="text-align: right; padding: 0.5rem; border-bottom: 1px solid var(--border);">${(forwardRate * 100).toFixed(2)}%</td>`;
+                    html += `</tr>`;
+                }
+                
+                html += '</table>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Forward rate calculation error:', error);
+                resultDiv.innerHTML = '<div class="error-message">Failed to calculate forward rates</div>';
+            }
+        }
+        
+        // Initialize
+        loadTreasuryData();
+        
+        // Auto-refresh every 60 seconds
+        setInterval(loadTreasuryData, 60000);
+    </script>
+</body>
+</html>
