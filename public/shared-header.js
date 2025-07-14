@@ -10,80 +10,29 @@ class HeaderController {
     }
 
     init() {
-        document.addEventListener('DOMContentLoaded', () => {
-            this.setupHeader();
-            this.setupScrollBehavior();
-            this.setupThemeToggle();
-            this.setupSystemStatus();
-        });
+        // Run immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setup());
+        } else {
+            this.setup();
+        }
+    }
+
+    setup() {
+        this.setupHeader();
+        this.setupScrollBehavior();
+        this.setupThemeToggle();
+        this.setupSystemStatus();
     }
 
     setupHeader() {
-        // Transform existing navbar into refined header
+        // Find the navbar
         const navbar = document.querySelector('.bp3-navbar');
         if (!navbar) return;
 
-        // Add refined header class
-        navbar.classList.add('app-header');
-        
-        // Wrap content in header-content
-        const content = document.createElement('div');
-        content.className = 'header-content';
-        
-        // Move all navbar content into wrapper
-        while (navbar.firstChild) {
-            content.appendChild(navbar.firstChild);
-        }
-        navbar.appendChild(content);
-
-        // Refine logo
-        const heading = navbar.querySelector('.bp3-navbar-heading');
-        if (heading) {
-            heading.classList.add('header-logo');
-        }
-
-        // Refine status indicator
-        const statusIndicator = navbar.querySelector('.status-indicator');
-        if (statusIndicator) {
-            statusIndicator.classList.add('system-status');
-            const dot = statusIndicator.querySelector('.status-dot');
-            if (dot) {
-                dot.classList.add('status-indicator-dot');
-            }
-        }
-
-        // Refine function count
-        const functionCount = navbar.querySelector('#function-count');
-        if (functionCount) {
-            functionCount.classList.add('function-count');
-        }
-
-        // Refine buttons
-        const buttons = navbar.querySelectorAll('.bp3-button');
-        buttons.forEach(button => {
-            button.classList.add('header-icon-button');
-            button.classList.remove('bp3-button', 'bp3-minimal');
-            
-            if (button.id === 'theme-toggle') {
-                button.classList.add('theme-toggle');
-            } else if (button.querySelector('.bp3-icon-user')) {
-                button.classList.add('user-button');
-            }
-        });
-
-        // Refine dividers
-        const dividers = navbar.querySelectorAll('.bp3-navbar-divider');
-        dividers.forEach(divider => {
-            divider.classList.add('header-divider');
-        });
-
-        // Group actions
-        const rightGroup = navbar.querySelector('.bp3-align-right');
-        if (rightGroup) {
-            rightGroup.classList.add('header-actions');
-        }
-
         this.header = navbar;
+        
+        // The CSS will handle the styling, we just need to add the scroll behavior
     }
 
     setupScrollBehavior() {

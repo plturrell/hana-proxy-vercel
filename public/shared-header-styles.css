@@ -53,7 +53,7 @@
 }
 
 /* System Status - Subtle Indicators */
-.system-status {
+.bp3-navbar .status-indicator {
     display: flex;
     align-items: center;
     gap: 8px;
@@ -64,17 +64,21 @@
     margin-left: 24px;
 }
 
-.bp3-dark .system-status {
+.bp3-dark .bp3-navbar .status-indicator {
     color: rgba(255, 255, 255, 0.56);
 }
 
-.status-indicator-dot {
+.bp3-navbar .status-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: #34C759; /* iOS System Green */
     box-shadow: 0 0 0 1px rgba(52, 199, 89, 0.2);
     animation: gentlePulse 3s ease-in-out infinite;
+}
+
+.bp3-navbar .status-dot.connected {
+    background: #34C759;
 }
 
 @keyframes gentlePulse {
@@ -96,21 +100,23 @@
 }
 
 /* Function Count - Subtle Progress */
-.function-count {
+.bp3-navbar #function-count {
     font-size: 11px;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.48);
     letter-spacing: 0.01em;
 }
 
-.bp3-dark .function-count {
+.bp3-dark .bp3-navbar #function-count {
     color: rgba(255, 255, 255, 0.48);
 }
 
 /* Icon Buttons - Refined Interactions */
-.header-icon-button {
+.bp3-navbar .bp3-button.bp3-minimal {
     width: 32px;
     height: 32px;
+    min-width: 32px;
+    min-height: 32px;
     border-radius: 6px;
     border: none;
     background: transparent;
@@ -122,24 +128,32 @@
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
 }
 
-.bp3-dark .header-icon-button {
+.bp3-dark .bp3-navbar .bp3-button.bp3-minimal {
     color: rgba(255, 255, 255, 0.64);
 }
 
-.header-icon-button:hover {
+.bp3-navbar .bp3-button.bp3-minimal:hover {
     background: rgba(0, 0, 0, 0.04);
     color: rgba(0, 0, 0, 0.88);
 }
 
-.bp3-dark .header-icon-button:hover {
+.bp3-dark .bp3-navbar .bp3-button.bp3-minimal:hover {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.88);
 }
 
-.header-icon-button:active {
+.bp3-navbar .bp3-button.bp3-minimal:active {
     transform: scale(0.96);
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.bp3-dark .bp3-navbar .bp3-button.bp3-minimal:active {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* Icon Styling */
@@ -197,28 +211,74 @@
 
 /* Content Adjustment */
 .bp3-app {
-    padding-top: 48px;
+    padding-top: 0;
 }
 
-/* Remove Blueprint's default navbar styling */
-.bp3-navbar {
-    all: unset;
-    display: contents;
+.bp3-app .app-content {
+    margin-top: 48px;
+    height: calc(100vh - 48px);
 }
 
-.bp3-navbar-group {
+/* Override Blueprint's default navbar styling with higher specificity */
+.bp3-app .bp3-navbar {
     all: unset;
-    display: contents;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    padding: 0;
+    box-shadow: none;
 }
 
-.bp3-navbar-heading {
-    all: unset;
-    display: contents;
+.bp3-dark .bp3-navbar {
+    background: rgba(18, 18, 18, 0.72);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
 }
 
-.bp3-navbar-divider {
-    all: unset;
-    display: contents;
+.bp3-navbar .bp3-navbar-group {
+    height: 48px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+
+.bp3-navbar .bp3-navbar-group.bp3-align-left {
+    flex: 1;
+    justify-content: flex-start;
+}
+
+.bp3-navbar .bp3-navbar-group.bp3-align-right {
+    flex: 0;
+    justify-content: flex-end;
+}
+
+.bp3-navbar .bp3-navbar-heading {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: rgba(0, 0, 0, 0.88);
+}
+
+.bp3-dark .bp3-navbar .bp3-navbar-heading {
+    color: rgba(255, 255, 255, 0.92);
+}
+
+.bp3-navbar .bp3-navbar-divider {
+    margin: 0 12px;
+    border-left: 1px solid rgba(0, 0, 0, 0.08);
+    height: 20px;
+}
+
+.bp3-dark .bp3-navbar .bp3-navbar-divider {
+    border-left-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Responsive Refinements */
