@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>News & Market Data Configuration - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -87,8 +84,12 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
             box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -100,48 +101,87 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+        }
+
+        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
+        }
+
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+        }
+
         .bp3-navbar {
             flex-shrink: 0;
+        }
+
         .app-content {
+            display: flex;
             flex: 1;
+            overflow: hidden;
+        }
+
         .bp3-sidebar {
             width: 280px;
+            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
+        }
+
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
         .main-content {
+            flex: 1;
+            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
+        }
+
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
+        }
+
         .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
         .status-indicator {
+            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
+        }
+
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
+        }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
+        }
+
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
         /* Page-specific styles */
         .bp3-card {
             background-color: white;
@@ -149,47 +189,80 @@
             box-shadow: var(--bp3-elevation-shadow-1);
             padding: calc(var(--bp3-grid-size) * 2);
             margin-bottom: calc(var(--bp3-grid-size) * 2);
+        }
+
         .bp3-dark .bp3-card {
+            background-color: var(--bp3-dark-gray3);
+        }
+
         .config-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
         /* Removed old metric styles - now using standardized apple-metric-card */
+
         .tags-container {
+            display: flex;
             flex-wrap: wrap;
+            gap: calc(var(--bp3-grid-size) / 2);
             margin-top: calc(var(--bp3-grid-size));
+        }
+
         .config-table {
             width: 100%;
+            margin-top: calc(var(--bp3-grid-size));
+        }
+
         .config-table th,
         .config-table td {
             padding: calc(var(--bp3-grid-size));
             text-align: left;
+            border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
         .config-table th {
             font-weight: 600;
             color: var(--bp3-text-color-muted);
+        }
+
         .priority-badge {
             padding: 2px 8px;
             border-radius: 12px;
             font-size: 11px;
+            font-weight: 600;
+        }
+
         .priority-high {
             background-color: rgba(219, 55, 55, 0.2);
             color: var(--bp3-red3);
+        }
+
         .priority-medium {
             background-color: rgba(217, 130, 43, 0.2);
             color: var(--bp3-orange3);
+        }
+
         .priority-low {
             background-color: rgba(138, 155, 168, 0.2);
             color: var(--bp3-gray3);
+        }
+
         .advanced-settings {
             display: none;
             margin-top: calc(var(--bp3-grid-size) * 2);
             padding-top: calc(var(--bp3-grid-size) * 2);
             border-top: 1px solid var(--bp3-divider-color);
+        }
+
         .advanced-settings.show {
             display: block;
+        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
-</head>
+    <link href="no-icons-override.css" rel="stylesheet"></head>
 <body data-technology-only="true" class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <nav class="bp3-navbar bp3-dark">
@@ -203,14 +276,18 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
+                    
                     <span>Dark Mode</span>
                 </button>
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
+                    
                     <span id="user-role-label">Finance User</span>
+                </button>
+            </div>
         </nav>
+
         <div class="app-content slate-layout-container">
             
     <aside class="bp3-sidebar">
@@ -220,86 +297,147 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                </a>
+            </li>
+            
+            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                </a>
+            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
+            </div>
+            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
+            </div>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                </a>
+            </li>
         </ul>
     </aside>
+
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">News & Market Data Configuration</h1>
                     <p class="bp3-text-muted">Configure news intelligence and market data feeds</p>
+                </div>
+
                 <div class="bp3-callout bp3-intent-success" style="margin-bottom: 20px;">
                     <h4 class="bp3-heading">System Status</h4>
                     Connected to HANA CONFIG_NEWS_QUERIES and CONFIG_MARKET_SYMBOLS tables
+                </div>
+
                 <div class="news-market-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
                         <div class="apple-metric-label">News Queries</div>
                         <div class="apple-metric-value" id="newsQueries">12</div>
                         <div class="apple-metric-change positive">↗ +3</div>
                     </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Market Symbols</div>
                         <div class="apple-metric-value" id="marketSymbols">485</div>
                         <div class="apple-metric-change neutral">→ Stable</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Update Frequency</div>
                         <div class="apple-metric-value" id="updateFreq">30s</div>
                         <div class="apple-metric-change neutral">→ Optimal</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">API Calls/Hour</div>
                         <div class="apple-metric-value" id="apiCalls">1,247</div>
                         <div class="apple-metric-change negative">↘ -156</div>
+                    </div>
+                </div>
+
                 <div class="config-grid">
                     <!-- News Configuration -->
                     <div class="bp3-card">
                         <h3 class="bp3-heading">
-                            <span class="bp3-icon bp3-icon-feed" style="margin-right: 10px;"></span>
+                            
                             News Intelligence
                         </h3>
+
                         <div class="bp3-form-group">
                             <label class="bp3-label">News Categories</label>
                             <div class="tags-container" id="newsCategories">
@@ -314,11 +452,17 @@
                             <div class="bp3-input-group" style="margin-top: 10px;">
                                 <input type="text" class="bp3-input" id="newCategoryInput" placeholder="Add new category">
                                 <button class="bp3-button bp3-intent-primary" onclick="addNewsCategory()">Add</button>
+                            </div>
                         </div>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Update Frequency</label>
                             <input type="range" min="5" max="300" value="30" class="bp3-slider" id="updateFrequency" 
                                    oninput="updateFrequencyDisplay(this.value)">
                             <span id="frequencyDisplay" class="bp3-text-muted">30 seconds</span>
+                        </div>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Sentiment Analysis</label>
                             <div class="bp3-select">
                                 <select id="sentimentFilter">
@@ -327,29 +471,50 @@
                                     <option value="negative">Negative Only</option>
                                     <option value="neutral">Neutral Only</option>
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Language</label>
+                            <div class="bp3-select">
                                 <select id="language">
                                     <option value="en">English</option>
                                     <option value="zh">Chinese</option>
                                     <option value="ja">Japanese</option>
                                     <option value="de">German</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <button class="bp3-button bp3-minimal" onclick="toggleAdvanced('newsAdvanced')">
-                            <span class="bp3-icon bp3-icon-settings"></span>
+                            
                             Advanced Settings
                         </button>
+
                         <div class="advanced-settings" id="newsAdvanced">
                             <div class="bp3-form-group">
                                 <label class="bp3-label">Impact Score Threshold</label>
                                 <input type="range" min="0" max="1" step="0.1" value="0.5" class="bp3-slider" id="impactThreshold">
+                            </div>
                             
+                            <div class="bp3-form-group">
                                 <label class="bp3-control bp3-switch">
                                     <input type="checkbox" checked id="websocketEnabled">
                                     <span class="bp3-control-indicator"></span>
                                     WebSocket Subscriptions
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Market Data Configuration -->
-                            <span class="bp3-icon bp3-icon-chart" style="margin-right: 10px;"></span>
+                    <div class="bp3-card">
+                        <h3 class="bp3-heading">
+                            
                             Market Data Feeds
+                        </h3>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Primary Symbols</label>
                             <div class="tags-container" id="primarySymbols">
                                 <span class="bp3-tag">SPY</span>
@@ -357,15 +522,27 @@
                                 <span class="bp3-tag">TLT</span>
                                 <span class="bp3-tag">DXY</span>
                                 <span class="bp3-tag">GLD</span>
+                            </div>
+                            <div class="bp3-input-group" style="margin-top: 10px;">
                                 <input type="text" class="bp3-input" id="newSymbolInput" placeholder="Add symbol (e.g., AAPL)">
                                 <button class="bp3-button bp3-intent-primary" onclick="addMarketSymbol()">Add</button>
+                            </div>
+                        </div>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Market Categories</label>
+                            <div class="bp3-select">
                                 <select id="marketCategory">
                                     <option value="stocks">Stocks</option>
                                     <option value="forex">Forex</option>
                                     <option value="crypto">Cryptocurrency</option>
                                     <option value="commodities">Commodities</option>
                                     <option value="bonds">Bonds</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="bp3-form-group">
                             <label class="bp3-label">Data Provider Priority</label>
                             <table class="bp3-html-table bp3-small">
                                 <tbody>
@@ -374,16 +551,33 @@
                                     <tr><td>Alpha Vantage</td><td>Priority: 80</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+
                         <button class="bp3-button bp3-minimal" onclick="toggleAdvanced('marketAdvanced')">
+                            
+                            Advanced Settings
+                        </button>
+
                         <div class="advanced-settings" id="marketAdvanced">
+                            <div class="bp3-form-group">
                                 <label class="bp3-label">Cache Duration (minutes)</label>
                                 <input type="number" min="1" max="60" value="5" class="bp3-input" id="cacheDuration">
+                            </div>
+                            
+                            <div class="bp3-form-group">
                                 <label class="bp3-label">Rate Limiting</label>
                                 <input type="number" min="10" max="1000" value="60" class="bp3-input" id="rateLimit" placeholder="Requests per minute">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Configuration Tables -->
+                <div class="config-grid">
                     <!-- News Queries Table -->
+                    <div class="bp3-card">
                         <h4 class="bp3-heading">
-                            <span class="bp3-icon bp3-icon-search" style="margin-right: 10px;"></span>
+                            
                             Active News Queries
                         </h4>
                         <table class="bp3-html-table bp3-striped config-table">
@@ -396,6 +590,7 @@
                                 </tr>
                             </thead>
                             <tbody id="newsQueriesTable">
+                                <tr>
                                     <td>corporate treasury management trends 2025</td>
                                     <td>TREASURY</td>
                                     <td><span class="priority-badge priority-high">HIGH</span></td>
@@ -405,35 +600,101 @@
                                             <span class="bp3-control-indicator"></span>
                                         </label>
                                     </td>
+                                </tr>
+                                <tr>
                                     <td>interest rate policy central banks</td>
                                     <td>RATES</td>
+                                    <td><span class="priority-badge priority-high">HIGH</span></td>
+                                    <td>
+                                        <label class="bp3-control bp3-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="bp3-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>forex volatility market conditions</td>
                                     <td>FOREX</td>
                                     <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                                    <td>
+                                        <label class="bp3-control bp3-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="bp3-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
-                        <button class="bp3-button bp3-intent-primary bp3-icon-plus" style="margin-top: 15px;" onclick="addNewsQuery()">Add Query</button>
+                        <button  style="margin-top: 15px;" onclick="addNewsQuery()">Add Query</button>
+                    </div>
+
                     <!-- Market Symbols Table -->
-                            <span class="bp3-icon bp3-icon-timeline-line-chart" style="margin-right: 10px;"></span>
+                    <div class="bp3-card">
+                        <h4 class="bp3-heading">
+                            
                             Market Symbols
+                        </h4>
+                        <table class="bp3-html-table bp3-striped config-table">
+                            <thead>
+                                <tr>
                                     <th>Symbol</th>
                                     <th>Exchange</th>
+                                    <th>Priority</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
                             <tbody id="marketSymbolsTable">
+                                <tr>
                                     <td>SPY</td>
                                     <td>NYSE</td>
+                                    <td><span class="priority-badge priority-high">HIGH</span></td>
+                                    <td>
+                                        <label class="bp3-control bp3-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="bp3-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>VIX</td>
                                     <td>CBOE</td>
+                                    <td><span class="priority-badge priority-high">HIGH</span></td>
+                                    <td>
+                                        <label class="bp3-control bp3-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="bp3-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <td>EURUSD</td>
-                        <button class="bp3-button bp3-intent-primary bp3-icon-plus" style="margin-top: 15px;" onclick="addMarketSymbolToTable()">Add Symbol</button>
+                                    <td>FOREX</td>
+                                    <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                                    <td>
+                                        <label class="bp3-control bp3-switch">
+                                            <input type="checkbox" checked>
+                                            <span class="bp3-control-indicator"></span>
+                                        </label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button  style="margin-top: 15px;" onclick="addMarketSymbolToTable()">Add Symbol</button>
+                    </div>
+                </div>
+
                 <!-- Action Buttons -->
                 <div class="bp3-card" style="text-align: center;">
                     <div class="bp3-button-group">
-                        <button class="bp3-button bp3-icon-lab-test" onclick="testConfiguration()">Test Configuration</button>
-                        <button class="bp3-button bp3-intent-primary bp3-icon-floppy-disk" onclick="saveConfiguration()">Save Configuration</button>
-                        <button class="bp3-button bp3-intent-success bp3-icon-cloud-upload" onclick="deployConfiguration()">Deploy to HANA</button>
+                        <button  onclick="testConfiguration()">Test Configuration</button>
+                        <button  onclick="saveConfiguration()">Save Configuration</button>
+                        <button  onclick="deployConfiguration()">Deploy to HANA</button>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
+
     <script>
         // Configuration state
         let config = {
@@ -452,45 +713,74 @@
                 rateLimit: 60
             }
         };
+
         function addNewsCategory() {
             const input = document.getElementById('newCategoryInput');
             const category = input.value.trim().toUpperCase();
+            
             if (category && !config.news.categories.includes(category)) {
                 config.news.categories.push(category);
                 renderNewsCategories();
                 input.value = '';
+            }
+        }
+
         function addMarketSymbol() {
             const input = document.getElementById('newSymbolInput');
             const symbol = input.value.trim().toUpperCase();
+            
             if (symbol && !config.market.symbols.includes(symbol)) {
                 config.market.symbols.push(symbol);
                 renderMarketSymbols();
+                input.value = '';
+            }
+        }
+
         function renderNewsCategories() {
             const container = document.getElementById('newsCategories');
             container.innerHTML = '';
+            
             config.news.categories.forEach(category => {
                 const tag = document.createElement('span');
                 tag.className = 'bp3-tag bp3-removable';
                 tag.innerHTML = `${category} <button class="bp3-tag-remove" onclick="removeNewsCategory('${category}')"></button>`;
                 container.appendChild(tag);
             });
+        }
+
         function renderMarketSymbols() {
             const container = document.getElementById('primarySymbols');
+            container.innerHTML = '';
+            
             config.market.symbols.forEach(symbol => {
+                const tag = document.createElement('span');
+                tag.className = 'bp3-tag bp3-removable';
                 tag.innerHTML = `${symbol} <button class="bp3-tag-remove" onclick="removeMarketSymbol('${symbol}')"></button>`;
+                container.appendChild(tag);
+            });
+        }
+
         function removeNewsCategory(category) {
             config.news.categories = config.news.categories.filter(c => c !== category);
             renderNewsCategories();
+        }
+
         function removeMarketSymbol(symbol) {
             config.market.symbols = config.market.symbols.filter(s => s !== symbol);
             renderMarketSymbols();
+        }
+
         function updateFrequencyDisplay(value) {
             document.getElementById('frequencyDisplay').textContent = value + ' seconds';
             config.news.updateFrequency = parseInt(value);
             document.getElementById('updateFreq').textContent = value + 's';
+        }
+
         function toggleAdvanced(sectionId) {
             const section = document.getElementById(sectionId);
             section.classList.toggle('show');
+        }
+
         function addNewsQuery() {
             const query = prompt('Enter news search query:');
             if (query) {
@@ -509,18 +799,40 @@
                     </td>
                 `;
                 updateMetrics();
+            }
+        }
+
         function addMarketSymbolToTable() {
             const symbol = prompt('Enter market symbol:');
             if (symbol) {
+                // Add to table
                 const table = document.getElementById('marketSymbolsTable');
+                const row = table.insertRow();
+                row.innerHTML = `
                     <td>${symbol.toUpperCase()}</td>
+                    <td>CUSTOM</td>
+                    <td><span class="priority-badge priority-medium">MEDIUM</span></td>
+                    <td>
+                        <label class="bp3-control bp3-switch">
+                            <input type="checkbox" checked>
+                            <span class="bp3-control-indicator"></span>
+                        </label>
+                    </td>
+                `;
+                updateMetrics();
+            }
+        }
+
         function updateMetrics() {
             document.getElementById('newsQueries').textContent = 
                 document.getElementById('newsQueriesTable').rows.length;
+        }
+
         async function testConfiguration() {
             const testBtn = event.target;
             testBtn.disabled = true;
             testBtn.textContent = 'Testing...';
+
             try {
                 // Test news API
                 const newsTest = await fetch('/api/configure', {
@@ -531,10 +843,17 @@
                         data: config.news
                     })
                 });
+
                 // Test market data API
                 const marketTest = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         action: 'test-market-config',
                         data: config.market
+                    })
+                });
+
                 if (newsTest.ok && marketTest.ok) {
                     alert('✅ Configuration test successful! All endpoints responding.');
                 } else {
@@ -545,53 +864,97 @@
             } finally {
                 testBtn.disabled = false;
                 testBtn.textContent = 'Test Configuration';
+            }
+        }
+
         async function saveConfiguration() {
             const saveBtn = event.target;
             saveBtn.disabled = true;
             saveBtn.textContent = 'Saving...';
+
+            try {
                 const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         action: 'save-news-market-config',
                         data: { news: config.news, market: config.market }
+                    })
+                });
+
                 if (response.ok) {
                     alert('✅ Configuration saved successfully!');
+                } else {
                     throw new Error('Save failed');
+                }
+            } catch (error) {
                 alert('❌ Failed to save configuration: ' + error.message);
+            } finally {
                 saveBtn.disabled = false;
                 saveBtn.textContent = 'Save Configuration';
+            }
+        }
+
         async function deployConfiguration() {
             const deployBtn = event.target;
             deployBtn.disabled = true;
             deployBtn.textContent = 'Deploying...';
+
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
                         action: 'deploy-to-hana',
                         data: {
                             tables: ['CONFIG_NEWS_QUERIES', 'CONFIG_MARKET_SYMBOLS'],
                             config: { news: config.news, market: config.market }
                         }
+                    })
+                });
+
+                if (response.ok) {
                     alert('✅ Configuration deployed to HANA successfully!');
+                } else {
                     throw new Error('Deployment failed');
+                }
+            } catch (error) {
                 alert('❌ Failed to deploy to HANA: ' + error.message);
+            } finally {
                 deployBtn.disabled = false;
                 deployBtn.textContent = 'Deploy to HANA';
+            }
+        }
+
         function toggleTheme() {
             const body = document.body;
             const button = document.getElementById('theme-toggle');
+            
             if (body.classList.contains('bp3-dark')) {
                 body.classList.remove('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
                 body.classList.add('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
+            }
+        }
+
         // Auto-save every 30 seconds
         setInterval(() => {
             console.log('Auto-saving configuration...');
             // Silent save without user notification
         }, 30000);
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', () => {
+            renderNewsCategories();
+            renderMarketSymbols();
             updateMetrics();
         });
     </script>
     <script src="shared-header.js"></script>
+
+    <script>
         // Role-based page protection
         document.addEventListener('DOMContentLoaded', function() {
             const userRole = localStorage.getItem('userRole') || 'Finance';
@@ -600,13 +963,22 @@
                     <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
                         <div class="bp3-non-ideal-state">
                             <div class="bp3-non-ideal-state-visual">
-                                <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
+                                
+                            </div>
                             <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
                             <div class="bp3-non-ideal-state-description">
                                 This page requires Technology privileges. Please contact your system admin.
+                            </div>
                             <div class="bp3-non-ideal-state-action">
                                 <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    <span class="bp3-icon bp3-icon-arrow-left"></span>
+                                    
                                     Go Back
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
 </body>

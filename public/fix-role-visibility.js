@@ -31,19 +31,16 @@ const standardMenuTemplate = `
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
                 </a>
             </li>
@@ -53,25 +50,21 @@ const standardMenuTemplate = `
             </li>
             <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
                 </a>
             </li>
@@ -82,25 +75,21 @@ const standardMenuTemplate = `
             </div>
             <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
                 </a>
             </li>
@@ -111,19 +100,16 @@ const standardMenuTemplate = `
             </div>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
                 </a>
             </li>
             <li class="admin-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
                 </a>
             </li>
@@ -191,7 +177,6 @@ htmlFiles.forEach(filename => {
                     <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
                         <div class="bp3-non-ideal-state">
                             <div class="bp3-non-ideal-state-visual">
-                                <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
                             </div>
                             <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
                             <div class="bp3-non-ideal-state-description">
@@ -199,7 +184,6 @@ htmlFiles.forEach(filename => {
                             </div>
                             <div class="bp3-non-ideal-state-action">
                                 <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    <span class="bp3-icon bp3-icon-arrow-left"></span>
                                     Go Back
                                 </button>
                             </div>

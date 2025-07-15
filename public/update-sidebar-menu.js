@@ -5,15 +5,15 @@ const unifiedSidebarMenu = `
                         <h6 class="bp3-heading">Analytics</h6>
                     </div>
                     <a class="bp3-menu-item" href="portfolio-analyser.html">
-                        <span class="bp3-icon bp3-icon-chart"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                     </a>
                     <a class="bp3-menu-item" href="treasury-insights.html">
-                        <span class="bp3-icon bp3-icon-trending-up"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
                     </a>
                     <a class="bp3-menu-item" href="scenario-analyser-config.html">
-                        <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
                     </a>
                     
@@ -22,19 +22,19 @@ const unifiedSidebarMenu = `
                         <h6 class="bp3-heading">Configuration</h6>
                     </div>
                     <a class="bp3-menu-item" href="news-market-data-config.html">
-                        <span class="bp3-icon bp3-icon-feed"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
                     </a>
                     <a class="bp3-menu-item" href="calculation-manager-config.html">
-                        <span class="bp3-icon bp3-icon-function"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
                     </a>
                     <a class="bp3-menu-item" href="ml-models-config.html">
-                        <span class="bp3-icon bp3-icon-learning"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
                     </a>
                     <a class="bp3-menu-item" href="treasury-insights-config.html">
-                        <span class="bp3-icon bp3-icon-bank-account"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
                     </a>
                     
@@ -43,19 +43,19 @@ const unifiedSidebarMenu = `
                         <h6 class="bp3-heading">Tools</h6>
                     </div>
                     <a class="bp3-menu-item" href="calculation-tester.html">
-                        <span class="bp3-icon bp3-icon-calculator"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
                     </a>
                     <a class="bp3-menu-item" href="calculations-config.html">
-                        <span class="bp3-icon bp3-icon-numerical"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
                     </a>
                     <a class="bp3-menu-item" href="news-market-config.html">
-                        <span class="bp3-icon bp3-icon-timeline-events"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
                     </a>
                     <a class="bp3-menu-item" href="scenario-analysis.html">
-                        <span class="bp3-icon bp3-icon-fork"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
                     </a>
                     
@@ -64,15 +64,15 @@ const unifiedSidebarMenu = `
                         <h6 class="bp3-heading">System</h6>
                     </div>
                     <a class="bp3-menu-item" href="command-centre.html">
-                        <span class="bp3-icon bp3-icon-console"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
                     </a>
                     <a class="bp3-menu-item" href="deployment.html">
-                        <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
                     </a>
                     <a class="bp3-menu-item" href="system-config.html">
-                        <span class="bp3-icon bp3-icon-settings"></span>
+                        
                         <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
                     </a>
                 </div>`;

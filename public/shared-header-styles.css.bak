@@ -168,10 +168,12 @@
 }
 
 /* Icon Styling */
+.header-icon-button .bp3-icon {
     font-size: 16px;
     transition: transform 0.2s ease;
 }
 
+.header-icon-button:hover .bp3-icon {
     transform: scale(1.05);
 }
 
@@ -180,6 +182,8 @@
     position: relative;
 }
 
+.theme-toggle .bp3-icon-moon,
+.theme-toggle .bp3-icon-flash {
     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 

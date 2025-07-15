@@ -1,0 +1,490 @@
+/* 
+ * Apple + Palantir Hybrid Design System
+ * A sophisticated CSS specification that surpasses Blueprint by combining 
+ * Apple's design excellence with Palantir's data capabilities
+ * 
+ * Architecture: Modular CSS system with design tokens foundation
+ * Performance: GPU-accelerated animations, CSS containment, modern features
+ * Accessibility: WCAG 2.1 AA compliant with comprehensive focus management
+ * 
+ * Usage:
+ * 1. Include this file after Blueprint CSS
+ * 2. Add data-density="high|normal|compact" to body for density control
+ * 3. Use .glass-* classes for modern glass morphism effects
+ * 4. Apply .apple-* classes for refined data components
+ * 5. Utilize .progressive-* classes for information disclosure
+ */
+
+/* ========================================
+   FOUNDATION: Design Tokens
+   ======================================== */
+
+@import url('./design-tokens.css');
+
+/* ========================================
+   CORE: Typography System
+   ======================================== */
+
+@import url('./typography-system.css');
+
+/* ========================================
+   VISUAL: Glass Morphism & Depth
+   ======================================== */
+
+@import url('./glass-morphism.css');
+
+/* ========================================
+   COMPONENTS: Data Tables
+   ======================================== */
+
+@import url('./data-tables.css');
+
+/* ========================================
+   COMPONENTS: Data Visualizations
+   ======================================== */
+
+@import url('./data-visualizations.css');
+
+/* ========================================
+   PATTERNS: Progressive Disclosure
+   ======================================== */
+
+@import url('./progressive-disclosure.css');
+
+/* ========================================
+   OPTIMIZATION: Performance & Accessibility
+   ======================================== */
+
+@import url('./performance-accessibility.css');
+
+/* ========================================
+   INTEGRATION: Blueprint Reconciliation
+   ======================================== */
+
+/* Override Blueprint with higher specificity where needed */
+.apple-hybrid-app {
+  /* Ensure our design system takes precedence */
+  isolation: isolate;
+  contain: layout style;
+}
+
+/* Enhanced Blueprint Card */
+.apple-hybrid-app .bp3-card {
+  background: var(--color-background-glass) !important;
+  backdrop-filter: var(--glass-light) !important;
+  -webkit-backdrop-filter: var(--glass-light) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-base) !important;
+  transition: var(--transition-spring) !important;
+}
+
+.apple-hybrid-app .bp3-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Enhanced Blueprint Buttons */
+.apple-hybrid-app .bp3-button {
+  border-radius: var(--radius-lg) !important;
+  font-weight: var(--font-weight-medium) !important;
+  transition: var(--transition-spring) !important;
+  font-family: var(--font-family-system) !important;
+}
+
+.apple-hybrid-app .bp3-button:not(.bp3-minimal) {
+  background: var(--color-background-glass) !important;
+  backdrop-filter: var(--backdrop-blur-sm) !important;
+  -webkit-backdrop-filter: var(--backdrop-blur-sm) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.apple-hybrid-app .bp3-button.bp3-intent-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover)) !important;
+  border: none !important;
+  color: white !important;
+}
+
+/* Enhanced Blueprint Tables */
+.apple-hybrid-app .bp3-html-table {
+  background: var(--color-background) !important;
+  border-radius: var(--radius-xl) !important;
+  overflow: hidden !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: var(--shadow-base) !important;
+}
+
+.apple-hybrid-app .bp3-html-table thead th {
+  background: var(--color-background-secondary) !important;
+  backdrop-filter: var(--backdrop-blur-md) !important;
+  -webkit-backdrop-filter: var(--backdrop-blur-md) !important;
+  border-bottom: 1px solid var(--color-separator) !important;
+  font-weight: var(--font-weight-semibold) !important;
+  text-transform: uppercase !important;
+  letter-spacing: var(--letter-spacing-wide) !important;
+  font-size: var(--text-xs) !important;
+  color: var(--color-text-secondary) !important;
+}
+
+.apple-hybrid-app .bp3-html-table tbody tr {
+  transition: var(--transition-fast) !important;
+}
+
+.apple-hybrid-app .bp3-html-table tbody tr:hover {
+  background: var(--color-background-secondary) !important;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Layout Utilities */
+.apple-layout-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+.apple-layout-grid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.apple-layout-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.apple-layout-cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+/* Spacing Utilities */
+.apple-space-xs { margin: var(--space-xs); }
+.apple-space-sm { margin: var(--space-sm); }
+.apple-space-md { margin: var(--space-md); }
+.apple-space-lg { margin: var(--space-lg); }
+.apple-space-xl { margin: var(--space-xl); }
+
+.apple-space-y-xs > * + * { margin-top: var(--space-xs); }
+.apple-space-y-sm > * + * { margin-top: var(--space-sm); }
+.apple-space-y-md > * + * { margin-top: var(--space-md); }
+.apple-space-y-lg > * + * { margin-top: var(--space-lg); }
+
+/* Color Utilities */
+.apple-bg-primary { background: var(--color-primary); }
+.apple-bg-secondary { background: var(--color-secondary); }
+.apple-bg-success { background: var(--color-success); }
+.apple-bg-warning { background: var(--color-warning); }
+.apple-bg-error { background: var(--color-error); }
+
+.apple-text-primary { color: var(--color-primary); }
+.apple-text-secondary { color: var(--color-secondary); }
+.apple-text-success { color: var(--color-success); }
+.apple-text-warning { color: var(--color-warning); }
+.apple-text-error { color: var(--color-error); }
+
+/* Border Utilities */
+.apple-border { border: 1px solid var(--color-border); }
+.apple-border-t { border-top: 1px solid var(--color-border); }
+.apple-border-r { border-right: 1px solid var(--color-border); }
+.apple-border-b { border-bottom: 1px solid var(--color-border); }
+.apple-border-l { border-left: 1px solid var(--color-border); }
+
+.apple-rounded-sm { border-radius: var(--radius-sm); }
+.apple-rounded { border-radius: var(--radius-base); }
+.apple-rounded-md { border-radius: var(--radius-md); }
+.apple-rounded-lg { border-radius: var(--radius-lg); }
+.apple-rounded-xl { border-radius: var(--radius-xl); }
+.apple-rounded-2xl { border-radius: var(--radius-2xl); }
+.apple-rounded-3xl { border-radius: var(--radius-3xl); }
+.apple-rounded-full { border-radius: var(--radius-full); }
+
+/* Shadow Utilities */
+.apple-shadow-xs { box-shadow: var(--shadow-xs); }
+.apple-shadow-sm { box-shadow: var(--shadow-sm); }
+.apple-shadow { box-shadow: var(--shadow-base); }
+.apple-shadow-md { box-shadow: var(--shadow-md); }
+.apple-shadow-lg { box-shadow: var(--shadow-lg); }
+.apple-shadow-xl { box-shadow: var(--shadow-xl); }
+.apple-shadow-2xl { box-shadow: var(--shadow-2xl); }
+
+/* ========================================
+   COMPONENT COMPOSITIONS
+   ======================================== */
+
+/* Financial Dashboard Card */
+.apple-financial-card {
+  @apply glass-card;
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-financial-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+}
+
+/* Data Metric Display */
+.apple-metric-display {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  background: var(--color-background-glass);
+  backdrop-filter: var(--glass-light);
+  -webkit-backdrop-filter: var(--glass-light);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+}
+
+.apple-metric-value {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.apple-metric-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  font-weight: var(--font-weight-medium);
+}
+
+.apple-metric-change {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.apple-metric-change.positive { color: var(--color-success); }
+.apple-metric-change.negative { color: var(--color-error); }
+.apple-metric-change.neutral { color: var(--color-text-secondary); }
+
+/* Action Button */
+.apple-action-button {
+  background: var(--color-background-glass);
+  backdrop-filter: var(--backdrop-blur-md);
+  -webkit-backdrop-filter: var(--backdrop-blur-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-6);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-system);
+  cursor: pointer;
+  transition: var(--transition-spring);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+}
+
+.apple-action-button:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-md);
+}
+
+.apple-action-button:active {
+  transform: translateY(0);
+}
+
+.apple-action-button.primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border: none;
+}
+
+.apple-action-button.primary:hover {
+  background: linear-gradient(135deg, var(--color-primary-hover), var(--color-primary-active));
+}
+
+/* ========================================
+   RESPONSIVE BEHAVIOR
+   ======================================== */
+
+@media (max-width: 768px) {
+  .apple-layout-container {
+    padding: 0 var(--space-4);
+  }
+  
+  .apple-layout-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .apple-financial-card {
+    padding: var(--space-4);
+  }
+  
+  .apple-metric-value {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* ========================================
+   THEME VARIANTS
+   ======================================== */
+
+/* Light Theme Enhancements */
+.apple-theme-light {
+  background: var(--color-background);
+  color: var(--color-text-primary);
+}
+
+/* Dark Theme Enhancements */
+.apple-theme-dark {
+  background: var(--color-background-dark);
+  color: var(--color-text-primary-dark);
+}
+
+.apple-theme-dark .apple-financial-card {
+  background: var(--color-background-glass-dark);
+}
+
+.apple-theme-dark .apple-metric-display {
+  background: var(--color-background-glass-dark);
+  border-color: var(--color-border-dark);
+}
+
+.apple-theme-dark .apple-action-button {
+  background: var(--color-background-glass-dark);
+  border-color: var(--color-border-dark);
+  color: var(--color-text-primary-dark);
+}
+
+.apple-theme-dark .apple-action-button:hover {
+  background: rgba(44, 44, 46, 0.9);
+  border-color: var(--color-border-hover-dark);
+}
+
+/* ========================================
+   DOCUMENTATION & EXAMPLES
+   ======================================== */
+
+/*
+USAGE EXAMPLES:
+
+1. Basic Financial Card:
+<div class="apple-financial-card">
+  <div class="apple-metric-display">
+    <div class="apple-metric-value">$1,234,567</div>
+    <div class="apple-metric-label">Portfolio Value</div>
+    <div class="apple-metric-change positive">+2.34%</div>
+  </div>
+</div>
+
+2. Data Table with Glass Effect:
+<div class="apple-data-table apple-data-table-glass">
+  <div class="apple-table-container">
+    <table class="apple-table" role="table">
+      <thead class="apple-table-header apple-table-header-glass">
+        <tr>
+          <th class="apple-table-header-cell" data-sortable="true">Symbol</th>
+          <th class="apple-table-header-cell apple-table-cell-numeric">Price</th>
+          <th class="apple-table-header-cell apple-table-cell-numeric">Change</th>
+        </tr>
+      </thead>
+      <tbody class="apple-table-body">
+        <tr class="apple-table-row">
+          <td class="apple-table-cell">AAPL</td>
+          <td class="apple-table-cell apple-table-cell-currency">$150.00</td>
+          <td class="apple-table-cell apple-table-cell-currency positive">+2.5%</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+3. Progressive Disclosure Card:
+<div class="progressive-card" data-expanded="false">
+  <div class="progressive-card-summary">
+    <div class="progressive-card-content">
+      <h3 class="progressive-card-title">Market Analysis</h3>
+      <p class="progressive-card-preview">Comprehensive market trends and insights...</p>
+    </div>
+    <div class="progressive-expand-icon">▼</div>
+  </div>
+  <div class="progressive-card-details">
+    <div class="progressive-card-details-content">
+      <!-- Detailed content here -->
+    </div>
+  </div>
+</div>
+
+4. Chart Container:
+<div class="apple-chart-container apple-chart-container-glass">
+  <div class="apple-chart-header">
+    <h3 class="apple-chart-title">Performance Overview</h3>
+    <div class="apple-chart-controls">
+      <button class="apple-action-button">1D</button>
+      <button class="apple-action-button primary">1W</button>
+    </div>
+  </div>
+  <div class="apple-bar-chart">
+    <div class="apple-bar" data-value="150" style="height: 60%;"></div>
+    <div class="apple-bar" data-value="200" style="height: 80%;"></div>
+    <div class="apple-bar success" data-value="250" style="height: 100%;"></div>
+  </div>
+</div>
+
+5. Glass Modal:
+<div class="glass-modal-backdrop">
+  <div class="glass-modal">
+    <div class="progressive-modal-header">
+      <h2 class="progressive-modal-title">Settings</h2>
+      <button class="progressive-modal-close">×</button>
+    </div>
+    <div class="progressive-modal-content">
+      <!-- Modal content -->
+    </div>
+  </div>
+</div>
+
+DENSITY CONTROL:
+Add data-density attribute to body:
+- data-density="normal" (default)
+- data-density="high" (more compact)
+- data-density="compact" (very compact)
+
+ACCESSIBILITY:
+- All components include proper ARIA attributes
+- Focus management with visible focus indicators
+- Screen reader support with semantic markup
+- Keyboard navigation support
+- High contrast mode compatibility
+- Reduced motion preferences respected
+
+PERFORMANCE:
+- CSS containment for layout isolation
+- GPU acceleration for smooth animations
+- Content visibility for lazy rendering
+- Minimal reflows and repaints
+- Optimized for 60fps animations
+
+BROWSER SUPPORT:
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+- Graceful degradation for older browsers
+*/

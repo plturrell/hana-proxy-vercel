@@ -1,0 +1,37 @@
+/* Global override to remove all icons */
+.bp3-icon,
+.bp3-icon::before,
+[class*="bp3-icon-"],
+[class*="bp3-icon-"]::before {
+    display: none !important;
+    content: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Remove icon spacing in buttons and menu items */
+.bp3-button .bp3-icon,
+.bp3-menu-item .bp3-icon,
+.bp3-tree-node-icon,
+.bp3-tab .bp3-icon {
+    display: none !important;
+}
+
+/* Adjust spacing for elements that had icons */
+.bp3-button,
+.bp3-menu-item {
+    padding-left: 10px !important;
+}
+
+/* Remove icon fonts */
+@font-face {
+    font-family: "Icons16";
+    src: none !important;
+}
+
+@font-face {
+    font-family: "Icons20";
+    src: none !important;
+}

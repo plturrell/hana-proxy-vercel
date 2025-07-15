@@ -178,16 +178,12 @@
         
         if (body.classList.contains('bp3-dark')) {
             body.classList.remove('bp3-dark');
-            const icon = button.querySelector('.bp3-icon');
             const text = button.querySelector('span:not(.bp3-icon)');
-            if (icon) icon.className = 'bp3-icon bp3-icon-flash';
             if (text) text.textContent = 'Light Mode';
             user.theme = 'light';
         } else {
             body.classList.add('bp3-dark');
-            const icon = button.querySelector('.bp3-icon');
             const text = button.querySelector('span:not(.bp3-icon)');
-            if (icon) icon.className = 'bp3-icon bp3-icon-moon';
             if (text) text.textContent = 'Dark Mode';
             user.theme = 'dark';
         }
@@ -222,22 +218,22 @@
                 <h6 class="bp3-heading">User Settings</h6>
             </li>
             <li class="bp3-menu-item" onclick="switchRole('Finance')">
-                <span class="bp3-icon bp3-icon-bank-account"></span>
+                
                 <span class="bp3-text-overflow-ellipsis bp3-fill">Finance User</span>
-                ${user.role === 'Finance' ? '<span class="bp3-icon bp3-icon-tick"></span>' : ''}
+                ${user.role === 'Finance' ? '' : ''}
             </li>
             <li class="bp3-menu-item" onclick="switchRole('Technology')">
-                <span class="bp3-icon bp3-icon-code"></span>
+                
                 <span class="bp3-text-overflow-ellipsis bp3-fill">Technology User</span>
-                ${user.role === 'Technology' ? '<span class="bp3-icon bp3-icon-tick"></span>' : ''}
+                ${user.role === 'Technology' ? '' : ''}
             </li>
             <li class="bp3-menu-divider"></li>
             <li class="bp3-menu-item" onclick="showPreferences()">
-                <span class="bp3-icon bp3-icon-settings"></span>
+                
                 <span class="bp3-text-overflow-ellipsis bp3-fill">Preferences</span>
             </li>
             <li class="bp3-menu-item" onclick="signOut()">
-                <span class="bp3-icon bp3-icon-log-out"></span>
+                
                 <span class="bp3-text-overflow-ellipsis bp3-fill">Sign Out</span>
             </li>
         `;
@@ -292,7 +288,6 @@
             if (themeButton) {
                 const icon = themeButton.querySelector('.bp3-icon');
                 const text = themeButton.querySelector('span:not(.bp3-icon)');
-                if (icon) icon.className = 'bp3-icon bp3-icon-flash';
                 if (text) text.textContent = 'Light Mode';
             }
         }

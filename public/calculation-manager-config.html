@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculation Manager Configuration - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -87,8 +84,12 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
             box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -100,105 +101,211 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+        }
+
+        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
+        }
+
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+        }
+
         .bp3-navbar {
             flex-shrink: 0;
+        }
+
         .app-content {
+            display: flex;
             flex: 1;
+            overflow: hidden;
+        }
+
         .bp3-sidebar {
             width: 280px;
+            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
+        }
+
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
         .main-content {
+            flex: 1;
+            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
+        }
+
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
+        }
+
         .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
         .status-indicator {
+            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
+        }
+
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
+        }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
+        }
+
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
         .functions-grid {
+            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
         .function-category {
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
         .function-item {
+            display: flex;
             justify-content: space-between;
+            align-items: center;
             padding: calc(var(--bp3-grid-size) * 1);
+            border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
         .function-item:last-child {
             border-bottom: none;
+        }
+
         .function-info {
+            flex: 1;
+        }
+
         .function-name {
             font-weight: 600;
             margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
         .function-description {
             color: var(--bp3-text-color-muted);
             font-size: 12px;
+        }
+
         .function-status {
             display: inline-flex;
+            align-items: center;
+            gap: calc(var(--bp3-grid-size) / 2);
             padding: calc(var(--bp3-grid-size) / 2) calc(var(--bp3-grid-size) * 1);
             border-radius: calc(var(--bp3-grid-size) * 2);
+            font-size: 12px;
             font-weight: 500;
+        }
+
         .function-status.active {
             background-color: rgba(15, 153, 96, 0.2);
             color: var(--bp3-intent-success);
+        }
+
         .function-status.inactive {
             background-color: rgba(219, 55, 55, 0.2);
             color: var(--bp3-intent-danger);
+        }
+
         .function-status.testing {
             background-color: rgba(217, 130, 43, 0.2);
             color: var(--bp3-intent-warning);
+        }
+
         .metric-value {
             font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
         .metric-value.primary {
             color: var(--bp3-intent-primary);
+        }
+
         .metric-value.success {
+            color: var(--bp3-intent-success);
+        }
+
         .metric-value.warning {
+            color: var(--bp3-intent-warning);
+        }
+
         .metric-label {
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+
         .test-console {
             background-color: var(--bp3-black);
             border-radius: var(--bp3-border-radius);
             padding: calc(var(--bp3-grid-size) * 2);
             font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-size: 12px;
             color: var(--bp3-light-gray5);
             height: 300px;
+            overflow-y: auto;
             margin-top: calc(var(--bp3-grid-size) * 2);
+        }
+
         .console-line {
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
+        }
+
         .console-line.success {
+            color: var(--bp3-intent-success);
+        }
+
         .console-line.error {
+            color: var(--bp3-intent-danger);
+        }
+
         .console-line.warning {
+            color: var(--bp3-intent-warning);
+        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
-</head>
+    <link href="no-icons-override.css" rel="stylesheet"></head>
 <body class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <!-- Top Navigation Bar -->
@@ -213,14 +320,18 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
+                    
                     <span>Dark Mode</span>
                 </button>
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
+                    
                     <span id="user-role-label">Finance User</span>
+                </button>
+            </div>
         </nav>
+
         <!-- Application Content -->
         <div class="app-content slate-layout-container">
             <!-- Left Sidebar -->
@@ -232,62 +343,112 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                </a>
+            </li>
+            
+            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                </a>
+            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item bp3-active" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
+            </div>
+            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
+            </div>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                </a>
+            </li>
         </ul>
     </aside>
+
             <!-- Main Content Area -->
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">Calculation Manager</h1>
                     <p class="bp3-text-muted">Manage and configure financial calculation functions</p>
+                </div>
+
                 <!-- Calculation Manager Metrics -->
                 <div class="calculation-manager-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -295,21 +456,33 @@
                         <div class="apple-metric-value" id="totalFunctions">32</div>
                         <div class="apple-metric-change positive">↗ +5</div>
                     </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Active Functions</div>
                         <div class="apple-metric-value" id="activeFunctions">28</div>
                         <div class="apple-metric-change positive">↗ 87.5%</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Test Results</div>
                         <div class="apple-metric-value" id="testResults">96.8%</div>
                         <div class="apple-metric-change positive">↗ +2.1%</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Last Updated</div>
                         <div class="apple-metric-value" id="lastUpdated">2 min ago</div>
                         <div class="apple-metric-change neutral">→ Recent</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Avg Execution</div>
                         <div class="apple-metric-value">14ms</div>
                         <div class="apple-metric-change positive">↗ -3ms</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Error Rate</div>
                         <div class="apple-metric-value">0.2%</div>
                         <div class="apple-metric-change positive">↗ -0.1%</div>
+                    </div>
+                </div>
+
                 <!-- Function Categories -->
                 <div class="functions-grid">
                     <!-- Risk Management Functions -->
@@ -322,90 +495,216 @@
                                     <div class="function-description">Value at Risk calculation</div>
                                 </div>
                                 <div class="function-status active">
-                                    <span class="bp3-icon bp3-icon-tick-circle"></span>
+                                    
                                     Active
+                                </div>
                             </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_cvar</div>
                                     <div class="function-description">Conditional Value at Risk</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_sharpe_ratio</div>
                                     <div class="function-description">Risk-adjusted return measure</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_beta</div>
                                     <div class="function-description">Market risk coefficient</div>
+                                </div>
                                 <div class="function-status testing">
-                                    <span class="bp3-icon bp3-icon-time"></span>
+                                    
                                     Testing
+                                </div>
+                            </div>
                         </div>
                         <button class="bp3-button bp3-intent-primary" onclick="testRiskFunctions()">
-                            <span class="bp3-icon bp3-icon-lab-test"></span>
+                            
                             Test Risk Functions
                         </button>
+                    </div>
+
                     <!-- Options Pricing Functions -->
+                    <div class="bp3-card bp3-elevation-1">
                         <h3 class="bp3-heading">Options Pricing</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">black_scholes_option_price</div>
                                     <div class="function-description">Black-Scholes option pricing</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_option_greeks</div>
                                     <div class="function-description">Delta, Gamma, Theta, Vega</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">binomial_option_price</div>
                                     <div class="function-description">Binomial tree pricing model</div>
+                                </div>
                                 <div class="function-status inactive">
-                                    <span class="bp3-icon bp3-icon-error"></span>
+                                    
                                     Inactive
+                                </div>
+                            </div>
+                        </div>
                         <button class="bp3-button bp3-intent-primary" onclick="testOptionsFunctions()">
+                            
                             Test Options Functions
+                        </button>
+                    </div>
+
                     <!-- Statistical Functions -->
+                    <div class="bp3-card bp3-elevation-1">
                         <h3 class="bp3-heading">Statistical Analysis</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_pearson_correlation</div>
                                     <div class="function-description">Linear correlation coefficient</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_moving_average</div>
                                     <div class="function-description">Simple and exponential MA</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_volatility</div>
                                     <div class="function-description">Historical volatility calculation</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                        </div>
                         <button class="bp3-button bp3-intent-primary" onclick="testStatisticalFunctions()">
+                            
                             Test Statistical Functions
+                        </button>
+                    </div>
+
                     <!-- Fixed Income Functions -->
+                    <div class="bp3-card bp3-elevation-1">
                         <h3 class="bp3-heading">Fixed Income</h3>
+                        <div class="function-category">
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_bond_price</div>
                                     <div class="function-description">Bond pricing calculation</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_duration</div>
                                     <div class="function-description">Macaulay and Modified duration</div>
+                                </div>
+                                <div class="function-status active">
+                                    
+                                    Active
+                                </div>
+                            </div>
+                            <div class="function-item">
+                                <div class="function-info">
                                     <div class="function-name">calculate_convexity</div>
                                     <div class="function-description">Bond convexity measure</div>
+                                </div>
+                                <div class="function-status testing">
+                                    
+                                    Testing
+                                </div>
+                            </div>
+                        </div>
                         <button class="bp3-button bp3-intent-primary" onclick="testFixedIncomeFunctions()">
+                            
                             Test Fixed Income Functions
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Test Console -->
                 <div class="bp3-card bp3-elevation-1">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                         <h3 class="bp3-heading">Test Console</h3>
                         <div>
                             <button class="bp3-button" onclick="clearConsole()">
-                                <span class="bp3-icon bp3-icon-trash"></span>
+                                
                                 Clear
                             </button>
                             <button class="bp3-button bp3-intent-primary" onclick="runAllTests()">
-                                <span class="bp3-icon bp3-icon-play"></span>
+                                
                                 Run All Tests
+                            </button>
+                        </div>
+                    </div>
                     <div class="test-console" id="testConsole">
                         <div class="console-line">FinSight Intelligence Calculation Manager v2.1</div>
                         <div class="console-line">Ready to execute function tests...</div>
                         <div class="console-line">Type 'help' for available commands</div>
+                    </div>
+                </div>
+
                 <!-- Action Buttons -->
                 <div style="margin-top: 30px; display: flex; gap: 10px;">
                     <button class="bp3-button bp3-intent-success" onclick="deployAllFunctions()">
-                        <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                        
                         Deploy All Functions
                     </button>
                     <button class="bp3-button" onclick="exportConfiguration()">
-                        <span class="bp3-icon bp3-icon-export"></span>
+                        
                         Export Configuration
+                    </button>
                     <button class="bp3-button bp3-intent-warning" onclick="resetAllFunctions()">
-                        <span class="bp3-icon bp3-icon-reset"></span>
+                        
                         Reset All
+                    </button>
+                </div>
             </main>
         </div>
     </div>
+    
     <script>
         const API_URL = '/api/supabase-proxy';
         let testCount = 0;
+
         // Load function metrics
         async function loadMetrics() {
             try {
@@ -417,22 +716,31 @@
                 
                 const data = await response.json();
                 const deployedCount = data.deployed_count || 0;
+                
                 document.getElementById('totalFunctions').textContent = '32';
                 document.getElementById('activeFunctions').textContent = deployedCount.toString();
                 document.getElementById('testResults').textContent = '98.7%';
                 document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                
                 // Update navbar function count
                 document.getElementById('function-count').textContent = `${deployedCount}/32 functions`;
+                
             } catch (error) {
                 console.error('Failed to load metrics:', error);
                 document.getElementById('totalFunctions').textContent = 'Error';
                 document.getElementById('activeFunctions').textContent = 'Error';
             }
+        }
+
         // Test function categories
         async function testRiskFunctions() {
             addConsoleLog('🧪 Testing Risk Management Functions...', 'warning');
+            
+            try {
                 // Test VaR calculation
                 const varResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'rpc',
                         function_name: 'calculate_var',
@@ -441,86 +749,190 @@
                             confidence_level: 0.95
                         }
                     })
+                });
+                
                 const varData = await varResponse.json();
+                
                 if (varData.data !== undefined) {
                     addConsoleLog(`✅ calculate_var: ${varData.data}`, 'success');
                 } else {
                     addConsoleLog(`❌ calculate_var: ${varData.error || 'Test failed'}`, 'error');
                 }
+                
                 // Test Sharpe ratio
                 const sharpeResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
                         function_name: 'calculate_sharpe_ratio',
+                        params: {
                             returns: [0.05, 0.08, 0.12, 0.15],
                             risk_free_rate: 0.02
+                        }
+                    })
+                });
+                
                 const sharpeData = await sharpeResponse.json();
+                
                 if (sharpeData.data !== undefined) {
                     addConsoleLog(`✅ calculate_sharpe_ratio: ${sharpeData.data}`, 'success');
+                } else {
                     addConsoleLog(`❌ calculate_sharpe_ratio: ${sharpeData.error || 'Test failed'}`, 'error');
+                }
+                
                 addConsoleLog('Risk Management tests completed', 'success');
+                
+            } catch (error) {
                 addConsoleLog(`❌ Risk function tests failed: ${error.message}`, 'error');
+            }
+        }
+
         async function testOptionsFunctions() {
             addConsoleLog('🧪 Testing Options Pricing Functions...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
                         function_name: 'black_scholes_option_price',
+                        params: {
                             spot_price: 100,
                             strike_price: 105,
                             time_to_expiry: 0.25,
                             risk_free_rate: 0.05,
                             volatility: 0.2,
                             option_type: 'call'
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
                 if (data.data !== undefined) {
                     addConsoleLog(`✅ black_scholes_option_price: $${data.data}`, 'success');
+                } else {
                     addConsoleLog(`❌ black_scholes_option_price: ${data.error || 'Test failed'}`, 'error');
+                }
+                
                 addConsoleLog('Options Pricing tests completed', 'success');
+                
+            } catch (error) {
                 addConsoleLog(`❌ Options function tests failed: ${error.message}`, 'error');
+            }
+        }
+
         async function testStatisticalFunctions() {
             addConsoleLog('🧪 Testing Statistical Functions...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
                         function_name: 'calculate_pearson_correlation',
+                        params: {
                             x_values: [1, 2, 3, 4, 5],
                             y_values: [2, 4, 6, 8, 10]
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
                     addConsoleLog(`✅ calculate_pearson_correlation: ${data.data}`, 'success');
+                } else {
                     addConsoleLog(`❌ calculate_pearson_correlation: ${data.error || 'Test failed'}`, 'error');
+                }
+                
                 addConsoleLog('Statistical functions tests completed', 'success');
+                
+            } catch (error) {
                 addConsoleLog(`❌ Statistical function tests failed: ${error.message}`, 'error');
+            }
+        }
+
         async function testFixedIncomeFunctions() {
             addConsoleLog('🧪 Testing Fixed Income Functions...', 'warning');
             addConsoleLog('⚠️ Fixed Income functions are still in development', 'warning');
             addConsoleLog('Fixed Income tests skipped', 'warning');
+        }
+
         async function runAllTests() {
             addConsoleLog('🚀 Starting comprehensive function test suite...', 'warning');
+            
             await testRiskFunctions();
             await new Promise(resolve => setTimeout(resolve, 500));
+            
             await testOptionsFunctions();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             await testStatisticalFunctions();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             await testFixedIncomeFunctions();
+            
             addConsoleLog('✅ All available tests completed successfully', 'success');
+        }
+
         async function deployAllFunctions() {
             addConsoleLog('🚀 Deploying all functions to production...', 'warning');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'deploy_functions' })
+                });
+                
+                const data = await response.json();
+                
                 if (data.success) {
                     addConsoleLog('✅ All functions deployed successfully', 'success');
                     loadMetrics(); // Refresh metrics
+                } else {
                     addConsoleLog(`❌ Deployment failed: ${data.error}`, 'error');
+                }
+                
+            } catch (error) {
                 addConsoleLog(`❌ Deployment error: ${error.message}`, 'error');
+            }
+        }
+
         function exportConfiguration() {
             addConsoleLog('📦 Exporting function configuration...', 'warning');
             addConsoleLog('✅ Configuration exported to functions_config.json', 'success');
+        }
+
         function resetAllFunctions() {
             if (confirm('Are you sure you want to reset all function configurations?')) {
                 addConsoleLog('🔄 Resetting all function configurations...', 'warning');
                 addConsoleLog('✅ All functions reset to default state', 'success');
+            }
+        }
+
         function addConsoleLog(message, type = 'normal') {
             const console = document.getElementById('testConsole');
             const line = document.createElement('div');
             line.className = `console-line ${type}`;
             line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            
             console.appendChild(line);
             console.scrollTop = console.scrollHeight;
+        }
+
         function clearConsole() {
             document.getElementById('testConsole').innerHTML = `
                 <div class="console-line">FinSight Intelligence Calculation Manager v2.1</div>
                 <div class="console-line">Console cleared</div>
                 <div class="console-line">Ready to execute function tests...</div>
             `;
+        }
+
         function toggleTheme() {
             document.body.classList.toggle('bp3-dark');
             const button = document.getElementById('theme-toggle');
@@ -528,22 +940,41 @@
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
+            }
+        }
+
         // Check system status
         async function checkStatus() {
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'health' })
+                });
+                
+                const data = await response.json();
                 const dot = document.getElementById('status-dot');
                 const text = document.getElementById('status-text');
+                
                 if (data.healthy) {
                     dot.className = 'status-dot connected';
                     text.textContent = 'System Online';
+                } else {
                     dot.className = 'status-dot';
                     text.textContent = 'System Offline';
+                }
+                
+            } catch (error) {
                 document.getElementById('status-dot').className = 'status-dot';
                 document.getElementById('status-text').textContent = 'Connection Error';
+            }
+        }
+
         // Initialize
         loadMetrics();
         checkStatus();
         setInterval(checkStatus, 30000);
     </script>
     <script src="shared-header.js"></script>
+
 </body>

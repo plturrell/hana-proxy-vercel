@@ -52,6 +52,9 @@
 }
 
 /* Force icon visibility */
+.bp3-navbar .bp3-icon,
+.bp3-sidebar .bp3-icon,
+.bp3-menu-item .bp3-icon {
     visibility: visible !important;
     opacity: 1 !important;
     display: inline-block !important;
@@ -63,6 +66,7 @@
 }
 
 /* Fix Blueprint icon font loading */
+.bp3-icon {
     font-family: "blueprint-icons-16" !important;
     font-style: normal !important;
     font-weight: normal !important;
@@ -83,10 +87,14 @@
 }
 
 /* Blueprint icons use Unicode through CSS content */
+.bp3-icon::before,
+.bp3-icon-standard::before,
+.bp3-icon-large::before {
     font-family: inherit !important;
 }
 
 /* Large icons use 20px font */
+.bp3-icon-large {
     font-family: "blueprint-icons-20" !important;
     font-size: 20px !important;
 }
@@ -129,12 +137,14 @@
 }
 
 /* Button text styling */
+.bp3-navbar .bp3-button > span:not(.bp3-icon) {
     font-size: 13px !important;
     font-weight: 500 !important;
     margin-left: 6px !important;
 }
 
 /* Icon spacing in buttons */
+.bp3-navbar .bp3-button .bp3-icon {
     margin-right: 6px !important;
     font-size: 16px !important;
 }
@@ -144,19 +154,24 @@
    ======================================== */
 
 /* Force specific sidebar icon visibility */
+.bp3-menu-item .bp3-icon::before,
+.bp3-navbar .bp3-icon::before {
     visibility: visible !important;
     opacity: 1 !important;
 }
 
 /* Debug - Force visible content if fonts fail */
+.bp3-icon:empty::before {
     content: "?" !important;
     font-family: inherit !important;
 }
 
 /* Ensure all Blueprint icon spans are treated as icon fonts */
+span[class*="bp3-icon-"] {
     font-family: "blueprint-icons-16" !important;
 }
 
+span[class*="bp3-icon-"].bp3-icon-large {
     font-family: "blueprint-icons-20" !important;
 }
 
@@ -293,6 +308,7 @@
         font-size: 12px !important;
     }
     
+    .bp3-navbar .bp3-button > span:not(.bp3-icon) {
         font-size: 11px !important;
     }
 }

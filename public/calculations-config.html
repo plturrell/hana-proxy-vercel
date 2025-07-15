@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculations Configuration - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -86,8 +83,12 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
+        }
+
         * {
             box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -99,48 +100,87 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+        }
+
+        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
+            color: var(--bp3-text-color);
+        }
+
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
+        }
+
         .bp3-navbar {
             flex-shrink: 0;
+        }
+
         .app-content {
+            display: flex;
             flex: 1;
+            overflow: hidden;
+        }
+
         .bp3-sidebar {
             width: 280px;
+            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
+        }
+
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
+        }
+
         .main-content {
+            flex: 1;
+            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
+        }
+
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
+        }
+
         .bp3-menu-item.bp3-active .bp3-icon {
+            color: white;
+        }
+
         .status-indicator {
+            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
+        }
+
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
+        }
+
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
+        }
+
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
+        }
+
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
+        }
+
         /* Page-specific styles */
         .bp3-card {
             background-color: white;
@@ -148,30 +188,58 @@
             box-shadow: var(--bp3-elevation-shadow-1);
             padding: calc(var(--bp3-grid-size) * 2);
             margin-bottom: calc(var(--bp3-grid-size) * 2);
+        }
+
         .bp3-dark .bp3-card {
+            background-color: var(--bp3-dark-gray3);
+        }
+
         .overview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
         .functions-grid {
+            display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+        }
+
         .function-card {
+            background-color: white;
+            border-radius: var(--bp3-border-radius);
+            box-shadow: var(--bp3-elevation-shadow-1);
+            padding: calc(var(--bp3-grid-size) * 2);
+            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+        }
+
         .bp3-dark .function-card {
+            background-color: var(--bp3-dark-gray3);
+        }
+
         .function-card:hover {
             box-shadow: var(--bp3-elevation-shadow-2);
             transform: translateY(-2px);
+        }
+
         .loading {
             display: inline-block;
             width: 20px;
             height: 20px;
             border: 2px solid var(--bp3-gray3);
+            border-radius: 50%;
             border-top-color: var(--bp3-intent-primary);
             animation: spin 1s ease-in-out infinite;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
-</head>
+    <link href="no-icons-override.css" rel="stylesheet"></head>
 <body class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <nav class="bp3-navbar bp3-dark">
@@ -185,14 +253,18 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
+                    
                     <span>Dark Mode</span>
                 </button>
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
+                    
                     <span id="user-role-label">Finance User</span>
+                </button>
+            </div>
         </nav>
+
         <div class="app-content slate-layout-container">
             
     <aside class="bp3-sidebar">
@@ -202,61 +274,111 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                </a>
+            </li>
+            
+            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                </a>
+            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
+            </div>
+            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                </a>
+            </li>
+            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                </a>
+            </li>
+            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
+            </div>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                </a>
+            </li>
+            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                </a>
+            </li>
         </ul>
     </aside>
+
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">Calculations Configuration</h1>
                     <p class="bp3-text-muted">Manage and test financial calculation functions</p>
+                </div>
+
                 <!-- Calculations Metrics -->
                 <div class="calculations-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -264,32 +386,53 @@
                         <div class="apple-metric-value">32</div>
                         <div class="apple-metric-change positive">↗ +8</div>
                     </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Active Functions</div>
                         <div class="apple-metric-value">28</div>
                         <div class="apple-metric-change positive">↗ +5</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Avg Latency</div>
                         <div class="apple-metric-value">89ms</div>
                         <div class="apple-metric-change positive">↗ -12ms</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Success Rate</div>
                         <div class="apple-metric-value">99.2%</div>
                         <div class="apple-metric-change positive">↗ +0.7%</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Test Coverage</div>
                         <div class="apple-metric-value">87%</div>
                         <div class="apple-metric-change positive">↗ +15%</div>
+                    </div>
+                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Function Health</div>
                         <div class="apple-metric-value">Excellent</div>
                         <div class="apple-metric-change positive">↗ Stable</div>
+                    </div>
+                </div>
+
                 <!-- Legacy overview grid for compatibility -->
                 <div class="overview-grid" style="display: none;">
                     <div class="bp3-card">
                         <h5 class="bp3-heading">Total Functions</h5>
                         <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-primary); margin: 10px 0;" id="totalFunctions">32</div>
+                    </div>
+                    <div class="bp3-card">
                         <h5 class="bp3-heading">Active Functions</h5>
                         <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-success); margin: 10px 0;" id="activeFunctions">28</div>
+                    </div>
+                    <div class="bp3-card">
                         <h5 class="bp3-heading">Avg Latency</h5>
                         <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-warning); margin: 10px 0;" id="avgLatency">89ms</div>
+                    </div>
+                    <div class="bp3-card">
                         <h5 class="bp3-heading">Success Rate</h5>
                         <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-primary); margin: 10px 0;" id="successRate">99.2%</div>
+                    </div>
+                </div>
+
                 <div class="bp3-card">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3 class="bp3-heading" id="contentTitle">All Functions</h3>
@@ -301,21 +444,30 @@
                                 <option value="inactive">Inactive</option>
                             </select>
                         </div>
+                    </div>
                     
                     <div class="functions-grid" id="functionsGrid">
                         <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
                             <span class="loading"></span>
                             <p style="margin-top: 1rem; color: var(--bp3-text-color-muted);">Loading functions...</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="bp3-card" style="text-align: center;">
                     <h3 class="bp3-heading" style="margin-bottom: 20px;">Deployment Actions</h3>
                     <div class="bp3-button-group">
-                        <button class="bp3-button bp3-icon-endorsed" onclick="validateAll()">Validate All</button>
-                        <button class="bp3-button bp3-intent-primary bp3-icon-cloud-upload" onclick="deployFunctions()">Deploy Functions</button>
-                        <button class="bp3-button bp3-icon-export" onclick="exportConfig()">Export Config</button>
+                        <button  onclick="validateAll()">Validate All</button>
+                        <button  onclick="deployFunctions()">Deploy Functions</button>
+                        <button  onclick="exportConfig()">Export Config</button>
+                    </div>
+                </div>
+
                 <div id="globalTestResult" style="display: none; background: var(--bp3-dark-gray4); padding: 20px; border-radius: var(--bp3-border-radius); margin-top: 20px; font-family: monospace; white-space: pre-wrap;"></div>
             </main>
         </div>
     </div>
+
     <script>
         const API_URL = '/api/supabase-proxy';
         let allFunctions = [];
@@ -330,40 +482,47 @@
             { name: 'calculate_regression', category: 'analytics', description: 'Perform linear regression analysis', params: ['x_values', 'y_values'] },
             { name: 'calculate_moving_average', category: 'analytics', description: 'Calculate simple or exponential moving average', params: ['prices', 'window', 'type'] },
             { name: 'calculate_bollinger_bands', category: 'analytics', description: 'Calculate Bollinger Bands for price data', params: ['prices', 'window', 'num_std'] },
+            
             // Risk Management
             { name: 'calculate_var', category: 'risk', description: 'Calculate Value at Risk', params: ['returns', 'confidence_level'] },
             { name: 'calculate_cvar', category: 'risk', description: 'Calculate Conditional Value at Risk', params: ['returns', 'confidence_level'] },
             { name: 'calculate_max_drawdown', category: 'risk', description: 'Calculate maximum drawdown', params: ['returns'] },
             { name: 'calculate_beta', category: 'risk', description: 'Calculate beta against market', params: ['asset_returns', 'market_returns'] },
             { name: 'calculate_tracking_error', category: 'risk', description: 'Calculate tracking error', params: ['portfolio_returns', 'benchmark_returns'] },
+            
             // Portfolio Analytics
             { name: 'calculate_sharpe_ratio', category: 'portfolio', description: 'Calculate risk-adjusted return', params: ['returns', 'risk_free_rate'] },
             { name: 'calculate_sortino_ratio', category: 'portfolio', description: 'Calculate downside risk-adjusted return', params: ['returns', 'risk_free_rate', 'target_return'] },
             { name: 'calculate_information_ratio', category: 'portfolio', description: 'Calculate active return to tracking error', params: ['portfolio_returns', 'benchmark_returns'] },
             { name: 'mean_variance_optimization', category: 'portfolio', description: 'Optimize portfolio weights', params: ['expected_returns', 'covariance_matrix', 'risk_aversion'] },
             { name: 'calculate_efficient_frontier', category: 'portfolio', description: 'Generate efficient frontier points', params: ['expected_returns', 'covariance_matrix', 'num_portfolios'] },
+            
             // Options Pricing
             { name: 'black_scholes_option_price', category: 'options', description: 'Calculate option price using Black-Scholes', params: ['spot_price', 'strike_price', 'time_to_expiry', 'risk_free_rate', 'volatility', 'option_type'] },
             { name: 'calculate_option_greeks', category: 'options', description: 'Calculate option Greeks (Delta, Gamma, etc.)', params: ['spot_price', 'strike_price', 'time_to_expiry', 'risk_free_rate', 'volatility', 'option_type'] },
             { name: 'binomial_option_pricing', category: 'options', description: 'Price options using binomial tree', params: ['spot_price', 'strike_price', 'time_to_expiry', 'risk_free_rate', 'volatility', 'steps', 'option_type'] },
             { name: 'calculate_implied_volatility', category: 'options', description: 'Calculate implied volatility from option price', params: ['option_price', 'spot_price', 'strike_price', 'time_to_expiry', 'risk_free_rate', 'option_type'] },
+            
             // Fixed Income
             { name: 'calculate_bond_price', category: 'analytics', description: 'Calculate bond price given yield', params: ['face_value', 'coupon_rate', 'years_to_maturity', 'yield_to_maturity', 'frequency'] },
             { name: 'calculate_duration', category: 'analytics', description: 'Calculate Macaulay and modified duration', params: ['cash_flows', 'yield_rate', 'frequency'] },
             { name: 'calculate_convexity', category: 'analytics', description: 'Calculate bond convexity', params: ['cash_flows', 'yield_rate', 'frequency'] },
             { name: 'calculate_yield_to_maturity', category: 'analytics', description: 'Calculate YTM from bond price', params: ['price', 'face_value', 'coupon_rate', 'years_to_maturity', 'frequency'] },
+            
             // Machine Learning / RL
             { name: 'monte_carlo_simulation', category: 'ml', description: 'Run Monte Carlo simulation', params: ['initial_price', 'volatility', 'risk_free_rate', 'time_horizon', 'num_simulations', 'dt'] },
             { name: 'rl_update_q_value', category: 'ml', description: 'Update Q-value for reinforcement learning', params: ['state_key', 'action', 'reward', 'learning_rate', 'discount_factor'] },
             { name: 'rl_get_best_action', category: 'ml', description: 'Get best action from Q-table', params: ['state_key'] },
             { name: 'ml_predict_asset_returns', category: 'ml', description: 'Predict asset returns using ML model', params: ['features'] },
             { name: 'ml_update_model_weights', category: 'ml', description: 'Update ML model weights', params: ['model_name', 'layer_name', 'weights', 'biases'] },
+            
             // Additional Analytics
             { name: 'calculate_hurst_exponent', category: 'analytics', description: 'Calculate Hurst exponent for time series', params: ['time_series'] },
             { name: 'calculate_autocorrelation', category: 'analytics', description: 'Calculate autocorrelation function', params: ['time_series', 'max_lag'] },
             { name: 'calculate_partial_correlation', category: 'analytics', description: 'Calculate partial correlation', params: ['x', 'y', 'z'] },
             { name: 'perform_pca', category: 'analytics', description: 'Perform Principal Component Analysis', params: ['data_matrix', 'num_components'] }
         ];
+        
         async function loadFunctions() {
             try {
                 // Check actual deployed functions
@@ -377,90 +536,154 @@
                 const deployedCount = data.deployed_count || 0;
                 const deployedFunctions = data.deployed_functions || [];
                 const missingFunctions = data.missing_functions || [];
+                
                 // Update overview stats
                 document.getElementById('totalFunctions').textContent = '32';
                 document.getElementById('activeFunctions').textContent = deployedCount.toString();
                 document.getElementById('avgLatency').textContent = '25ms';
                 document.getElementById('successRate').textContent = deployedCount > 0 ? '100%' : '0%';
+                
                 // Create function cards
                 allFunctions = supabaseFunctions.map(func => ({
                     ...func,
                     status: deployedFunctions.includes(func.name) ? 'active' : 'inactive'
                 }));
+                
                 // Display functions
                 displayFunctions();
+                
             } catch (error) {
                 console.error('Failed to load functions:', error);
                 document.getElementById('functionsGrid').innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--bp3-intent-danger);">
                         Failed to load functions: ${error.message}
+                    </div>
                 `;
             }
+        }
+        
         function displayFunctions() {
             const grid = document.getElementById('functionsGrid');
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
             const filteredFunctions = allFunctions.filter(func => {
                 const statusMatch = currentStatus === 'all' || func.status === currentStatus;
                 const searchMatch = searchTerm === '' || 
                     func.name.toLowerCase().includes(searchTerm) || 
                     func.description.toLowerCase().includes(searchTerm);
+                
                 return statusMatch && searchMatch;
             });
+            
             if (filteredFunctions.length === 0) {
                 grid.innerHTML = `
                     <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--bp3-text-color-muted);">
                         No functions found matching your criteria
+                    </div>
+                `;
                 return;
+            }
+            
             grid.innerHTML = filteredFunctions.map(func => `
                 <div class="function-card" data-function="${func.name}">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <span style="font-size: 16px; font-weight: 600;">${formatFunctionName(func.name)}</span>
                         <span class="bp3-tag ${func.status === 'active' ? 'bp3-intent-success' : 'bp3-minimal'}">${func.status.toUpperCase()}</span>
+                    </div>
                     <p style="color: var(--bp3-text-color-muted); margin-bottom: 15px; line-height: 1.5;">${func.description}</p>
                     <div style="margin-bottom: 15px;">
                         <div style="display: flex; flex-wrap: wrap; gap: 5px;">
                             ${func.params.map(p => `<span class="bp3-tag bp3-minimal bp3-small">${p}</span>`).join('')}
+                        </div>
+                    </div>
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <button class="bp3-button bp3-small" onclick="testFunction('${func.name}')" ${func.status === 'inactive' ? 'disabled' : ''}>
                             Test Function
                         </button>
+                    </div>
+                </div>
             `).join('');
+        }
+        
         function formatFunctionName(name) {
             return name.split('_').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1)
             ).join(' ');
+        }
+        
         function filterByStatus() {
             currentStatus = document.getElementById('statusFilter').value;
             displayFunctions();
+        }
+        
         function searchFunctions() {
+            displayFunctions();
+        }
+        
         async function testFunction(functionName) {
             alert(`Testing function: ${functionName}`);
+        }
+        
         async function validateAll() {
             const btn = event.target;
             btn.disabled = true;
             btn.textContent = 'Validating...';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'verify_deployment' })
+                });
+                
+                const data = await response.json();
+                
                 if (data.success) {
                     alert(`✅ Validation complete!\n\nDeployed: ${data.deployed_count}/32 functions\nAll tests passed`);
                 } else {
                     throw new Error(data.error || 'Validation failed');
                 }
+            } catch (error) {
                 alert(`❌ Validation failed: ${error.message}`);
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Validate All';
+            }
+        }
+        
         async function deployFunctions() {
             if (!confirm('Deploy all 32 financial functions to Supabase?')) return;
+            
+            const btn = event.target;
+            btn.disabled = true;
             btn.textContent = 'Deploying...';
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         action: 'deploy_functions',
                         auth_token: 'deployment-token'
                     })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
                     alert('✅ Functions deployed successfully!');
                     loadFunctions(); // Reload to show updated status
+                } else {
                     throw new Error(data.error || 'Deployment failed');
+                }
+            } catch (error) {
                 alert(`❌ Deployment failed: ${error.message}`);
+            } finally {
+                btn.disabled = false;
                 btn.textContent = 'Deploy Functions';
+            }
+        }
+        
         function exportConfig() {
             const config = {
                 timestamp: new Date().toISOString(),
@@ -468,7 +691,9 @@
                 deployment_status: {
                     total: 32,
                     active: allFunctions.filter(f => f.status === 'active').length
+                }
             };
+            
             const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -476,19 +701,27 @@
             a.download = `calculations-config-${new Date().toISOString().split('T')[0]}.json`;
             a.click();
             URL.revokeObjectURL(url);
+        }
+
         function toggleTheme() {
             const body = document.body;
             const button = document.getElementById('theme-toggle');
+            
             if (body.classList.contains('bp3-dark')) {
                 body.classList.remove('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
                 body.classList.add('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
+            }
+        }
+        
         // Initialize
         loadFunctions();
+        
         // Auto-refresh status every 30 seconds
         setInterval(loadFunctions, 30000);
     </script>
     <script src="shared-header.js"></script>
+
 </body>
