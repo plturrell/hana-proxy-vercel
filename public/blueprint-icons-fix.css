@@ -1,0 +1,47 @@
+/* Blueprint Icons Fix - Load fonts and define common icons */
+
+/* Force load icon fonts with all formats */
+@font-face {
+    font-family: "Icons16";
+    src: url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-16.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Icons20";  
+    src: url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-20.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Apply font to all icon elements */
+.bp3-icon {
+    font-family: "Icons16" !important;
+}
+
+.bp3-icon-large {
+    font-family: "Icons20" !important;
+}
+
+/* Common icon definitions */
+.bp3-icon-timeline-line-chart:before { content: "\e90f"; }
+.bp3-icon-bank-account:before { content: "\e617"; }
+.bp3-icon-predictive-analysis:before { content: "\e96f"; }
+.bp3-icon-feed:before { content: "\e72c"; }
+.bp3-icon-function:before { content: "\e739"; }
+.bp3-icon-learning:before { content: "\e7c2"; }
+.bp3-icon-calculator:before { content: "\e634"; }
+.bp3-icon-numerical:before { content: "\e85f"; }
+.bp3-icon-timeline-events:before { content: "\e97b"; }
+.bp3-icon-fork:before { content: "\e736"; }
+.bp3-icon-console:before { content: "\e685"; }
+.bp3-icon-cloud-upload:before { content: "\e66b"; }
+.bp3-icon-cog:before { content: "\e667"; }
+.bp3-icon-moon:before { content: "\e80e"; }
+.bp3-icon-flash:before { content: "\e72e"; }
+.bp3-icon-user:before { content: "\e99d"; }
+.bp3-icon-lock:before { content: "\e7dc"; }
+.bp3-icon-arrow-left:before { content: "\e60c"; }
+.bp3-icon-dashboard:before { content: "\e692"; }
+.bp3-icon-home:before { content: "\e771"; }
