@@ -9,9 +9,7 @@
     <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
-    <link href="palantir-slate-layout.css" rel="stylesheet">
-    <link href="apple-hybrid-safe.css" rel="stylesheet">
-    <link href="universal-consistency-fix.css" rel="stylesheet">    <style>
+    <link href="palantir-slate-layout.css" rel="stylesheet">    <style>
         /* Blueprint Design System CSS Variables */
         :root {
             --bp3-grid-size: 10px;
@@ -326,7 +324,7 @@
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
-<body data-technology-only="true" class="bp3-dark">
+<body class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <!-- Top Navigation Bar -->
         <nav class="bp3-navbar bp3-dark">
@@ -341,14 +339,8 @@
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
                 <span class="bp3-navbar-divider"></span>
-                <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
-                    <span>Dark Mode</span>
-                </button>
-                <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
-                    <span id="user-role-label">Finance User</span>
-                </button>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle theme"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user" aria-label="User menu"></button>
             </div>
         </nav>
 
@@ -432,49 +424,19 @@
                     <p class="bp3-text-muted">Train and manage machine learning models for financial analysis</p>
                 </div>
 
-                <!-- ML Models Metrics -->
-                <div class="ml-models-metrics apple-data-grid" style="margin-bottom: 30px;">
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Total Models</div>
-                        <div class="apple-metric-value">15</div>
-                        <div class="apple-metric-change positive">↗ +3</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Trained Models</div>
-                        <div class="apple-metric-value">12</div>
-                        <div class="apple-metric-change positive">↗ +2</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Model Accuracy</div>
-                        <div class="apple-metric-value">94.2%</div>
-                        <div class="apple-metric-change positive">↗ +1.8%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Training Time</div>
-                        <div class="apple-metric-value">45min</div>
-                        <div class="apple-metric-change positive">↗ -12min</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Predictions/sec</div>
-                        <div class="apple-metric-value">1,847</div>
-                        <div class="apple-metric-change positive">↗ +23%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Model Health</div>
-                        <div class="apple-metric-value">Excellent</div>
-                        <div class="apple-metric-change positive">↗ Stable</div>
-                    </div>
-                </div>
-
-                <!-- Legacy metrics for remaining functionality -->
-                <div class="metrics-grid" style="display: none;">
+                <!-- Model Metrics -->
+                <div class="metrics-grid">
                     <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Total Models</div>
-                        <div class="metric-value primary" id="totalModels">15</div>
+                        <div class="metric-value primary" id="totalModels">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
                     <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Trained Models</div>
-                        <div class="metric-value success" id="trainedModels">12</div>
+                        <div class="metric-value success" id="trainedModels">
+                            <span class="bp3-skeleton">Loading...</span>
+                        </div>
                     </div>
                     <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Avg Accuracy</div>
@@ -871,32 +833,5 @@
         simulateTrainingProgress();
     </script>
     <script src="shared-header.js"></script>
-
-    <script>
-        // Role-based page protection
-        document.addEventListener('DOMContentLoaded', function() {
-            const userRole = localStorage.getItem('userRole') || 'Finance';
-            if (userRole !== 'Technology') {
-                document.body.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
-                        <div class="bp3-non-ideal-state">
-                            <div class="bp3-non-ideal-state-visual">
-                                <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
-                            </div>
-                            <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
-                            <div class="bp3-non-ideal-state-description">
-                                This page requires Technology privileges. Please contact your system admin.
-                            </div>
-                            <div class="bp3-non-ideal-state-action">
-                                <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    <span class="bp3-icon bp3-icon-arrow-left"></span>
-                                    Go Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    </script>
 </body>
+</html>

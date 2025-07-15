@@ -1,0 +1,156 @@
+/* 
+ * Blueprint Reconciliation CSS
+ * Ensures original Blueprint styles work with custom enhancements
+ */
+
+/* Fix main content padding */
+.main-content {
+    padding: calc(var(--bp3-grid-size) * 3) !important;
+}
+
+/* Ensure sidebar menu is visible - Force visibility */
+.bp3-sidebar .bp3-menu {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+.bp3-sidebar .bp3-menu li {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: list-item !important;
+}
+
+.bp3-sidebar .bp3-menu-item {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: #182026 !important;
+    display: flex !important;
+    text-decoration: none !important;
+}
+
+.bp3-dark .bp3-sidebar .bp3-menu-item {
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Fix menu item text visibility */
+.bp3-menu-item span,
+.bp3-menu-item .bp3-text-overflow-ellipsis {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: inline-block !important;
+    color: inherit !important;
+}
+
+/* Force menu header visibility */
+.bp3-menu-header {
+    opacity: 1 !important;
+    visibility: visible !important;
+    display: block !important;
+}
+
+.bp3-menu-header .bp3-heading {
+    opacity: 1 !important;
+    visibility: visible !important;
+    color: var(--bp3-text-color-muted) !important;
+}
+
+/* Ensure proper Blueprint card styling */
+.bp3-card {
+    background-color: var(--bp3-white) !important;
+    padding: 20px !important;
+    margin-bottom: var(--bp3-grid-size) !important;
+}
+
+.bp3-dark .bp3-card {
+    background-color: var(--bp3-dark-gray4) !important;
+}
+
+/* Fix grid layouts */
+.dashboard-grid,
+.metrics-grid {
+    display: grid !important;
+    gap: calc(var(--bp3-grid-size) * 2) !important;
+}
+
+/* Ensure Slate doesn't override Blueprint buttons */
+.bp3-button {
+    background-color: var(--bp3-light-gray3) !important;
+    color: var(--bp3-text-color) !important;
+}
+
+.bp3-dark .bp3-button {
+    background-color: var(--bp3-dark-gray5) !important;
+    color: #F5F8FA !important;
+}
+
+/* Fix content visibility */
+.content-header {
+    margin-bottom: calc(var(--bp3-grid-size) * 3) !important;
+}
+
+/* Ensure proper z-index hierarchy */
+.bp3-navbar {
+    z-index: 1000 !important;
+}
+
+.bp3-sidebar {
+    z-index: 900 !important;
+}
+
+/* Remove conflicting animations and ensure proper display */
+.bp3-menu-item {
+    animation: none !important;
+    transform: none !important;
+    transition: background-color 0.2s ease !important;
+}
+
+/* Override any glassmorphism effects that might hide text */
+.bp3-sidebar {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--bp3-light-gray5) !important;
+    border-right: 1px solid var(--bp3-divider-color) !important;
+}
+
+.bp3-dark .bp3-sidebar {
+    background: var(--bp3-dark-gray3) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Emergency text visibility fix */
+.bp3-sidebar * {
+    color: inherit !important;
+}
+
+.bp3-sidebar .bp3-menu-item {
+    background: transparent !important;
+    color: #182026 !important;
+}
+
+.bp3-dark .bp3-sidebar .bp3-menu-item {
+    color: #FFFFFF !important;
+}
+
+/* Test: Make all sidebar text red to verify visibility */
+.bp3-sidebar {
+    color: #182026 !important;
+}
+
+.bp3-dark .bp3-sidebar {
+    color: #FFFFFF !important;
+}
+
+/* Ensure list items are visible */
+.bp3-menu li {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Fix menu dividers */
+.bp3-menu-divider {
+    display: block !important;
+    height: 1px !important;
+    margin: 12px 0 !important;
+}

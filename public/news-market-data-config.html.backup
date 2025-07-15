@@ -9,9 +9,7 @@
     <link href="https://unpkg.com/@blueprintjs/core@^4.0.0/lib/css/blueprint.css" rel="stylesheet">
     <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
-    <link href="palantir-slate-layout.css" rel="stylesheet">
-    <link href="apple-hybrid-safe.css" rel="stylesheet">
-    <link href="universal-consistency-fix.css" rel="stylesheet">    <style>
+    <link href="palantir-slate-layout.css" rel="stylesheet">    <style>
         /* Blueprint Design System CSS Variables */
         :root {
             --bp3-grid-size: 10px;
@@ -279,14 +277,8 @@
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
                 <span class="bp3-navbar-divider"></span>
-                <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
-                    <span>Dark Mode</span>
-                </button>
-                <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
-                    <span id="user-role-label">Finance User</span>
-                </button>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" onclick="toggleTheme()" id="theme-toggle" aria-label="Toggle theme"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user" aria-label="User menu"></button>
             </div>
         </nav>
 
@@ -368,40 +360,6 @@
                 <div class="content-header">
                     <h1 class="bp3-heading">News & Market Data Configuration</h1>
                     <p class="bp3-text-muted">Configure real-time data sources and news feeds</p>
-                </div>
-
-                <!-- News & Market Data Metrics -->
-                <div class="news-market-data-metrics apple-data-grid" style="margin-bottom: 30px;">
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Active Data Sources</div>
-                        <div class="apple-metric-value">7</div>
-                        <div class="apple-metric-change positive">↗ +2</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">News Articles Today</div>
-                        <div class="apple-metric-value">1,847</div>
-                        <div class="apple-metric-change positive">↗ +23%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Market Updates</div>
-                        <div class="apple-metric-value">156/min</div>
-                        <div class="apple-metric-change positive">↗ Live</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">API Response Time</div>
-                        <div class="apple-metric-value">127ms</div>
-                        <div class="apple-metric-change positive">↗ -15ms</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Data Accuracy</div>
-                        <div class="apple-metric-value">99.2%</div>
-                        <div class="apple-metric-change positive">↗ +0.3%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Feed Health</div>
-                        <div class="apple-metric-value">Excellent</div>
-                        <div class="apple-metric-change positive">↗ Stable</div>
-                    </div>
                 </div>
 
                 <!-- Data Sources Configuration -->

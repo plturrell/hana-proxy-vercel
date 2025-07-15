@@ -11,7 +11,6 @@
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
-    <link href="universal-consistency-fix.css" rel="stylesheet">
     <style>
         /* Blueprint Design System CSS Variables */
         :root {
@@ -547,132 +546,95 @@
             <div class="bp3-navbar-group bp3-align-left">
                 <div class="bp3-navbar-heading">FinSight Intelligence</div>
                 <span class="bp3-navbar-divider"></span>
-                <div class="status-indicator">
-                    <span class="status-dot" id="status-dot"></span>
-                    <span id="status-text">System Online</span>
-                </div>
+                <button class="bp3-button bp3-minimal page-title bp3-icon-bank-account">Treasury Config</button>
             </div>
             <div class="bp3-navbar-group bp3-align-right">
-                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <div class="status-indicator">
+                    <span class="status-dot connected"></span>
+                    <span class="bp3-text-muted">Connected</span>
+                </div>
                 <span class="bp3-navbar-divider"></span>
-                <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
-                    <span>Dark Mode</span>
-                </button>
-                <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
-                    <span id="user-role-label">Finance User</span>
-                </button>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" id="theme-toggle" onclick="toggleTheme()"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
             </div>
         </nav>
 
         <div class="app-content slate-layout-container">
-            
-    <aside class="bp3-sidebar">
-        <ul class="bp3-menu bp3-large">
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Analytics</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider"></div>
-            <div class="bp3-menu-header">
-                <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
-                <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider technology-only" style="display: none;"></div>
-            <div class="bp3-menu-header technology-only" style="display: none;">
-                <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+            <aside class="bp3-sidebar">
+                <div class="bp3-menu">
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="portfolio-analyser.html">
+                        <span class="bp3-icon bp3-icon-chart"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
+                    </a>
+                    <a class="bp3-menu-item" href="treasury-insights.html">
+                        <span class="bp3-icon bp3-icon-trending-up"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                    </a>
+                    <a class="bp3-menu-item" href="scenario-analyser-config.html">
+                        <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="news-market-data-config.html">
+                        <span class="bp3-icon bp3-icon-feed"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                    </a>
+                    <a class="bp3-menu-item" href="calculation-manager-config.html">
+                        <span class="bp3-icon bp3-icon-function"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                    </a>
+                    <a class="bp3-menu-item" href="ml-models-config.html">
+                        <span class="bp3-icon bp3-icon-learning"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                    </a>
+                    <a class="bp3-menu-item bp3-active" href="treasury-insights-config.html">
+                        <span class="bp3-icon bp3-icon-bank-account"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Tools</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="calculation-tester.html">
+                        <span class="bp3-icon bp3-icon-calculator"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                    </a>
+                    <a class="bp3-menu-item" href="calculations-config.html">
+                        <span class="bp3-icon bp3-icon-numerical"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                    </a>
+                    <a class="bp3-menu-item" href="news-market-config.html">
+                        <span class="bp3-icon bp3-icon-timeline-events"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                    </a>
+                    <a class="bp3-menu-item" href="scenario-analysis.html">
+                        <span class="bp3-icon bp3-icon-fork"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="command-centre.html">
+                        <span class="bp3-icon bp3-icon-console"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                    </a>
+                    <a class="bp3-menu-item" href="deployment.html">
+                        <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                    </a>
+                    <a class="bp3-menu-item" href="system-config.html">
+                        <span class="bp3-icon bp3-icon-settings"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                    </a>
+                </div>
+            </aside>
 
             <main class="main-content slate-content-primary">
                 <div class="content-header">
@@ -684,40 +646,6 @@
                 <div class="status-bar">
                     <div class="status-icon"></div>
                     <span>Treasury Intelligence Engine Active - Smart Formula Selector Online</span>
-                </div>
-
-                <!-- Treasury Configuration Metrics -->
-                <div class="treasury-config-metrics apple-data-grid" style="margin-bottom: 30px;">
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Active Engines</div>
-                        <div class="apple-metric-value">3</div>
-                        <div class="apple-metric-change positive">↗ +1</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Formula Accuracy</div>
-                        <div class="apple-metric-value">94.7%</div>
-                        <div class="apple-metric-change positive">↗ +2.3%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Context Detection</div>
-                        <div class="apple-metric-value">85%</div>
-                        <div class="apple-metric-change positive">↗ +5%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Response Time</div>
-                        <div class="apple-metric-value">142ms</div>
-                        <div class="apple-metric-change positive">↓ -28ms</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Live Insights</div>
-                        <div class="apple-metric-value">247</div>
-                        <div class="apple-metric-change positive">↗ +34</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Config Status</div>
-                        <div class="apple-metric-value">Optimized</div>
-                        <div class="apple-metric-change positive">✓ Ready</div>
-                    </div>
                 </div>
 
                 <!-- Main Configuration Grid -->

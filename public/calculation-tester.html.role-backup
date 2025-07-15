@@ -11,7 +11,6 @@
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
-    <link href="universal-consistency-fix.css" rel="stylesheet">
     <style>
         /* Blueprint Design System CSS Variables */
         :root {
@@ -276,34 +275,6 @@
         .bp3-dark .result-breakdown {
             background-color: var(--bp3-dark-gray2);
         }
-
-        /* Calculation Metrics */
-        .calculation-metrics {
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
-        .calculation-metrics .apple-metric-card {
-            min-height: 120px;
-        }
-
-        .calculation-metrics .apple-metric-value {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--bp3-intent-primary);
-            margin: calc(var(--bp3-grid-size) * 1.5) 0 calc(var(--bp3-grid-size));
-        }
-
-        .calculation-metrics .apple-metric-change.positive {
-            color: var(--bp3-intent-success);
-        }
-
-        .calculation-metrics .apple-metric-change.negative {
-            color: var(--bp3-intent-danger);
-        }
-
-        .calculation-metrics .apple-metric-change.neutral {
-            color: var(--bp3-text-color-muted);
-        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
@@ -313,184 +284,131 @@
             <div class="bp3-navbar-group bp3-align-left">
                 <div class="bp3-navbar-heading">FinSight Intelligence</div>
                 <span class="bp3-navbar-divider"></span>
-                <div class="status-indicator">
-                    <span class="status-dot" id="status-dot"></span>
-                    <span id="status-text">System Online</span>
-                </div>
+                <button class="bp3-button bp3-minimal page-title bp3-icon-calculator">Calculation Tester</button>
             </div>
             <div class="bp3-navbar-group bp3-align-right">
-                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <div class="status-indicator">
+                    <span class="status-dot connected"></span>
+                    <span class="bp3-text-muted">Connected</span>
+                </div>
                 <span class="bp3-navbar-divider"></span>
-                <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
-                    <span>Dark Mode</span>
-                </button>
-                <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
-                    <span id="user-role-label">Finance User</span>
-                </button>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" id="theme-toggle" onclick="toggleTheme()"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
             </div>
         </nav>
 
         <div class="app-content slate-layout-container">
-            
-    <aside class="bp3-sidebar">
-        <ul class="bp3-menu bp3-large">
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Analytics</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider"></div>
-            <div class="bp3-menu-header">
-                <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
-                <a class="bp3-menu-item bp3-active" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider technology-only" style="display: none;"></div>
-            <div class="bp3-menu-header technology-only" style="display: none;">
-                <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+            <aside class="bp3-sidebar">
+                <ul class="bp3-menu bp3-large">
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                            <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                            <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                        </a>
+                    </li>
+                    
+                    <li class="bp3-menu-header">
+                        <h6 class="bp3-heading">Knowledge</h6>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/news-market-data-config.html">
+                            <span class="bp3-icon bp3-icon-feed"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                            <span class="bp3-icon bp3-icon-function"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/ml-models-config.html">
+                            <span class="bp3-icon bp3-icon-learning"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                            <span class="bp3-icon bp3-icon-bank-account"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                        </a>
+                    </li>
+                    
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Tools</h6>
+                    </div>
+                    <li>
+                        <a class="bp3-menu-item bp3-active" href="/calculation-tester.html">
+                            <span class="bp3-icon bp3-icon-calculator"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/calculations-config.html">
+                            <span class="bp3-icon bp3-icon-numerical"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/news-market-config.html">
+                            <span class="bp3-icon bp3-icon-timeline-events"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="bp3-menu-item" href="/scenario-analysis.html">
+                            <span class="bp3-icon bp3-icon-fork"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                        </a>
+                    </li>
+                    
+                    <div class="bp3-menu-divider admin-only" style="display: none;"></div>
+                    <div class="bp3-menu-header admin-only" style="display: none;">
+                        <h6 class="bp3-heading">System</h6>
+                    </div>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/command-centre.html">
+                            <span class="bp3-icon bp3-icon-console"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/deployment.html">
+                            <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                        </a>
+                    </li>
+                    <li class="admin-only" style="display: none;">
+                        <a class="bp3-menu-item" href="/system-config.html">
+                            <span class="bp3-icon bp3-icon-settings"></span>
+                            <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
 
             <main class="main-content slate-content-primary">
                 <div class="slate-widget-container">
                     <div class="content-header">
                         <h1 class="bp3-heading">Calculation Tester</h1>
                         <p class="bp3-text-muted">Test and validate financial calculations in real-time</p>
-                    </div>
-
-                    <!-- Testing Metrics -->
-                    <div class="calculation-metrics apple-data-grid" style="margin-bottom: 30px;">
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Total Calculations</div>
-                            <div class="apple-metric-value" id="totalCalculations">1,247</div>
-                            <div class="apple-metric-change positive" id="totalCalculationsChange">
-                                ↗ +156
-                            </div>
-                        </div>
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Success Rate</div>
-                            <div class="apple-metric-value" id="successRate">97.3%</div>
-                            <div class="apple-metric-change positive" id="successRateChange">
-                                ↗ +2.1%
-                            </div>
-                        </div>
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Average Execution Time</div>
-                            <div class="apple-metric-value" id="executionTime">23ms</div>
-                            <div class="apple-metric-change positive" id="executionTimeChange">
-                                ↘ -5ms
-                            </div>
-                        </div>
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Failed Tests</div>
-                            <div class="apple-metric-value" id="failedTests">34</div>
-                            <div class="apple-metric-change negative" id="failedTestsChange">
-                                ↗ +8
-                            </div>
-                        </div>
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Coverage</div>
-                            <div class="apple-metric-value" id="coverage">89.5%</div>
-                            <div class="apple-metric-change positive" id="coverageChange">
-                                ↗ +4.2%
-                            </div>
-                        </div>
-                        <div class="apple-metric-card">
-                            <div class="apple-metric-label">Queue Size</div>
-                            <div class="apple-metric-value" id="queueSize">12</div>
-                            <div class="apple-metric-change neutral" id="queueSizeChange">
-                                → 0
-                            </div>
-                        </div>
                     </div>
 
                     <div class="tester-layout slate-flex-row">
@@ -673,83 +591,6 @@
     <script>
         let selectedFormula = null;
         let calculationCache = new Map();
-        let calculationMetrics = {
-            totalCalculations: 1247,
-            successfulCalculations: 1213,
-            failedCalculations: 34,
-            totalExecutionTime: 28641, // in milliseconds
-            testsCovered: 89.5,
-            queueSize: 12,
-            calculationHistory: []
-        };
-
-        // Update metrics display
-        function updateMetricsDisplay() {
-            const successRate = calculationMetrics.totalCalculations > 0 
-                ? (calculationMetrics.successfulCalculations / calculationMetrics.totalCalculations * 100).toFixed(1)
-                : 0;
-            
-            const avgExecutionTime = calculationMetrics.totalCalculations > 0
-                ? Math.round(calculationMetrics.totalExecutionTime / calculationMetrics.totalCalculations)
-                : 0;
-
-            // Update metric values
-            document.getElementById('totalCalculations').textContent = calculationMetrics.totalCalculations.toLocaleString();
-            document.getElementById('successRate').textContent = successRate + '%';
-            document.getElementById('executionTime').textContent = avgExecutionTime + 'ms';
-            document.getElementById('failedTests').textContent = calculationMetrics.failedCalculations.toLocaleString();
-            document.getElementById('coverage').textContent = calculationMetrics.testsCovered.toFixed(1) + '%';
-            document.getElementById('queueSize').textContent = calculationMetrics.queueSize.toLocaleString();
-
-            // Update trend indicators (simulate changes)
-            const trends = {
-                totalCalculations: Math.random() > 0.5 ? 'positive' : 'neutral',
-                successRate: Math.random() > 0.3 ? 'positive' : 'negative',
-                executionTime: Math.random() > 0.6 ? 'positive' : 'negative',
-                failedTests: Math.random() > 0.7 ? 'negative' : 'positive',
-                coverage: Math.random() > 0.4 ? 'positive' : 'neutral',
-                queueSize: calculationMetrics.queueSize > 20 ? 'negative' : 'neutral'
-            };
-
-            // Apply trend classes
-            Object.keys(trends).forEach(key => {
-                const changeElement = document.getElementById(key + 'Change');
-                if (changeElement) {
-                    changeElement.className = 'apple-metric-change ' + trends[key];
-                }
-            });
-        }
-
-        // Record calculation execution
-        function recordCalculation(success, executionTime) {
-            calculationMetrics.totalCalculations++;
-            calculationMetrics.totalExecutionTime += executionTime;
-            
-            if (success) {
-                calculationMetrics.successfulCalculations++;
-            } else {
-                calculationMetrics.failedCalculations++;
-            }
-
-            // Update queue size (simulate processing)
-            calculationMetrics.queueSize = Math.max(0, calculationMetrics.queueSize + (Math.random() > 0.7 ? 1 : -1));
-
-            // Record in history
-            calculationMetrics.calculationHistory.push({
-                timestamp: new Date(),
-                success: success,
-                executionTime: executionTime,
-                formula: selectedFormula
-            });
-
-            // Keep only last 100 calculations
-            if (calculationMetrics.calculationHistory.length > 100) {
-                calculationMetrics.calculationHistory.shift();
-            }
-
-            // Update display
-            updateMetricsDisplay();
-        }
 
         // Formula definitions with parameters
         const formulas = {
@@ -900,18 +741,11 @@
                     // Cache the result
                     const cacheKey = JSON.stringify({ formula: selectedFormula, params });
                     calculationCache.set(cacheKey, result);
-
-                    // Record successful calculation
-                    recordCalculation(true, endTime - startTime);
                 } else {
                     alert('Calculation failed: ' + result.error);
-                    // Record failed calculation
-                    recordCalculation(false, endTime - startTime);
                 }
             } catch (error) {
                 alert('Error performing calculation: ' + error.message);
-                // Record failed calculation
-                recordCalculation(false, performance.now() - startTime);
             }
         }
 
@@ -980,28 +814,6 @@
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
         }
-
-        // Initialize metrics display and auto-refresh
-        function initializeMetrics() {
-            updateMetricsDisplay();
-            
-            // Auto-refresh metrics every 5 seconds
-            setInterval(() => {
-                // Simulate small random changes to coverage and queue size
-                calculationMetrics.testsCovered += (Math.random() - 0.5) * 0.2;
-                calculationMetrics.testsCovered = Math.max(80, Math.min(100, calculationMetrics.testsCovered));
-                
-                calculationMetrics.queueSize += Math.random() > 0.6 ? 1 : -1;
-                calculationMetrics.queueSize = Math.max(0, Math.min(50, calculationMetrics.queueSize));
-                
-                updateMetricsDisplay();
-            }, 5000);
-        }
-
-        // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            initializeMetrics();
-        });
     </script>
     <script src="shared-header.js"></script>
 </body>

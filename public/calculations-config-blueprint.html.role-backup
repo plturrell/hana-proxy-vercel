@@ -10,8 +10,7 @@
     <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
-    <link href="apple-hybrid-safe.css" rel="stylesheet">
-    <link href="universal-consistency-fix.css" rel="stylesheet">    <style>
+    <link href="apple-hybrid-safe.css" rel="stylesheet">    <style>
         /* Blueprint Design System CSS Variables */
         :root {
             --bp3-grid-size: 10px;
@@ -183,19 +182,7 @@
             border-bottom: 1px solid var(--bp3-divider-color);
         }
 
-        /* Page-specific styles */
-        .bp3-card {
-            background-color: white;
-            border-radius: var(--bp3-border-radius);
-            box-shadow: var(--bp3-elevation-shadow-1);
-            padding: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
-        .bp3-dark .bp3-card {
-            background-color: var(--bp3-dark-gray3);
-        }
-
+        /* Custom styles for calculations config */
         .overview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -203,9 +190,40 @@
             margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
+        .overview-card {
+            background-color: white;
+            border-radius: var(--bp3-border-radius);
+            box-shadow: var(--bp3-elevation-shadow-1);
+            padding: calc(var(--bp3-grid-size) * 2);
+            text-align: center;
+        }
+
+        .bp3-dark .overview-card {
+            background-color: var(--bp3-dark-gray3);
+        }
+
+        .overview-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--bp3-intent-primary);
+            margin-bottom: calc(var(--bp3-grid-size));
+        }
+
+        .overview-label {
+            font-size: 12px;
+            color: var(--bp3-text-color-muted);
+            font-weight: 500;
+        }
+
+        .config-layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: calc(var(--bp3-grid-size) * 2);
+        }
+
         .functions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
         }
 
@@ -214,7 +232,7 @@
             border-radius: var(--bp3-border-radius);
             box-shadow: var(--bp3-elevation-shadow-1);
             padding: calc(var(--bp3-grid-size) * 2);
-            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
+            transition: box-shadow var(--bp3-transition-duration);
         }
 
         .bp3-dark .function-card {
@@ -223,14 +241,43 @@
 
         .function-card:hover {
             box-shadow: var(--bp3-elevation-shadow-2);
-            transform: translateY(-2px);
+        }
+
+        .function-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: calc(var(--bp3-grid-size));
+        }
+
+        .function-name {
+            font-weight: 600;
+            font-size: var(--bp3-font-size-large);
+        }
+
+        .param-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(var(--bp3-grid-size) / 2);
+            margin: calc(var(--bp3-grid-size)) 0;
+        }
+
+        .param-tag {
+            font-size: 11px;
+            padding: 2px 6px;
+            background-color: var(--bp3-light-gray4);
+            border-radius: 2px;
+        }
+
+        .bp3-dark .param-tag {
+            background-color: var(--bp3-dark-gray4);
         }
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid var(--bp3-gray3);
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--bp3-gray5);
             border-radius: 50%;
             border-top-color: var(--bp3-intent-primary);
             animation: spin 1s ease-in-out infinite;
@@ -242,138 +289,101 @@
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
-<body data-technology-only="true" class="bp3-dark">
+<body class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <nav class="bp3-navbar bp3-dark">
             <div class="bp3-navbar-group bp3-align-left">
                 <div class="bp3-navbar-heading">FinSight Intelligence</div>
                 <span class="bp3-navbar-divider"></span>
-                <div class="status-indicator">
-                    <span class="status-dot" id="status-dot"></span>
-                    <span id="status-text">System Online</span>
-                </div>
+                <button class="bp3-button bp3-minimal page-title bp3-icon-numerical">Calculations Config</button>
             </div>
             <div class="bp3-navbar-group bp3-align-right">
-                <span class="bp3-text-muted" id="function-count">0/32 functions</span>
+                <div class="status-indicator">
+                    <span class="status-dot connected"></span>
+                    <span class="bp3-text-muted">Connected</span>
+                </div>
                 <span class="bp3-navbar-divider"></span>
-                <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
-                    <span>Dark Mode</span>
-                </button>
-                <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-                    <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
-                    <span id="user-role-label">Finance User</span>
-                </button>
+                <button class="bp3-button bp3-minimal bp3-icon-moon" id="theme-toggle" onclick="toggleTheme()"></button>
+                <button class="bp3-button bp3-minimal bp3-icon-user"></button>
             </div>
         </nav>
 
         <div class="app-content slate-layout-container">
-            
-    <aside class="bp3-sidebar">
-        <ul class="bp3-menu bp3-large">
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Analytics</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/portfolio-analyser.html">
-                    <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-                    <span class="bp3-icon bp3-icon-predictive-analysis"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
-                <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/news-market-data-config.html">
-                    <span class="bp3-icon bp3-icon-feed"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculation-manager-config.html">
-                    <span class="bp3-icon bp3-icon-function"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/ml-models-config.html">
-                    <span class="bp3-icon bp3-icon-learning"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider"></div>
-            <div class="bp3-menu-header">
-                <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
-                <a class="bp3-menu-item" href="/calculation-tester.html">
-                    <span class="bp3-icon bp3-icon-calculator"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/calculations-config.html">
-                    <span class="bp3-icon bp3-icon-numerical"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/news-market-config.html">
-                    <span class="bp3-icon bp3-icon-timeline-events"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
-                <a class="bp3-menu-item" href="/scenario-analysis.html">
-                    <span class="bp3-icon bp3-icon-fork"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
-            <div class="bp3-menu-divider technology-only" style="display: none;"></div>
-            <div class="bp3-menu-header technology-only" style="display: none;">
-                <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/command-centre.html">
-                    <span class="bp3-icon bp3-icon-console"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/deployment.html">
-                    <span class="bp3-icon bp3-icon-cloud-upload"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/system-config.html">
-                    <span class="bp3-icon bp3-icon-cog"></span>
-                    <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
-        </ul>
-    </aside>
+            <aside class="bp3-sidebar">
+                <div class="bp3-menu">
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Analytics</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="portfolio-analyser.html">
+                        <span class="bp3-icon bp3-icon-chart"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
+                    </a>
+                    <a class="bp3-menu-item" href="treasury-insights.html">
+                        <span class="bp3-icon bp3-icon-trending-up"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
+                    </a>
+                    <a class="bp3-menu-item" href="scenario-analyser-config.html">
+                        <span class="bp3-icon bp3-icon-predictive-analysis"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Configuration</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="news-market-data-config.html">
+                        <span class="bp3-icon bp3-icon-feed"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
+                    </a>
+                    <a class="bp3-menu-item" href="calculation-manager-config.html">
+                        <span class="bp3-icon bp3-icon-function"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
+                    </a>
+                    <a class="bp3-menu-item" href="ml-models-config.html">
+                        <span class="bp3-icon bp3-icon-learning"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
+                    </a>
+                    <a class="bp3-menu-item" href="treasury-insights-config.html">
+                        <span class="bp3-icon bp3-icon-bank-account"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">Tools</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="calculation-tester.html">
+                        <span class="bp3-icon bp3-icon-calculator"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
+                    </a>
+                    <a class="bp3-menu-item bp3-active" href="calculations-config.html">
+                        <span class="bp3-icon bp3-icon-numerical"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
+                    </a>
+                    <a class="bp3-menu-item" href="news-market-config.html">
+                        <span class="bp3-icon bp3-icon-timeline-events"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
+                    </a>
+                    <a class="bp3-menu-item" href="scenario-analysis.html">
+                        <span class="bp3-icon bp3-icon-fork"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
+                    </a>
+                    <div class="bp3-menu-divider"></div>
+                    <div class="bp3-menu-header">
+                        <h6 class="bp3-heading">System</h6>
+                    </div>
+                    <a class="bp3-menu-item" href="command-centre.html">
+                        <span class="bp3-icon bp3-icon-console"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
+                    </a>
+                    <a class="bp3-menu-item" href="deployment.html">
+                        <span class="bp3-icon bp3-icon-cloud-upload"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
+                    </a>
+                    <a class="bp3-menu-item" href="system-config.html">
+                        <span class="bp3-icon bp3-icon-settings"></span>
+                        <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
+                    </a>
+                </div>
+            </aside>
 
             <main class="main-content slate-content-primary">
                 <div class="content-header">
@@ -381,91 +391,108 @@
                     <p class="bp3-text-muted">Manage and test financial calculation functions</p>
                 </div>
 
-                <!-- Calculations Metrics -->
-                <div class="calculations-metrics apple-data-grid" style="margin-bottom: 30px;">
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Total Functions</div>
-                        <div class="apple-metric-value">32</div>
-                        <div class="apple-metric-change positive">↗ +8</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Active Functions</div>
-                        <div class="apple-metric-value">28</div>
-                        <div class="apple-metric-change positive">↗ +5</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Avg Latency</div>
-                        <div class="apple-metric-value">89ms</div>
-                        <div class="apple-metric-change positive">↗ -12ms</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Success Rate</div>
-                        <div class="apple-metric-value">99.2%</div>
-                        <div class="apple-metric-change positive">↗ +0.7%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Test Coverage</div>
-                        <div class="apple-metric-value">87%</div>
-                        <div class="apple-metric-change positive">↗ +15%</div>
-                    </div>
-                    <div class="apple-metric-card">
-                        <div class="apple-metric-label">Function Health</div>
-                        <div class="apple-metric-value">Excellent</div>
-                        <div class="apple-metric-change positive">↗ Stable</div>
-                    </div>
-                </div>
-
-                <!-- Legacy overview grid for compatibility -->
-                <div class="overview-grid" style="display: none;">
-                    <div class="bp3-card">
-                        <h5 class="bp3-heading">Total Functions</h5>
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-primary); margin: 10px 0;" id="totalFunctions">32</div>
-                    </div>
-                    <div class="bp3-card">
-                        <h5 class="bp3-heading">Active Functions</h5>
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-success); margin: 10px 0;" id="activeFunctions">28</div>
-                    </div>
-                    <div class="bp3-card">
-                        <h5 class="bp3-heading">Avg Latency</h5>
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-warning); margin: 10px 0;" id="avgLatency">89ms</div>
-                    </div>
-                    <div class="bp3-card">
-                        <h5 class="bp3-heading">Success Rate</h5>
-                        <div style="font-size: 2rem; font-weight: 600; color: var(--bp3-intent-primary); margin: 10px 0;" id="successRate">99.2%</div>
-                    </div>
-                </div>
-
-                <div class="bp3-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                        <h3 class="bp3-heading" id="contentTitle">All Functions</h3>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" class="bp3-input" placeholder="Search functions..." id="searchInput" oninput="searchFunctions()">
-                            <select class="bp3-select" id="statusFilter" onchange="filterByStatus()">
-                                <option value="all">All Status</option>
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <div class="functions-grid" id="functionsGrid">
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                <!-- Overview Stats -->
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="overview-value" id="totalFunctions">
                             <span class="loading"></span>
-                            <p style="margin-top: 1rem; color: var(--bp3-text-color-muted);">Loading functions...</p>
+                        </div>
+                        <div class="overview-label">Total Functions</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="activeFunctions">
+                            <span class="loading"></span>
+                        </div>
+                        <div class="overview-label">Active Functions</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="avgLatency">
+                            <span class="loading"></span>
+                        </div>
+                        <div class="overview-label">Avg Latency</div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="overview-value" id="successRate">
+                            <span class="loading"></span>
+                        </div>
+                        <div class="overview-label">Success Rate</div>
+                    </div>
+                </div>
+
+                <!-- Main Layout -->
+                <div class="config-layout">
+                    <!-- Categories Sidebar -->
+                    <div class="bp3-card">
+                        <h3 class="bp3-heading">Categories</h3>
+                        <div class="bp3-menu" style="margin-top: 15px;">
+                            <div class="bp3-menu-item bp3-active" onclick="filterCategory('all')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">All Functions</span>
+                                <span class="bp3-tag bp3-minimal" id="count-all">0</span>
+                            </div>
+                            <div class="bp3-menu-item" onclick="filterCategory('analytics')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">Analytics</span>
+                                <span class="bp3-tag bp3-minimal" id="count-analytics">0</span>
+                            </div>
+                            <div class="bp3-menu-item" onclick="filterCategory('risk')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">Risk Management</span>
+                                <span class="bp3-tag bp3-minimal" id="count-risk">0</span>
+                            </div>
+                            <div class="bp3-menu-item" onclick="filterCategory('portfolio')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio</span>
+                                <span class="bp3-tag bp3-minimal" id="count-portfolio">0</span>
+                            </div>
+                            <div class="bp3-menu-item" onclick="filterCategory('options')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">Options</span>
+                                <span class="bp3-tag bp3-minimal" id="count-options">0</span>
+                            </div>
+                            <div class="bp3-menu-item" onclick="filterCategory('ml')">
+                                <span class="bp3-text-overflow-ellipsis bp3-fill">ML/RL</span>
+                                <span class="bp3-tag bp3-minimal" id="count-ml">0</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="bp3-card" style="text-align: center;">
-                    <h3 class="bp3-heading" style="margin-bottom: 20px;">Deployment Actions</h3>
-                    <div class="bp3-button-group">
-                        <button class="bp3-button bp3-icon-endorsed" onclick="validateAll()">Validate All</button>
-                        <button class="bp3-button bp3-intent-primary bp3-icon-cloud-upload" onclick="deployFunctions()">Deploy Functions</button>
-                        <button class="bp3-button bp3-icon-export" onclick="exportConfig()">Export Config</button>
+                    <!-- Functions Content -->
+                    <div>
+                        <div class="bp3-card" style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h2 class="bp3-heading" id="contentTitle">All Functions</h2>
+                                <div style="display: flex; gap: 10px;">
+                                    <div class="bp3-input-group">
+                                        <span class="bp3-icon bp3-icon-search"></span>
+                                        <input type="text" class="bp3-input" placeholder="Search functions..." id="searchInput" oninput="searchFunctions()">
+                                    </div>
+                                    <div class="bp3-select">
+                                        <select id="statusFilter" onchange="filterByStatus()">
+                                            <option value="all">All Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="functions-grid" id="functionsGrid">
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                                <span class="loading"></span>
+                                <p style="margin-top: 1rem; color: var(--bp3-text-color-muted);">Loading functions...</p>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="bp3-card" style="margin-top: 20px; text-align: center;">
+                            <h3 class="bp3-heading" style="margin-bottom: 15px;">Deployment Actions</h3>
+                            <div class="bp3-button-group">
+                                <button class="bp3-button bp3-icon-confirm" onclick="validateAll()">Validate All</button>
+                                <button class="bp3-button bp3-intent-primary bp3-icon-cloud-upload" onclick="deployFunctions()">Deploy Functions</button>
+                                <button class="bp3-button bp3-icon-export" onclick="exportConfig()">Export Config</button>
+                            </div>
+                        </div>
+
+                        <div id="globalTestResult" class="bp3-callout" style="display: none; margin-top: 20px;"></div>
                     </div>
                 </div>
-
-                <div id="globalTestResult" style="display: none; background: var(--bp3-dark-gray4); padding: 20px; border-radius: var(--bp3-border-radius); margin-top: 20px; font-family: monospace; white-space: pre-wrap;"></div>
             </main>
         </div>
     </div>
@@ -537,7 +564,6 @@
                 const data = await response.json();
                 const deployedCount = data.deployed_count || 0;
                 const deployedFunctions = data.deployed_functions || [];
-                const missingFunctions = data.missing_functions || [];
                 
                 // Update overview stats
                 document.getElementById('totalFunctions').textContent = '32';
@@ -551,13 +577,28 @@
                     status: deployedFunctions.includes(func.name) ? 'active' : 'inactive'
                 }));
                 
+                // Update category counts
+                const categoryCounts = {
+                    all: allFunctions.length,
+                    analytics: allFunctions.filter(f => f.category === 'analytics').length,
+                    risk: allFunctions.filter(f => f.category === 'risk').length,
+                    portfolio: allFunctions.filter(f => f.category === 'portfolio').length,
+                    options: allFunctions.filter(f => f.category === 'options').length,
+                    ml: allFunctions.filter(f => f.category === 'ml').length
+                };
+                
+                Object.keys(categoryCounts).forEach(cat => {
+                    const countEl = document.getElementById(`count-${cat}`);
+                    if (countEl) countEl.textContent = categoryCounts[cat];
+                });
+                
                 // Display functions
                 displayFunctions();
                 
             } catch (error) {
                 console.error('Failed to load functions:', error);
                 document.getElementById('functionsGrid').innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--bp3-intent-danger);">
+                    <div style="grid-column: 1 / -1;" class="bp3-callout bp3-intent-danger">
                         Failed to load functions: ${error.message}
                     </div>
                 `;
@@ -569,40 +610,46 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             
             const filteredFunctions = allFunctions.filter(func => {
+                const categoryMatch = currentCategory === 'all' || func.category === currentCategory;
                 const statusMatch = currentStatus === 'all' || func.status === currentStatus;
                 const searchMatch = searchTerm === '' || 
                     func.name.toLowerCase().includes(searchTerm) || 
                     func.description.toLowerCase().includes(searchTerm);
                 
-                return statusMatch && searchMatch;
+                return categoryMatch && statusMatch && searchMatch;
             });
             
             if (filteredFunctions.length === 0) {
                 grid.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--bp3-text-color-muted);">
-                        No functions found matching your criteria
+                    <div style="grid-column: 1 / -1;" class="bp3-non-ideal-state">
+                        <div class="bp3-non-ideal-state-visual">
+                            <span class="bp3-icon bp3-icon-search"></span>
+                        </div>
+                        <h4 class="bp3-non-ideal-state-title">No functions found</h4>
+                        <div class="bp3-non-ideal-state-description">
+                            No functions match your current filters
+                        </div>
                     </div>
                 `;
                 return;
             }
             
             grid.innerHTML = filteredFunctions.map(func => `
-                <div class="function-card" data-function="${func.name}">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span style="font-size: 16px; font-weight: 600;">${formatFunctionName(func.name)}</span>
-                        <span class="bp3-tag ${func.status === 'active' ? 'bp3-intent-success' : 'bp3-minimal'}">${func.status.toUpperCase()}</span>
+                <div class="function-card">
+                    <div class="function-header">
+                        <span class="function-name">${formatFunctionName(func.name)}</span>
+                        <span class="bp3-tag ${func.status === 'active' ? 'bp3-intent-success' : 'bp3-intent-warning'}">${func.status.toUpperCase()}</span>
                     </div>
-                    <p style="color: var(--bp3-text-color-muted); margin-bottom: 15px; line-height: 1.5;">${func.description}</p>
-                    <div style="margin-bottom: 15px;">
-                        <div style="display: flex; flex-wrap: wrap; gap: 5px;">
-                            ${func.params.map(p => `<span class="bp3-tag bp3-minimal bp3-small">${p}</span>`).join('')}
-                        </div>
+                    <p class="bp3-text-muted" style="margin-bottom: 10px;">${func.description}</p>
+                    <div class="param-list">
+                        ${func.params.map(p => `<span class="param-tag">${p}</span>`).join('')}
                     </div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <button class="bp3-button bp3-small" onclick="testFunction('${func.name}')" ${func.status === 'inactive' ? 'disabled' : ''}>
+                    <div style="margin-top: 15px;">
+                        <button class="bp3-button bp3-small bp3-icon-play" onclick="testFunction('${func.name}')" ${func.status === 'inactive' ? 'disabled' : ''}>
                             Test Function
                         </button>
                     </div>
+                    <div class="bp3-callout" id="result-${func.name}" style="display: none; margin-top: 10px;"></div>
                 </div>
             `).join('');
         }
@@ -611,6 +658,29 @@
             return name.split('_').map(word => 
                 word.charAt(0).toUpperCase() + word.slice(1)
             ).join(' ');
+        }
+        
+        function filterCategory(category) {
+            currentCategory = category;
+            
+            // Update active state
+            document.querySelectorAll('.bp3-menu .bp3-menu-item').forEach(item => {
+                item.classList.remove('bp3-active');
+            });
+            event.target.closest('.bp3-menu-item').classList.add('bp3-active');
+            
+            // Update title
+            const titles = {
+                'all': 'All Functions',
+                'analytics': 'Analytics Functions',
+                'risk': 'Risk Management Functions',
+                'portfolio': 'Portfolio Functions',
+                'options': 'Options Functions',
+                'ml': 'ML/RL Functions'
+            };
+            document.getElementById('contentTitle').textContent = titles[category];
+            
+            displayFunctions();
         }
         
         function filterByStatus() {
@@ -623,11 +693,77 @@
         }
         
         async function testFunction(functionName) {
-            alert(`Testing function: ${functionName}`);
+            const btn = event.target;
+            const resultDiv = document.getElementById(`result-${functionName}`);
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing...';
+            resultDiv.style.display = 'none';
+            
+            try {
+                // Get test parameters based on function
+                const testParams = getTestParams(functionName);
+                
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: functionName,
+                        params: testParams
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.data !== undefined) {
+                    resultDiv.className = 'bp3-callout bp3-intent-success';
+                    resultDiv.innerHTML = `<strong>Success!</strong><br><pre>${JSON.stringify(data.data, null, 2)}</pre>`;
+                } else {
+                    throw new Error(data.error || 'Test failed');
+                }
+            } catch (error) {
+                resultDiv.className = 'bp3-callout bp3-intent-danger';
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            } finally {
+                resultDiv.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Test Function';
+            }
+        }
+        
+        function getTestParams(functionName) {
+            // Return appropriate test parameters for each function
+            const testData = {
+                'calculate_pearson_correlation': {
+                    x_values: [1, 2, 3, 4, 5],
+                    y_values: [2, 4, 6, 8, 10]
+                },
+                'calculate_var': {
+                    returns: [-0.02, 0.01, -0.03, 0.02, 0.01],
+                    confidence_level: 0.95
+                },
+                'calculate_sharpe_ratio': {
+                    returns: [0.01, 0.02, -0.01, 0.03, 0.02],
+                    risk_free_rate: 0.02 / 252
+                },
+                'black_scholes_option_price': {
+                    spot_price: 100,
+                    strike_price: 105,
+                    time_to_expiry: 0.25,
+                    risk_free_rate: 0.05,
+                    volatility: 0.2,
+                    option_type: 'call'
+                }
+            };
+            
+            return testData[functionName] || {};
         }
         
         async function validateAll() {
             const btn = event.target;
+            const resultDiv = document.getElementById('globalTestResult');
+            
             btn.disabled = true;
             btn.textContent = 'Validating...';
             
@@ -641,13 +777,16 @@
                 const data = await response.json();
                 
                 if (data.success) {
-                    alert(`✅ Validation complete!\n\nDeployed: ${data.deployed_count}/32 functions\nAll tests passed`);
+                    resultDiv.className = 'bp3-callout bp3-intent-success';
+                    resultDiv.innerHTML = `<strong>Validation complete!</strong><br>Deployed: ${data.deployed_count}/32 functions<br>All tests passed`;
                 } else {
                     throw new Error(data.error || 'Validation failed');
                 }
             } catch (error) {
-                alert(`❌ Validation failed: ${error.message}`);
+                resultDiv.className = 'bp3-callout bp3-intent-danger';
+                resultDiv.innerHTML = `<strong>Validation failed:</strong> ${error.message}`;
             } finally {
+                resultDiv.style.display = 'block';
                 btn.disabled = false;
                 btn.textContent = 'Validate All';
             }
@@ -688,23 +827,19 @@
         
         function exportConfig() {
             const config = {
-                timestamp: new Date().toISOString(),
                 functions: allFunctions,
-                deployment_status: {
-                    total: 32,
-                    active: allFunctions.filter(f => f.status === 'active').length
-                }
+                timestamp: new Date().toISOString(),
+                version: '1.0'
             };
             
             const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `calculations-config-${new Date().toISOString().split('T')[0]}.json`;
+            a.download = `calculations-config-${Date.now()}.json`;
             a.click();
-            URL.revokeObjectURL(url);
         }
-
+        
         function toggleTheme() {
             const body = document.body;
             const button = document.getElementById('theme-toggle');
@@ -725,32 +860,5 @@
         setInterval(loadFunctions, 30000);
     </script>
     <script src="shared-header.js"></script>
-
-    <script>
-        // Role-based page protection
-        document.addEventListener('DOMContentLoaded', function() {
-            const userRole = localStorage.getItem('userRole') || 'Finance';
-            if (userRole !== 'Technology') {
-                document.body.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
-                        <div class="bp3-non-ideal-state">
-                            <div class="bp3-non-ideal-state-visual">
-                                <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
-                            </div>
-                            <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
-                            <div class="bp3-non-ideal-state-description">
-                                This page requires Technology privileges. Please contact your system admin.
-                            </div>
-                            <div class="bp3-non-ideal-state-action">
-                                <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    <span class="bp3-icon bp3-icon-arrow-left"></span>
-                                    Go Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    </script>
 </body>
+</html>

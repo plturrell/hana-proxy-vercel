@@ -1,0 +1,365 @@
+/* 
+ * Palantir Slate-Inspired Layout System
+ * Following Foundry best practices for complex layouts
+ */
+
+/* ========================================
+   Container System - Max 3-4 levels deep
+   ======================================== */
+
+/* Root Container */
+.slate-app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    background: var(--bp3-app-background-color);
+}
+
+/* Level 1: Main Layout Container */
+.slate-layout-container {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Level 2: Content Containers */
+.slate-content-primary {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    min-width: 0; /* Prevent flex item overflow */
+    background: transparent;
+    padding: calc(var(--bp3-grid-size) * 3);
+}
+
+.slate-content-secondary {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Level 3: Widget Containers */
+.slate-widget-container {
+    flex: 1;
+    overflow: visible;
+    padding: 0;
+    position: relative;
+    background: transparent;
+}
+
+/* ========================================
+   Flex Container System
+   ======================================== */
+
+.slate-flex-row {
+    display: flex;
+    flex-direction: row;
+    gap: var(--slate-spacing-md);
+    align-items: stretch;
+}
+
+.slate-flex-column {
+    display: flex;
+    flex-direction: column;
+    gap: var(--slate-spacing-md);
+}
+
+.slate-flex-wrap {
+    flex-wrap: wrap;
+}
+
+.slate-flex-1 { flex: 1; }
+.slate-flex-2 { flex: 2; }
+.slate-flex-3 { flex: 3; }
+.slate-flex-auto { flex: 0 0 auto; }
+
+/* ========================================
+   Grid System - Responsive & Performant
+   ======================================== */
+
+.slate-grid {
+    display: grid;
+    gap: var(--slate-spacing-md);
+}
+
+.slate-grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
+.slate-grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.slate-grid-4 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* ========================================
+   Tabbed Container (Multi-page pattern)
+   ======================================== */
+
+.slate-tabs-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.slate-tabs-header {
+    flex: 0 0 auto;
+    display: flex;
+    border-bottom: 1px solid var(--bp3-divider-color);
+    background: var(--bp3-light-gray5);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.bp3-dark .slate-tabs-header {
+    background: var(--bp3-dark-gray3);
+}
+
+.slate-tab {
+    padding: var(--slate-spacing-sm) var(--slate-spacing-lg);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.slate-tab:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.bp3-dark .slate-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.slate-tab.active {
+    border-bottom-color: #137CBD;
+    color: #137CBD;
+    font-weight: 600;
+    background: rgba(19, 124, 189, 0.08);
+}
+
+.slate-tabs-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.slate-tab-panel {
+    height: 100%;
+    overflow: auto;
+    display: none;
+}
+
+.slate-tab-panel.active {
+    display: block;
+}
+
+/* Lazy rendering support */
+.slate-tab-panel[data-lazy="true"]:not(.loaded) {
+    display: none !important;
+}
+
+/* ========================================
+   Performance-Optimized Cards
+   ======================================== */
+
+.slate-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    padding: var(--slate-spacing-lg);
+    position: relative;
+    contain: layout style;
+    will-change: transform;
+    transition: box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.slate-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.16), 0 1px 3px rgba(0, 0, 0, 0.22);
+}
+
+.bp3-dark .slate-card {
+    background: rgba(47, 52, 60, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.24), 0 1px 2px rgba(0, 0, 0, 0.48);
+}
+
+.bp3-dark .slate-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.32), 0 1px 3px rgba(0, 0, 0, 0.44);
+}
+
+.slate-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--slate-spacing-md);
+}
+
+.slate-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bp3-heading-color);
+    margin: 0;
+}
+
+.slate-card-content {
+    position: relative;
+}
+
+/* ========================================
+   Spacing System (Following Palantir)
+   ======================================== */
+
+:root {
+    --slate-spacing-xs: 4px;
+    --slate-spacing-sm: 8px;
+    --slate-spacing-md: 16px;
+    --slate-spacing-lg: 24px;
+    --slate-spacing-xl: 32px;
+    --slate-spacing-xxl: 48px;
+}
+
+/* ========================================
+   Responsive Visibility Classes
+   ======================================== */
+
+@media (max-width: 768px) {
+    .slate-hide-mobile {
+        display: none !important;
+    }
+    
+    .slate-flex-row.slate-responsive {
+        flex-direction: column;
+    }
+    
+    .slate-content-secondary {
+        flex: 1;
+    }
+}
+
+@media (min-width: 769px) {
+    .slate-hide-desktop {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   Widget Alignment Helpers
+   ======================================== */
+
+.slate-align-start { align-items: flex-start; }
+.slate-align-center { align-items: center; }
+.slate-align-end { align-items: flex-end; }
+.slate-align-stretch { align-items: stretch; }
+
+.slate-justify-start { justify-content: flex-start; }
+.slate-justify-center { justify-content: center; }
+.slate-justify-end { justify-content: flex-end; }
+.slate-justify-between { justify-content: space-between; }
+.slate-justify-around { justify-content: space-around; }
+
+/* ========================================
+   Performance Optimizations
+   ======================================== */
+
+/* Minimize reflows */
+.slate-fixed-height-100 { height: 100px; }
+.slate-fixed-height-200 { height: 200px; }
+.slate-fixed-height-300 { height: 300px; }
+.slate-fixed-height-400 { height: 400px; }
+
+/* GPU acceleration for smooth scrolling */
+.slate-smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Reduce paint areas */
+.slate-isolated {
+    isolation: isolate;
+}
+
+/* ========================================
+   Loading States (Lazy Rendering)
+   ======================================== */
+
+.slate-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bp3-light-gray3) 0%,
+        var(--bp3-light-gray2) 50%,
+        var(--bp3-light-gray3) 100%
+    );
+    background-size: 200% 100%;
+    animation: slate-skeleton-pulse 1.5s ease-in-out infinite;
+    border-radius: var(--bp3-border-radius);
+}
+
+@keyframes slate-skeleton-pulse {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.slate-skeleton-text {
+    height: 16px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.slate-skeleton-text.short { width: 60%; }
+.slate-skeleton-text.medium { width: 80%; }
+
+/* ========================================
+   Invisible Container Technique
+   ======================================== */
+
+.slate-invisible-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.slate-invisible-container > * {
+    pointer-events: auto;
+}
+
+/* ========================================
+   Focus Management
+   ======================================== */
+
+.slate-focus-trap {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+
+.slate-focus-trap:focus-within {
+    outline-color: var(--bp3-intent-primary);
+}
+
+/* ========================================
+   Print Optimization
+   ======================================== */
+
+@media print {
+    .slate-no-print {
+        display: none !important;
+    }
+    
+    .slate-card {
+        break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+}

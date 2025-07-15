@@ -1,0 +1,469 @@
+/* 
+ * Apple-Palantir Hybrid Design System - SAFE IMPLEMENTATION
+ * This file safely enhances existing Blueprint components without breaking functionality
+ * Load this AFTER Blueprint CSS for progressive enhancement
+ */
+
+/* ========================================
+   SAFE FOUNDATION: Enhanced Design Tokens
+   ======================================== */
+
+:root {
+  /* Enhance existing Blueprint variables with new Apple-inspired tokens */
+  
+  /* Typography enhancements (preserve Blueprint base) */
+  --apple-font-family-system: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, var(--bp3-font-family, sans-serif);
+  --apple-font-family-mono: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', monospace;
+  
+  /* Enhanced spacing (compatible with Blueprint grid) */
+  --apple-space-unit: var(--bp3-grid-size, 10px);
+  --apple-space-xs: calc(0.25 * var(--apple-space-unit));
+  --apple-space-sm: calc(0.5 * var(--apple-space-unit));
+  --apple-space-md: var(--apple-space-unit);
+  --apple-space-lg: calc(1.5 * var(--apple-space-unit));
+  --apple-space-xl: calc(2 * var(--apple-space-unit));
+  
+  /* Enhanced colors (compatible with Blueprint) */
+  --apple-primary: var(--bp3-blue3, #137CBD);
+  --apple-success: var(--bp3-green3, #0F9960);
+  --apple-warning: var(--bp3-orange3, #D9822B);
+  --apple-danger: var(--bp3-red3, #DB3737);
+  
+  /* Glass morphism effects (safe fallbacks) */
+  --apple-glass-bg: rgba(255, 255, 255, 0.8);
+  --apple-glass-border: rgba(255, 255, 255, 0.2);
+  --apple-blur-light: blur(8px);
+  --apple-blur-medium: blur(16px);
+  
+  /* Enhanced shadows (supplement Blueprint) */
+  --apple-shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --apple-shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --apple-shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.08);
+  
+  /* Enhanced transitions (compatible with Blueprint) */
+  --apple-transition-spring: all 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --apple-transition-smooth: all 200ms cubic-bezier(0.4, 0.0, 0.2, 1);
+  
+  /* Border radius enhancements */
+  --apple-radius-sm: 4px;
+  --apple-radius-md: 8px;
+  --apple-radius-lg: 12px;
+  --apple-radius-xl: 16px;
+  --apple-radius-2xl: 24px;
+}
+
+/* Dark mode enhancements */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --apple-glass-bg: rgba(30, 30, 32, 0.8);
+    --apple-glass-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ========================================
+   SAFE ENHANCEMENT: Blueprint Card Improvements
+   ======================================== */
+
+/* Only enhance cards that opt-in with the apple-enhanced class */
+.bp3-card.apple-enhanced {
+  background: var(--apple-glass-bg);
+  backdrop-filter: var(--apple-blur-light);
+  -webkit-backdrop-filter: var(--apple-blur-light);
+  border: 1px solid var(--apple-glass-border);
+  border-radius: var(--apple-radius-xl);
+  box-shadow: var(--apple-shadow-glass);
+  transition: var(--apple-transition-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.bp3-card.apple-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent
+  );
+  pointer-events: none;
+}
+
+.bp3-card.apple-enhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--apple-shadow-glass), 0 16px 64px rgba(0, 0, 0, 0.12);
+}
+
+/* Dark mode for enhanced cards */
+.bp3-dark .bp3-card.apple-enhanced::before {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.1), 
+    transparent
+  );
+}
+
+/* ========================================
+   SAFE ENHANCEMENT: Blueprint Button Improvements
+   ======================================== */
+
+.bp3-button.apple-enhanced {
+  border-radius: var(--apple-radius-lg);
+  font-family: var(--apple-font-family-system);
+  font-weight: 500;
+  transition: var(--apple-transition-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.bp3-button.apple-enhanced:not(.bp3-minimal):not(.bp3-intent-primary):not(.bp3-intent-success):not(.bp3-intent-warning):not(.bp3-intent-danger) {
+  background: var(--apple-glass-bg);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid var(--apple-glass-border);
+}
+
+.bp3-button.apple-enhanced:hover {
+  transform: translateY(-1px);
+}
+
+.bp3-button.apple-enhanced:active {
+  transform: translateY(0);
+}
+
+/* ========================================
+   SAFE ENHANCEMENT: Blueprint Table Improvements
+   ======================================== */
+
+.bp3-html-table.apple-enhanced {
+  background: var(--bp3-white);
+  border-radius: var(--apple-radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--bp3-divider-color);
+  box-shadow: var(--apple-shadow-sm);
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.bp3-html-table.apple-enhanced thead th {
+  background: var(--bp3-light-gray5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--bp3-text-color-muted);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.bp3-html-table.apple-enhanced tbody tr {
+  transition: var(--apple-transition-smooth);
+}
+
+.bp3-html-table.apple-enhanced tbody tr:hover {
+  background: var(--bp3-light-gray5);
+}
+
+/* Dark mode for enhanced tables */
+.bp3-dark .bp3-html-table.apple-enhanced {
+  background: var(--bp3-dark-gray4);
+  border-color: var(--bp3-divider-color);
+}
+
+.bp3-dark .bp3-html-table.apple-enhanced thead th {
+  background: var(--bp3-dark-gray3);
+}
+
+.bp3-dark .bp3-html-table.apple-enhanced tbody tr:hover {
+  background: var(--bp3-dark-gray3);
+}
+
+/* ========================================
+   NEW SAFE COMPONENTS: Additive Only
+   ======================================== */
+
+/* Financial Metric Card - New component, doesn't interfere with existing */
+.apple-metric-card {
+  background: var(--apple-glass-bg);
+  backdrop-filter: var(--apple-blur-light);
+  -webkit-backdrop-filter: var(--apple-blur-light);
+  border: 1px solid var(--apple-glass-border);
+  border-radius: var(--apple-radius-xl);
+  padding: var(--apple-space-lg);
+  box-shadow: var(--apple-shadow-sm);
+  transition: var(--apple-transition-spring);
+  position: relative;
+  overflow: hidden;
+}
+
+.apple-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--apple-primary), var(--apple-success));
+}
+
+.apple-metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--apple-shadow-glass);
+}
+
+.apple-metric-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--bp3-text-color);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.apple-metric-label {
+  font-size: 0.875rem;
+  color: var(--bp3-text-color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  margin: var(--apple-space-xs) 0 0 0;
+}
+
+.apple-metric-change {
+  display: flex;
+  align-items: center;
+  gap: var(--apple-space-xs);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-top: var(--apple-space-sm);
+}
+
+.apple-metric-change.positive { color: var(--apple-success); }
+.apple-metric-change.negative { color: var(--apple-danger); }
+.apple-metric-change.neutral { color: var(--bp3-text-color-muted); }
+
+/* Glass Panel - New component */
+.apple-glass-panel {
+  background: var(--apple-glass-bg);
+  backdrop-filter: var(--apple-blur-medium);
+  -webkit-backdrop-filter: var(--apple-blur-medium);
+  border: 1px solid var(--apple-glass-border);
+  border-radius: var(--apple-radius-xl);
+  padding: var(--apple-space-lg);
+  box-shadow: var(--apple-shadow-glass);
+  position: relative;
+}
+
+/* Enhanced Data Grid - Compatible with existing tables */
+.apple-data-grid {
+  display: grid;
+  gap: var(--apple-space-md);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.apple-data-grid.grid-2 {
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+}
+
+.apple-data-grid.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.apple-data-grid.grid-4 {
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* ========================================
+   SAFE UTILITIES: Non-conflicting classes
+   ======================================== */
+
+/* Typography utilities that don't conflict with Blueprint */
+.apple-font-system { font-family: var(--apple-font-family-system); }
+.apple-font-mono { font-family: var(--apple-font-family-mono); }
+
+.apple-text-xs { font-size: 0.75rem; }
+.apple-text-sm { font-size: 0.875rem; }
+.apple-text-base { font-size: 1rem; }
+.apple-text-lg { font-size: 1.125rem; }
+.apple-text-xl { font-size: 1.25rem; }
+.apple-text-2xl { font-size: 1.5rem; }
+.apple-text-3xl { font-size: 1.875rem; }
+
+.apple-font-light { font-weight: 300; }
+.apple-font-normal { font-weight: 400; }
+.apple-font-medium { font-weight: 500; }
+.apple-font-semibold { font-weight: 600; }
+.apple-font-bold { font-weight: 700; }
+
+/* Spacing utilities */
+.apple-p-xs { padding: var(--apple-space-xs); }
+.apple-p-sm { padding: var(--apple-space-sm); }
+.apple-p-md { padding: var(--apple-space-md); }
+.apple-p-lg { padding: var(--apple-space-lg); }
+.apple-p-xl { padding: var(--apple-space-xl); }
+
+.apple-m-xs { margin: var(--apple-space-xs); }
+.apple-m-sm { margin: var(--apple-space-sm); }
+.apple-m-md { margin: var(--apple-space-md); }
+.apple-m-lg { margin: var(--apple-space-lg); }
+.apple-m-xl { margin: var(--apple-space-xl); }
+
+/* Layout utilities */
+.apple-flex { display: flex; }
+.apple-flex-col { flex-direction: column; }
+.apple-flex-row { flex-direction: row; }
+.apple-items-center { align-items: center; }
+.apple-justify-center { justify-content: center; }
+.apple-justify-between { justify-content: space-between; }
+.apple-gap-xs { gap: var(--apple-space-xs); }
+.apple-gap-sm { gap: var(--apple-space-sm); }
+.apple-gap-md { gap: var(--apple-space-md); }
+.apple-gap-lg { gap: var(--apple-space-lg); }
+
+/* Border radius utilities */
+.apple-rounded-sm { border-radius: var(--apple-radius-sm); }
+.apple-rounded-md { border-radius: var(--apple-radius-md); }
+.apple-rounded-lg { border-radius: var(--apple-radius-lg); }
+.apple-rounded-xl { border-radius: var(--apple-radius-xl); }
+.apple-rounded-2xl { border-radius: var(--apple-radius-2xl); }
+.apple-rounded-full { border-radius: 9999px; }
+
+/* Shadow utilities */
+.apple-shadow-xs { box-shadow: var(--apple-shadow-xs); }
+.apple-shadow-sm { box-shadow: var(--apple-shadow-sm); }
+.apple-shadow-glass { box-shadow: var(--apple-shadow-glass); }
+
+/* ========================================
+   PERFORMANCE & ACCESSIBILITY (Safe)
+   ======================================== */
+
+/* GPU acceleration for enhanced components only */
+.apple-enhanced,
+.apple-metric-card,
+.apple-glass-panel {
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+}
+
+/* Remove will-change when not interacting (performance) */
+.apple-enhanced:not(:hover),
+.apple-metric-card:not(:hover),
+.apple-glass-panel:not(:hover) {
+  will-change: auto;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .apple-enhanced,
+  .apple-metric-card,
+  .apple-glass-panel {
+    transition: none;
+    transform: none;
+  }
+  
+  .apple-enhanced:hover,
+  .apple-metric-card:hover,
+  .apple-glass-panel:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .apple-enhanced,
+  .apple-metric-card,
+  .apple-glass-panel {
+    background: var(--bp3-white) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 2px solid var(--bp3-divider-color) !important;
+  }
+  
+  .bp3-dark .apple-enhanced,
+  .bp3-dark .apple-metric-card,
+  .bp3-dark .apple-glass-panel {
+    background: var(--bp3-dark-gray4) !important;
+  }
+}
+
+/* ========================================
+   RESPONSIVE BEHAVIOR (Safe)
+   ======================================== */
+
+@media (max-width: 768px) {
+  .apple-data-grid {
+    grid-template-columns: 1fr;
+    gap: var(--apple-space-sm);
+  }
+  
+  .apple-metric-card {
+    padding: var(--apple-space-md);
+  }
+  
+  .apple-metric-value {
+    font-size: 1.5rem;
+  }
+}
+
+/* ========================================
+   FALLBACKS: Graceful Degradation
+   ======================================== */
+
+/* Fallback for browsers without backdrop-filter support */
+@supports not (backdrop-filter: blur(8px)) {
+  .apple-enhanced,
+  .apple-metric-card,
+  .apple-glass-panel {
+    background: var(--bp3-white) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  .bp3-dark .apple-enhanced,
+  .bp3-dark .apple-metric-card,
+  .bp3-dark .apple-glass-panel {
+    background: var(--bp3-dark-gray4) !important;
+  }
+}
+
+/* Fallback for browsers without CSS Grid */
+@supports not (display: grid) {
+  .apple-data-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .apple-data-grid > * {
+    flex: 1 1 300px;
+    margin: var(--apple-space-sm);
+  }
+}
+
+/* ========================================
+   PRINT STYLES (Safe)
+   ======================================== */
+
+@media print {
+  .apple-enhanced,
+  .apple-metric-card,
+  .apple-glass-panel {
+    background: white !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    break-inside: avoid;
+  }
+  
+  .apple-enhanced:hover,
+  .apple-metric-card:hover,
+  .apple-glass-panel:hover {
+    transform: none !important;
+  }
+}
