@@ -67,28 +67,45 @@
 
 /* Fix Blueprint icon font loading */
 .bp3-icon::before {
-    font-family: "Icons16", "Icons20" !important;
+    font-family: "blueprint-icons-16", "blueprint-icons-20" !important;
     font-style: normal !important;
     font-weight: 400 !important;
     font-size: inherit !important;
     display: inline-block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
-/* Ensure icon fonts are loaded */
+/* Force 16px icons to use correct font */
+.bp3-icon-standard::before,
+.bp3-icon-large::before {
+    font-family: "blueprint-icons-16" !important;
+}
+
+/* Force 20px icons to use correct font */
+.bp3-icon-large::before {
+    font-family: "blueprint-icons-20" !important;
+}
+
+/* Ensure icon fonts are loaded - Blueprint 4.x uses different paths */
 @font-face {
-    font-family: "Icons16";
-    src: url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-16.eot?v=4") format("embedded-opentype"),
-         url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-16.ttf?v=4") format("truetype");
+    font-family: "blueprint-icons-16";
+    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.eot");
+    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.eot?#iefix") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.woff") format("woff"),
+         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: "Icons20";
-    src: url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-20.eot?v=4") format("embedded-opentype"),
-         url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-20.ttf?v=4") format("truetype");
+    font-family: "blueprint-icons-20";
+    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.eot");
+    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.eot?#iefix") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.woff") format("woff"),
+         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
@@ -127,8 +144,8 @@
    ======================================== */
 
 /* Force specific sidebar icon visibility */
-.bp3-menu-item .bp3-icon::before {
-    content: attr(class) !important;
+.bp3-menu-item .bp3-icon::before,
+.bp3-navbar .bp3-icon::before {
     visibility: visible !important;
     opacity: 1 !important;
 }
