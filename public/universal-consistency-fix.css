@@ -66,46 +66,56 @@
 }
 
 /* Fix Blueprint icon font loading */
-.bp3-icon::before {
-    font-family: "blueprint-icons-16", "blueprint-icons-20" !important;
+.bp3-icon {
+    font-family: "blueprint-icons-16" !important;
     font-style: normal !important;
-    font-weight: 400 !important;
-    font-size: inherit !important;
+    font-weight: normal !important;
+    font-size: 16px !important;
     display: inline-block !important;
     visibility: visible !important;
     opacity: 1 !important;
+    line-height: 1 !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale !important;
+    speak: none !important;
+    text-transform: none !important;
+    white-space: nowrap !important;
+    word-wrap: normal !important;
+    -webkit-font-feature-settings: "liga" !important;
+    font-feature-settings: "liga" !important;
+    letter-spacing: normal !important;
 }
 
-/* Force 16px icons to use correct font */
+/* Blueprint icons use Unicode through CSS content */
+.bp3-icon::before,
 .bp3-icon-standard::before,
 .bp3-icon-large::before {
-    font-family: "blueprint-icons-16" !important;
+    font-family: inherit !important;
 }
 
-/* Force 20px icons to use correct font */
-.bp3-icon-large::before {
+/* Large icons use 20px font */
+.bp3-icon-large {
     font-family: "blueprint-icons-20" !important;
+    font-size: 20px !important;
 }
 
-/* Ensure icon fonts are loaded - Blueprint 4.x uses different paths */
+/* Ensure icon fonts are loaded - Blueprint 4.x with correct absolute paths */
 @font-face {
     font-family: "blueprint-icons-16";
-    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.eot");
-    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.eot?#iefix") format("embedded-opentype"),
-         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.woff") format("woff"),
-         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-16.ttf") format("truetype");
+    src: url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-16.ttf") format("truetype"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-16.eot#iefix") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-16.woff2") format("woff2"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-16.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: "blueprint-icons-20";
-    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.eot");
-    src: url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.eot?#iefix") format("embedded-opentype"),
-         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.woff") format("woff"),
-         url("https://unpkg.com/@blueprintjs/icons@4/lib/css/blueprint-icons-20.ttf") format("truetype");
+    src: url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-20.ttf") format("truetype"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-20.eot#iefix") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-20.woff2") format("woff2"),
+         url("https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons-20.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
@@ -150,23 +160,20 @@
     opacity: 1 !important;
 }
 
-/* Specific icon fixes */
-.bp3-icon-timeline-line-chart::before { content: "\e90f" !important; }
-.bp3-icon-bank-account::before { content: "\e617" !important; }
-.bp3-icon-predictive-analysis::before { content: "\e96f" !important; }
-.bp3-icon-feed::before { content: "\e72c" !important; }
-.bp3-icon-function::before { content: "\e739" !important; }
-.bp3-icon-learning::before { content: "\e7c2" !important; }
-.bp3-icon-calculator::before { content: "\e634" !important; }
-.bp3-icon-numerical::before { content: "\e85f" !important; }
-.bp3-icon-timeline-events::before { content: "\e97b" !important; }
-.bp3-icon-fork::before { content: "\e736" !important; }
-.bp3-icon-console::before { content: "\e685" !important; }
-.bp3-icon-cloud-upload::before { content: "\e66b" !important; }
-.bp3-icon-cog::before { content: "\e667" !important; }
-.bp3-icon-moon::before { content: "\e80e" !important; }
-.bp3-icon-flash::before { content: "\e72e" !important; }
-.bp3-icon-user::before { content: "\e99d" !important; }
+/* Debug - Force visible content if fonts fail */
+.bp3-icon:empty::before {
+    content: "?" !important;
+    font-family: inherit !important;
+}
+
+/* Ensure all Blueprint icon spans are treated as icon fonts */
+span[class*="bp3-icon-"] {
+    font-family: "blueprint-icons-16" !important;
+}
+
+span[class*="bp3-icon-"].bp3-icon-large {
+    font-family: "blueprint-icons-20" !important;
+}
 
 /* Force sidebar visibility and structure */
 .bp3-sidebar {
