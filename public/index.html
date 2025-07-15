@@ -324,6 +324,18 @@
       background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-blue));
     }
     
+    .jobs-card:nth-child(4)::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .jobs-card:nth-child(5)::before {
+      background: linear-gradient(90deg, #5AC8FA, #32D74B);
+    }
+    
+    .jobs-card:nth-child(6)::before {
+      background: linear-gradient(90deg, #FF2D92, var(--jobs-purple));
+    }
+    
     .jobs-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -509,6 +521,24 @@
         <div class="jobs-metric-label">Cash Position</div>
         <div class="jobs-metric-value">$25.0M</div>
         <div class="jobs-metric-change positive">↗ +4.1%</div>
+      </div>
+      
+      <div class="jobs-card" onclick="navigate('analyze', 'positions')">
+        <div class="jobs-metric-label">Open Positions</div>
+        <div class="jobs-metric-value">247</div>
+        <div class="jobs-metric-change positive">↗ +8</div>
+      </div>
+      
+      <div class="jobs-card" onclick="navigate('analyze', 'volatility')">
+        <div class="jobs-metric-label">Volatility</div>
+        <div class="jobs-metric-value">12.3%</div>
+        <div class="jobs-metric-change negative">↘ -2.1%</div>
+      </div>
+      
+      <div class="jobs-card" onclick="navigate('analyze', 'returns')">
+        <div class="jobs-metric-label">YTD Return</div>
+        <div class="jobs-metric-value">+18.7%</div>
+        <div class="jobs-metric-change positive">↗ +1.2%</div>
       </div>
     </div>
     

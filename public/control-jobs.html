@@ -356,6 +356,45 @@
       overflow: hidden;
     }
     
+    .jobs-system-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-green));
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .jobs-system-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--jobs-green), #00C7BE);
+    }
+    
+    .jobs-system-card:nth-child(3)::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .jobs-system-card:nth-child(4)::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-blue));
+    }
+    
+    .jobs-system-card:nth-child(5)::before {
+      background: linear-gradient(90deg, #5AC8FA, #32D74B);
+    }
+    
+    .jobs-system-card:nth-child(6)::before {
+      background: linear-gradient(90deg, var(--jobs-red), var(--jobs-orange));
+    }
+    
+    .jobs-system-card:nth-child(7)::before {
+      background: linear-gradient(90deg, var(--jobs-purple), #FF2D92);
+    }
+    
+    .jobs-system-card:nth-child(8)::before {
+      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-blue));
+    }
+    
     .jobs-system-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);

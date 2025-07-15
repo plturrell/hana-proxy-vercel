@@ -400,12 +400,7 @@
       right: 0;
       height: 3px;
       background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
-      opacity: 0;
-      transition: opacity var(--jobs-duration) var(--jobs-animation);
-    }
-    
-    .jobs-learning-card:hover::before {
-      opacity: 1;
+      border-radius: 12px 12px 0 0;
     }
     
     .jobs-learning-card.reinforcement::before {
@@ -601,6 +596,21 @@
     .jobs-curriculum-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-curriculum-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-teal));
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .jobs-curriculum-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--jobs-red), var(--jobs-orange));
     }
     
     .jobs-curriculum-header {
