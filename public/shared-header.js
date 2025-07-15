@@ -73,10 +73,10 @@
     // Menu visibility based on role
     const MenuVisibility = {
         Finance: {
-            // Finance users see analytics, treasury, and financial tools
+            // Finance users see analytics, treasury, financial tools, calculations and ML models
             analytics: ['portfolio-analyser', 'treasury-insights', 'scenario-analyser-config'],
-            knowledge: ['news-market-data-config', 'treasury-insights-config'],
-            tools: ['calculation-tester', 'scenario-analysis'],
+            knowledge: ['news-market-data-config', 'calculation-manager-config', 'ml-models-config', 'treasury-insights-config'],
+            tools: ['calculation-tester', 'calculations-config', 'scenario-analysis'],
             system: [] // No system access for Finance
         },
         Technology: {

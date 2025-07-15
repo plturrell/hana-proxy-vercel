@@ -326,7 +326,7 @@
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
-<body data-technology-only="true" class="bp3-dark">
+<body class="bp3-dark">
     <div class="bp3-app slate-app-container">
         <!-- Top Navigation Bar -->
         <nav class="bp3-navbar bp3-dark">
@@ -872,31 +872,4 @@
     </script>
     <script src="shared-header.js"></script>
 
-    <script>
-        // Role-based page protection
-        document.addEventListener('DOMContentLoaded', function() {
-            const userRole = localStorage.getItem('userRole') || 'Finance';
-            if (userRole !== 'Technology') {
-                document.body.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
-                        <div class="bp3-non-ideal-state">
-                            <div class="bp3-non-ideal-state-visual">
-                                <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
-                            </div>
-                            <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
-                            <div class="bp3-non-ideal-state-description">
-                                This page requires Technology privileges. Please contact your system admin.
-                            </div>
-                            <div class="bp3-non-ideal-state-action">
-                                <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    <span class="bp3-icon bp3-icon-arrow-left"></span>
-                                    Go Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    </script>
 </body>
