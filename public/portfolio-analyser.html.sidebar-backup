@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Deployment - FinSight Intelligence</title>
+    <title>Portfolio Analyser - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
@@ -181,122 +181,64 @@
             border-bottom: 1px solid var(--bp3-divider-color);
         }
 
-        /* Page-specific styles */
-        .bp3-card {
-            background-color: white;
-            border-radius: var(--bp3-border-radius);
-            box-shadow: var(--bp3-elevation-shadow-1);
-            padding: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
-        .bp3-dark .bp3-card {
-            background-color: var(--bp3-dark-gray3);
-        }
-
-        .deploy-steps {
+        .portfolio-grid {
             display: grid;
-            gap: calc(var(--bp3-grid-size) * 1.5);
-            margin-bottom: calc(var(--bp3-grid-size) * 2);
+            grid-template-columns: 2fr 1fr;
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
         }
 
-        .step {
-            display: flex;
-            align-items: center;
-            gap: calc(var(--bp3-grid-size) * 1.5);
-            padding: calc(var(--bp3-grid-size) * 1.5);
-            background-color: var(--bp3-light-gray5);
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: calc(var(--bp3-grid-size) * 2);
+            margin-bottom: calc(var(--bp3-grid-size) * 3);
+        }
+
+        .portfolio-chart {
+            height: 400px;
+            background: var(--bp3-dark-gray5);
             border-radius: var(--bp3-border-radius);
-            border: 1px solid var(--bp3-divider-color);
-            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
-        .bp3-dark .step {
-            background-color: var(--bp3-dark-gray4);
-            border-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            background-color: var(--bp3-gray3);
-            color: white;
-            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .step.completed .step-number {
-            background-color: var(--bp3-intent-success);
-        }
-
-        .step.error .step-number {
-            background-color: var(--bp3-intent-danger);
-        }
-
-        .step.in-progress .step-number {
-            background-color: var(--bp3-intent-warning);
-            animation: pulse-step 1s infinite;
-        }
-
-        @keyframes pulse-step {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .step-content h4 {
-            margin: 0 0 4px 0;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--bp3-heading-color);
-        }
-
-        .step-content p {
-            margin: 0;
-            font-size: 12px;
             color: var(--bp3-text-color-muted);
         }
 
-        .result {
-            background-color: var(--bp3-light-gray5);
-            border: 1px solid var(--bp3-divider-color);
-            border-radius: var(--bp3-border-radius);
-            padding: calc(var(--bp3-grid-size) * 1.5);
-            margin-top: calc(var(--bp3-grid-size) * 2);
-            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
-            font-size: 12px;
-            white-space: pre-wrap;
-            max-height: 300px;
-            overflow-y: auto;
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: calc(var(--bp3-grid-size) / 2);
         }
 
-        .bp3-dark .result {
-            background-color: var(--bp3-dark-gray4);
-            border-color: rgba(255, 255, 255, 0.15);
+        .metric-value.positive {
+            color: var(--bp3-intent-success);
         }
 
-        .result.success {
-            border-color: var(--bp3-intent-success);
-            background-color: rgba(15, 153, 96, 0.1);
-        }
-
-        .result.error {
-            border-color: var(--bp3-intent-danger);
-            background-color: rgba(219, 55, 55, 0.1);
+        .metric-value.negative {
             color: var(--bp3-intent-danger);
         }
 
-        .hidden {
-            display: none;
+        .metric-value.neutral {
+            color: var(--bp3-intent-primary);
+        }
+
+        .metric-label {
+            color: var(--bp3-text-color-muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .holdings-table {
+            margin-top: calc(var(--bp3-grid-size) * 3);
         }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
     <link href="no-icons-override.css" rel="stylesheet"></head>
-<body data-technology-only="true" class="bp3-dark">
+<body class="bp3-dark">
     <div class="bp3-app slate-app-container">
+        <!-- Top Navigation Bar -->
         <nav class="bp3-navbar bp3-dark">
             <div class="bp3-navbar-group bp3-align-left">
                 <div class="bp3-navbar-heading">FinSight Intelligence</div>
@@ -320,7 +262,9 @@
             </div>
         </nav>
 
+        <!-- Application Content -->
         <div class="app-content slate-layout-container">
+            <!-- Left Sidebar -->
             
     <aside class="bp3-sidebar">
         <ul class="bp3-menu bp3-large">
@@ -329,16 +273,19 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
                 </a>
             </li>
@@ -348,21 +295,25 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
                 </a>
             </li>
@@ -373,21 +324,25 @@
             </div>
             <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
                 </a>
             </li>
@@ -398,94 +353,147 @@
             </div>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
-                <a class="bp3-menu-item" href="/deployment.html" class="bp3-active">
+                <a class="bp3-menu-item" href="/deployment.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
                 </a>
             </li>
         </ul>
     </aside>
 
+            <!-- Main Content Area -->
             <main class="main-content slate-content-primary">
                 <div class="content-header">
-                    <h1 class="bp3-heading">System Deployment</h1>
-                    <p class="bp3-text-muted">Deploy 32 financial functions to Supabase</p>
+                    <h1 class="bp3-heading">Portfolio Analyser</h1>
+                    <p class="bp3-text-muted">Advanced portfolio performance and risk analysis</p>
                 </div>
 
-                <!-- Deployment Metrics -->
-                <div class="deployment-metrics apple-data-grid" style="margin-bottom: 30px;">
+                <!-- Key Portfolio Metrics -->
+                <div class="portfolio-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">Functions Deployed</div>
-                        <div class="apple-metric-value">32</div>
-                        <div class="apple-metric-change positive">↗ Live</div>
+                        <div class="apple-metric-label">Total Portfolio Value</div>
+                        <div class="apple-metric-value" id="totalValue">$24.8M</div>
+                        <div class="apple-metric-change positive">↗ +5.2%</div>
                     </div>
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">System Health</div>
-                        <div class="apple-metric-value">98.7%</div>
-                        <div class="apple-metric-change positive">↗ +0.2%</div>
+                        <div class="apple-metric-label">Daily P&L</div>
+                        <div class="apple-metric-value" id="dailyPnL">+$127K</div>
+                        <div class="apple-metric-change positive">↗ +0.8%</div>
                     </div>
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">Deployment Time</div>
-                        <div class="apple-metric-value">2.3s</div>
-                        <div class="apple-metric-change positive">↗ -0.7s</div>
+                        <div class="apple-metric-label">Total Return</div>
+                        <div class="apple-metric-value" id="totalReturn">+18.6%</div>
+                        <div class="apple-metric-change positive">↗ +2.1%</div>
                     </div>
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">Success Rate</div>
-                        <div class="apple-metric-value">100%</div>
-                        <div class="apple-metric-change positive">↗ Perfect</div>
+                        <div class="apple-metric-label">Sharpe Ratio</div>
+                        <div class="apple-metric-value" id="sharpeRatio">1.82</div>
+                        <div class="apple-metric-change positive">↗ +0.05</div>
                     </div>
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">Active Connections</div>
-                        <div class="apple-metric-value">847</div>
-                        <div class="apple-metric-change positive">↗ +23</div>
+                        <div class="apple-metric-label">Max Drawdown</div>
+                        <div class="apple-metric-value" id="maxDrawdown">-3.2%</div>
+                        <div class="apple-metric-change negative">↘ -0.1%</div>
                     </div>
                     <div class="apple-metric-card">
-                        <div class="apple-metric-label">Response Time</div>
-                        <div class="apple-metric-value">89ms</div>
-                        <div class="apple-metric-change positive">↗ -12ms</div>
+                        <div class="apple-metric-label">Volatility</div>
+                        <div class="apple-metric-value" id="volatility">12.4%</div>
+                        <div class="apple-metric-change neutral">→ Stable</div>
                     </div>
                 </div>
 
-                <div class="bp3-card">
-                    <h2 class="bp3-heading" style="margin-bottom: calc(var(--bp3-grid-size) * 2);">Deployment Pipeline</h2>
-                    
-                    <div class="deploy-steps">
-                        <div class="step" id="step-1">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Create Schema</h4>
-                                <p>Creates app_data schema and required tables</p>
+                <!-- Portfolio Performance Chart -->
+                <div class="portfolio-grid">
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Performance Chart</h3>
+                        <div class="portfolio-chart">
+                            
+                            <span style="margin-left: 20px;">Portfolio performance visualization will be implemented here</span>
+                        </div>
+                    </div>
+
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Risk Analysis</h3>
+                        <div style="margin-top: 20px;">
+                            <div class="bp3-progress-bar bp3-intent-success">
+                                <div class="bp3-progress-meter" style="width: 75%"></div>
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px; color: var(--bp3-text-color-muted);">
+                                Risk Score: 75/100 (Moderate)
                             </div>
                         </div>
-                        <div class="step" id="step-2">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Deploy Functions</h4>
-                                <p>Installs all 32 production functions</p>
-                            </div>
-                        </div>
-                        <div class="step" id="step-3">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Verify Deployment</h4>
-                                <p>Tests functions are working correctly</p>
+
+                        <div style="margin-top: 30px;">
+                            <h5 class="bp3-heading">Key Risk Metrics</h5>
+                            <div style="margin-top: 15px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">Beta:</span>
+                                    <span id="beta">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">Alpha:</span>
+                                    <span id="alpha">Loading...</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                    <span class="bp3-text-muted">VaR (95%):</span>
+                                    <span id="var95">Loading...</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <button  onclick="deployAll()" id="deploy-btn">
-                        Deploy All Functions
+                </div>
+
+                <!-- Holdings Table -->
+                <div class="holdings-table">
+                    <div class="bp3-card bp3-elevation-1">
+                        <h3 class="bp3-heading">Top Holdings</h3>
+                        <table class="bp3-html-table bp3-html-table-striped" style="width: 100%; margin-top: 20px;">
+                            <thead>
+                                <tr>
+                                    <th>Asset</th>
+                                    <th>Weight</th>
+                                    <th>Value</th>
+                                    <th>P&L</th>
+                                    <th>Return</th>
+                                </tr>
+                            </thead>
+                            <tbody id="holdingsTableBody">
+                                <tr>
+                                    <td colspan="5" class="bp3-text-muted" style="text-align: center; padding: 20px;">
+                                        
+                                        Loading holdings data...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div style="margin-top: 30px; display: flex; gap: 10px;">
+                    <button class="bp3-button bp3-intent-primary" onclick="refreshPortfolio()">
+                        
+                        Refresh Data
                     </button>
-                    
-                    <div id="deploy-result" class="result hidden"></div>
+                    <button class="bp3-button" onclick="exportPortfolio()">
+                        
+                        Export Report
+                    </button>
+                    <button class="bp3-button" onclick="runRiskAnalysis()">
+                        
+                        Risk Analysis
+                    </button>
                 </div>
             </main>
         </div>
@@ -493,182 +501,110 @@
     
     <script>
         const API_URL = '/api/supabase-proxy';
-        
-        async function deployAll() {
-            const btn = document.getElementById('deploy-btn');
-            const result = document.getElementById('deploy-result');
-            
-            btn.disabled = true;
-            btn.textContent = 'Initializing deployment...';
-            result.className = 'result';
-            result.textContent = 'Starting automated deployment process...\n';
-            
+
+        // Load portfolio data
+        async function loadPortfolioData() {
             try {
-                // Step 1: Deploy schema
-                updateStep(1, 'in-progress');
-                addLog('Creating schema and tables...');
+                // Simulate portfolio data - in real implementation, fetch from API
+                const portfolioData = {
+                    totalValue: 2500000,
+                    dailyPnL: 15750,
+                    totalReturn: 0.127,
+                    sharpeRatio: 1.42,
+                    maxDrawdown: -0.087,
+                    volatility: 0.156,
+                    beta: 1.15,
+                    alpha: 0.032,
+                    var95: -47500
+                };
+
+                document.getElementById('totalValue').textContent = '$' + portfolioData.totalValue.toLocaleString();
                 
-                const schemaResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'deploy_schema'
-                    })
-                });
+                const dailyPnL = document.getElementById('dailyPnL');
+                dailyPnL.textContent = (portfolioData.dailyPnL >= 0 ? '+$' : '-$') + Math.abs(portfolioData.dailyPnL).toLocaleString();
+                dailyPnL.className = 'metric-value ' + (portfolioData.dailyPnL >= 0 ? 'positive' : 'negative');
                 
-                const schemaData = await schemaResponse.json();
-                if (!schemaData.success) {
-                    throw new Error(schemaData.error || 'Schema deployment failed');
-                }
+                const totalReturn = document.getElementById('totalReturn');
+                totalReturn.textContent = (portfolioData.totalReturn * 100).toFixed(2) + '%';
+                totalReturn.className = 'metric-value ' + (portfolioData.totalReturn >= 0 ? 'positive' : 'negative');
                 
-                updateStep(1, 'completed');
-                addLog('✅ Schema created successfully');
+                document.getElementById('sharpeRatio').textContent = portfolioData.sharpeRatio.toFixed(2);
+                document.getElementById('maxDrawdown').textContent = (portfolioData.maxDrawdown * 100).toFixed(2) + '%';
+                document.getElementById('volatility').textContent = (portfolioData.volatility * 100).toFixed(2) + '%';
                 
-                // Step 2: Deploy functions
-                updateStep(2, 'in-progress');
-                addLog('Deploying 32 production functions...');
-                
-                const functionsResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'deploy_functions'
-                    })
-                });
-                
-                const functionsData = await functionsResponse.json();
-                if (!functionsData.success) {
-                    throw new Error(functionsData.error || 'Functions deployment failed');
-                }
-                
-                updateStep(2, 'completed');
-                addLog('✅ Functions deployed successfully');
-                
-                // Step 3: Verify deployment
-                updateStep(3, 'in-progress');
-                addLog('Verifying deployment...');
-                
-                const verifyResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'verify_deployment'
-                    })
-                });
-                
-                const verifyData = await verifyResponse.json();
-                if (!verifyData.success) {
-                    throw new Error(verifyData.error || 'Verification failed');
-                }
-                
-                updateStep(3, 'completed');
-                
-                // Success!
-                result.className = 'result success';
-                addLog('✅ Deployment complete!');
-                addLog(`${verifyData.deployed_count || 32} functions deployed successfully`);
-                addLog(verifyData.test_results || 'All tests passed');
-                
-                btn.textContent = 'Deployment Complete';
-                
+                document.getElementById('beta').textContent = portfolioData.beta.toFixed(2);
+                document.getElementById('alpha').textContent = (portfolioData.alpha * 100).toFixed(2) + '%';
+                document.getElementById('var95').textContent = '$' + Math.abs(portfolioData.var95).toLocaleString();
+
+                // Load holdings data
+                loadHoldingsData();
+
             } catch (error) {
-                result.className = 'result error';
-                addLog(`❌ Deployment failed: ${error.message}`);
-                
-                // Reset steps
-                ['step-1', 'step-2', 'step-3'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el.className.includes('in-progress')) {
-                        el.className = 'step error';
-                    }
-                });
-                
-                btn.disabled = false;
-                btn.textContent = 'Retry Deployment';
+                console.error('Failed to load portfolio data:', error);
             }
         }
-        
-        function updateStep(stepNum, status) {
-            const step = document.getElementById(`step-${stepNum}`);
-            step.className = `step ${status}`;
+
+        async function loadHoldingsData() {
+            const holdings = [
+                { asset: 'AAPL', weight: 15.2, value: 380000, pnl: 2340, return: 0.062 },
+                { asset: 'MSFT', weight: 12.8, value: 320000, pnl: 1890, return: 0.059 },
+                { asset: 'GOOGL', weight: 10.5, value: 262500, pnl: -1250, return: -0.047 },
+                { asset: 'AMZN', weight: 9.3, value: 232500, pnl: 3210, return: 0.140 },
+                { asset: 'TSLA', weight: 7.8, value: 195000, pnl: -890, return: -0.045 }
+            ];
+
+            const tbody = document.getElementById('holdingsTableBody');
+            tbody.innerHTML = '';
+            
+            holdings.forEach(holding => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${holding.asset}</strong></td>
+                    <td>${holding.weight.toFixed(1)}%</td>
+                    <td>$${holding.value.toLocaleString()}</td>
+                    <td class="${holding.pnl >= 0 ? 'bp3-text-intent-success' : 'bp3-text-intent-danger'}">
+                        ${holding.pnl >= 0 ? '+' : ''}$${holding.pnl.toLocaleString()}
+                    </td>
+                    <td class="${holding.return >= 0 ? 'bp3-text-intent-success' : 'bp3-text-intent-danger'}">
+                        ${(holding.return * 100).toFixed(2)}%
+                    </td>
+                `;
+            });
         }
-        
-        function addLog(message) {
-            const result = document.getElementById('deploy-result');
-            const timestamp = new Date().toLocaleTimeString();
-            result.textContent += `[${timestamp}] ${message}\n`;
-            result.scrollTop = result.scrollHeight;
+
+        function refreshPortfolio() {
+            // Show loading states
+            document.querySelectorAll('.metric-value').forEach(el => {
+                el.innerHTML = '<span class="bp3-skeleton">Loading...</span>';
+            });
+            
+            // Reload data
+            setTimeout(loadPortfolioData, 1000);
         }
-        
-        // Check initial status
-        async function checkStatus() {
-            try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'check_functions' })
-                });
-                
-                const data = await response.json();
-                const deployedCount = data.deployed_count || 0;
-                
-                if (deployedCount === 32) {
-                    document.getElementById('step-1').className = 'step completed';
-                    document.getElementById('step-2').className = 'step completed';
-                    document.getElementById('step-3').className = 'step completed';
-                    document.getElementById('deploy-btn').textContent = 'Redeploy All Functions';
-                } else if (deployedCount > 0) {
-                    document.getElementById('step-1').className = 'step completed';
-                    document.getElementById('deploy-btn').textContent = `Deploy Remaining ${32 - deployedCount} Functions`;
-                }
-            } catch (error) {
-                console.error('Status check failed:', error);
-            }
+
+        function exportPortfolio() {
+            // Implement export functionality
+            alert('Portfolio report export functionality will be implemented');
+        }
+
+        function runRiskAnalysis() {
+            // Implement risk analysis
+            alert('Advanced risk analysis functionality will be implemented');
         }
 
         function toggleTheme() {
-            const body = document.body;
+            document.body.classList.toggle('bp3-dark');
             const button = document.getElementById('theme-toggle');
-            
-            if (body.classList.contains('bp3-dark')) {
-                body.classList.remove('bp3-dark');
+            if (document.body.classList.contains('bp3-dark')) {
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
-                body.classList.add('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
         }
-        
+
         // Initialize
-        checkStatus();
+        loadPortfolioData();
     </script>
     <script src="shared-header.js"></script>
-
-    <script>
-        // Role-based page protection
-        document.addEventListener('DOMContentLoaded', function() {
-            const userRole = localStorage.getItem('userRole') || 'Finance';
-            if (userRole !== 'Technology') {
-                document.body.innerHTML = `
-                    <div style="display: flex; align-items: center; justify-content: center; height: 100vh; flex-direction: column; font-family: var(--apple-font-family-system); background: var(--bp3-app-background-color);">
-                        <div class="bp3-non-ideal-state">
-                            <div class="bp3-non-ideal-state-visual">
-                                
-                            </div>
-                            <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
-                            <div class="bp3-non-ideal-state-description">
-                                This page requires Technology privileges. Please contact your system admin.
-                            </div>
-                            <div class="bp3-non-ideal-state-action">
-                                <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
-                                    
-                                    Go Back
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    </script>
 </body>
+</html>

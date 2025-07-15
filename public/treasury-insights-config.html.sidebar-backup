@@ -573,16 +573,19 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/portfolio-analyser.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
                 </a>
             </li>
@@ -592,21 +595,25 @@
             </li>
             <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
                 </a>
             </li>
             <li>
-                <a class="bp3-menu-item" href="/treasury-insights-config.html" class="bp3-active">
+                <a class="bp3-menu-item" href="/treasury-insights-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
                 </a>
             </li>
@@ -617,21 +624,25 @@
             </div>
             <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
                 </a>
             </li>
             <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
                 </a>
             </li>
@@ -642,16 +653,19 @@
             </div>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
                 </a>
             </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
+                    
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
                 </a>
             </li>
