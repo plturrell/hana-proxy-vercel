@@ -7,7 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
-  <script src="shared-hamburger-nav.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -89,7 +88,171 @@
       background: var(--jobs-red);
     }
     
-    /* Navigation - will be replaced by hamburger nav */
+    /* Navigation with Hamburger */
+    .jobs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-hamburger {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-hamburger-line {
+      width: 18px;
+      height: 2px;
+      background: var(--jobs-black);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    body.dark-mode .jobs-hamburger-line {
+      background: var(--jobs-white);
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    
+    /* Side Menu */
+    .jobs-sidebar {
+      position: fixed;
+      top: 48px;
+      left: -280px;
+      width: 280px;
+      height: calc(100vh - 48px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      z-index: 999;
+      transition: left var(--jobs-duration) var(--jobs-animation);
+      overflow-y: auto;
+      padding: var(--jobs-spacing-lg);
+    }
+    
+    .jobs-sidebar.open {
+      left: 0;
+    }
+    
+    body.dark-mode .jobs-sidebar {
+      background: rgba(28, 28, 30, 0.95);
+      border-right-color: #38383A;
+    }
+    
+    .jobs-sidebar-section {
+      margin-bottom: var(--jobs-spacing-xl);
+    }
+    
+    .jobs-sidebar-title {
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      margin-bottom: var(--jobs-spacing-xs);
+      text-decoration: none;
+      color: var(--jobs-black);
+    }
+    
+    body.dark-mode .jobs-sidebar-item {
+      color: var(--jobs-white);
+    }
+    
+    .jobs-sidebar-item:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    .jobs-sidebar-item.active {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-sidebar-icon {
+      font-size: 16px;
+    }
+    
+    .jobs-sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      z-index: 998;
+    }
+    
+    .jobs-sidebar-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .jobs-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .jobs-nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      align-items: center;
+    }
+    
+    .jobs-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
     
     /* Main Container */
     .jobs-container {
@@ -380,8 +543,54 @@
   </style>
 </head>
 <body class="dark-mode">
-  <!-- Navigation will be inserted here -->
-  <div id="navigation-container"></div>
+  <!-- Navigation with Hamburger -->
+  <nav class="jobs-nav">
+    <div style="display: flex; align-items: center; gap: var(--jobs-spacing-md);">
+      <button class="jobs-hamburger" onclick="toggleSidebar()" id="hamburger-btn">
+        <div class="jobs-hamburger-line"></div>
+        <div class="jobs-hamburger-line"></div>
+        <div class="jobs-hamburger-line"></div>
+      </button>
+      <div class="jobs-nav-title">FinSight Intelligence</div>
+    </div>
+    <div class="jobs-nav-actions">
+      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+    </div>
+  </nav>
+  
+  <!-- Sidebar Overlay -->
+  <div class="jobs-sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+  
+  <!-- Sidebar -->
+  <div class="jobs-sidebar" id="sidebar">
+    <div class="jobs-sidebar-section">
+      <div class="jobs-sidebar-title">FinSight Intelligence</div>
+      <a href="/index.html" class="jobs-sidebar-item">
+        <div class="jobs-sidebar-icon">◉</div>
+        <span>Today</span>
+      </a>
+      <a href="/analyze-jobs.html" class="jobs-sidebar-item">
+        <div class="jobs-sidebar-icon">◎</div>
+        <span>Analyze</span>
+      </a>
+      <a href="/model-jobs.html" class="jobs-sidebar-item">
+        <div class="jobs-sidebar-icon">◆</div>
+        <span>Model</span>
+      </a>
+      <a href="/teach-jobs.html" class="jobs-sidebar-item">
+        <div class="jobs-sidebar-icon">◇</div>
+        <span>Teach</span>
+      </a>
+      <a href="/ai-jobs.html" class="jobs-sidebar-item">
+        <div class="jobs-sidebar-icon">◈</div>
+        <span>AI</span>
+      </a>
+      <a href="/control-jobs.html" class="jobs-sidebar-item active" id="control-menu" style="display: none;">
+        <div class="jobs-sidebar-icon">⚙️</div>
+        <span>Control</span>
+      </a>
+    </div>
+  </div>
   
   <!-- Main Container -->
   <div class="jobs-container">
@@ -662,22 +871,48 @@
   </div>
   
   <script>
-    // Initialize hamburger navigation
-    document.addEventListener('DOMContentLoaded', function() {
-      // Add hamburger CSS to the page
-      const style = document.createElement('style');
-      style.innerHTML = getHamburgerCSS();
-      document.head.appendChild(style);
+    // Check user role
+    const userRole = localStorage.getItem('userRole') || 'Finance';
+    if (userRole === 'Technology') {
+      document.getElementById('control-menu').style.display = 'flex';
+    }
+    
+    // Sidebar functionality
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const hamburger = document.getElementById('hamburger-btn');
       
-      // Add hamburger navigation
-      const navContainer = document.getElementById('navigation-container');
-      if (navContainer) {
-        navContainer.innerHTML = createHamburgerNav();
-      }
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('open');
+      hamburger.classList.toggle('active');
+    }
+    
+    function closeSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      const hamburger = document.getElementById('hamburger-btn');
       
-      // Initialize hamburger functionality
-      initHamburgerNav();
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+      hamburger.classList.remove('active');
+    }
+    
+    // Close sidebar when clicking on a link
+    document.querySelectorAll('.jobs-sidebar-item').forEach(item => {
+      item.addEventListener('click', closeSidebar);
     });
+    
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
     
     // Spotlight search
     function showSpotlight() {
@@ -947,7 +1182,6 @@
       }, 2000);
     }
     
-    // Load saved preferences - handled by hamburger nav
     
     // Auto-refresh system metrics
     function refreshMetrics() {
