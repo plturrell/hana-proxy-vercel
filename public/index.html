@@ -398,55 +398,6 @@
       color: rgba(255, 255, 255, 0.8);
     }
     
-    /* Bottom Tab Bar */
-    .jobs-tabbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 49px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    body.dark-mode .jobs-tabbar {
-      background: rgba(0, 0, 0, 0.95);
-      border-top-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .jobs-tab {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-      text-decoration: none;
-      color: var(--jobs-gray);
-    }
-    
-    .jobs-tab:hover,
-    .jobs-tab.active {
-      color: var(--jobs-blue);
-    }
-    
-    .jobs-tab-icon {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    
-    .jobs-tab-label {
-      font-size: 10px;
-      font-weight: 500;
-    }
     
     /* Gesture hints */
     .jobs-gesture-hint {
@@ -478,39 +429,6 @@
       to { transform: rotate(360deg); }
     }
     
-    /* Voice indicator */
-    .jobs-voice-indicator {
-      position: fixed;
-      bottom: 68px;
-      right: var(--jobs-spacing-lg);
-      width: 56px;
-      height: 56px;
-      background: var(--jobs-blue);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--jobs-white);
-      font-size: 24px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
-      transition: all var(--jobs-duration) var(--jobs-animation);
-    }
-    
-    .jobs-voice-indicator:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
-    }
-    
-    .jobs-voice-indicator.listening {
-      animation: jobs-pulse 1.5s ease-in-out infinite;
-    }
-    
-    @keyframes jobs-pulse {
-      0% { box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
-      50% { box-shadow: 0 4px 20px rgba(0, 122, 255, 0.6); }
-      100% { box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
-    }
   </style>
 </head>
 <body class="dark-mode">
@@ -525,9 +443,7 @@
       <div class="jobs-nav-title">FinSight Intelligence</div>
     </div>
     <div class="jobs-nav-actions">
-      <span style="font-size: 13px; color: var(--jobs-gray);">Good morning, Sarah</span>
       <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
-      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
     </div>
   </nav>
   
@@ -537,8 +453,8 @@
   <!-- Sidebar -->
   <div class="jobs-sidebar" id="sidebar">
     <div class="jobs-sidebar-section">
-      <div class="jobs-sidebar-title">Dashboard</div>
-      <a href="#" class="jobs-sidebar-item active">
+      <div class="jobs-sidebar-title">FinSight Intelligence</div>
+      <a href="/index.html" class="jobs-sidebar-item active">
         <div class="jobs-sidebar-icon">◉</div>
         <span>Today</span>
       </a>
@@ -546,50 +462,22 @@
         <div class="jobs-sidebar-icon">◎</div>
         <span>Analyze</span>
       </a>
-    </div>
-    
-    <div class="jobs-sidebar-section">
-      <div class="jobs-sidebar-title">AI & Models</div>
       <a href="/model-jobs.html" class="jobs-sidebar-item">
         <div class="jobs-sidebar-icon">◆</div>
-        <span>Machine Learning</span>
+        <span>Model</span>
       </a>
       <a href="/teach-jobs.html" class="jobs-sidebar-item">
         <div class="jobs-sidebar-icon">◇</div>
-        <span>Adaptive Learning</span>
+        <span>Teach</span>
       </a>
       <a href="/ai-jobs.html" class="jobs-sidebar-item">
         <div class="jobs-sidebar-icon">◈</div>
-        <span>AI Assistant</span>
+        <span>AI</span>
       </a>
-    </div>
-    
-    <div class="jobs-sidebar-section" id="tech-section" style="display: none;">
-      <div class="jobs-sidebar-title">System</div>
-      <a href="/control-jobs.html" class="jobs-sidebar-item">
-        <div class="jobs-sidebar-icon">◈</div>
-        <span>Control Centre</span>
+      <a href="/control-jobs.html" class="jobs-sidebar-item" id="control-menu" style="display: none;">
+        <div class="jobs-sidebar-icon">⚙️</div>
+        <span>Control</span>
       </a>
-    </div>
-    
-    <div class="jobs-sidebar-section">
-      <div class="jobs-sidebar-title">Quick Access</div>
-      <div class="jobs-sidebar-item" onclick="navigate('analyze', 'portfolio')">
-        <div class="jobs-sidebar-icon">📊</div>
-        <span>Portfolio</span>
-      </div>
-      <div class="jobs-sidebar-item" onclick="navigate('analyze', 'treasury')">
-        <div class="jobs-sidebar-icon">💰</div>
-        <span>Treasury</span>
-      </div>
-      <div class="jobs-sidebar-item" onclick="navigate('analyze', 'risk')">
-        <div class="jobs-sidebar-icon">⚠️</div>
-        <span>Risk Analysis</span>
-      </div>
-      <div class="jobs-sidebar-item" onclick="navigate('analyze', 'scenarios')">
-        <div class="jobs-sidebar-icon">🎯</div>
-        <span>Scenarios</span>
-      </div>
     </div>
   </div>
   
@@ -656,45 +544,12 @@
     </div>
   </div>
   
-  <!-- Bottom Tab Bar (iOS style) -->
-  <div class="jobs-tabbar">
-    <a href="#" class="jobs-tab active">
-      <div class="jobs-tab-icon">◉</div>
-      <div class="jobs-tab-label">Today</div>
-    </a>
-    <a href="/analyze-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◎</div>
-      <div class="jobs-tab-label">Analyze</div>
-    </a>
-    <a href="/control-jobs.html" class="jobs-tab" id="control-tab" style="display: none;">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">Control</div>
-    </a>
-    <a href="/model-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◆</div>
-      <div class="jobs-tab-label">Model</div>
-    </a>
-    <a href="/teach-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◇</div>
-      <div class="jobs-tab-label">Teach</div>
-    </a>
-    <a href="/ai-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">AI</div>
-    </a>
-  </div>
-  
-  <!-- Voice Assistant Button -->
-  <div class="jobs-voice-indicator" onclick="startVoiceCommand()">
-    <span>🎤</span>
-  </div>
   
   <script>
     // Check user role
     const userRole = localStorage.getItem('userRole') || 'Finance';
     if (userRole === 'Technology') {
-      document.getElementById('control-tab').style.display = 'flex';
-      document.getElementById('tech-section').style.display = 'block';
+      document.getElementById('control-menu').style.display = 'flex';
     }
     
     // Sidebar functionality
@@ -723,47 +578,16 @@
       item.addEventListener('click', closeSidebar);
     });
     
-    // Navigation
-    function navigate(screen, section) {
-      if (screen === 'analyze') {
-        window.location.href = `/analyze-jobs.html${section ? '#' + section : ''}`;
-      }
-    }
-    
     // Handle actions
     function handleAction(action) {
-      // In real implementation, these would open in-place overlays
       console.log('Handling action:', action);
-      // For now, navigate to analyze
-      navigate('analyze', action);
+      window.location.href = `/analyze-jobs.html#${action}`;
     }
     
     // Dark mode toggle
     function toggleDarkMode() {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
-    
-    // Spotlight search
-    function showSpotlight() {
-      // In real implementation, this would show a spotlight-style search
-      const query = prompt('Search FinSight...');
-      if (query) {
-        console.log('Searching for:', query);
-      }
-    }
-    
-    // Voice command
-    function startVoiceCommand() {
-      const indicator = document.querySelector('.jobs-voice-indicator');
-      indicator.classList.add('listening');
-      
-      // Simulate voice recognition
-      setTimeout(() => {
-        indicator.classList.remove('listening');
-        // In real implementation, this would use Web Speech API
-        console.log('Voice command completed');
-      }, 3000);
     }
     
     // Load saved preferences
