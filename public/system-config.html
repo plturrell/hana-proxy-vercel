@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Configuration - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-    <link href="blueprint-icons-fix.css" rel="stylesheet">    <link href="shared-header-styles.css" rel="stylesheet">
+    <link href="blueprint-icons-ios-fix.css" rel="stylesheet">
+        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -85,12 +86,8 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -102,87 +99,48 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
-        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
-            color: var(--bp3-text-color);
-        }
-
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-        }
-
         .bp3-navbar {
             flex-shrink: 0;
-        }
-
         .app-content {
-            display: flex;
             flex: 1;
-            overflow: hidden;
-        }
-
         .bp3-sidebar {
             width: 280px;
-            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
-        }
-
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
-        }
-
         .main-content {
-            flex: 1;
-            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
-        }
-
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
-        }
-
         .bp3-menu-item.bp3-active .bp3-icon {
-            color: white;
-        }
-
         .status-indicator {
-            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
-        }
-
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
-        }
-
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
-        }
-
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
-        }
-
         /* Page-specific styles */
         .bp3-card {
             background-color: white;
@@ -190,233 +148,102 @@
             box-shadow: var(--bp3-elevation-shadow-1);
             padding: calc(var(--bp3-grid-size) * 2);
             margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
         .bp3-dark .bp3-card {
-            background-color: var(--bp3-dark-gray3);
-        }
-
         .section-header {
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
         .section-title {
             font-size: 18px;
             font-weight: 600;
             color: var(--bp3-heading-color);
-        }
-
         .section-description {
             color: var(--bp3-text-color-muted);
             font-size: 12px;
             margin-top: 5px;
-        }
-
         .config-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
-        }
-
         .config-item {
-            background-color: white;
-            border-radius: var(--bp3-border-radius);
-            box-shadow: var(--bp3-elevation-shadow-1);
-            padding: calc(var(--bp3-grid-size) * 2);
-        }
-
         .bp3-dark .config-item {
             background-color: var(--bp3-dark-gray4);
-        }
-
         .config-label {
-            font-weight: 600;
-            color: var(--bp3-heading-color);
             margin-bottom: calc(var(--bp3-grid-size));
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
         .config-range {
-            color: var(--bp3-text-color-muted);
             font-size: 11px;
             font-weight: 500;
-        }
-
         .config-description {
-            color: var(--bp3-text-color-muted);
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
         .config-tabs {
-            display: flex;
             gap: 5px;
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-            background-color: var(--bp3-light-gray5);
             padding: 5px;
-            border-radius: var(--bp3-border-radius);
-        }
-
         .bp3-dark .config-tabs {
-            background-color: var(--bp3-dark-gray4);
-        }
-
         .tab {
             padding: calc(var(--bp3-grid-size)) calc(var(--bp3-grid-size) * 2);
             background: transparent;
             border: none;
-            color: var(--bp3-text-color-muted);
-            border-radius: var(--bp3-border-radius);
             cursor: pointer;
-            font-weight: 600;
-            font-size: var(--bp3-font-size);
-            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
         .tab.active {
-            background-color: var(--bp3-intent-primary);
-            color: white;
-        }
-
         .config-group {
             display: none;
-        }
-
         .config-group.active {
             display: block;
-        }
-
         .export-import-section {
-            display: flex;
-            gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .file-label {
-            background-color: white;
             border: 2px dashed var(--bp3-gray3);
-            border-radius: var(--bp3-border-radius);
-            padding: calc(var(--bp3-grid-size) * 2);
             text-align: center;
-            cursor: pointer;
-            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-            flex: 1;
-        }
-
         .bp3-dark .file-label {
-            background-color: var(--bp3-dark-gray3);
             border-color: var(--bp3-gray1);
-        }
-
         .file-label:hover {
             border-color: var(--bp3-intent-primary);
             background-color: rgba(19, 124, 189, 0.1);
-        }
-
         .file-input {
-            display: none;
-        }
-
         .checkbox-container {
-            display: flex;
-            align-items: center;
             gap: calc(var(--bp3-grid-size));
-        }
-
         .config-checkbox {
             width: 16px;
             height: 16px;
             appearance: none;
-            background-color: white;
             border: 2px solid var(--bp3-gray3);
             border-radius: 3px;
-            cursor: pointer;
             position: relative;
-            transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
         .bp3-dark .config-checkbox {
-            background-color: var(--bp3-dark-gray4);
-            border-color: var(--bp3-gray1);
-        }
-
         .config-checkbox:checked {
-            background-color: var(--bp3-intent-primary);
-            border-color: var(--bp3-intent-primary);
-        }
-
         .config-checkbox:checked::after {
             content: '✓';
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: white;
             font-size: 10px;
             font-weight: bold;
-        }
-
         .status-badge {
             padding: 4px 8px;
-            border-radius: var(--bp3-border-radius);
-            font-size: 11px;
-            font-weight: 600;
             text-transform: uppercase;
-        }
-
         .status-success {
             background-color: rgba(15, 153, 96, 0.2);
             color: var(--bp3-intent-success);
-        }
-
         .status-warning {
             background-color: rgba(217, 130, 43, 0.2);
             color: var(--bp3-intent-warning);
-        }
-
         .status-error {
             background-color: rgba(219, 55, 55, 0.2);
             color: var(--bp3-intent-danger);
-        }
-
         .loading {
             animation: pulse-loading 1.5s infinite;
-        }
-
         @keyframes pulse-loading {
-            0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
-        }
-
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
             padding: calc(var(--bp3-grid-size) * 1.5) calc(var(--bp3-grid-size) * 2);
-            border-radius: var(--bp3-border-radius);
-            color: white;
-            font-weight: 600;
             z-index: 1000;
             transform: translateX(400px);
             transition: transform 0.3s ease;
-        }
-
         .notification.show {
             transform: translateX(0);
-        }
-
         .notification.success {
-            background-color: var(--bp3-intent-success);
-        }
-
         .notification.error {
             background-color: var(--bp3-intent-danger);
-        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
@@ -433,7 +260,6 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
                     <span>Dark Mode</span>
@@ -441,10 +267,7 @@
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
                     <span id="user-role-label">Finance User</span>
-                </button>
-            </div>
         </nav>
-
         <div class="app-content slate-layout-container">
             
     <aside class="bp3-sidebar">
@@ -457,108 +280,58 @@
                     <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
                     <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
                     <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
                     <span class="bp3-icon bp3-icon-feed"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
                     <span class="bp3-icon bp3-icon-function"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
                     <span class="bp3-icon bp3-icon-learning"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
                     <span class="bp3-icon bp3-icon-calculator"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
                     <span class="bp3-icon bp3-icon-numerical"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
                     <span class="bp3-icon bp3-icon-timeline-events"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
                     <span class="bp3-icon bp3-icon-fork"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
                     <span class="bp3-icon bp3-icon-console"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
                     <span class="bp3-icon bp3-icon-cloud-upload"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
                     <span class="bp3-icon bp3-icon-cog"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
         </ul>
     </aside>
-
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">System Configuration</h1>
                     <p class="bp3-text-muted">Configure system settings, database connections, and performance parameters</p>
-                </div>
-
                 <!-- System Configuration Metrics -->
                 <div class="system-config-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -566,46 +339,30 @@
                         <div class="apple-metric-value">847</div>
                         <div class="apple-metric-change positive">↗ +23</div>
                     </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">System Uptime</div>
                         <div class="apple-metric-value">99.8%</div>
                         <div class="apple-metric-change positive">↗ +0.1%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Config Integrity</div>
                         <div class="apple-metric-value">Valid</div>
                         <div class="apple-metric-change positive">↗ Verified</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">DB Performance</div>
                         <div class="apple-metric-value">Excellent</div>
                         <div class="apple-metric-change positive">↗ +5ms</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Memory Usage</div>
                         <div class="apple-metric-value">67%</div>
                         <div class="apple-metric-change positive">↗ -3%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">CPU Load</div>
                         <div class="apple-metric-value">23%</div>
                         <div class="apple-metric-change positive">↗ -8%</div>
-                    </div>
-                </div>
-
                 <div class="export-import-section">
                     <div class="file-label" onclick="document.getElementById('config-file').click()">
                         <strong>Import Configuration</strong><br>
                         <span style="font-size: 12px; color: var(--bp3-text-color-muted);">Click to select configuration file</span>
                         <input type="file" id="config-file" class="file-input" accept=".json" onchange="importConfiguration(this)">
-                    </div>
                     <div style="display: flex; gap: 10px; align-items: flex-end;">
                         <button class="bp3-button bp3-icon-export" onclick="exportConfiguration()">Export Config</button>
                         <button class="bp3-button bp3-icon-reset" onclick="resetToDefaults()">Reset to Defaults</button>
                         <button class="bp3-button bp3-intent-success bp3-icon-floppy-disk" onclick="saveAllConfigurations()">Save All</button>
-                    </div>
-                </div>
-
                 <div class="config-tabs">
                     <button class="tab active" onclick="showConfigGroup('database')">Database</button>
                     <button class="tab" onclick="showConfigGroup('calculation')">Calculation</button>
@@ -615,8 +372,6 @@
                     <button class="tab" onclick="showConfigGroup('api')">API</button>
                     <button class="tab" onclick="showConfigGroup('ui')">UI</button>
                     <button class="tab" onclick="showConfigGroup('security')">Security</button>
-                </div>
-
                 <!-- Database Configuration -->
                 <div id="database-config" class="config-group active">
                     <div class="bp3-card">
@@ -629,150 +384,69 @@
                         </div>
                         <div class="config-grid" id="database-configs">
                             <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Calculation Configuration -->
                 <div id="calculation-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">Calculation Engine Configuration</div>
                                 <div class="section-description">Configure financial calculation engine parameters and caching</div>
-                            </div>
                             <div class="status-badge status-success">Operational</div>
-                        </div>
                         <div class="config-grid" id="calculation-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- MCTS Configuration -->
                 <div id="mcts-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">Monte Carlo Tree Search Configuration</div>
                                 <div class="section-description">Configure MCTS algorithm parameters for scenario analysis</div>
-                            </div>
                             <div class="status-badge status-success">Ready</div>
-                        </div>
                         <div class="config-grid" id="mcts-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Thompson Sampling Configuration -->
                 <div id="thompson-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">Thompson Sampling Configuration</div>
                                 <div class="section-description">Configure Thompson Sampling ML optimization parameters</div>
-                            </div>
                             <div class="status-badge status-success">Learning</div>
-                        </div>
                         <div class="config-grid" id="thompson-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Performance Configuration -->
                 <div id="performance-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">Performance Monitoring Configuration</div>
                                 <div class="section-description">Configure performance thresholds and monitoring settings</div>
-                            </div>
                             <div class="status-badge status-success">Monitoring</div>
-                        </div>
                         <div class="config-grid" id="performance-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- API Configuration -->
                 <div id="api-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">API Configuration</div>
                                 <div class="section-description">Configure external API endpoints, timeouts, and rate limits</div>
-                            </div>
                             <div class="status-badge status-warning">Review Required</div>
-                        </div>
                         <div class="config-grid" id="api-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- UI Configuration -->
                 <div id="ui-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">User Interface Configuration</div>
                                 <div class="section-description">Configure UI behavior, refresh rates, and display preferences</div>
-                            </div>
                             <div class="status-badge status-success">Active</div>
-                        </div>
                         <div class="config-grid" id="ui-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Security Configuration -->
                 <div id="security-config" class="config-group">
-                    <div class="bp3-card">
-                        <div class="section-header">
-                            <div>
                                 <div class="section-title">Security Configuration</div>
                                 <div class="section-description">Configure security policies, timeouts, and access controls</div>
-                            </div>
                             <div class="status-badge status-success">Secure</div>
-                        </div>
                         <div class="config-grid" id="security-configs">
-                            <!-- Dynamically populated -->
-                        </div>
-                    </div>
-                </div>
             </main>
         </div>
     </div>
-
     <script>
         let systemConfigurations = {};
         let apiConfigurations = {};
-
         // Load configurations on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadAllConfigurations();
         });
-
         function showConfigGroup(groupName) {
             // Hide all config groups
             document.querySelectorAll('.config-group').forEach(group => {
                 group.classList.remove('active');
             });
-            
             // Show selected group
             document.getElementById(groupName + '-config').classList.add('active');
-            
             // Update tab states
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.classList.remove('active');
-            });
             event.target.classList.add('active');
-        }
-
         async function loadAllConfigurations() {
             try {
                 const response = await fetch('/api/configure', {
@@ -784,7 +458,6 @@
                         action: 'get-all-configurations'
                     })
                 });
-
                 const result = await response.json();
                 if (result.success) {
                     systemConfigurations = result.configurations.system || [];
@@ -796,18 +469,14 @@
             } catch (error) {
                 showNotification('Error loading configurations: ' + error.message, 'error');
             }
-        }
-
         function renderConfigurations() {
             // Group system configurations by category
             const grouped = systemConfigurations.reduce((acc, config) => {
                 if (!acc[config.CONFIG_GROUP]) {
                     acc[config.CONFIG_GROUP] = [];
-                }
                 acc[config.CONFIG_GROUP].push(config);
                 return acc;
             }, {});
-
             // Render each group
             Object.keys(grouped).forEach(groupName => {
                 const container = document.getElementById(groupName + '-configs');
@@ -816,46 +485,30 @@
                     grouped[groupName].forEach(config => {
                         container.appendChild(createConfigItem(config));
                     });
-                }
-            });
-
             // Render API configurations
             const apiContainer = document.getElementById('api-configs');
             if (apiContainer) {
                 apiContainer.innerHTML = '';
                 apiConfigurations.forEach(api => {
                     apiContainer.appendChild(createAPIConfigItem(api));
-                });
-            }
-        }
-
         function createConfigItem(config) {
             const item = document.createElement('div');
             item.className = 'config-item';
-            
             const rangeText = (config.MIN_VALUE !== null || config.MAX_VALUE !== null) ? 
                 `(${config.MIN_VALUE || 'min'} - ${config.MAX_VALUE || 'max'})` : '';
-
             if (config.DATA_TYPE === 'boolean') {
                 item.innerHTML = `
                     <div class="config-label">
                         ${config.CONFIG_KEY.replace(/_/g, ' ').toUpperCase()}
                         <span class="config-range">${rangeText}</span>
-                    </div>
                     <div class="checkbox-container">
                         <input type="checkbox" class="config-checkbox" id="${config.CONFIG_GROUP}_${config.CONFIG_KEY}" 
                                ${config.CONFIG_VALUE === 'true' ? 'checked' : ''} 
                                onchange="updateConfiguration('${config.CONFIG_GROUP}', '${config.CONFIG_KEY}', this.checked.toString())">
                         <label for="${config.CONFIG_GROUP}_${config.CONFIG_KEY}">Enable</label>
-                    </div>
                     <div class="config-description">${config.DESCRIPTION}</div>
                 `;
             } else {
-                item.innerHTML = `
-                    <div class="config-label">
-                        ${config.CONFIG_KEY.replace(/_/g, ' ').toUpperCase()}
-                        <span class="config-range">${rangeText}</span>
-                    </div>
                     <input type="${config.DATA_TYPE === 'integer' || config.DATA_TYPE === 'decimal' ? 'number' : 'text'}" 
                            class="bp3-input" 
                            value="${config.CONFIG_VALUE}" 
@@ -863,58 +516,31 @@
                            ${config.MIN_VALUE !== null ? `min="${config.MIN_VALUE}"` : ''}
                            ${config.MAX_VALUE !== null ? `max="${config.MAX_VALUE}"` : ''}
                            onchange="updateConfiguration('${config.CONFIG_GROUP}', '${config.CONFIG_KEY}', this.value)">
-                    <div class="config-description">${config.DESCRIPTION}</div>
-                `;
-            }
-            
             return item;
-        }
-
         function createAPIConfigItem(api) {
-            const item = document.createElement('div');
-            item.className = 'config-item';
-            
             item.innerHTML = `
                 <div class="config-label">
                     ${api.API_NAME.toUpperCase()} API
                     <span class="status-badge ${api.IS_ENABLED ? 'status-success' : 'status-error'}">
                         ${api.IS_ENABLED ? 'Enabled' : 'Disabled'}
                     </span>
-                </div>
                 <div style="margin-bottom: 10px;">
                     <label class="bp3-label">Endpoint URL</label>
                     <input type="text" class="bp3-input" value="${api.ENDPOINT_URL}" 
                            onchange="updateAPIConfig('${api.API_NAME}', 'endpoint', this.value)">
-                </div>
-                <div style="margin-bottom: 10px;">
                     <label class="bp3-label">Timeout (ms)</label>
                     <input type="number" class="bp3-input" value="${api.TIMEOUT_MS}" 
                            onchange="updateAPIConfig('${api.API_NAME}', 'timeout', this.value)">
-                </div>
-                <div style="margin-bottom: 10px;">
                     <label class="bp3-label">Rate Limit (/min)</label>
                     <input type="number" class="bp3-input" value="${api.RATE_LIMIT_PER_MIN}" 
                            onchange="updateAPIConfig('${api.API_NAME}', 'rateLimit', this.value)">
-                </div>
                 <div class="checkbox-container">
                     <input type="checkbox" class="config-checkbox" id="api_${api.API_NAME}" 
                            ${api.IS_ENABLED ? 'checked' : ''} 
                            onchange="updateAPIConfig('${api.API_NAME}', 'enabled', this.checked)">
                     <label for="api_${api.API_NAME}">Enabled</label>
-                </div>
             `;
-            
-            return item;
-        }
-
         async function updateConfiguration(group, key, value) {
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
                         action: 'update-system-configuration',
                         data: {
                             category: group,
@@ -922,50 +548,25 @@
                                 [key]: { value: value, description: '' }
                             }
                         }
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
                     showNotification(`${key} updated successfully`, 'success');
-                } else {
                     showNotification('Failed to update configuration: ' + result.error, 'error');
-                }
-            } catch (error) {
                 showNotification('Error updating configuration: ' + error.message, 'error');
-            }
-        }
-
         async function updateAPIConfig(apiName, field, value) {
             // Update the local API configuration object
             const apiConfig = apiConfigurations.find(api => api.API_NAME === apiName);
             if (!apiConfig) return;
-
             switch (field) {
                 case 'endpoint':
                     apiConfig.ENDPOINT_URL = value;
                     break;
                 case 'timeout':
                     apiConfig.TIMEOUT_MS = parseInt(value);
-                    break;
                 case 'rateLimit':
                     apiConfig.RATE_LIMIT_PER_MIN = parseInt(value);
-                    break;
                 case 'enabled':
                     apiConfig.IS_ENABLED = value;
-                    break;
-            }
-
             // Save to backend
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
                         action: 'update-configuration',
-                        data: {
                             type: 'api',
                             configurations: [{
                                 name: apiName,
@@ -976,167 +577,75 @@
                                 retries: apiConfig.RETRY_COUNT,
                                 enabled: apiConfig.IS_ENABLED
                             }]
-                        }
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
                     showNotification(`${apiName} API updated successfully`, 'success');
-                } else {
                     showNotification('Failed to update API configuration: ' + result.error, 'error');
-                }
-            } catch (error) {
                 showNotification('Error updating API configuration: ' + error.message, 'error');
-            }
-        }
-
         async function saveAllConfigurations() {
             showNotification('Saving all configurations...', 'success');
             // Configurations are saved individually on change
             showNotification('All configurations saved successfully', 'success');
-        }
-
         async function exportConfiguration() {
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
                         action: 'export-configuration'
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
                     const dataStr = JSON.stringify(result.configuration, null, 2);
                     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
                     
                     const exportFileDefaultName = `finance-config-${new Date().toISOString().split('T')[0]}.json`;
-                    
                     const linkElement = document.createElement('a');
                     linkElement.setAttribute('href', dataUri);
                     linkElement.setAttribute('download', exportFileDefaultName);
                     linkElement.click();
-                    
                     showNotification('Configuration exported successfully', 'success');
-                } else {
                     showNotification('Failed to export configuration: ' + result.error, 'error');
-                }
-            } catch (error) {
                 showNotification('Error exporting configuration: ' + error.message, 'error');
-            }
-        }
-
         async function importConfiguration(input) {
             const file = input.files[0];
             if (!file) return;
-
-            try {
                 const text = await file.text();
                 const configuration = JSON.parse(text);
-
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
                         action: 'import-configuration',
-                        data: {
                             configuration: configuration
-                        }
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
                     showNotification('Configuration imported successfully', 'success');
                     loadAllConfigurations(); // Reload to show imported values
-                } else {
                     showNotification('Failed to import configuration: ' + result.error, 'error');
-                }
-            } catch (error) {
                 showNotification('Error importing configuration: ' + error.message, 'error');
-            }
-        }
-
         async function resetToDefaults() {
             if (!confirm('Are you sure you want to reset all configurations to defaults? This cannot be undone.')) {
                 return;
-            }
-
-            try {
-                const response = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
                         action: 'reset-to-defaults',
-                        data: {
                             configTypes: ['system', 'api', 'mcts', 'thompson']
-                        }
-                    })
-                });
-
-                const result = await response.json();
-                if (result.success) {
                     showNotification('All configurations reset to defaults', 'success');
                     loadAllConfigurations(); // Reload to show default values
-                } else {
                     showNotification('Failed to reset configurations: ' + result.error, 'error');
-                }
-            } catch (error) {
                 showNotification('Error resetting configurations: ' + error.message, 'error');
-            }
-        }
-
         function showNotification(message, type = 'success') {
             // Remove any existing notifications
             const existingNotifications = document.querySelectorAll('.notification');
             existingNotifications.forEach(n => n.remove());
-
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.textContent = message;
-            
             document.body.appendChild(notification);
-            
             // Show notification
             setTimeout(() => {
                 notification.classList.add('show');
             }, 100);
-            
             // Hide notification after 3 seconds
-            setTimeout(() => {
                 notification.classList.remove('show');
                 setTimeout(() => {
                     notification.remove();
                 }, 300);
             }, 3000);
-        }
-
         function toggleTheme() {
             const body = document.body;
             const button = document.getElementById('theme-toggle');
-            
             if (body.classList.contains('bp3-dark')) {
                 body.classList.remove('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
-            } else {
                 body.classList.add('bp3-dark');
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-            }
-        }
     </script>
     <script src="shared-header.js"></script>
-
-    <script>
         // Role-based page protection
-        document.addEventListener('DOMContentLoaded', function() {
             const userRole = localStorage.getItem('userRole') || 'Finance';
             if (userRole !== 'Technology') {
                 document.body.innerHTML = `
@@ -1144,21 +653,12 @@
                         <div class="bp3-non-ideal-state">
                             <div class="bp3-non-ideal-state-visual">
                                 <span class="bp3-icon bp3-icon-lock" style="font-size: 48px; color: var(--bp3-intent-warning);"></span>
-                            </div>
                             <h4 class="bp3-non-ideal-state-title">Access Restricted</h4>
                             <div class="bp3-non-ideal-state-description">
                                 This page requires Technology privileges. Please contact your system admin.
-                            </div>
                             <div class="bp3-non-ideal-state-action">
                                 <button class="bp3-button bp3-intent-primary" onclick="window.history.back()">
                                     <span class="bp3-icon bp3-icon-arrow-left"></span>
                                     Go Back
                                 </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-    </script>
 </body>

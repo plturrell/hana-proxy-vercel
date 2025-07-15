@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ML Models Configuration - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-    <link href="blueprint-icons-fix.css" rel="stylesheet">    <link href="shared-header-styles.css" rel="stylesheet">
+    <link href="blueprint-icons-ios-fix.css" rel="stylesheet">
+        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -85,12 +86,8 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -102,227 +99,112 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
-        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
-            color: var(--bp3-text-color);
-        }
-
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-        }
-
         .bp3-navbar {
             flex-shrink: 0;
-        }
-
         .app-content {
-            display: flex;
             flex: 1;
-            overflow: hidden;
-        }
-
         .bp3-sidebar {
             width: 280px;
-            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
-        }
-
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
-        }
-
         .main-content {
-            flex: 1;
-            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
-        }
-
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
-        }
-
         .bp3-menu-item.bp3-active .bp3-icon {
-            color: white;
-        }
-
         .status-indicator {
-            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
-        }
-
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
-        }
-
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
-        }
-
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
-        }
-
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .models-grid {
-            display: grid;
             gap: calc(var(--bp3-grid-size) * 3);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .model-card {
             margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
         .model-header {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
         .model-status {
             display: inline-flex;
-            align-items: center;
-            gap: calc(var(--bp3-grid-size) / 2);
             padding: calc(var(--bp3-grid-size) / 2) calc(var(--bp3-grid-size) * 1);
             border-radius: calc(var(--bp3-grid-size) * 2);
             font-size: 12px;
             font-weight: 500;
-        }
-
         .model-status.trained {
             background-color: rgba(15, 153, 96, 0.2);
             color: var(--bp3-intent-success);
-        }
-
         .model-status.training {
             background-color: rgba(217, 130, 43, 0.2);
             color: var(--bp3-intent-warning);
-        }
-
         .model-status.untrained {
             background-color: rgba(92, 112, 128, 0.2);
             color: var(--bp3-text-color-muted);
-        }
-
         .metric-value {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .metric-value.primary {
             color: var(--bp3-intent-primary);
-        }
-
         .metric-value.success {
-            color: var(--bp3-intent-success);
-        }
-
         .metric-value.warning {
-            color: var(--bp3-intent-warning);
-        }
-
         .metric-label {
-            color: var(--bp3-text-color-muted);
-            font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
         .performance-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
             margin: calc(var(--bp3-grid-size) * 2) 0;
-        }
-
         .performance-metric {
             text-align: center;
-        }
-
         .performance-value {
             font-size: 20px;
-            font-weight: 600;
-            color: var(--bp3-intent-primary);
-            margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .performance-label {
             font-size: 11px;
-            color: var(--bp3-text-color-muted);
-            text-transform: uppercase;
-        }
-
         .training-progress {
             margin-top: calc(var(--bp3-grid-size) * 2);
-        }
-
         .progress-info {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: calc(var(--bp3-grid-size) / 2);
-            font-size: 12px;
-        }
-
         .training-log {
             background-color: var(--bp3-black);
             border-radius: var(--bp3-border-radius);
             padding: calc(var(--bp3-grid-size) * 2);
             font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-            font-size: 12px;
             color: var(--bp3-light-gray5);
             height: 200px;
-            overflow-y: auto;
-            margin-top: calc(var(--bp3-grid-size) * 2);
-        }
-
         .log-entry {
-            margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .log-entry.info {
             color: var(--bp3-blue5);
-        }
-
         .log-entry.success {
             color: var(--bp3-green5);
-        }
-
         .log-entry.warning {
             color: var(--bp3-orange5);
-        }
-
         .log-entry.error {
             color: var(--bp3-red5);
-        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
@@ -340,7 +222,6 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
                     <span>Dark Mode</span>
@@ -348,10 +229,7 @@
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
                     <span id="user-role-label">Finance User</span>
-                </button>
-            </div>
         </nav>
-
         <!-- Application Content -->
         <div class="app-content slate-layout-container">
             <!-- Left Sidebar -->
@@ -365,73 +243,39 @@
                             <span class="bp3-icon bp3-icon-dashboard"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
                         </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/portfolio-analyser.html">
                             <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/treasury-insights.html">
                             <span class="bp3-icon bp3-icon-bank-account"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/scenario-analyser-config.html">
                             <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                        </a>
-                    </li>
                     
-                    <li class="bp3-menu-header">
                         <h6 class="bp3-heading">Configuration</h6>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/news-market-data-config.html">
                             <span class="bp3-icon bp3-icon-feed"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/calculation-manager-config.html">
                             <span class="bp3-icon bp3-icon-calculator"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item bp3-active" href="/ml-models-config.html">
                             <span class="bp3-icon bp3-icon-learning"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                        </a>
-                    </li>
-                    
-                    <li class="bp3-menu-header">
                         <h6 class="bp3-heading">System</h6>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/deployment.html">
                             <span class="bp3-icon bp3-icon-cloud-upload"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Deploy Functions</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="bp3-menu-item" href="/">
                             <span class="bp3-icon bp3-icon-home"></span>
                             <span class="bp3-text-overflow-ellipsis bp3-fill">Dashboard</span>
-                        </a>
-                    </li>
                 </ul>
-            </div>
-
             <!-- Main Content Area -->
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">ML Models Configuration</h1>
                     <p class="bp3-text-muted">Train and manage machine learning models for financial analysis</p>
-                </div>
-
                 <!-- ML Models Metrics -->
                 <div class="ml-models-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -439,57 +283,34 @@
                         <div class="apple-metric-value">15</div>
                         <div class="apple-metric-change positive">↗ +3</div>
                     </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Trained Models</div>
                         <div class="apple-metric-value">12</div>
                         <div class="apple-metric-change positive">↗ +2</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Model Accuracy</div>
                         <div class="apple-metric-value">94.2%</div>
                         <div class="apple-metric-change positive">↗ +1.8%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Training Time</div>
                         <div class="apple-metric-value">45min</div>
                         <div class="apple-metric-change positive">↗ -12min</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Predictions/sec</div>
                         <div class="apple-metric-value">1,847</div>
                         <div class="apple-metric-change positive">↗ +23%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Model Health</div>
                         <div class="apple-metric-value">Excellent</div>
                         <div class="apple-metric-change positive">↗ Stable</div>
-                    </div>
-                </div>
-
                 <!-- Legacy metrics for remaining functionality -->
                 <div class="metrics-grid" style="display: none;">
                     <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Total Models</div>
                         <div class="metric-value primary" id="totalModels">15</div>
-                    </div>
-                    <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Trained Models</div>
                         <div class="metric-value success" id="trainedModels">12</div>
-                    </div>
-                    <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Avg Accuracy</div>
                         <div class="metric-value primary" id="avgAccuracy">
                             <span class="bp3-skeleton">Loading...</span>
                         </div>
-                    </div>
-                    <div class="bp3-card bp3-elevation-2">
                         <div class="metric-label">Training Time</div>
                         <div class="metric-value warning" id="trainingTime">
-                            <span class="bp3-skeleton">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- ML Models -->
                 <div class="models-grid">
                     <!-- Price Prediction Model -->
@@ -500,7 +321,6 @@
                                 <span class="bp3-icon bp3-icon-tick-circle"></span>
                                 Trained
                             </span>
-                        </div>
                         <p class="bp3-text-muted">LSTM-based neural network for predicting stock prices using historical data and technical indicators</p>
                         
                         <div class="performance-grid">
@@ -508,20 +328,12 @@
                                 <div class="performance-value">94.2%</div>
                                 <div class="performance-label">Accuracy</div>
                             </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">0.023</div>
                                 <div class="performance-label">MSE</div>
-                            </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">0.89</div>
                                 <div class="performance-label">R² Score</div>
-                            </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">2.4M</div>
                                 <div class="performance-label">Parameters</div>
-                            </div>
-                        </div>
-
                         <div style="margin-top: 20px; display: flex; gap: 10px;">
                             <button class="bp3-button bp3-intent-primary" onclick="trainModel('price_prediction')">
                                 <span class="bp3-icon bp3-icon-refresh"></span>
@@ -530,134 +342,52 @@
                             <button class="bp3-button" onclick="testModel('price_prediction')">
                                 <span class="bp3-icon bp3-icon-lab-test"></span>
                                 Test Model
-                            </button>
                             <button class="bp3-button" onclick="exportModel('price_prediction')">
                                 <span class="bp3-icon bp3-icon-export"></span>
                                 Export
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- Sentiment Analysis Model -->
-                    <div class="bp3-card bp3-elevation-1 model-card">
-                        <div class="model-header">
                             <h3 class="bp3-heading">Sentiment Analysis Model</h3>
-                            <span class="model-status trained">
-                                <span class="bp3-icon bp3-icon-tick-circle"></span>
-                                Trained
-                            </span>
-                        </div>
                         <p class="bp3-text-muted">BERT-based transformer model for analyzing market sentiment from news articles and social media</p>
-                        
-                        <div class="performance-grid">
-                            <div class="performance-metric">
                                 <div class="performance-value">91.8%</div>
-                                <div class="performance-label">Accuracy</div>
-                            </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">0.92</div>
                                 <div class="performance-label">F1 Score</div>
-                            </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">0.90</div>
                                 <div class="performance-label">Precision</div>
-                            </div>
-                            <div class="performance-metric">
                                 <div class="performance-value">110M</div>
-                                <div class="performance-label">Parameters</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
                             <button class="bp3-button bp3-intent-primary" onclick="trainModel('sentiment_analysis')">
-                                <span class="bp3-icon bp3-icon-refresh"></span>
-                                Retrain Model
-                            </button>
                             <button class="bp3-button" onclick="testModel('sentiment_analysis')">
-                                <span class="bp3-icon bp3-icon-lab-test"></span>
-                                Test Model
-                            </button>
                             <button class="bp3-button" onclick="exportModel('sentiment_analysis')">
-                                <span class="bp3-icon bp3-icon-export"></span>
-                                Export
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- Risk Assessment Model -->
-                    <div class="bp3-card bp3-elevation-1 model-card">
-                        <div class="model-header">
                             <h3 class="bp3-heading">Risk Assessment Model</h3>
                             <span class="model-status training">
                                 <span class="bp3-icon bp3-icon-time"></span>
                                 Training
-                            </span>
-                        </div>
                         <p class="bp3-text-muted">Gradient boosting ensemble for comprehensive portfolio risk assessment and anomaly detection</p>
-                        
                         <div class="training-progress">
                             <div class="progress-info">
                                 <span>Training Progress</span>
                                 <span>67%</span>
-                            </div>
                             <div class="bp3-progress-bar bp3-intent-primary">
                                 <div class="bp3-progress-meter" style="width: 67%"></div>
-                            </div>
                             <div class="progress-info" style="margin-top: 10px;">
                                 <span class="bp3-text-muted">Epoch 134/200</span>
                                 <span class="bp3-text-muted">~12 min remaining</span>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
                             <button class="bp3-button bp3-intent-danger" onclick="stopTraining('risk_assessment')">
                                 <span class="bp3-icon bp3-icon-stop"></span>
                                 Stop Training
-                            </button>
                             <button class="bp3-button" disabled>
-                                <span class="bp3-icon bp3-icon-lab-test"></span>
-                                Test Model
-                            </button>
-                            <button class="bp3-button" disabled>
-                                <span class="bp3-icon bp3-icon-export"></span>
-                                Export
-                            </button>
-                        </div>
-                    </div>
-
                     <!-- Fraud Detection Model -->
-                    <div class="bp3-card bp3-elevation-1 model-card">
-                        <div class="model-header">
                             <h3 class="bp3-heading">Fraud Detection Model</h3>
                             <span class="model-status untrained">
                                 <span class="bp3-icon bp3-icon-circle"></span>
                                 Untrained
-                            </span>
-                        </div>
                         <p class="bp3-text-muted">Autoencoder neural network for detecting anomalous trading patterns and potential fraud</p>
-                        
                         <div class="bp3-callout bp3-intent-warning" style="margin-top: 15px;">
                             <h4 class="bp3-callout-title">Model Not Trained</h4>
                             <p>This model requires training data. Upload transaction data to begin training.</p>
-                        </div>
-
-                        <div style="margin-top: 20px; display: flex; gap: 10px;">
                             <button class="bp3-button bp3-intent-primary" onclick="uploadTrainingData('fraud_detection')">
                                 <span class="bp3-icon bp3-icon-cloud-upload"></span>
                                 Upload Data
-                            </button>
-                            <button class="bp3-button" disabled>
-                                <span class="bp3-icon bp3-icon-lab-test"></span>
-                                Test Model
-                            </button>
-                            <button class="bp3-button" disabled>
-                                <span class="bp3-icon bp3-icon-export"></span>
-                                Export
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Training Log -->
                 <div class="bp3-card bp3-elevation-1">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -666,7 +396,6 @@
                             <span class="bp3-icon bp3-icon-trash"></span>
                             Clear
                         </button>
-                    </div>
                     <div class="training-log" id="trainingLog">
                         <div class="log-entry info">[10:23:45] ML Models Configuration initialized</div>
                         <div class="log-entry success">[10:23:46] Connected to model registry</div>
@@ -675,9 +404,6 @@
                         <div class="log-entry success">[10:23:48] Sentiment Analysis Model: Ready (last trained 18 hours ago)</div>
                         <div class="log-entry warning">[10:23:49] Risk Assessment Model: Training in progress (67% complete)</div>
                         <div class="log-entry info">[10:23:49] Fraud Detection Model: Awaiting training data</div>
-                    </div>
-                </div>
-
                 <!-- Action Buttons -->
                 <div style="margin-top: 30px; display: flex; gap: 10px;">
                     <button class="bp3-button bp3-intent-primary" onclick="trainAllModels()">
@@ -687,19 +413,14 @@
                     <button class="bp3-button" onclick="downloadReports()">
                         <span class="bp3-icon bp3-icon-document"></span>
                         Download Reports
-                    </button>
                     <button class="bp3-button" onclick="configureHyperparameters()">
                         <span class="bp3-icon bp3-icon-cog"></span>
                         Hyperparameters
-                    </button>
-                </div>
             </main>
         </div>
     </div>
-    
     <script>
         const API_URL = '/api/supabase-proxy';
-
         // Load model metrics
         async function loadMetrics() {
             // Simulate loading metrics
@@ -707,8 +428,6 @@
             document.getElementById('trainedModels').textContent = '2';
             document.getElementById('avgAccuracy').textContent = '93.0%';
             document.getElementById('trainingTime').textContent = '3.2 hrs';
-        }
-
         // Training functions
         async function trainModel(modelName) {
             addLogEntry(`Starting training for ${modelName}...`, 'info');
@@ -719,84 +438,54 @@
                 addLogEntry(`Training ${modelName} - Epoch 1/200`, 'info');
                 addLogEntry(`Initial loss: 0.8234`, 'warning');
             }, 1000);
-        }
-
         async function testModel(modelName) {
             addLogEntry(`Testing ${modelName}...`, 'info');
-            
             // Simulate test results
-            setTimeout(() => {
                 addLogEntry(`Test results for ${modelName}:`, 'success');
                 addLogEntry(`- Accuracy: 94.2%`, 'success');
                 addLogEntry(`- Precision: 0.93`, 'success');
                 addLogEntry(`- Recall: 0.91`, 'success');
                 addLogEntry(`✅ Model performance meets production criteria`, 'success');
             }, 1500);
-        }
-
         async function exportModel(modelName) {
             addLogEntry(`Exporting ${modelName}...`, 'info');
-            
-            setTimeout(() => {
                 addLogEntry(`✅ Model exported to ${modelName}_v2.1.pkl`, 'success');
                 addLogEntry(`Model size: 124.3 MB`, 'info');
-            }, 1000);
-        }
-
         function stopTraining(modelName) {
             addLogEntry(`⚠️ Stopping training for ${modelName}...`, 'warning');
             addLogEntry(`Training stopped at epoch 134/200`, 'warning');
             addLogEntry(`Partial model saved`, 'info');
-        }
-
         function uploadTrainingData(modelName) {
             addLogEntry(`Opening data upload dialog for ${modelName}...`, 'info');
             alert('Data upload functionality will be implemented');
-        }
-
         async function trainAllModels() {
             addLogEntry('🚀 Starting batch training for all models...', 'warning');
             addLogEntry('This process may take several hours', 'info');
-            
             const models = ['price_prediction', 'sentiment_analysis', 'risk_assessment', 'fraud_detection'];
             models.forEach((model, index) => {
                 setTimeout(() => {
                     addLogEntry(`Starting training for ${model}...`, 'info');
                 }, index * 2000);
             });
-        }
-
         function downloadReports() {
             addLogEntry('Generating model performance reports...', 'info');
-            
-            setTimeout(() => {
                 addLogEntry('✅ Reports generated successfully', 'success');
                 addLogEntry('Downloaded: ml_models_report_2024_01.pdf', 'info');
-            }, 1500);
-        }
-
         function configureHyperparameters() {
             addLogEntry('Opening hyperparameter configuration...', 'info');
             alert('Hyperparameter configuration wizard will be implemented');
-        }
-
         function addLogEntry(message, type = 'info') {
             const log = document.getElementById('trainingLog');
             const entry = document.createElement('div');
             entry.className = `log-entry ${type}`;
             const timestamp = new Date().toLocaleTimeString();
             entry.textContent = `[${timestamp}] ${message}`;
-            
             log.appendChild(entry);
             log.scrollTop = log.scrollHeight;
-        }
-
         function clearLog() {
             document.getElementById('trainingLog').innerHTML = `
                 <div class="log-entry info">[${new Date().toLocaleTimeString()}] Training log cleared</div>
             `;
-        }
-
         function toggleTheme() {
             document.body.classList.toggle('bp3-dark');
             const button = document.getElementById('theme-toggle');
@@ -805,8 +494,6 @@
             } else {
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
             }
-        }
-
         // Check system status
         async function checkStatus() {
             try {
@@ -819,7 +506,6 @@
                 const data = await response.json();
                 const dot = document.getElementById('status-dot');
                 const text = document.getElementById('status-text');
-                
                 if (data.healthy) {
                     dot.className = 'status-dot connected';
                     text.textContent = 'System Online';
@@ -827,23 +513,14 @@
                     dot.className = 'status-dot';
                     text.textContent = 'System Offline';
                 }
-                
                 // Check function count
                 const functionsResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'check_functions' })
-                });
-                
                 const functionsData = await functionsResponse.json();
                 document.getElementById('function-count').textContent = `${functionsData.deployed_count || 0}/32 functions`;
-                
             } catch (error) {
                 document.getElementById('status-dot').className = 'status-dot';
                 document.getElementById('status-text').textContent = 'Connection Error';
-            }
-        }
-
         // Simulate training progress
         function simulateTrainingProgress() {
             let progress = 67;
@@ -854,16 +531,11 @@
                     clearInterval(interval);
                     addLogEntry('✅ Risk Assessment Model training completed!', 'success');
                     // Update UI to show trained status
-                }
-                
                 // Update progress bar if still on page
                 const progressBar = document.querySelector('.bp3-progress-meter');
                 if (progressBar) {
                     progressBar.style.width = `${progress}%`;
-                }
             }, 5000);
-        }
-
         // Initialize
         loadMetrics();
         checkStatus();
@@ -871,5 +543,4 @@
         simulateTrainingProgress();
     </script>
     <script src="shared-header.js"></script>
-
 </body>

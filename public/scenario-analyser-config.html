@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scenario Analysis - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-    <link href="blueprint-icons-fix.css" rel="stylesheet">    <link href="shared-header-styles.css" rel="stylesheet">
+    <link href="blueprint-icons-ios-fix.css" rel="stylesheet">
+        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -85,12 +86,8 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -102,223 +99,105 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
-        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
-            color: var(--bp3-text-color);
-        }
-
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-        }
-
         .bp3-navbar {
             flex-shrink: 0;
-        }
-
         .app-content {
-            display: flex;
             flex: 1;
-            overflow: hidden;
-        }
-
         .bp3-sidebar {
             width: 280px;
-            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
-        }
-
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
-        }
-
         .main-content {
-            flex: 1;
-            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
-        }
-
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
-        }
-
         .bp3-menu-item.bp3-active .bp3-icon {
-            color: white;
-        }
-
         .status-indicator {
-            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
-        }
-
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
-        }
-
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
-        }
-
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
-        }
-
         .status-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .metric-value {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .metric-value.primary {
             color: var(--bp3-intent-primary);
-        }
-
         .metric-value.success {
             color: var(--bp3-intent-success);
-        }
-
         .metric-value.warning {
             color: var(--bp3-intent-warning);
-        }
-
         .metric-value.danger {
             color: var(--bp3-intent-danger);
-        }
-
         .metric-label {
             color: var(--bp3-text-color-muted);
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
         .config-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
             gap: calc(var(--bp3-grid-size) * 3);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .slider-group {
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .slider-values {
-            display: flex;
             justify-content: space-between;
             font-size: 11px;
-            color: var(--bp3-text-color-muted);
             margin-top: calc(var(--bp3-grid-size) / 2);
-        }
-
         .stress-test-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .stress-test-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             margin-bottom: calc(var(--bp3-grid-size) * 2);
-        }
-
         .formula-tags {
-            display: flex;
             flex-wrap: wrap;
-            gap: calc(var(--bp3-grid-size) / 2);
             margin-top: calc(var(--bp3-grid-size) * 1);
-        }
-
         .scenario-controls {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .scenario-results {
             display: none;
-        }
-
         .scenario-results.show {
             display: block;
-        }
-
         .result-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .result-metric {
             text-align: center;
-        }
-
         .result-value {
             font-size: 20px;
-            font-weight: 600;
-            color: var(--bp3-intent-primary);
-            margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .narrative-output {
             margin-top: calc(var(--bp3-grid-size) * 3);
-        }
-
         .performance-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
             margin-top: calc(var(--bp3-grid-size) * 2);
-        }
-
         .perf-metric {
-            text-align: center;
-        }
-
         .perf-value {
             font-size: 18px;
-            font-weight: 600;
-            color: var(--bp3-intent-success);
-            margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .perf-label {
-            font-size: 11px;
-            color: var(--bp3-text-color-muted);
-            text-transform: uppercase;
-        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
@@ -336,7 +215,6 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
                     <span>Dark Mode</span>
@@ -344,10 +222,7 @@
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
                     <span id="user-role-label">Finance User</span>
-                </button>
-            </div>
         </nav>
-
         <!-- Application Content -->
         <div class="app-content slate-layout-container">
             <!-- Left Sidebar -->
@@ -362,109 +237,59 @@
                     <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
                     <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
                     <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
                     <span class="bp3-icon bp3-icon-feed"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
                     <span class="bp3-icon bp3-icon-function"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
                     <span class="bp3-icon bp3-icon-learning"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
                     <span class="bp3-icon bp3-icon-calculator"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
                     <span class="bp3-icon bp3-icon-numerical"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
                     <span class="bp3-icon bp3-icon-timeline-events"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
                     <span class="bp3-icon bp3-icon-fork"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
                     <span class="bp3-icon bp3-icon-console"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
                     <span class="bp3-icon bp3-icon-cloud-upload"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
                     <span class="bp3-icon bp3-icon-cog"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
         </ul>
     </aside>
-
             <!-- Main Content Area -->
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">Scenario Analysis & Financial Action Narrative</h1>
                     <p class="bp3-text-muted">Advanced scenario modeling with Monte Carlo Tree Search and GPU acceleration</p>
-                </div>
-
                 <!-- Scenario Configuration Metrics -->
                 <div class="scenario-config-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -472,33 +297,21 @@
                         <div class="apple-metric-value" id="mctsIterations">10,000</div>
                         <div class="apple-metric-change positive">↗ Optimized</div>
                     </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">GPU Acceleration</div>
                         <div class="apple-metric-value" id="gpuAcceleration">ACTIVE</div>
                         <div class="apple-metric-change positive">↗ Enabled</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Parallel Workers</div>
                         <div class="apple-metric-value" id="parallelWorkers">4</div>
                         <div class="apple-metric-change neutral">→ Stable</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Avg Convergence</div>
                         <div class="apple-metric-value" id="avgConvergence">2.3s</div>
                         <div class="apple-metric-change positive">↗ Fast</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Formula Relations</div>
                         <div class="apple-metric-value" id="formulaRelations">127</div>
                         <div class="apple-metric-change positive">↗ +12</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Success Rate</div>
                         <div class="apple-metric-value">94.7%</div>
                         <div class="apple-metric-change positive">↗ +2.1%</div>
-                    </div>
-                </div>
-
                 <!-- Configuration Grid -->
                 <div class="config-grid">
                     <!-- MCTS Engine Configuration -->
@@ -507,7 +320,6 @@
                             <span class="bp3-icon bp3-icon-tree"></span>
                             Monte Carlo Tree Search Engine
                         </h3>
-
                         <div class="slider-group">
                             <label class="bp3-label">
                                 Iterations Per Search
@@ -520,102 +332,52 @@
                                 <span>50,000</span>
                             </div>
                         </div>
-
-                        <div class="slider-group">
-                            <label class="bp3-label">
                                 Exploration Parameter (UCB1)
                                 <span class="bp3-text-muted" style="float: right;">1.414</span>
-                            </label>
                             <input type="range" class="bp3-input-group bp3-slider" min="0.5" max="2.5" step="0.1" value="1.414">
-                            <div class="slider-values">
                                 <span>0.5</span>
                                 <span>2.5</span>
-                            </div>
-                        </div>
-
-                        <div class="slider-group">
-                            <label class="bp3-label">
                                 Maximum Search Depth
                                 <span class="bp3-text-muted" style="float: right;">8</span>
-                            </label>
                             <input type="range" class="bp3-input-group bp3-slider" min="3" max="15" value="8">
-                            <div class="slider-values">
                                 <span>3</span>
                                 <span>15</span>
-                            </div>
-                        </div>
-
                         <div class="bp3-form-group">
                             <label class="bp3-label">Parallel Workers</label>
                             <input type="number" class="bp3-input" value="4" min="1" max="16">
-                        </div>
-
                         <label class="bp3-control bp3-switch">
                             <input type="checkbox" checked>
                             <span class="bp3-control-indicator"></span>
                             Use UCB1-Tuned Algorithm
                         </label>
-                    </div>
-
                     <!-- GPU Acceleration Configuration -->
-                    <div class="bp3-card bp3-elevation-1">
-                        <h3 class="bp3-heading">
                             <span class="bp3-icon bp3-icon-flash"></span>
                             GPU Acceleration
-                        </h3>
-
                         <label class="bp3-control bp3-switch" style="margin-bottom: 15px;">
-                            <input type="checkbox" checked>
-                            <span class="bp3-control-indicator"></span>
                             Prefer GPU for High Impact News (> 0.5)
-                        </label>
-
-                        <label class="bp3-control bp3-switch" style="margin-bottom: 15px;">
-                            <input type="checkbox" checked>
-                            <span class="bp3-control-indicator"></span>
                             SIMD Support
-                        </label>
-
-                        <div class="bp3-form-group">
                             <label class="bp3-label">iOS GPU Bridge URL</label>
                             <input type="text" class="bp3-input" placeholder="https://ios-gpu-bridge.vercel.app">
-                        </div>
-
-                        <div class="bp3-form-group">
                             <label class="bp3-label">Cloud GPU API Key</label>
                             <input type="password" class="bp3-input" placeholder="gpu-cloud-api-key">
-                        </div>
-
                         <!-- Performance Monitoring -->
                         <h5 class="bp3-heading" style="margin-top: 20px;">Performance Metrics</h5>
                         <div class="performance-grid">
                             <div class="perf-metric">
                                 <div class="perf-value" id="gpuUtilization">78%</div>
                                 <div class="perf-label">GPU Util</div>
-                            </div>
-                            <div class="perf-metric">
                                 <div class="perf-value" id="computeTime">0.84ms</div>
                                 <div class="perf-label">Compute</div>
-                            </div>
-                            <div class="perf-metric">
                                 <div class="perf-value" id="memoryUsage">2.1GB</div>
                                 <div class="perf-label">Memory</div>
-                            </div>
-                            <div class="perf-metric">
                                 <div class="perf-value" id="throughput">1,247</div>
                                 <div class="perf-label">Ops/Sec</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Stress Testing Configuration -->
                 <div class="bp3-card bp3-elevation-1">
                     <h3 class="bp3-heading">
                         <span class="bp3-icon bp3-icon-target"></span>
                         Stress Testing Scenarios
                     </h3>
-
                     <div class="stress-test-grid">
                         <div class="bp3-card bp3-elevation-2">
                             <div class="stress-test-header">
@@ -624,107 +386,41 @@
                                     <input type="checkbox" checked>
                                     <span class="bp3-control-indicator"></span>
                                 </label>
-                            </div>
                             <p class="bp3-text-muted">Test equity portfolio under extreme market conditions</p>
                             <div class="formula-tags">
                                 <span class="bp3-tag bp3-intent-primary">VaR</span>
                                 <span class="bp3-tag bp3-intent-primary">ES</span>
                                 <span class="bp3-tag bp3-intent-primary">Beta</span>
-                            </div>
-                        </div>
-
-                        <div class="bp3-card bp3-elevation-2">
-                            <div class="stress-test-header">
                                 <h4 class="bp3-heading">Fixed Income Stress</h4>
-                                <label class="bp3-control bp3-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="bp3-control-indicator"></span>
-                                </label>
-                            </div>
                             <p class="bp3-text-muted">Duration and convexity analysis under rate shocks</p>
-                            <div class="formula-tags">
                                 <span class="bp3-tag bp3-intent-primary">Duration</span>
                                 <span class="bp3-tag bp3-intent-primary">Convexity</span>
-                                <span class="bp3-tag bp3-intent-primary">VaR</span>
-                            </div>
-                        </div>
-
-                        <div class="bp3-card bp3-elevation-2">
-                            <div class="stress-test-header">
                                 <h4 class="bp3-heading">Derivatives Risk</h4>
-                                <label class="bp3-control bp3-switch">
-                                    <input type="checkbox" checked>
-                                    <span class="bp3-control-indicator"></span>
-                                </label>
-                            </div>
                             <p class="bp3-text-muted">Options and derivatives under volatility scenarios</p>
-                            <div class="formula-tags">
-                                <span class="bp3-tag bp3-intent-primary">VaR</span>
                                 <span class="bp3-tag bp3-intent-primary">CVA</span>
                                 <span class="bp3-tag bp3-intent-primary">Delta</span>
                                 <span class="bp3-tag bp3-intent-primary">Gamma</span>
-                            </div>
-                        </div>
-
-                        <div class="bp3-card bp3-elevation-2">
-                            <div class="stress-test-header">
                                 <h4 class="bp3-heading">Liquidity Crisis</h4>
-                                <label class="bp3-control bp3-switch">
                                     <input type="checkbox">
-                                    <span class="bp3-control-indicator"></span>
-                                </label>
-                            </div>
                             <p class="bp3-text-muted">Basel III liquidity stress scenarios</p>
-                            <div class="formula-tags">
                                 <span class="bp3-tag">LCR</span>
                                 <span class="bp3-tag">NSFR</span>
                                 <span class="bp3-tag">HQLA</span>
-                            </div>
-                        </div>
-
-                        <div class="bp3-card bp3-elevation-2">
-                            <div class="stress-test-header">
                                 <h4 class="bp3-heading">Credit Stress</h4>
-                                <label class="bp3-control bp3-switch">
-                                    <input type="checkbox">
-                                    <span class="bp3-control-indicator"></span>
-                                </label>
-                            </div>
                             <p class="bp3-text-muted">Credit portfolio under default scenarios</p>
-                            <div class="formula-tags">
                                 <span class="bp3-tag">PD</span>
                                 <span class="bp3-tag">LGD</span>
                                 <span class="bp3-tag">EAD</span>
-                            </div>
-                        </div>
-
-                        <div class="bp3-card bp3-elevation-2">
-                            <div class="stress-test-header">
                                 <h4 class="bp3-heading">Market Shock</h4>
-                                <label class="bp3-control bp3-switch">
-                                    <input type="checkbox">
-                                    <span class="bp3-control-indicator"></span>
-                                </label>
-                            </div>
                             <p class="bp3-text-muted">Cross-asset correlation breakdown scenarios</p>
-                            <div class="formula-tags">
                                 <span class="bp3-tag">Correlation</span>
                                 <span class="bp3-tag">VaR</span>
                                 <span class="bp3-tag">Copula</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Scenario Runner -->
                 <div class="bp3-card bp3-elevation-1" style="margin-top: 30px;">
-                    <h3 class="bp3-heading">
                         <span class="bp3-icon bp3-icon-play"></span>
                         Run Scenario Analysis
-                    </h3>
-
                     <div class="scenario-controls">
-                        <div class="bp3-form-group">
                             <label class="bp3-label">Scenario Type</label>
                             <div class="bp3-select">
                                 <select id="scenarioType">
@@ -734,37 +430,19 @@
                                     <option value="parametric_var">Parametric VaR</option>
                                     <option value="backtesting">Backtesting</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="bp3-form-group">
                             <label class="bp3-label">Time Horizon (days)</label>
                             <input type="number" class="bp3-input" id="timeHorizon" value="250" min="1" max="1000">
-                        </div>
-
-                        <div class="bp3-form-group">
                             <label class="bp3-label">Confidence Level</label>
-                            <div class="bp3-select">
                                 <select id="confidenceLevel">
                                     <option value="0.95">95%</option>
                                     <option value="0.99">99%</option>
                                     <option value="0.995">99.5%</option>
                                     <option value="0.999">99.9%</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="bp3-form-group">
                             <label class="bp3-label">Simulations</label>
                             <input type="number" class="bp3-input" id="simulations" value="10000" min="1000" max="100000">
-                        </div>
-                    </div>
-
                     <button class="bp3-button bp3-intent-primary bp3-large" onclick="runScenarioAnalysis()" style="margin-top: 20px;">
                         <span class="bp3-icon bp3-icon-predictive-analysis"></span>
-                        Run Scenario Analysis
                     </button>
-
                     <!-- Scenario Results -->
                     <div class="scenario-results" id="scenarioResults">
                         <h4 class="bp3-heading" style="margin-top: 30px; margin-bottom: 20px;">Scenario Analysis Results</h4>
@@ -773,29 +451,16 @@
                             <div class="result-metric">
                                 <div class="result-value" id="varResult">-$2.45M</div>
                                 <div class="metric-label">Value at Risk</div>
-                            </div>
-                            <div class="result-metric">
                                 <div class="result-value" id="esResult">-$3.21M</div>
                                 <div class="metric-label">Expected Shortfall</div>
-                            </div>
-                            <div class="result-metric">
                                 <div class="result-value" id="maxDrawdown">-8.7%</div>
                                 <div class="metric-label">Max Drawdown</div>
-                            </div>
-                            <div class="result-metric">
                                 <div class="result-value" id="sharpeRatio">1.82</div>
                                 <div class="metric-label">Sharpe Ratio</div>
-                            </div>
-                            <div class="result-metric">
                                 <div class="result-value" id="stressLoss">-$5.89M</div>
                                 <div class="metric-label">Stress Test Loss</div>
-                            </div>
-                            <div class="result-metric">
                                 <div class="result-value" id="convergenceTime">2.3s</div>
                                 <div class="metric-label">Convergence Time</div>
-                            </div>
-                        </div>
-
                         <div class="narrative-output">
                             <div class="bp3-callout bp3-intent-primary">
                                 <h4 class="bp3-callout-title">Financial Action Narrative</h4>
@@ -808,37 +473,25 @@
                                     <br>• Increase duration hedging in fixed income positions
                                     <br>• Consider volatility overlay strategy to manage tail risk
                                     <br>• Monitor correlation breakdown scenarios for early warning signals
-                                    <br><br>
                                     The stress test indicates vulnerability to market shock scenarios exceeding -15% equity moves. 
                                     Consider implementing dynamic hedging strategies during high volatility periods.
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Action Buttons -->
                 <div style="margin-top: 30px; display: flex; gap: 10px;">
                     <button class="bp3-button bp3-intent-primary" onclick="saveConfiguration()">
                         <span class="bp3-icon bp3-icon-floppy-disk"></span>
                         Save Configuration
-                    </button>
                     <button class="bp3-button" onclick="exportResults()">
                         <span class="bp3-icon bp3-icon-export"></span>
                         Export Results
-                    </button>
                     <button class="bp3-button" onclick="scheduleAnalysis()">
                         <span class="bp3-icon bp3-icon-time"></span>
                         Schedule Analysis
-                    </button>
-                </div>
             </main>
         </div>
     </div>
-    
     <script>
         const API_URL = '/api/supabase-proxy';
-
         // Configuration state
         let config = {
             mcts: {
@@ -854,7 +507,6 @@
                 simdSupport: true,
                 iosGPUBridge: '',
                 cloudGPUKey: ''
-            },
             stressTesting: {
                 equity: true,
                 fixedIncome: true,
@@ -864,23 +516,17 @@
                 marketShock: false
             }
         };
-
         function updateSliderValue(elementId, value) {
             document.getElementById(elementId).textContent = parseInt(value).toLocaleString();
-        }
-
         async function runScenarioAnalysis() {
             const btn = event.target;
             btn.disabled = true;
             btn.innerHTML = '<span class="bp3-icon bp3-icon-time"></span> Running Analysis...';
-
             // Show results section
             document.getElementById('scenarioResults').classList.add('show');
-
             try {
                 // Simulate scenario analysis
                 await new Promise(resolve => setTimeout(resolve, 3000));
-
                 // Generate realistic results
                 const var95 = -Math.random() * 5000000;
                 const es = var95 * 1.3;
@@ -897,18 +543,13 @@
                     '$' + (var95 * 2.4 / 1000000).toFixed(2) + 'M';
                 document.getElementById('convergenceTime').textContent = 
                     (2 + Math.random() * 2).toFixed(1) + 's';
-
                 // Update narrative
                 generateNarrative();
-
             } catch (error) {
                 console.error('Scenario analysis error:', error);
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span class="bp3-icon bp3-icon-predictive-analysis"></span> Run Scenario Analysis';
-            }
-        }
-
         function generateNarrative() {
             const scenarioType = document.getElementById('scenarioType').value;
             const narratives = {
@@ -918,30 +559,19 @@
                 'parametric_var': 'Parametric VaR indicates normal distribution assumptions may underestimate tail risk.',
                 'backtesting': 'Backtesting results show model accuracy within acceptable bounds.'
             };
-
             const baseNarrative = narratives[scenarioType] || narratives['monte_carlo'];
-            
             const narrative = baseNarrative + '\n\n<strong>Recommended Actions:</strong>\n' +
                 '• Reduce equity exposure by 3-5% to improve risk-adjusted returns\n' +
                 '• Implement dynamic hedging overlay during high volatility periods\n' +
                 '• Consider increasing defensive positions\n' +
                 '• Monitor correlation breakdown scenarios';
-
             document.getElementById('narrativeText').innerHTML = narrative;
-        }
-
         async function saveConfiguration() {
             alert('✅ Scenario analysis configuration saved successfully!');
-        }
-
         function exportResults() {
             alert('📊 Exporting scenario analysis results...');
-        }
-
         function scheduleAnalysis() {
             alert('📅 Schedule analysis feature coming soon!');
-        }
-
         function toggleTheme() {
             document.body.classList.toggle('bp3-dark');
             const button = document.getElementById('theme-toggle');
@@ -949,9 +579,6 @@
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-            }
-        }
-
         // Update performance metrics
         function updatePerformanceMetrics() {
             document.getElementById('gpuUtilization').textContent = 
@@ -960,21 +587,16 @@
                 (0.5 + Math.random() * 1).toFixed(2) + 'ms';
             document.getElementById('throughput').textContent = 
                 (1000 + Math.floor(Math.random() * 500)).toLocaleString();
-        }
-
         // Check system status
         async function checkStatus() {
-            try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'health' })
                 });
-                
                 const data = await response.json();
                 const dot = document.getElementById('status-dot');
                 const text = document.getElementById('status-text');
-                
                 if (data.healthy) {
                     dot.className = 'status-dot connected';
                     text.textContent = 'System Online';
@@ -982,23 +604,13 @@
                     dot.className = 'status-dot';
                     text.textContent = 'System Offline';
                 }
-                
                 // Check function count
                 const functionsResponse = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'check_functions' })
-                });
-                
                 const functionsData = await functionsResponse.json();
                 document.getElementById('function-count').textContent = `${functionsData.deployed_count || 0}/32 functions`;
-                
-            } catch (error) {
                 document.getElementById('status-dot').className = 'status-dot';
                 document.getElementById('status-text').textContent = 'Connection Error';
-            }
-        }
-
         // Initialize
         checkStatus();
         setInterval(checkStatus, 30000);

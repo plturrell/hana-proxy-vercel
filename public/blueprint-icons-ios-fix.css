@@ -1,0 +1,259 @@
+/* Blueprint Icons iOS Fix - Complete Solution */
+
+/* Preload critical icon fonts for better performance */
+@font-face {
+    font-family: "blueprint-icons-16";
+    src: url("./blueprint-icons-16.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    font-variant: normal;
+    font-stretch: normal;
+}
+
+@font-face {
+    font-family: "blueprint-icons-20";
+    src: url("./blueprint-icons-20.woff2") format("woff2");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    font-variant: normal;
+    font-stretch: normal;
+}
+
+/* Base icon class optimized for iOS */
+.bp3-icon {
+    font-family: "blueprint-icons-16", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    
+    /* iOS-specific optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "liga" off;
+    font-variant-ligatures: none;
+    
+    /* Ensure proper display */
+    display: inline-block;
+    vertical-align: middle;
+    color: inherit;
+    opacity: 1;
+    
+    /* iOS Safari fixes */
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+    transform: translateZ(0);
+    will-change: auto;
+}
+
+.bp3-icon:before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    speak: none;
+    
+    /* Force hardware acceleration on iOS */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* Large icons */
+.bp3-icon-large,
+.bp3-large .bp3-icon {
+    font-family: "blueprint-icons-20", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 20px;
+}
+
+/* iOS fallback using Unicode symbols */
+.bp3-icon-timeline-line-chart:before { content: "\1F4C8"; } /* 📈 */
+.bp3-icon-bank-account:before { content: "\1F3E6"; } /* 🏦 */
+.bp3-icon-predictive-analysis:before { content: "\1F52E"; } /* 🔮 */
+.bp3-icon-feed:before { content: "\1F4F0"; } /* 📰 */
+.bp3-icon-function:before { content: "\1F527"; } /* 🔧 */
+.bp3-icon-learning:before { content: "\1F9E0"; } /* 🧠 */
+.bp3-icon-calculator:before { content: "\1F9EE"; } /* 🧮 */
+.bp3-icon-numerical:before { content: "\1F522"; } /* 🔢 */
+.bp3-icon-timeline-events:before { content: "\1F4C5"; } /* 📅 */
+.bp3-icon-fork:before { content: "\2442"; } /* ⑂ */
+.bp3-icon-console:before { content: "\1F4BB"; } /* 💻 */
+.bp3-icon-cloud-upload:before { content: "\2601\FE0F"; } /* ☁️ */
+.bp3-icon-cog:before { content: "\2699\FE0F"; } /* ⚙️ */
+.bp3-icon-moon:before { content: "\1F319"; } /* 🌙 */
+.bp3-icon-flash:before { content: "\26A1"; } /* ⚡ */
+.bp3-icon-user:before { content: "\1F464"; } /* 👤 */
+.bp3-icon-pulse:before { content: "\1F493"; } /* 💓 */
+.bp3-icon-lab-test:before { content: "\1F9EA"; } /* 🧪 */
+.bp3-icon-refresh:before { content: "\1F504"; } /* 🔄 */
+.bp3-icon-tick-circle:before { content: "\2705"; } /* ✅ */
+.bp3-icon-error:before { content: "\274C"; } /* ❌ */
+.bp3-icon-warning-sign:before { content: "\26A0\FE0F"; } /* ⚠️ */
+.bp3-icon-home:before { content: "\1F3E0"; } /* 🏠 */
+.bp3-icon-dashboard:before { content: "\1F4CA"; } /* 📊 */
+.bp3-icon-chart:before { content: "\1F4C8"; } /* 📈 */
+.bp3-icon-grid-view:before { content: "\229E"; } /* ⊞ */
+.bp3-icon-list:before { content: "\1F4CB"; } /* 📋 */
+.bp3-icon-search:before { content: "\1F50D"; } /* 🔍 */
+.bp3-icon-settings:before { content: "\2699\FE0F"; } /* ⚙️ */
+.bp3-icon-help:before { content: "\2753"; } /* ❓ */
+.bp3-icon-info-sign:before { content: "\2139\FE0F"; } /* ℹ️ */
+.bp3-icon-plus:before { content: "\2795"; } /* ➕ */
+.bp3-icon-minus:before { content: "\2796"; } /* ➖ */
+.bp3-icon-cross:before { content: "\274C"; } /* ❌ */
+.bp3-icon-edit:before { content: "\270F\FE0F"; } /* ✏️ */
+.bp3-icon-delete:before { content: "\1F5D1\FE0F"; } /* 🗑️ */
+.bp3-icon-save:before { content: "\1F4BE"; } /* 💾 */
+.bp3-icon-download:before { content: "\2B07\FE0F"; } /* ⬇️ */
+.bp3-icon-upload:before { content: "\2B06\FE0F"; } /* ⬆️ */
+.bp3-icon-export:before { content: "\1F4E4"; } /* 📤 */
+.bp3-icon-import:before { content: "\1F4E5"; } /* 📥 */
+.bp3-icon-play:before { content: "\25B6\FE0F"; } /* ▶️ */
+.bp3-icon-pause:before { content: "\23F8\FE0F"; } /* ⏸️ */
+.bp3-icon-stop:before { content: "\23F9\FE0F"; } /* ⏹️ */
+.bp3-icon-chevron-left:before { content: "\25C0"; } /* ◀ */
+.bp3-icon-chevron-right:before { content: "\25B6"; } /* ▶ */
+.bp3-icon-chevron-up:before { content: "\25B2"; } /* ▲ */
+.bp3-icon-chevron-down:before { content: "\25BC"; } /* ▼ */
+.bp3-icon-arrow-left:before { content: "\2190"; } /* ← */
+.bp3-icon-arrow-right:before { content: "\2192"; } /* → */
+.bp3-icon-arrow-up:before { content: "\2191"; } /* ↑ */
+.bp3-icon-arrow-down:before { content: "\2193"; } /* ↓ */
+.bp3-icon-menu:before { content: "\2630"; } /* ☰ */
+.bp3-icon-more:before { content: "\22EF"; } /* ⋯ */
+.bp3-icon-filter:before { content: "\1F53D"; } /* 🔽 */
+.bp3-icon-sort:before { content: "\2195\FE0F"; } /* ↕️ */
+.bp3-icon-inbox:before { content: "\1F4E5"; } /* 📥 */
+.bp3-icon-folder-close:before { content: "\1F4C1"; } /* 📁 */
+.bp3-icon-folder-open:before { content: "\1F4C2"; } /* 📂 */
+.bp3-icon-document:before { content: "\1F4C4"; } /* 📄 */
+.bp3-icon-new-text-box:before { content: "\1F4DD"; } /* 📝 */
+.bp3-icon-link:before { content: "\1F517"; } /* 🔗 */
+.bp3-icon-unlink:before { content: "\26D3"; } /* ⛓ */
+.bp3-icon-eye-open:before { content: "\1F441"; } /* 👁 */
+.bp3-icon-eye-off:before { content: "\1F648"; } /* 🙈 */
+.bp3-icon-lock:before { content: "\1F512"; } /* 🔒 */
+.bp3-icon-unlock:before { content: "\1F513"; } /* 🔓 */
+.bp3-icon-key:before { content: "\1F511"; } /* 🔑 */
+.bp3-icon-shield:before { content: "\1F6E1\FE0F"; } /* 🛡️ */
+.bp3-icon-time:before { content: "\23F0"; } /* ⏰ */
+.bp3-icon-calendar:before { content: "\1F4C5"; } /* 📅 */
+.bp3-icon-history:before { content: "\1F558"; } /* 🕘 */
+.bp3-icon-notifications:before { content: "\1F514"; } /* 🔔 */
+.bp3-icon-email:before { content: "\2709\FE0F"; } /* ✉️ */
+.bp3-icon-phone:before { content: "\1F4DE"; } /* 📞 */
+.bp3-icon-mobile:before { content: "\1F4F1"; } /* 📱 */
+.bp3-icon-globe:before { content: "\1F310"; } /* 🌐 */
+.bp3-icon-map:before { content: "\1F5FA\FE0F"; } /* 🗺️ */
+.bp3-icon-location:before { content: "\1F4CD"; } /* 📍 */
+.bp3-icon-star:before { content: "\2B50"; } /* ⭐ */
+.bp3-icon-star-empty:before { content: "\2606"; } /* ☆ */
+.bp3-icon-heart:before { content: "\2764\FE0F"; } /* ❤️ */
+.bp3-icon-thumbs-up:before { content: "\1F44D"; } /* 👍 */
+.bp3-icon-thumbs-down:before { content: "\1F44E"; } /* 👎 */
+.bp3-icon-flag:before { content: "\1F6A9"; } /* 🚩 */
+.bp3-icon-bookmark:before { content: "\1F516"; } /* 🔖 */
+.bp3-icon-tag:before { content: "\1F3F7\FE0F"; } /* 🏷️ */
+.bp3-icon-label:before { content: "\1F516"; } /* 🔖 */
+.bp3-icon-comment:before { content: "\1F4AC"; } /* 💬 */
+.bp3-icon-chat:before { content: "\1F4AD"; } /* 💭 */
+.bp3-icon-share:before { content: "\1F4E4"; } /* 📤 */
+.bp3-icon-social-media:before { content: "\1F4F1"; } /* 📱 */
+.bp3-icon-wifi:before { content: "\1F4F6"; } /* 📶 */
+.bp3-icon-offline:before { content: "\1F4F5"; } /* 📵 */
+.bp3-icon-database:before { content: "\1F5C4\FE0F"; } /* 🗄️ */
+.bp3-icon-server:before { content: "\1F5A5\FE0F"; } /* 🖥️ */
+.bp3-icon-cloud:before { content: "\2601\FE0F"; } /* ☁️ */
+.bp3-icon-layer:before { content: "\1F4CB"; } /* 📋 */
+.bp3-icon-layers:before { content: "\1F4DA"; } /* 📚 */
+.bp3-icon-git-branch:before { content: "\1F33F"; } /* 🌿 */
+.bp3-icon-git-commit:before { content: "\1F4CC"; } /* 📌 */
+.bp3-icon-git-merge:before { content: "\1F500"; } /* 🔀 */
+.bp3-icon-git-pull:before { content: "\2B07\FE0F"; } /* ⬇️ */
+.bp3-icon-git-push:before { content: "\2B06\FE0F"; } /* ⬆️ */
+.bp3-icon-code:before { content: "\1F4BB"; } /* 💻 */
+.bp3-icon-code-block:before { content: "\1F4CB"; } /* 📋 */
+.bp3-icon-application:before { content: "\1F4F1"; } /* 📱 */
+.bp3-icon-desktop:before { content: "\1F5A5\FE0F"; } /* 🖥️ */
+.bp3-icon-laptop:before { content: "\1F4BB"; } /* 💻 */
+.bp3-icon-tablet:before { content: "\1F4F1"; } /* 📱 */
+.bp3-icon-clean:before { content: "\1F9F9"; } /* 🧹 */
+.bp3-icon-build:before { content: "\1F528"; } /* 🔨 */
+.bp3-icon-wrench:before { content: "\1F527"; } /* 🔧 */
+.bp3-icon-updated:before { content: "\1F504"; } /* 🔄 */
+.bp3-icon-new-object:before { content: "\2728"; } /* ✨ */
+.bp3-icon-add:before { content: "\2795"; } /* ➕ */
+.bp3-icon-remove:before { content: "\2796"; } /* ➖ */
+.bp3-icon-duplicate:before { content: "\1F4C4"; } /* 📄 */
+.bp3-icon-selection:before { content: "\2705"; } /* ✅ */
+.bp3-icon-move:before { content: "\2194\FE0F"; } /* ↔️ */
+.bp3-icon-drag:before { content: "\270B"; } /* ✋ */
+.bp3-icon-resize:before { content: "\2197\FE0F"; } /* ↗️ */
+.bp3-icon-fullscreen:before { content: "\26F6"; } /* ⛶ */
+.bp3-icon-minimize:before { content: "\1F5D5"; } /* 🗕 */
+.bp3-icon-maximize:before { content: "\1F5D6"; } /* 🗖 */
+.bp3-icon-reset:before { content: "\1F504"; } /* 🔄 */
+.bp3-icon-trash:before { content: "\1F5D1\FE0F"; } /* 🗑️ */
+.bp3-icon-tick:before { content: "\2713"; } /* ✓ */
+
+/* Additional specific icons for our app */
+.bp3-icon-scenario:before { content: "\1F3AF"; } /* 🎯 */
+.bp3-icon-analytics:before { content: "\1F4CA"; } /* 📊 */
+.bp3-icon-treasury:before { content: "\1F3DB\FE0F"; } /* 🏛️ */
+.bp3-icon-portfolio:before { content: "\1F4C8"; } /* 📈 */
+.bp3-icon-news:before { content: "\1F4F0"; } /* 📰 */
+.bp3-icon-configuration:before { content: "\2699\FE0F"; } /* ⚙️ */
+.bp3-icon-testing:before { content: "\1F9EA"; } /* 🧪 */
+.bp3-icon-deployment:before { content: "\1F680"; } /* 🚀 */
+.bp3-icon-system:before { content: "\2699\FE0F"; } /* ⚙️ */
+.bp3-icon-command:before { content: "\1F4BB"; } /* 💻 */
+
+/* iOS-specific fixes for common display issues */
+@supports (-webkit-appearance: none) {
+    .bp3-icon {
+        /* Safari-specific fixes */
+        -webkit-font-feature-settings: "liga" off;
+        font-variant-ligatures: none;
+        text-rendering: geometricPrecision;
+    }
+}
+
+/* High DPI displays (Retina) */
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .bp3-icon {
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .bp3-icon {
+        color: #F5F8FA;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    .bp3-icon {
+        transform: none;
+        will-change: auto;
+    }
+}
+
+/* Force visibility in case of hiding CSS rules */
+.bp3-icon,
+.bp3-icon:before,
+.bp3-icon:after {
+    visibility: visible !important;
+    display: inline-block !important;
+    opacity: 1 !important;
+}

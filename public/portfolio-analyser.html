@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio Analyser - FinSight Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/@blueprintjs/icons@4.16.0/lib/css/blueprint-icons.css" rel="stylesheet">
+    
     <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-    <link href="blueprint-icons-fix.css" rel="stylesheet">    <link href="shared-header-styles.css" rel="stylesheet">
+    <link href="blueprint-icons-ios-fix.css" rel="stylesheet">
+        <link href="shared-header-styles.css" rel="stylesheet">
     <link href="shared-sidebar-styles.css" rel="stylesheet">
     <link href="palantir-slate-layout.css" rel="stylesheet">
     <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -85,12 +86,8 @@
             --bp3-link-color: var(--bp3-blue4);
             --bp3-app-background-color: var(--bp3-dark-gray2);
             --bp3-divider-color: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             box-sizing: border-box;
-        }
-
         body {
             margin: 0;
             padding: 0;
@@ -102,139 +99,76 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-        }
-
-        .bp3-dark {
             background-color: var(--bp3-dark-gray2);
-            color: var(--bp3-text-color);
-        }
-
         .bp3-app {
             display: flex;
             flex-direction: column;
             height: 100vh;
             overflow: hidden;
-        }
-
         .bp3-navbar {
             flex-shrink: 0;
-        }
-
         .app-content {
-            display: flex;
             flex: 1;
-            overflow: hidden;
-        }
-
         .bp3-sidebar {
             width: 280px;
-            flex-shrink: 0;
             background-color: var(--bp3-light-gray5);
             border-right: 1px solid var(--bp3-divider-color);
             overflow-y: auto;
-        }
-
         .bp3-dark .bp3-sidebar {
             background-color: var(--bp3-dark-gray3);
             border-right-color: rgba(255, 255, 255, 0.15);
-        }
-
         .main-content {
-            flex: 1;
-            overflow-y: auto;
             padding: calc(var(--bp3-grid-size) * 3);
-        }
-
         .bp3-menu-item.bp3-active {
             background-color: var(--bp3-intent-primary);
             color: white;
-        }
-
         .bp3-menu-item.bp3-active .bp3-icon {
-            color: white;
-        }
-
         .status-indicator {
-            display: flex;
             align-items: center;
             gap: calc(var(--bp3-grid-size) / 2);
-        }
-
         .status-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
             background-color: var(--bp3-gray3);
-        }
-
         .status-dot.connected {
             background-color: var(--bp3-intent-success);
             animation: pulse 2s infinite;
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.7; }
-        }
-
         .content-header {
             margin-bottom: calc(var(--bp3-grid-size) * 3);
             padding-bottom: calc(var(--bp3-grid-size) * 2);
             border-bottom: 1px solid var(--bp3-divider-color);
-        }
-
         .portfolio-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .metrics-grid {
-            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: calc(var(--bp3-grid-size) * 2);
-            margin-bottom: calc(var(--bp3-grid-size) * 3);
-        }
-
         .portfolio-chart {
             height: 400px;
             background: var(--bp3-dark-gray5);
             border-radius: var(--bp3-border-radius);
-            display: flex;
-            align-items: center;
             justify-content: center;
             color: var(--bp3-text-color-muted);
-        }
-
         .metric-value {
             font-size: 24px;
             font-weight: 600;
             margin-bottom: calc(var(--bp3-grid-size) / 2);
-        }
-
         .metric-value.positive {
             color: var(--bp3-intent-success);
-        }
-
         .metric-value.negative {
             color: var(--bp3-intent-danger);
-        }
-
         .metric-value.neutral {
             color: var(--bp3-intent-primary);
-        }
-
         .metric-label {
-            color: var(--bp3-text-color-muted);
             font-size: 12px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-        }
-
         .holdings-table {
             margin-top: calc(var(--bp3-grid-size) * 3);
-        }
     </style>
     <link href="blueprint-reconcile.css" rel="stylesheet">
 </head>
@@ -252,7 +186,6 @@
             </div>
             <div class="bp3-navbar-group bp3-align-right">
                 <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-                <span class="bp3-navbar-divider"></span>
                 <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-moon" style="margin-right: 6px;"></span>
                     <span>Dark Mode</span>
@@ -260,10 +193,7 @@
                 <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
                     <span class="bp3-icon bp3-icon-user" style="margin-right: 6px;"></span>
                     <span id="user-role-label">Finance User</span>
-                </button>
-            </div>
         </nav>
-
         <!-- Application Content -->
         <div class="app-content slate-layout-container">
             <!-- Left Sidebar -->
@@ -278,109 +208,59 @@
                     <span class="bp3-icon bp3-icon-timeline-line-chart"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
                 </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights.html">
                     <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analyser-config.html">
                     <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-                </a>
-            </li>
-            
-            <li class="bp3-menu-header">
                 <h6 class="bp3-heading">Knowledge</h6>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/news-market-data-config.html">
                     <span class="bp3-icon bp3-icon-feed"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-                </a>
-            </li>
             <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculation-manager-config.html">
                     <span class="bp3-icon bp3-icon-function"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/ml-models-config.html">
                     <span class="bp3-icon bp3-icon-learning"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/treasury-insights-config.html">
-                    <span class="bp3-icon bp3-icon-bank-account"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider"></div>
             <div class="bp3-menu-header">
                 <h6 class="bp3-heading">Tools</h6>
-            </div>
-            <li>
                 <a class="bp3-menu-item" href="/calculation-tester.html">
                     <span class="bp3-icon bp3-icon-calculator"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/calculations-config.html">
                     <span class="bp3-icon bp3-icon-numerical"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/news-market-config.html">
                     <span class="bp3-icon bp3-icon-timeline-events"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-                </a>
-            </li>
-            <li>
                 <a class="bp3-menu-item" href="/scenario-analysis.html">
                     <span class="bp3-icon bp3-icon-fork"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-                </a>
-            </li>
-            
             <div class="bp3-menu-divider technology-only" style="display: none;"></div>
             <div class="bp3-menu-header technology-only" style="display: none;">
                 <h6 class="bp3-heading">System</h6>
-            </div>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/command-centre.html">
                     <span class="bp3-icon bp3-icon-console"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/deployment.html">
                     <span class="bp3-icon bp3-icon-cloud-upload"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-                </a>
-            </li>
-            <li class="technology-only" style="display: none;">
                 <a class="bp3-menu-item" href="/system-config.html">
                     <span class="bp3-icon bp3-icon-cog"></span>
                     <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-                </a>
-            </li>
         </ul>
     </aside>
-
             <!-- Main Content Area -->
             <main class="main-content slate-content-primary">
                 <div class="content-header">
                     <h1 class="bp3-heading">Portfolio Analyser</h1>
                     <p class="bp3-text-muted">Advanced portfolio performance and risk analysis</p>
-                </div>
-
                 <!-- Key Portfolio Metrics -->
                 <div class="portfolio-metrics apple-data-grid" style="margin-bottom: 30px;">
                     <div class="apple-metric-card">
@@ -388,33 +268,21 @@
                         <div class="apple-metric-value" id="totalValue">$24.8M</div>
                         <div class="apple-metric-change positive">↗ +5.2%</div>
                     </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Daily P&L</div>
                         <div class="apple-metric-value" id="dailyPnL">+$127K</div>
                         <div class="apple-metric-change positive">↗ +0.8%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Total Return</div>
                         <div class="apple-metric-value" id="totalReturn">+18.6%</div>
                         <div class="apple-metric-change positive">↗ +2.1%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Sharpe Ratio</div>
                         <div class="apple-metric-value" id="sharpeRatio">1.82</div>
                         <div class="apple-metric-change positive">↗ +0.05</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Max Drawdown</div>
                         <div class="apple-metric-value" id="maxDrawdown">-3.2%</div>
                         <div class="apple-metric-change negative">↘ -0.1%</div>
-                    </div>
-                    <div class="apple-metric-card">
                         <div class="apple-metric-label">Volatility</div>
                         <div class="apple-metric-value" id="volatility">12.4%</div>
                         <div class="apple-metric-change neutral">→ Stable</div>
-                    </div>
-                </div>
-
                 <!-- Portfolio Performance Chart -->
                 <div class="portfolio-grid">
                     <div class="bp3-card bp3-elevation-1">
@@ -423,9 +291,6 @@
                             <span class="bp3-icon bp3-icon-timeline-line-chart" style="font-size: 48px; opacity: 0.3;"></span>
                             <span style="margin-left: 20px;">Portfolio performance visualization will be implemented here</span>
                         </div>
-                    </div>
-
-                    <div class="bp3-card bp3-elevation-1">
                         <h3 class="bp3-heading">Risk Analysis</h3>
                         <div style="margin-top: 20px;">
                             <div class="bp3-progress-bar bp3-intent-success">
@@ -433,9 +298,6 @@
                             </div>
                             <div style="margin-top: 10px; font-size: 12px; color: var(--bp3-text-color-muted);">
                                 Risk Score: 75/100 (Moderate)
-                            </div>
-                        </div>
-
                         <div style="margin-top: 30px;">
                             <h5 class="bp3-heading">Key Risk Metrics</h5>
                             <div style="margin-top: 15px;">
@@ -443,22 +305,12 @@
                                     <span class="bp3-text-muted">Beta:</span>
                                     <span id="beta">Loading...</span>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                                     <span class="bp3-text-muted">Alpha:</span>
                                     <span id="alpha">Loading...</span>
-                                </div>
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                                     <span class="bp3-text-muted">VaR (95%):</span>
                                     <span id="var95">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Holdings Table -->
                 <div class="holdings-table">
-                    <div class="bp3-card bp3-elevation-1">
                         <h3 class="bp3-heading">Top Holdings</h3>
                         <table class="bp3-html-table bp3-html-table-striped" style="width: 100%; margin-top: 20px;">
                             <thead>
@@ -471,17 +323,12 @@
                                 </tr>
                             </thead>
                             <tbody id="holdingsTableBody">
-                                <tr>
                                     <td colspan="5" class="bp3-text-muted" style="text-align: center; padding: 20px;">
                                         <span class="bp3-icon bp3-icon-database"></span>
                                         Loading holdings data...
                                     </td>
-                                </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-
                 <!-- Action Buttons -->
                 <div style="margin-top: 30px; display: flex; gap: 10px;">
                     <button class="bp3-button bp3-intent-primary" onclick="refreshPortfolio()">
@@ -491,19 +338,14 @@
                     <button class="bp3-button" onclick="exportPortfolio()">
                         <span class="bp3-icon bp3-icon-export"></span>
                         Export Report
-                    </button>
                     <button class="bp3-button" onclick="runRiskAnalysis()">
                         <span class="bp3-icon bp3-icon-predictive-analysis"></span>
                         Risk Analysis
-                    </button>
-                </div>
             </main>
         </div>
     </div>
-    
     <script>
         const API_URL = '/api/supabase-proxy';
-
         // Load portfolio data
         async function loadPortfolioData() {
             try {
@@ -519,33 +361,25 @@
                     alpha: 0.032,
                     var95: -47500
                 };
-
                 document.getElementById('totalValue').textContent = '$' + portfolioData.totalValue.toLocaleString();
                 
                 const dailyPnL = document.getElementById('dailyPnL');
                 dailyPnL.textContent = (portfolioData.dailyPnL >= 0 ? '+$' : '-$') + Math.abs(portfolioData.dailyPnL).toLocaleString();
                 dailyPnL.className = 'metric-value ' + (portfolioData.dailyPnL >= 0 ? 'positive' : 'negative');
-                
                 const totalReturn = document.getElementById('totalReturn');
                 totalReturn.textContent = (portfolioData.totalReturn * 100).toFixed(2) + '%';
                 totalReturn.className = 'metric-value ' + (portfolioData.totalReturn >= 0 ? 'positive' : 'negative');
-                
                 document.getElementById('sharpeRatio').textContent = portfolioData.sharpeRatio.toFixed(2);
                 document.getElementById('maxDrawdown').textContent = (portfolioData.maxDrawdown * 100).toFixed(2) + '%';
                 document.getElementById('volatility').textContent = (portfolioData.volatility * 100).toFixed(2) + '%';
-                
                 document.getElementById('beta').textContent = portfolioData.beta.toFixed(2);
                 document.getElementById('alpha').textContent = (portfolioData.alpha * 100).toFixed(2) + '%';
                 document.getElementById('var95').textContent = '$' + Math.abs(portfolioData.var95).toLocaleString();
-
                 // Load holdings data
                 loadHoldingsData();
-
             } catch (error) {
                 console.error('Failed to load portfolio data:', error);
             }
-        }
-
         async function loadHoldingsData() {
             const holdings = [
                 { asset: 'AAPL', weight: 15.2, value: 380000, pnl: 2340, return: 0.062 },
@@ -554,10 +388,8 @@
                 { asset: 'AMZN', weight: 9.3, value: 232500, pnl: 3210, return: 0.140 },
                 { asset: 'TSLA', weight: 7.8, value: 195000, pnl: -890, return: -0.045 }
             ];
-
             const tbody = document.getElementById('holdingsTableBody');
             tbody.innerHTML = '';
-            
             holdings.forEach(holding => {
                 const row = tbody.insertRow();
                 row.innerHTML = `
@@ -569,31 +401,20 @@
                     </td>
                     <td class="${holding.return >= 0 ? 'bp3-text-intent-success' : 'bp3-text-intent-danger'}">
                         ${(holding.return * 100).toFixed(2)}%
-                    </td>
                 `;
             });
-        }
-
         function refreshPortfolio() {
             // Show loading states
             document.querySelectorAll('.metric-value').forEach(el => {
                 el.innerHTML = '<span class="bp3-skeleton">Loading...</span>';
-            });
-            
             // Reload data
             setTimeout(loadPortfolioData, 1000);
-        }
-
         function exportPortfolio() {
             // Implement export functionality
             alert('Portfolio report export functionality will be implemented');
-        }
-
         function runRiskAnalysis() {
             // Implement risk analysis
             alert('Advanced risk analysis functionality will be implemented');
-        }
-
         function toggleTheme() {
             document.body.classList.toggle('bp3-dark');
             const button = document.getElementById('theme-toggle');
@@ -601,9 +422,6 @@
                 button.className = 'bp3-button bp3-minimal bp3-icon-flash';
             } else {
                 button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-            }
-        }
-
         // Initialize
         loadPortfolioData();
     </script>
