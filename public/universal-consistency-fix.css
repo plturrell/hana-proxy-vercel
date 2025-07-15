@@ -52,11 +52,45 @@
 }
 
 /* Force icon visibility */
-.bp3-navbar .bp3-icon {
+.bp3-navbar .bp3-icon,
+.bp3-sidebar .bp3-icon,
+.bp3-menu-item .bp3-icon {
     visibility: visible !important;
     opacity: 1 !important;
     display: inline-block !important;
     font-size: 16px !important;
+    width: 16px !important;
+    height: 16px !important;
+    line-height: 1 !important;
+    vertical-align: middle !important;
+}
+
+/* Fix Blueprint icon font loading */
+.bp3-icon::before {
+    font-family: "Icons16", "Icons20" !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+    font-size: inherit !important;
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Ensure icon fonts are loaded */
+@font-face {
+    font-family: "Icons16";
+    src: url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-16.eot?v=4") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-16.ttf?v=4") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Icons20";
+    src: url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-20.eot?v=4") format("embedded-opentype"),
+         url("https://unpkg.com/@blueprintjs/icons@^4.0.0/resources/icons/icons-20.ttf?v=4") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
 /* ========================================
@@ -91,6 +125,31 @@
 /* ========================================
    SIDEBAR CONSISTENCY
    ======================================== */
+
+/* Force specific sidebar icon visibility */
+.bp3-menu-item .bp3-icon::before {
+    content: attr(class) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+/* Specific icon fixes */
+.bp3-icon-timeline-line-chart::before { content: "\e90f" !important; }
+.bp3-icon-bank-account::before { content: "\e617" !important; }
+.bp3-icon-predictive-analysis::before { content: "\e96f" !important; }
+.bp3-icon-feed::before { content: "\e72c" !important; }
+.bp3-icon-function::before { content: "\e739" !important; }
+.bp3-icon-learning::before { content: "\e7c2" !important; }
+.bp3-icon-calculator::before { content: "\e634" !important; }
+.bp3-icon-numerical::before { content: "\e85f" !important; }
+.bp3-icon-timeline-events::before { content: "\e97b" !important; }
+.bp3-icon-fork::before { content: "\e736" !important; }
+.bp3-icon-console::before { content: "\e685" !important; }
+.bp3-icon-cloud-upload::before { content: "\e66b" !important; }
+.bp3-icon-cog::before { content: "\e667" !important; }
+.bp3-icon-moon::before { content: "\e80e" !important; }
+.bp3-icon-flash::before { content: "\e72e" !important; }
+.bp3-icon-user::before { content: "\e99d" !important; }
 
 /* Force sidebar visibility and structure */
 .bp3-sidebar {
