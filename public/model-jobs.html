@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Model - FinSight Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
+  <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <style>
+    /* Jobs/Ive Minimalist Design System */
+    :root {
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      --jobs-teal: #5AC8FA;
+      --jobs-pink: #FF2D92;
+      
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-hero: 48px;
+      --jobs-font-size-title: 34px;
+      --jobs-font-size-headline: 28px;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-nav {
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-tabbar {
+      background: rgba(0, 0, 0, 0.95);
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-model-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-category-header {
+      background: rgba(28, 28, 30, 0.95);
+      border-bottom-color: #38383A;
+    }
+    
+    /* Navigation */
+    .jobs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .jobs-nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      align-items: center;
+    }
+    
+    .jobs-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Main Container */
+    .jobs-container {
+      padding-top: 48px;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+    
+    /* Header */
+    .jobs-header {
+      text-align: center;
+      padding: var(--jobs-spacing-xl) var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .jobs-header-title {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--jobs-spacing-sm) 0;
+    }
+    
+    .jobs-header-subtitle {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      margin: 0;
+    }
+    
+    /* Model Overview */
+    .jobs-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xxl);
+    }
+    
+    .jobs-overview-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      text-align: center;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-overview-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-overview-value {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-overview-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-overview-value.online {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-overview-value.training {
+      color: var(--jobs-orange);
+    }
+    
+    .jobs-overview-value.warning {
+      color: var(--jobs-red);
+    }
+    
+    /* Category Headers */
+    .jobs-category-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      margin: var(--jobs-spacing-xxl) 0 var(--jobs-spacing-lg) 0;
+      position: sticky;
+      top: 48px;
+      z-index: 100;
+    }
+    
+    .jobs-category-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Model Cards */
+    .jobs-models-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xl);
+    }
+    
+    .jobs-model-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-model-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-model-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      opacity: 0;
+      transition: opacity var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-model-card:hover::before {
+      opacity: 1;
+    }
+    
+    .jobs-model-card.supervised::before {
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-teal));
+    }
+    
+    .jobs-model-card.unsupervised::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-pink));
+    }
+    
+    .jobs-model-card.reinforcement::before {
+      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-teal));
+    }
+    
+    .jobs-model-card.deep-learning::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-pink));
+    }
+    
+    .jobs-model-card.nlp::before {
+      background: linear-gradient(90deg, var(--jobs-red), var(--jobs-orange));
+    }
+    
+    .jobs-model-card.ai-integration::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-blue));
+    }
+    
+    .jobs-model-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-model-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .jobs-model-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-gray);
+      position: relative;
+    }
+    
+    .jobs-model-status.online {
+      background: var(--jobs-green);
+      animation: pulse 2s infinite;
+    }
+    
+    .jobs-model-status.training {
+      background: var(--jobs-orange);
+      animation: pulse 1s infinite;
+    }
+    
+    .jobs-model-status.offline {
+      background: var(--jobs-red);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .jobs-model-type {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-model-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    .jobs-model-metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-metric {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .jobs-metric-value {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-metric-label {
+      font-size: 10px;
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-model-actions {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-action-button {
+      flex: 1;
+      background: var(--jobs-light-gray);
+      border: none;
+      padding: var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-action-button:hover {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary:hover {
+      background: var(--jobs-purple);
+    }
+    
+    body.dark-mode .jobs-action-button {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-action-button:hover {
+      background: var(--jobs-blue);
+    }
+    
+    /* Bottom Tab Bar */
+    .jobs-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 49px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .jobs-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      text-decoration: none;
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-tab:hover,
+    .jobs-tab.active {
+      color: var(--jobs-blue);
+    }
+    
+    .jobs-tab-icon {
+      font-size: 24px;
+      margin-bottom: 2px;
+    }
+    
+    .jobs-tab-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .jobs-models-grid {
+        grid-template-columns: 1fr;
+        gap: var(--jobs-spacing-md);
+      }
+      
+      .jobs-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .jobs-model-metrics {
+        flex-direction: column;
+        gap: var(--jobs-spacing-sm);
+      }
+      
+      .jobs-metric {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Navigation -->
+  <nav class="jobs-nav">
+    <div class="jobs-nav-title">FinSight Models</div>
+    <div class="jobs-nav-actions">
+      <span style="font-size: 13px; color: var(--jobs-gray);">AI/ML Hub</span>
+      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="jobs-container">
+    <!-- Header -->
+    <div class="jobs-header">
+      <h1 class="jobs-header-title">Machine Learning Models</h1>
+      <p class="jobs-header-subtitle">AI-powered financial intelligence and decision making</p>
+    </div>
+    
+    <!-- Model Overview -->
+    <div class="jobs-overview-grid">
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value online" id="active-models">12/13</div>
+        <div class="jobs-overview-label">Models Active</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="avg-accuracy">94.7%</div>
+        <div class="jobs-overview-label">Avg Accuracy</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value training" id="training-jobs">3</div>
+        <div class="jobs-overview-label">Training Jobs</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="predictions-today">2.3M</div>
+        <div class="jobs-overview-label">Predictions Today</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="inference-time">0.12s</div>
+        <div class="jobs-overview-label">Avg Inference</div>
+      </div>
+    </div>
+    
+    <!-- Supervised Learning Models -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Supervised Learning</h2>
+    </div>
+    
+    <div class="jobs-models-grid">
+      <div class="jobs-model-card supervised" onclick="openModelDetails('anomaly-detection')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Anomaly Detection</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Multi-Algorithm Ensemble</div>
+        <div class="jobs-model-description">
+          8 different algorithms including Z-score, IQR, Isolation Forest, and Local Outlier Factor for comprehensive anomaly detection
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">97.3%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">142</div>
+            <div class="jobs-metric-label">Detections</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.08s</div>
+            <div class="jobs-metric-label">Latency</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('anomaly-detection')">Run Detection</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('anomaly-detection')">View Results</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card supervised" onclick="openModelDetails('credit-risk')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Credit Risk Scoring</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Multi-Factor Risk Model</div>
+        <div class="jobs-model-description">
+          Comprehensive credit risk assessment using financial ratios, behavioral scoring, and industry-specific adjustments
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">92.1%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1,247</div>
+            <div class="jobs-metric-label">Scores Today</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.15s</div>
+            <div class="jobs-metric-label">Latency</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('credit-risk')">Score Portfolio</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('credit-risk')">Risk Report</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card supervised" onclick="openModelDetails('performance-monitoring')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Model Performance Monitor</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Comprehensive Metrics Suite</div>
+        <div class="jobs-model-description">
+          Real-time monitoring with regression, classification, time series, and ranking metrics plus statistical significance tests
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">13</div>
+            <div class="jobs-metric-label">Models Tracked</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">24/7</div>
+            <div class="jobs-metric-label">Monitoring</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.02s</div>
+            <div class="jobs-metric-label">Latency</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('performance-monitoring')">Generate Report</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('performance-monitoring')">View Dashboard</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Unsupervised Learning Models -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Unsupervised Learning</h2>
+    </div>
+    
+    <div class="jobs-models-grid">
+      <div class="jobs-model-card unsupervised" onclick="openModelDetails('feature-importance')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Feature Engineering</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Automated Feature Selection</div>
+        <div class="jobs-model-description">
+          Correlation analysis, mutual information, permutation importance, and ensemble feature selection methods
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">247</div>
+            <div class="jobs-metric-label">Features</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">89</div>
+            <div class="jobs-metric-label">Selected</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.3s</div>
+            <div class="jobs-metric-label">Analysis Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('feature-importance')">Analyze Features</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('feature-importance')">View Rankings</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card unsupervised" onclick="openModelDetails('synthetic-data')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Synthetic Data Generator</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Monte Carlo Simulation</div>
+        <div class="jobs-model-description">
+          Generate synthetic financial data using multiple probability distributions and copula-based dependency modeling
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1.2M</div>
+            <div class="jobs-metric-label">Records Generated</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">99.8%</div>
+            <div class="jobs-metric-label">Quality Score</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.1s</div>
+            <div class="jobs-metric-label">Generation Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('synthetic-data')">Generate Data</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('synthetic-data')">View Samples</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card unsupervised" onclick="openModelDetails('adaptive-cache')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Adaptive Caching</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Predictive Cache Optimization</div>
+        <div class="jobs-model-description">
+          ML-based caching using frequency-recency analysis and predictive algorithms for optimal performance
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">87.4%</div>
+            <div class="jobs-metric-label">Hit Rate</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.3GB</div>
+            <div class="jobs-metric-label">Cache Size</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.01s</div>
+            <div class="jobs-metric-label">Lookup Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('adaptive-cache')">Optimize Cache</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('adaptive-cache')">View Stats</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Reinforcement Learning Models -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Reinforcement Learning</h2>
+    </div>
+    
+    <div class="jobs-models-grid">
+      <div class="jobs-model-card reinforcement" onclick="openModelDetails('linucb-bandit')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Contextual Bandits</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">LinUCB Multi-Armed Bandit</div>
+        <div class="jobs-model-description">
+          Contextual decision making with LinUCB variants including Standard, Disjoint, Hybrid, Neural, and Kernelized approaches
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">12,847</div>
+            <div class="jobs-metric-label">Decisions</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.94</div>
+            <div class="jobs-metric-label">Reward Rate</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.05s</div>
+            <div class="jobs-metric-label">Decision Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('linucb-bandit')">Make Decision</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('linucb-bandit')">View Performance</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card reinforcement" onclick="openModelDetails('neural-bandit')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Neural Bandit</h3>
+          <div class="jobs-model-status training"></div>
+        </div>
+        <div class="jobs-model-type">Deep Learning Bandit</div>
+        <div class="jobs-model-description">
+          Neural network integration with bandit algorithms for advanced feature learning and decision making
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">Training</div>
+            <div class="jobs-metric-label">Status</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">87.2%</div>
+            <div class="jobs-metric-label">Progress</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.5h</div>
+            <div class="jobs-metric-label">ETA</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button" onclick="event.stopPropagation(); runModel('neural-bandit')" disabled>Training...</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('neural-bandit')">View Progress</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card reinforcement" onclick="openModelDetails('collaborative-learning')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Collaborative Learning</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Recommendation System</div>
+        <div class="jobs-model-description">
+          Matrix factorization, deep collaborative filtering, NCF, VAE, and GNN-based hybrid recommendation system
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">91.6%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">5,247</div>
+            <div class="jobs-metric-label">Recommendations</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.07s</div>
+            <div class="jobs-metric-label">Response Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('collaborative-learning')">Get Recommendations</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('collaborative-learning')">View Matrix</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Deep Learning & NLP Models -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Deep Learning & NLP</h2>
+    </div>
+    
+    <div class="jobs-models-grid">
+      <div class="jobs-model-card nlp" onclick="openModelDetails('knowledge-graph')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Knowledge Graph</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Advanced NLP & Graph Analytics</div>
+        <div class="jobs-model-description">
+          Entity extraction, relationship inference, semantic analysis, and graph metrics with confidence scoring
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">24,712</div>
+            <div class="jobs-metric-label">Entities</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">89,341</div>
+            <div class="jobs-metric-label">Relationships</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.32s</div>
+            <div class="jobs-metric-label">Query Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('knowledge-graph')">Generate Graph</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('knowledge-graph')">Explore Graph</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card nlp" onclick="openModelDetails('entity-extraction')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Entity Extraction</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Real-time NLP Processing</div>
+        <div class="jobs-model-description">
+          Extract companies, metrics, locations, and currencies from financial news with confidence scoring
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">96.3%</div>
+            <div class="jobs-metric-label">Precision</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1,847</div>
+            <div class="jobs-metric-label">Extractions</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.18s</div>
+            <div class="jobs-metric-label">Processing Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('entity-extraction')">Extract Entities</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('entity-extraction')">View Results</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card deep-learning" onclick="openModelDetails('neural-networks')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Neural Networks</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">Deep Learning Suite</div>
+        <div class="jobs-model-description">
+          Comprehensive neural network toolkit with forward pass, gradient descent, activation functions, and optimization
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">7</div>
+            <div class="jobs-metric-label">Active Networks</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">94.8%</div>
+            <div class="jobs-metric-label">Avg Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.25s</div>
+            <div class="jobs-metric-label">Inference Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('neural-networks')">Run Inference</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('neural-networks')">View Architecture</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI Integration -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">AI Integration</h2>
+    </div>
+    
+    <div class="jobs-models-grid">
+      <div class="jobs-model-card ai-integration" onclick="openModelDetails('grok-credit-analysis')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Grok Credit Analysis</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">AI-Powered Risk Assessment</div>
+        <div class="jobs-model-description">
+          Advanced credit risk assessment using Grok AI with industry-specific analysis and intelligent fallback scoring
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">98.1%</div>
+            <div class="jobs-metric-label">API Uptime</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">342</div>
+            <div class="jobs-metric-label">Analyses Today</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1.2s</div>
+            <div class="jobs-metric-label">Response Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('grok-credit-analysis')">Analyze Risk</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('grok-credit-analysis')">View Report</button>
+        </div>
+      </div>
+      
+      <div class="jobs-model-card ai-integration" onclick="openModelDetails('grok-entity-extraction')">
+        <div class="jobs-model-header">
+          <h3 class="jobs-model-title">Grok Entity Extraction</h3>
+          <div class="jobs-model-status online"></div>
+        </div>
+        <div class="jobs-model-type">AI-Enhanced NLP</div>
+        <div class="jobs-model-description">
+          Real-time entity extraction from financial news using Grok AI with batch processing and confidence scoring
+        </div>
+        <div class="jobs-model-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">99.7%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2,847</div>
+            <div class="jobs-metric-label">Processed</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.8s</div>
+            <div class="jobs-metric-label">Processing Time</div>
+          </div>
+        </div>
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('grok-entity-extraction')">Extract Entities</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('grok-entity-extraction')">View Entities</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bottom Tab Bar -->
+  <div class="jobs-tabbar">
+    <a href="/index-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◉</div>
+      <div class="jobs-tab-label">Today</div>
+    </a>
+    <a href="/analyze-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◎</div>
+      <div class="jobs-tab-label">Analyze</div>
+    </a>
+    <a href="/control-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">Control</div>
+    </a>
+    <a href="#" class="jobs-tab active">
+      <div class="jobs-tab-icon">◆</div>
+      <div class="jobs-tab-label">Model</div>
+    </a>
+    <a href="/teach-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◇</div>
+      <div class="jobs-tab-label">Teach</div>
+    </a>
+    <a href="/ai-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">AI</div>
+    </a>
+  </div>
+  
+  <script>
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Spotlight search
+    function showSpotlight() {
+      const query = prompt('Search ML models and functions...');
+      if (query) {
+        console.log('Searching for:', query);
+        // In real implementation, would filter models based on query
+        filterModels(query);
+      }
+    }
+    
+    // Filter models based on search
+    function filterModels(query) {
+      const cards = document.querySelectorAll('.jobs-model-card');
+      const lowerQuery = query.toLowerCase();
+      
+      cards.forEach(card => {
+        const title = card.querySelector('.jobs-model-title').textContent.toLowerCase();
+        const description = card.querySelector('.jobs-model-description').textContent.toLowerCase();
+        const type = card.querySelector('.jobs-model-type').textContent.toLowerCase();
+        
+        if (title.includes(lowerQuery) || description.includes(lowerQuery) || type.includes(lowerQuery)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Open model details
+    function openModelDetails(modelId) {
+      console.log('Opening model details for:', modelId);
+      // In real implementation, would show detailed model information
+      alert(`Model Details: ${modelId}\n\nThis would open a detailed view with:\n- Model architecture\n- Training history\n- Performance metrics\n- Configuration options\n- Real-time monitoring`);
+    }
+    
+    // Run model
+    function runModel(modelId) {
+      console.log('Running model:', modelId);
+      
+      // Simulate model execution
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Running...';
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+        
+        // Show results based on model type
+        const results = getModelResults(modelId);
+        alert(`Model Execution Complete!\n\n${results}`);
+      }, 2000);
+    }
+    
+    // View model results
+    function viewResults(modelId) {
+      console.log('Viewing results for:', modelId);
+      
+      const results = getModelResults(modelId);
+      alert(`Model Results: ${modelId}\n\n${results}`);
+    }
+    
+    // Get model results
+    function getModelResults(modelId) {
+      const results = {
+        'anomaly-detection': 'Detected 12 anomalies in portfolio data\n- 3 high-risk outliers\n- 9 moderate anomalies\n- Confidence: 97.3%',
+        'credit-risk': 'Credit risk analysis complete\n- Portfolio risk score: 7.2/10\n- 15 high-risk positions identified\n- Recommended actions: Diversify tech holdings',
+        'performance-monitoring': 'Model performance summary\n- 12/13 models performing within tolerance\n- 1 model requires retraining\n- Average accuracy: 94.7%',
+        'feature-importance': 'Feature analysis complete\n- Top 3 features: Market cap, P/E ratio, Volatility\n- 89/247 features selected\n- Correlation threshold: 0.85',
+        'synthetic-data': 'Generated 100,000 synthetic records\n- Quality score: 99.8%\n- Distribution match: 98.5%\n- Ready for model training',
+        'adaptive-cache': 'Cache optimization complete\n- Hit rate improved to 87.4%\n- Memory usage: 2.3GB\n- Evicted 1,247 stale entries',
+        'linucb-bandit': 'Bandit decision made\n- Selected arm: Portfolio rebalancing\n- Confidence: 94.2%\n- Expected reward: 0.87',
+        'neural-bandit': 'Neural bandit training in progress\n- Epoch 87/100\n- Loss: 0.0234\n- ETA: 2.5 hours',
+        'collaborative-learning': 'Recommendations generated\n- 25 investment opportunities\n- Avg confidence: 91.6%\n- Top recommendation: TSLA',
+        'knowledge-graph': 'Knowledge graph updated\n- 24,712 entities processed\n- 89,341 relationships mapped\n- Query time: 0.32s',
+        'entity-extraction': 'Entities extracted from 50 news articles\n- 247 companies identified\n- 89 financial metrics found\n- Confidence: 96.3%',
+        'neural-networks': 'Neural network inference complete\n- 7 networks executed\n- Average accuracy: 94.8%\n- Predictions: 1,247',
+        'grok-credit-analysis': 'Grok AI credit analysis complete\n- Risk score: 8.1/10\n- Industry comparison: Above average\n- Recommendations: 5 action items',
+        'grok-entity-extraction': 'Grok entity extraction complete\n- Processed 100 documents\n- 2,847 entities extracted\n- Accuracy: 99.7%'
+      };
+      
+      return results[modelId] || 'Model results will be displayed here.';
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // Auto-refresh model metrics
+    function refreshModelMetrics() {
+      // Simulate metric updates
+      const metrics = {
+        'active-models': `${Math.floor(Math.random() * 2) + 12}/13`,
+        'avg-accuracy': `${(Math.random() * 2 + 93).toFixed(1)}%`,
+        'training-jobs': Math.floor(Math.random() * 3) + 2,
+        'predictions-today': `${(Math.random() * 0.5 + 2.0).toFixed(1)}M`,
+        'inference-time': `${(Math.random() * 0.1 + 0.08).toFixed(2)}s`
+      };
+      
+      Object.entries(metrics).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value;
+        }
+      });
+    }
+    
+    // Refresh metrics every 30 seconds
+    setInterval(refreshModelMetrics, 30000);
+    
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault();
+        showSpotlight();
+      }
+      if (e.key === 'r' && e.metaKey) {
+        e.preventDefault();
+        refreshModelMetrics();
+      }
+    });
+    
+    // Initialize tooltips for model cards
+    document.querySelectorAll('.jobs-model-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        // Add subtle animation on hover
+        card.style.transform = 'translateY(-2px) scale(1.01)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>

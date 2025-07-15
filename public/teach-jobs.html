@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teach - FinSight Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
+  <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <style>
+    /* Jobs/Ive Minimalist Design System */
+    :root {
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      --jobs-teal: #5AC8FA;
+      --jobs-pink: #FF2D92;
+      --jobs-indigo: #5856D6;
+      --jobs-cyan: #32D74B;
+      
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-hero: 48px;
+      --jobs-font-size-title: 34px;
+      --jobs-font-size-headline: 28px;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-nav {
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-tabbar {
+      background: rgba(0, 0, 0, 0.95);
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-curriculum-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-learning-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-category-header {
+      background: rgba(28, 28, 30, 0.95);
+      border-bottom-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-progress-bar {
+      background: #2C2C2E;
+    }
+    
+    body.dark-mode .jobs-progress-fill {
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+    }
+    
+    /* Navigation */
+    .jobs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .jobs-nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      align-items: center;
+    }
+    
+    .jobs-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Main Container */
+    .jobs-container {
+      padding-top: 48px;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+    
+    /* Header */
+    .jobs-header {
+      text-align: center;
+      padding: var(--jobs-spacing-xl) var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .jobs-header-title {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--jobs-spacing-sm) 0;
+    }
+    
+    .jobs-header-subtitle {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      margin: 0;
+    }
+    
+    /* Learning Overview */
+    .jobs-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xxl);
+    }
+    
+    .jobs-overview-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      text-align: center;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-overview-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-overview-value {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-overview-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-overview-value.active {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-overview-value.learning {
+      color: var(--jobs-orange);
+    }
+    
+    .jobs-overview-value.completed {
+      color: var(--jobs-blue);
+    }
+    
+    /* Category Headers */
+    .jobs-category-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      margin: var(--jobs-spacing-xxl) 0 var(--jobs-spacing-lg) 0;
+      position: sticky;
+      top: 48px;
+      z-index: 100;
+    }
+    
+    .jobs-category-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Learning Cards */
+    .jobs-learning-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xl);
+    }
+    
+    .jobs-learning-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-learning-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-learning-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      opacity: 0;
+      transition: opacity var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-learning-card:hover::before {
+      opacity: 1;
+    }
+    
+    .jobs-learning-card.reinforcement::before {
+      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-teal));
+    }
+    
+    .jobs-learning-card.adaptive::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-pink));
+    }
+    
+    .jobs-learning-card.curriculum::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .jobs-learning-card.contextual::before {
+      background: linear-gradient(90deg, var(--jobs-indigo), var(--jobs-cyan));
+    }
+    
+    .jobs-learning-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-learning-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .jobs-learning-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-gray);
+      position: relative;
+    }
+    
+    .jobs-learning-status.active {
+      background: var(--jobs-green);
+      animation: pulse 2s infinite;
+    }
+    
+    .jobs-learning-status.learning {
+      background: var(--jobs-orange);
+      animation: pulse 1s infinite;
+    }
+    
+    .jobs-learning-status.completed {
+      background: var(--jobs-blue);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .jobs-learning-type {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-learning-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    /* Progress Bar */
+    .jobs-progress-container {
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-progress-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-progress-text {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-progress-percentage {
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 600;
+      color: var(--jobs-blue);
+    }
+    
+    .jobs-progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--jobs-light-gray);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .jobs-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      border-radius: 2px;
+      transition: width var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-learning-metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-metric {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .jobs-metric-value {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-metric-label {
+      font-size: 10px;
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-learning-actions {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-action-button {
+      flex: 1;
+      background: var(--jobs-light-gray);
+      border: none;
+      padding: var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-action-button:hover {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary:hover {
+      background: var(--jobs-purple);
+    }
+    
+    .jobs-action-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    body.dark-mode .jobs-action-button {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-action-button:hover {
+      background: var(--jobs-blue);
+    }
+    
+    /* Curriculum Cards */
+    .jobs-curriculum-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-curriculum-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-curriculum-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-curriculum-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .jobs-curriculum-badge {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-curriculum-badge.beginner {
+      background: var(--jobs-green);
+    }
+    
+    .jobs-curriculum-badge.intermediate {
+      background: var(--jobs-orange);
+    }
+    
+    .jobs-curriculum-badge.advanced {
+      background: var(--jobs-red);
+    }
+    
+    .jobs-curriculum-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    .jobs-curriculum-modules {
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-module-item {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-module-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--jobs-light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-module-icon.completed {
+      background: var(--jobs-green);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-module-icon.active {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-module-text {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-module-text.completed {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-module-text.active {
+      color: var(--jobs-blue);
+      font-weight: 600;
+    }
+    
+    /* Bottom Tab Bar */
+    .jobs-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 49px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .jobs-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      text-decoration: none;
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-tab:hover,
+    .jobs-tab.active {
+      color: var(--jobs-blue);
+    }
+    
+    .jobs-tab-icon {
+      font-size: 24px;
+      margin-bottom: 2px;
+    }
+    
+    .jobs-tab-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .jobs-learning-grid {
+        grid-template-columns: 1fr;
+        gap: var(--jobs-spacing-md);
+      }
+      
+      .jobs-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .jobs-learning-metrics {
+        flex-direction: column;
+        gap: var(--jobs-spacing-sm);
+      }
+      
+      .jobs-metric {
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Navigation -->
+  <nav class="jobs-nav">
+    <div class="jobs-nav-title">FinSight Teach</div>
+    <div class="jobs-nav-actions">
+      <span style="font-size: 13px; color: var(--jobs-gray);">Learning Hub</span>
+      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="jobs-container">
+    <!-- Header -->
+    <div class="jobs-header">
+      <h1 class="jobs-header-title">Adaptive Learning</h1>
+      <p class="jobs-header-subtitle">Reinforcement learning, curricula, and contextual adaptation</p>
+    </div>
+    
+    <!-- Learning Overview -->
+    <div class="jobs-overview-grid">
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value active" id="active-learners">8</div>
+        <div class="jobs-overview-label">Active Learners</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="avg-performance">94.3%</div>
+        <div class="jobs-overview-label">Avg Performance</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value learning" id="training-sessions">12</div>
+        <div class="jobs-overview-label">Training Sessions</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value completed" id="completed-modules">247</div>
+        <div class="jobs-overview-label">Completed Modules</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="adaptation-rate">0.87</div>
+        <div class="jobs-overview-label">Adaptation Rate</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="context-accuracy">96.1%</div>
+        <div class="jobs-overview-label">Context Accuracy</div>
+      </div>
+    </div>
+    
+    <!-- Reinforcement Learning Section -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Reinforcement Learning Systems</h2>
+    </div>
+    
+    <div class="jobs-learning-grid">
+      <div class="jobs-learning-card reinforcement" onclick="openLearningDetails('linucb-system')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">LinUCB Bandit System</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Contextual Multi-Armed Bandit</div>
+        <div class="jobs-learning-description">
+          Continuously learning optimal portfolio allocation strategies using contextual bandits with confidence bounds
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Learning Progress</span>
+            <span class="jobs-progress-percentage">87.3%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 87.3%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.94</div>
+            <div class="jobs-metric-label">Reward Rate</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">12,847</div>
+            <div class="jobs-metric-label">Actions</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.12</div>
+            <div class="jobs-metric-label">Regret</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('linucb-system')">Continue Training</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('linucb-system')">View Performance</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card reinforcement" onclick="openLearningDetails('neural-bandit-system')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Neural Bandit System</h3>
+          <div class="jobs-learning-status learning"></div>
+        </div>
+        <div class="jobs-learning-type">Deep Reinforcement Learning</div>
+        <div class="jobs-learning-description">
+          Advanced neural network-based bandit learning for complex financial decision making with deep feature extraction
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Training Progress</span>
+            <span class="jobs-progress-percentage">64.2%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 64.2%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">Training</div>
+            <div class="jobs-metric-label">Status</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.0234</div>
+            <div class="jobs-metric-label">Loss</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.5h</div>
+            <div class="jobs-metric-label">ETA</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button" onclick="event.stopPropagation(); trainSystem('neural-bandit-system')" disabled>Training...</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('neural-bandit-system')">Monitor Progress</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card reinforcement" onclick="openLearningDetails('thompson-sampling')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Thompson Sampling</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Bayesian Reinforcement Learning</div>
+        <div class="jobs-learning-description">
+          Bayesian approach to exploration-exploitation in trading decisions using posterior sampling for uncertainty quantification
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Convergence</span>
+            <span class="jobs-progress-percentage">92.1%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 92.1%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.89</div>
+            <div class="jobs-metric-label">Posterior Conf</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">8,432</div>
+            <div class="jobs-metric-label">Samples</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.08</div>
+            <div class="jobs-metric-label">Uncertainty</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('thompson-sampling')">Sample Decision</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('thompson-sampling')">View Posterior</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card reinforcement" onclick="openLearningDetails('q-learning')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Q-Learning Agent</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Temporal Difference Learning</div>
+        <div class="jobs-learning-description">
+          Model-free reinforcement learning for optimal trading strategies using Q-value iteration and exploration strategies
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Policy Convergence</span>
+            <span class="jobs-progress-percentage">78.9%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 78.9%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.91</div>
+            <div class="jobs-metric-label">Q-Value Stable</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">15,234</div>
+            <div class="jobs-metric-label">Episodes</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.15</div>
+            <div class="jobs-metric-label">Epsilon</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('q-learning')">Train Episode</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('q-learning')">Q-Table</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Adaptive Learning Section -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Adaptive Learning Systems</h2>
+    </div>
+    
+    <div class="jobs-learning-grid">
+      <div class="jobs-learning-card adaptive" onclick="openLearningDetails('collaborative-filter')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Collaborative Learning</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Matrix Factorization & Deep Learning</div>
+        <div class="jobs-learning-description">
+          Adaptive recommendation system using collaborative filtering, NCF, VAE, and GNN for personalized investment suggestions
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Model Adaptation</span>
+            <span class="jobs-progress-percentage">91.6%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 91.6%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">94.2%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">5,247</div>
+            <div class="jobs-metric-label">User Profiles</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.07s</div>
+            <div class="jobs-metric-label">Response Time</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('collaborative-filter')">Update Model</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('collaborative-filter')">View Matrix</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card adaptive" onclick="openLearningDetails('adaptive-cache')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Adaptive Caching</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Predictive Cache Management</div>
+        <div class="jobs-learning-description">
+          ML-based adaptive caching system that learns access patterns and predicts future data needs for optimal performance
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Learning Efficiency</span>
+            <span class="jobs-progress-percentage">87.4%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 87.4%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">89.1%</div>
+            <div class="jobs-metric-label">Hit Rate</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.3GB</div>
+            <div class="jobs-metric-label">Cache Size</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.01s</div>
+            <div class="jobs-metric-label">Lookup Time</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('adaptive-cache')">Optimize Cache</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('adaptive-cache')">View Analytics</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card adaptive" onclick="openLearningDetails('anomaly-adaptation')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Anomaly Detection Adaptation</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Ensemble Learning Adaptation</div>
+        <div class="jobs-learning-description">
+          Adaptive anomaly detection that learns from new patterns and adjusts detection thresholds based on market conditions
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Threshold Adaptation</span>
+            <span class="jobs-progress-percentage">97.3%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 97.3%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">96.8%</div>
+            <div class="jobs-metric-label">Precision</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">142</div>
+            <div class="jobs-metric-label">Detections</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.08s</div>
+            <div class="jobs-metric-label">Response Time</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('anomaly-adaptation')">Adapt Thresholds</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('anomaly-adaptation')">View Detections</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Curriculum Learning Section -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Curriculum Learning Programs</h2>
+    </div>
+    
+    <div class="jobs-learning-grid">
+      <div class="jobs-curriculum-card" onclick="openCurriculumDetails('financial-ml-basics')">
+        <div class="jobs-curriculum-header">
+          <h3 class="jobs-curriculum-title">Financial ML Fundamentals</h3>
+          <div class="jobs-curriculum-badge beginner">Beginner</div>
+        </div>
+        <div class="jobs-curriculum-description">
+          Comprehensive introduction to machine learning applications in finance, from basic concepts to practical implementation
+        </div>
+        <div class="jobs-curriculum-modules">
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Introduction to Financial Data</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Statistical Foundations</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon active">3</div>
+            <span class="jobs-module-text active">Time Series Analysis</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon">4</div>
+            <span class="jobs-module-text">Risk Modeling</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon">5</div>
+            <span class="jobs-module-text">Portfolio Optimization</span>
+          </div>
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Course Progress</span>
+            <span class="jobs-progress-percentage">40%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 40%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); continueCurriculum('financial-ml-basics')">Continue Learning</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('financial-ml-basics')">View Curriculum</button>
+        </div>
+      </div>
+      
+      <div class="jobs-curriculum-card" onclick="openCurriculumDetails('advanced-rl')">
+        <div class="jobs-curriculum-header">
+          <h3 class="jobs-curriculum-title">Advanced Reinforcement Learning</h3>
+          <div class="jobs-curriculum-badge advanced">Advanced</div>
+        </div>
+        <div class="jobs-curriculum-description">
+          Deep dive into reinforcement learning for algorithmic trading, multi-agent systems, and complex decision making
+        </div>
+        <div class="jobs-curriculum-modules">
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Multi-Armed Bandits</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Contextual Bandits</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Deep Q-Networks</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon active">4</div>
+            <span class="jobs-module-text active">Actor-Critic Methods</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon">5</div>
+            <span class="jobs-module-text">Multi-Agent RL</span>
+          </div>
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Course Progress</span>
+            <span class="jobs-progress-percentage">75%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 75%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); continueCurriculum('advanced-rl')">Continue Learning</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('advanced-rl')">View Curriculum</button>
+        </div>
+      </div>
+      
+      <div class="jobs-curriculum-card" onclick="openCurriculumDetails('nlp-finance')">
+        <div class="jobs-curriculum-header">
+          <h3 class="jobs-curriculum-title">NLP for Financial Analysis</h3>
+          <div class="jobs-curriculum-badge intermediate">Intermediate</div>
+        </div>
+        <div class="jobs-curriculum-description">
+          Natural language processing techniques for financial news analysis, sentiment analysis, and knowledge extraction
+        </div>
+        <div class="jobs-curriculum-modules">
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Text Preprocessing</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Entity Recognition</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Sentiment Analysis</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon completed">✓</div>
+            <span class="jobs-module-text completed">Knowledge Graphs</span>
+          </div>
+          <div class="jobs-module-item">
+            <div class="jobs-module-icon active">5</div>
+            <span class="jobs-module-text active">Financial Document Analysis</span>
+          </div>
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Course Progress</span>
+            <span class="jobs-progress-percentage">80%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 80%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); continueCurriculum('nlp-finance')">Continue Learning</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('nlp-finance')">View Curriculum</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contextual Learning Section -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Contextual Learning Systems</h2>
+    </div>
+    
+    <div class="jobs-learning-grid">
+      <div class="jobs-learning-card contextual" onclick="openLearningDetails('market-context')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Market Context Engine</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Contextual Understanding</div>
+        <div class="jobs-learning-description">
+          Real-time market context analysis that adapts model behavior based on current market conditions and volatility regimes
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Context Accuracy</span>
+            <span class="jobs-progress-percentage">96.1%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 96.1%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">12</div>
+            <div class="jobs-metric-label">Context Types</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.89</div>
+            <div class="jobs-metric-label">Adaptation Speed</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.15s</div>
+            <div class="jobs-metric-label">Context Switch</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('market-context')">Update Context</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('market-context')">View Contexts</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card contextual" onclick="openLearningDetails('temporal-correlation')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Temporal Correlation Learning</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Time-Series Context</div>
+        <div class="jobs-learning-description">
+          Learning temporal correlations and dependencies to understand how past events influence current market behavior
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Correlation Strength</span>
+            <span class="jobs-progress-percentage">84.7%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 84.7%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">247</div>
+            <div class="jobs-metric-label">Time Windows</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.78</div>
+            <div class="jobs-metric-label">Correlation Coef</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.23s</div>
+            <div class="jobs-metric-label">Computation Time</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('temporal-correlation')">Analyze Correlations</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('temporal-correlation')">View Timeline</button>
+        </div>
+      </div>
+      
+      <div class="jobs-learning-card contextual" onclick="openLearningDetails('entity-evolution')">
+        <div class="jobs-learning-header">
+          <h3 class="jobs-learning-title">Entity Evolution Tracking</h3>
+          <div class="jobs-learning-status active"></div>
+        </div>
+        <div class="jobs-learning-type">Dynamic Entity Learning</div>
+        <div class="jobs-learning-description">
+          Tracks how financial entities evolve over time, learning patterns in company performance and market behavior
+        </div>
+        <div class="jobs-progress-container">
+          <div class="jobs-progress-label">
+            <span class="jobs-progress-text">Evolution Tracking</span>
+            <span class="jobs-progress-percentage">91.2%</span>
+          </div>
+          <div class="jobs-progress-bar">
+            <div class="jobs-progress-fill" style="width: 91.2%"></div>
+          </div>
+        </div>
+        <div class="jobs-learning-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">24,712</div>
+            <div class="jobs-metric-label">Entities Tracked</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">89,341</div>
+            <div class="jobs-metric-label">Evolution Events</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.32s</div>
+            <div class="jobs-metric-label">Update Time</div>
+          </div>
+        </div>
+        <div class="jobs-learning-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); trainSystem('entity-evolution')">Track Evolution</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPerformance('entity-evolution')">View Evolution</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bottom Tab Bar -->
+  <div class="jobs-tabbar">
+    <a href="/index-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◉</div>
+      <div class="jobs-tab-label">Today</div>
+    </a>
+    <a href="/analyze-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◎</div>
+      <div class="jobs-tab-label">Analyze</div>
+    </a>
+    <a href="/control-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">Control</div>
+    </a>
+    <a href="/model-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◆</div>
+      <div class="jobs-tab-label">Model</div>
+    </a>
+    <a href="#" class="jobs-tab active">
+      <div class="jobs-tab-icon">◇</div>
+      <div class="jobs-tab-label">Teach</div>
+    </a>
+    <a href="/ai-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">AI</div>
+    </a>
+  </div>
+  
+  <script>
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Spotlight search
+    function showSpotlight() {
+      const query = prompt('Search learning systems and curricula...');
+      if (query) {
+        console.log('Searching for:', query);
+        filterLearningContent(query);
+      }
+    }
+    
+    // Filter learning content based on search
+    function filterLearningContent(query) {
+      const cards = document.querySelectorAll('.jobs-learning-card, .jobs-curriculum-card');
+      const lowerQuery = query.toLowerCase();
+      
+      cards.forEach(card => {
+        const title = card.querySelector('.jobs-learning-title, .jobs-curriculum-title').textContent.toLowerCase();
+        const description = card.querySelector('.jobs-learning-description, .jobs-curriculum-description').textContent.toLowerCase();
+        const type = card.querySelector('.jobs-learning-type, .jobs-curriculum-badge').textContent.toLowerCase();
+        
+        if (title.includes(lowerQuery) || description.includes(lowerQuery) || type.includes(lowerQuery)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Open learning system details
+    function openLearningDetails(systemId) {
+      console.log('Opening learning system details for:', systemId);
+      alert(`Learning System: ${systemId}\n\nThis would open detailed view with:\n- Learning algorithm details\n- Training history and metrics\n- Performance analytics\n- Hyperparameter tuning\n- Real-time adaptation monitoring`);
+    }
+    
+    // Open curriculum details
+    function openCurriculumDetails(curriculumId) {
+      console.log('Opening curriculum details for:', curriculumId);
+      alert(`Curriculum: ${curriculumId}\n\nThis would open detailed view with:\n- Full curriculum outline\n- Module descriptions\n- Learning objectives\n- Prerequisites\n- Assessment criteria\n- Progress tracking`);
+    }
+    
+    // Train learning system
+    function trainSystem(systemId) {
+      console.log('Training system:', systemId);
+      
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Training...';
+      button.disabled = true;
+      
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.disabled = false;
+        
+        const results = getTrainingResults(systemId);
+        alert(`Training Complete!\n\n${results}`);
+      }, 3000);
+    }
+    
+    // Continue curriculum
+    function continueCurriculum(curriculumId) {
+      console.log('Continuing curriculum:', curriculumId);
+      
+      const results = getCurriculumProgress(curriculumId);
+      alert(`Curriculum Progress: ${curriculumId}\n\n${results}`);
+    }
+    
+    // View performance
+    function viewPerformance(systemId) {
+      console.log('Viewing performance for:', systemId);
+      
+      const results = getPerformanceMetrics(systemId);
+      alert(`Performance Metrics: ${systemId}\n\n${results}`);
+    }
+    
+    // View curriculum
+    function viewCurriculum(curriculumId) {
+      console.log('Viewing curriculum for:', curriculumId);
+      
+      const results = getCurriculumDetails(curriculumId);
+      alert(`Curriculum Details: ${curriculumId}\n\n${results}`);
+    }
+    
+    // Get training results
+    function getTrainingResults(systemId) {
+      const results = {
+        'linucb-system': 'LinUCB training iteration complete\n- Reward rate improved to 0.96\n- Confidence bounds adjusted\n- 847 new actions learned\n- Ready for deployment',
+        'neural-bandit-system': 'Neural bandit training progressing\n- Loss decreased to 0.0198\n- Feature extraction improved\n- 64.2% → 67.8% progress\n- ETA: 2.1 hours',
+        'thompson-sampling': 'Thompson sampling updated\n- Posterior distribution refined\n- Uncertainty reduced to 0.06\n- 1,247 new samples processed\n- Confidence: 92.3%',
+        'q-learning': 'Q-Learning episode complete\n- Q-values converged further\n- Policy improvement: 3.2%\n- Exploration rate: 0.12\n- Ready for next episode',
+        'collaborative-filter': 'Collaborative model updated\n- User profiles refreshed\n- Matrix factorization improved\n- Recommendation accuracy: 94.8%\n- 2,341 new interactions processed',
+        'adaptive-cache': 'Cache optimization complete\n- Hit rate improved to 89.7%\n- Eviction policy updated\n- Memory usage optimized\n- Performance boost: 15%',
+        'anomaly-adaptation': 'Anomaly thresholds adapted\n- 23 new patterns learned\n- False positive rate: 2.1%\n- Detection sensitivity improved\n- Model accuracy: 97.1%',
+        'market-context': 'Market context updated\n- 3 new market regimes identified\n- Context switching improved\n- Adaptation speed: 0.91\n- Context accuracy: 96.8%',
+        'temporal-correlation': 'Temporal analysis complete\n- 89 new correlations discovered\n- Time window optimized\n- Correlation strength: 85.3%\n- Prediction accuracy improved',
+        'entity-evolution': 'Entity evolution tracking updated\n- 1,247 entity changes tracked\n- Evolution patterns identified\n- Prediction accuracy: 91.8%\n- Timeline analysis complete'
+      };
+      
+      return results[systemId] || 'Training results will be displayed here.';
+    }
+    
+    // Get curriculum progress
+    function getCurriculumProgress(curriculumId) {
+      const progress = {
+        'financial-ml-basics': 'Currently on Module 3: Time Series Analysis\n- Completed: 2/5 modules\n- Current topic: ARIMA modeling\n- Next: Risk measurement techniques\n- Estimated completion: 2 weeks',
+        'advanced-rl': 'Currently on Module 4: Actor-Critic Methods\n- Completed: 3/5 modules\n- Current topic: Policy gradient methods\n- Next: Multi-agent systems\n- Estimated completion: 1 week',
+        'nlp-finance': 'Currently on Module 5: Financial Document Analysis\n- Completed: 4/5 modules\n- Current topic: SEC filing analysis\n- Next: Course completion\n- Estimated completion: 3 days'
+      };
+      
+      return progress[curriculumId] || 'Curriculum progress will be displayed here.';
+    }
+    
+    // Get performance metrics
+    function getPerformanceMetrics(systemId) {
+      const metrics = {
+        'linucb-system': 'LinUCB Performance Metrics\n- Cumulative reward: 12,847\n- Regret: 0.12 (excellent)\n- Confidence bounds: 94.2%\n- Action selection time: 0.05s\n- Exploration rate: 15%',
+        'neural-bandit-system': 'Neural Bandit Training Metrics\n- Training loss: 0.0234\n- Validation accuracy: 89.7%\n- Feature extraction quality: 92.1%\n- Convergence rate: 87.3%\n- Training time: 2.5h remaining',
+        'thompson-sampling': 'Thompson Sampling Performance\n- Posterior confidence: 89.3%\n- Sampling efficiency: 94.7%\n- Uncertainty quantification: 0.08\n- Decision quality: 91.2%\n- Bayesian update rate: 0.95',
+        'q-learning': 'Q-Learning Performance\n- Policy convergence: 78.9%\n- Q-value stability: 91.3%\n- Action selection accuracy: 87.6%\n- Exploration efficiency: 84.2%\n- Learning rate: 0.15',
+        'collaborative-filter': 'Collaborative Learning Metrics\n- Recommendation accuracy: 94.2%\n- User satisfaction: 89.7%\n- Matrix factorization quality: 92.8%\n- Cold start performance: 78.3%\n- Response time: 0.07s',
+        'adaptive-cache': 'Adaptive Cache Performance\n- Hit rate: 89.1%\n- Miss penalty: 0.15s\n- Cache efficiency: 94.3%\n- Memory utilization: 87.2%\n- Eviction accuracy: 96.1%'
+      };
+      
+      return metrics[systemId] || 'Performance metrics will be displayed here.';
+    }
+    
+    // Get curriculum details
+    function getCurriculumDetails(curriculumId) {
+      const details = {
+        'financial-ml-basics': 'Financial ML Fundamentals Curriculum\n\nModule 1: Introduction to Financial Data ✓\nModule 2: Statistical Foundations ✓\nModule 3: Time Series Analysis (Current)\nModule 4: Risk Modeling\nModule 5: Portfolio Optimization\n\nDuration: 6 weeks\nPrerequisites: Basic statistics\nAssessment: Practical projects',
+        'advanced-rl': 'Advanced Reinforcement Learning Curriculum\n\nModule 1: Multi-Armed Bandits ✓\nModule 2: Contextual Bandits ✓\nModule 3: Deep Q-Networks ✓\nModule 4: Actor-Critic Methods (Current)\nModule 5: Multi-Agent RL\n\nDuration: 8 weeks\nPrerequisites: ML fundamentals\nAssessment: Research project',
+        'nlp-finance': 'NLP for Financial Analysis Curriculum\n\nModule 1: Text Preprocessing ✓\nModule 2: Entity Recognition ✓\nModule 3: Sentiment Analysis ✓\nModule 4: Knowledge Graphs ✓\nModule 5: Financial Document Analysis (Current)\n\nDuration: 5 weeks\nPrerequisites: NLP basics\nAssessment: Capstone project'
+      };
+      
+      return details[curriculumId] || 'Curriculum details will be displayed here.';
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // Auto-refresh learning metrics
+    function refreshLearningMetrics() {
+      const metrics = {
+        'active-learners': Math.floor(Math.random() * 3) + 7,
+        'avg-performance': `${(Math.random() * 3 + 93).toFixed(1)}%`,
+        'training-sessions': Math.floor(Math.random() * 5) + 10,
+        'completed-modules': Math.floor(Math.random() * 10) + 240,
+        'adaptation-rate': `${(Math.random() * 0.1 + 0.85).toFixed(2)}`,
+        'context-accuracy': `${(Math.random() * 2 + 95).toFixed(1)}%`
+      };
+      
+      Object.entries(metrics).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value;
+        }
+      });
+    }
+    
+    // Refresh metrics every 30 seconds
+    setInterval(refreshLearningMetrics, 30000);
+    
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault();
+        showSpotlight();
+      }
+      if (e.key === 'r' && e.metaKey) {
+        e.preventDefault();
+        refreshLearningMetrics();
+      }
+    });
+    
+    // Initialize learning system animations
+    document.querySelectorAll('.jobs-learning-card, .jobs-curriculum-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-2px) scale(1.01)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+    
+    // Auto-update progress bars
+    function updateProgressBars() {
+      const progressBars = document.querySelectorAll('.jobs-progress-fill');
+      progressBars.forEach(bar => {
+        const currentWidth = parseFloat(bar.style.width);
+        if (currentWidth < 100) {
+          const increment = Math.random() * 0.5;
+          const newWidth = Math.min(currentWidth + increment, 100);
+          bar.style.width = `${newWidth}%`;
+          
+          // Update percentage text
+          const container = bar.closest('.jobs-progress-container');
+          const percentage = container.querySelector('.jobs-progress-percentage');
+          if (percentage) {
+            percentage.textContent = `${newWidth.toFixed(1)}%`;
+          }
+        }
+      });
+    }
+    
+    // Update progress bars every 5 seconds
+    setInterval(updateProgressBars, 5000);
+  </script>
+</body>
+</html>

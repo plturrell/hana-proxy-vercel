@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI - FinSight Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
+  <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <style>
+    /* Jobs/Ive Minimalist Design System */
+    :root {
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      --jobs-teal: #5AC8FA;
+      --jobs-pink: #FF2D92;
+      --jobs-indigo: #5856D6;
+      --jobs-cyan: #32D74B;
+      --jobs-mint: #00C7BE;
+      --jobs-yellow: #FFCC00;
+      
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-hero: 48px;
+      --jobs-font-size-title: 34px;
+      --jobs-font-size-headline: 28px;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-nav {
+      background: rgba(0, 0, 0, 0.8);
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-tabbar {
+      background: rgba(0, 0, 0, 0.95);
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    body.dark-mode .jobs-ai-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-category-header {
+      background: rgba(28, 28, 30, 0.95);
+      border-bottom-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-chat-container {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-chat-input {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-message {
+      background: #2C2C2E;
+    }
+    
+    body.dark-mode .jobs-message.user {
+      background: var(--jobs-blue);
+    }
+    
+    body.dark-mode .jobs-data-source {
+      background: #2C2C2E;
+    }
+    
+    /* Navigation */
+    .jobs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .jobs-nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      align-items: center;
+    }
+    
+    .jobs-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Main Container */
+    .jobs-container {
+      padding-top: 48px;
+      min-height: 100vh;
+      padding-bottom: 70px;
+    }
+    
+    /* Header */
+    .jobs-header {
+      text-align: center;
+      padding: var(--jobs-spacing-xl) var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .jobs-header-title {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0 0 var(--jobs-spacing-sm) 0;
+    }
+    
+    .jobs-header-subtitle {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      margin: 0;
+    }
+    
+    /* AI Overview */
+    .jobs-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xxl);
+    }
+    
+    .jobs-overview-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      text-align: center;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-overview-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-overview-value {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-overview-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-overview-value.online {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-overview-value.processing {
+      color: var(--jobs-orange);
+    }
+    
+    .jobs-overview-value.insights {
+      color: var(--jobs-purple);
+    }
+    
+    /* Category Headers */
+    .jobs-category-header {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      margin: var(--jobs-spacing-xxl) 0 var(--jobs-spacing-lg) 0;
+      position: sticky;
+      top: 48px;
+      z-index: 100;
+    }
+    
+    .jobs-category-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* AI Cards */
+    .jobs-ai-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto var(--jobs-spacing-xl);
+    }
+    
+    .jobs-ai-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-ai-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-ai-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      opacity: 0;
+      transition: opacity var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-ai-card:hover::before {
+      opacity: 1;
+    }
+    
+    .jobs-ai-card.grok::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .jobs-ai-card.perplexity::before {
+      background: linear-gradient(90deg, var(--jobs-teal), var(--jobs-cyan));
+    }
+    
+    .jobs-ai-card.supabase::before {
+      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-mint));
+    }
+    
+    .jobs-ai-card.integration::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-pink));
+    }
+    
+    .jobs-ai-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-ai-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .jobs-ai-status {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-gray);
+      position: relative;
+    }
+    
+    .jobs-ai-status.online {
+      background: var(--jobs-green);
+      animation: pulse 2s infinite;
+    }
+    
+    .jobs-ai-status.processing {
+      background: var(--jobs-orange);
+      animation: pulse 1s infinite;
+    }
+    
+    .jobs-ai-status.offline {
+      background: var(--jobs-red);
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .jobs-ai-type {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-ai-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    .jobs-ai-metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-metric {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .jobs-metric-value {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-metric-label {
+      font-size: 10px;
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .jobs-ai-actions {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-action-button {
+      flex: 1;
+      background: var(--jobs-light-gray);
+      border: none;
+      padding: var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-action-button:hover {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-button.primary:hover {
+      background: var(--jobs-purple);
+    }
+    
+    body.dark-mode .jobs-action-button {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-action-button:hover {
+      background: var(--jobs-blue);
+    }
+    
+    /* Chat Interface */
+    .jobs-chat-container {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: 0;
+      height: 500px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    
+    .jobs-chat-header {
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      border-bottom: 1px solid var(--jobs-light-gray);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .jobs-chat-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .jobs-chat-ai-selector {
+      background: var(--jobs-light-gray);
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      cursor: pointer;
+    }
+    
+    .jobs-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--jobs-spacing-md);
+      display: flex;
+      flex-direction: column;
+      gap: var(--jobs-spacing-md);
+    }
+    
+    .jobs-message {
+      max-width: 80%;
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 18px;
+      font-size: var(--jobs-font-size-caption);
+      line-height: 1.4;
+      position: relative;
+    }
+    
+    .jobs-message.user {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      align-self: flex-end;
+      border-bottom-right-radius: 6px;
+    }
+    
+    .jobs-message.ai {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+      align-self: flex-start;
+      border-bottom-left-radius: 6px;
+    }
+    
+    .jobs-message.ai.grok {
+      border-left: 3px solid var(--jobs-orange);
+    }
+    
+    .jobs-message.ai.perplexity {
+      border-left: 3px solid var(--jobs-teal);
+    }
+    
+    .jobs-message.ai.supabase {
+      border-left: 3px solid var(--jobs-green);
+    }
+    
+    .jobs-message-time {
+      font-size: 10px;
+      color: var(--jobs-gray);
+      margin-top: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-chat-input-container {
+      padding: var(--jobs-spacing-md);
+      border-top: 1px solid var(--jobs-light-gray);
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-chat-input {
+      flex: 1;
+      background: var(--jobs-light-gray);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 20px;
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      font-size: var(--jobs-font-size-caption);
+      outline: none;
+      resize: none;
+      min-height: 40px;
+      max-height: 120px;
+    }
+    
+    .jobs-chat-input:focus {
+      border-color: var(--jobs-blue);
+      box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+    }
+    
+    .jobs-chat-send {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      border: none;
+      border-radius: 20px;
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      font-size: var(--jobs-font-size-caption);
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-chat-send:hover {
+      background: var(--jobs-purple);
+    }
+    
+    .jobs-chat-send:disabled {
+      background: var(--jobs-gray);
+      cursor: not-allowed;
+    }
+    
+    /* Data Sources */
+    .jobs-data-sources {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+      margin-bottom: var(--jobs-spacing-md);
+      flex-wrap: wrap;
+    }
+    
+    .jobs-data-source {
+      background: var(--jobs-light-gray);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 20px;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-data-source:hover {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-data-source.active {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-data-source-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-green);
+    }
+    
+    .jobs-data-source-icon.warning {
+      background: var(--jobs-orange);
+    }
+    
+    .jobs-data-source-icon.error {
+      background: var(--jobs-red);
+    }
+    
+    /* Bottom Tab Bar */
+    .jobs-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 49px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .jobs-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      text-decoration: none;
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-tab:hover,
+    .jobs-tab.active {
+      color: var(--jobs-blue);
+    }
+    
+    .jobs-tab-icon {
+      font-size: 24px;
+      margin-bottom: 2px;
+    }
+    
+    .jobs-tab-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .jobs-ai-grid {
+        grid-template-columns: 1fr;
+        gap: var(--jobs-spacing-md);
+      }
+      
+      .jobs-overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .jobs-chat-container {
+        height: 400px;
+      }
+      
+      .jobs-message {
+        max-width: 90%;
+      }
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Navigation -->
+  <nav class="jobs-nav">
+    <div class="jobs-nav-title">FinSight AI</div>
+    <div class="jobs-nav-actions">
+      <span style="font-size: 13px; color: var(--jobs-gray);">AI Assistant</span>
+      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="jobs-container">
+    <!-- Header -->
+    <div class="jobs-header">
+      <h1 class="jobs-header-title">AI Intelligence</h1>
+      <p class="jobs-header-subtitle">Powered by Grok-4 and Perplexity AI with Supabase integration</p>
+    </div>
+    
+    <!-- AI Overview -->
+    <div class="jobs-overview-grid">
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value online" id="ai-status">Online</div>
+        <div class="jobs-overview-label">AI Status</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="queries-today">1,247</div>
+        <div class="jobs-overview-label">Queries Today</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value processing" id="processing-queue">8</div>
+        <div class="jobs-overview-label">Processing Queue</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value insights" id="insights-generated">342</div>
+        <div class="jobs-overview-label">Insights Generated</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="avg-response-time">0.8s</div>
+        <div class="jobs-overview-label">Avg Response Time</div>
+      </div>
+      
+      <div class="jobs-overview-card">
+        <div class="jobs-overview-value" id="data-sources">15</div>
+        <div class="jobs-overview-label">Data Sources</div>
+      </div>
+    </div>
+    
+    <!-- Interactive Chat Interface -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">AI Chat Interface</h2>
+    </div>
+    
+    <div class="jobs-ai-grid">
+      <div class="jobs-chat-container" style="grid-column: 1 / -1;">
+        <div class="jobs-chat-header">
+          <h3 class="jobs-chat-title">Financial Intelligence Assistant</h3>
+          <select class="jobs-chat-ai-selector" id="ai-selector">
+            <option value="auto">Auto-Select AI</option>
+            <option value="grok">Grok-4</option>
+            <option value="perplexity">Perplexity AI</option>
+            <option value="supabase">Supabase Query</option>
+          </select>
+        </div>
+        
+        <div class="jobs-data-sources">
+          <div class="jobs-data-source active" data-source="supabase">
+            <div class="jobs-data-source-icon"></div>
+            <span>Supabase DB</span>
+          </div>
+          <div class="jobs-data-source" data-source="market">
+            <div class="jobs-data-source-icon"></div>
+            <span>Market Data</span>
+          </div>
+          <div class="jobs-data-source" data-source="news">
+            <div class="jobs-data-source-icon"></div>
+            <span>Financial News</span>
+          </div>
+          <div class="jobs-data-source" data-source="earnings">
+            <div class="jobs-data-source-icon warning"></div>
+            <span>Earnings Reports</span>
+          </div>
+          <div class="jobs-data-source" data-source="economic">
+            <div class="jobs-data-source-icon"></div>
+            <span>Economic Data</span>
+          </div>
+          <div class="jobs-data-source" data-source="social">
+            <div class="jobs-data-source-icon"></div>
+            <span>Social Sentiment</span>
+          </div>
+        </div>
+        
+        <div class="jobs-chat-messages" id="chat-messages">
+          <div class="jobs-message ai supabase">
+            <div>Welcome to FinSight AI! I can help you analyze financial data, generate insights, and answer questions using our integrated AI systems and Supabase database.</div>
+            <div class="jobs-message-time">Just now</div>
+          </div>
+          <div class="jobs-message ai grok">
+            <div>I'm Grok-4, ready to provide advanced financial analysis and real-time market insights. What would you like to explore?</div>
+            <div class="jobs-message-time">Just now</div>
+          </div>
+          <div class="jobs-message ai perplexity">
+            <div>Perplexity AI here - I can search the web for the latest financial information and provide comprehensive research-backed answers.</div>
+            <div class="jobs-message-time">Just now</div>
+          </div>
+        </div>
+        
+        <div class="jobs-chat-input-container">
+          <textarea class="jobs-chat-input" id="chat-input" placeholder="Ask about portfolio performance, market trends, or specific financial data..." rows="1"></textarea>
+          <button class="jobs-chat-send" id="send-button" onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI Services -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">AI Services</h2>
+    </div>
+    
+    <div class="jobs-ai-grid">
+      <div class="jobs-ai-card grok" onclick="openAIService('grok')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Grok-4 Intelligence</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Advanced AI Reasoning</div>
+        <div class="jobs-ai-description">
+          Grok-4 provides sophisticated financial analysis, market predictions, and strategic insights with real-time reasoning capabilities
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">847</div>
+            <div class="jobs-metric-label">Queries Today</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.6s</div>
+            <div class="jobs-metric-label">Avg Response</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">98.7%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); quickQuery('grok')">Quick Query</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewHistory('grok')">View History</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card perplexity" onclick="openAIService('perplexity')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Perplexity AI Research</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Web-Enhanced AI</div>
+        <div class="jobs-ai-description">
+          Perplexity AI combines web search with advanced reasoning to provide comprehensive, research-backed financial insights
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">623</div>
+            <div class="jobs-metric-label">Searches Today</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1.2s</div>
+            <div class="jobs-metric-label">Avg Response</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">97.4%</div>
+            <div class="jobs-metric-label">Source Quality</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); quickQuery('perplexity')">Research Query</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewHistory('perplexity')">View Sources</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card supabase" onclick="openAIService('supabase')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Supabase Integration</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Database AI Query</div>
+        <div class="jobs-ai-description">
+          Natural language queries to Supabase database with AI-powered SQL generation and financial data analysis
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">1,247</div>
+            <div class="jobs-metric-label">DB Queries</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.3s</div>
+            <div class="jobs-metric-label">Query Time</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">32</div>
+            <div class="jobs-metric-label">Functions</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); quickQuery('supabase')">Query Database</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewHistory('supabase')">View Functions</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Data Integration -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">Data Integration</h2>
+    </div>
+    
+    <div class="jobs-ai-grid">
+      <div class="jobs-ai-card integration" onclick="openIntegration('external-data')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">External Data Sources</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Real-time Data Integration</div>
+        <div class="jobs-ai-description">
+          Connect to external APIs, market data feeds, and news sources for comprehensive financial analysis
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">15</div>
+            <div class="jobs-metric-label">Data Sources</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">99.2%</div>
+            <div class="jobs-metric-label">Uptime</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">2.1GB</div>
+            <div class="jobs-metric-label">Data Processed</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); manageIntegration('external-data')">Manage Sources</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewIntegration('external-data')">View Data</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card integration" onclick="openIntegration('real-time-feeds')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Real-time Market Feeds</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Live Market Data</div>
+        <div class="jobs-ai-description">
+          Bloomberg, Reuters, and other premium data feeds integrated with AI analysis for instant market insights
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">8</div>
+            <div class="jobs-metric-label">Active Feeds</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.2s</div>
+            <div class="jobs-metric-label">Data Latency</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">847K</div>
+            <div class="jobs-metric-label">Updates/Hour</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); manageIntegration('real-time-feeds')">Configure Feeds</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewIntegration('real-time-feeds')">Monitor Status</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card integration" onclick="openIntegration('sentiment-analysis')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Sentiment Analysis</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Social & News Sentiment</div>
+        <div class="jobs-ai-description">
+          AI-powered sentiment analysis from social media, news articles, and analyst reports for market sentiment tracking
+        </div>
+        <div class="jobs-ai-metrics">
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">12.3K</div>
+            <div class="jobs-metric-label">Sources Analyzed</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">94.7%</div>
+            <div class="jobs-metric-label">Accuracy</div>
+          </div>
+          <div class="jobs-metric">
+            <div class="jobs-metric-value">0.4s</div>
+            <div class="jobs-metric-label">Processing Time</div>
+          </div>
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); manageIntegration('sentiment-analysis')">Analyze Sentiment</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewIntegration('sentiment-analysis')">View Trends</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- AI Tools -->
+    <div class="jobs-category-header">
+      <h2 class="jobs-category-title">AI Tools</h2>
+    </div>
+    
+    <div class="jobs-ai-grid">
+      <div class="jobs-ai-card" onclick="openAITool('financial-summary')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Financial Summary Generator</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Automated Reporting</div>
+        <div class="jobs-ai-description">
+          Generate comprehensive financial summaries and reports using AI analysis of portfolio data and market conditions
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); generateSummary()">Generate Summary</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewTemplates()">View Templates</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card" onclick="openAITool('risk-assessment')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">AI Risk Assessment</h3>
+          <div class="jobs-ai-status online"></div>
+        </div>
+        <div class="jobs-ai-type">Predictive Risk Analysis</div>
+        <div class="jobs-ai-description">
+          Advanced risk assessment using multiple AI models to predict market volatility and portfolio risks
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); assessRisk()">Assess Risk</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewRiskMetrics()">View Metrics</button>
+        </div>
+      </div>
+      
+      <div class="jobs-ai-card" onclick="openAITool('market-prediction')">
+        <div class="jobs-ai-header">
+          <h3 class="jobs-ai-title">Market Prediction Engine</h3>
+          <div class="jobs-ai-status processing"></div>
+        </div>
+        <div class="jobs-ai-type">AI-Powered Forecasting</div>
+        <div class="jobs-ai-description">
+          Machine learning models combined with Grok-4 reasoning for market trend prediction and investment recommendations
+        </div>
+        <div class="jobs-ai-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); predictMarket()">Predict Trends</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPredictions()">View Forecasts</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bottom Tab Bar -->
+  <div class="jobs-tabbar">
+    <a href="/index-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◉</div>
+      <div class="jobs-tab-label">Today</div>
+    </a>
+    <a href="/analyze-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◎</div>
+      <div class="jobs-tab-label">Analyze</div>
+    </a>
+    <a href="/control-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">Control</div>
+    </a>
+    <a href="/model-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◆</div>
+      <div class="jobs-tab-label">Model</div>
+    </a>
+    <a href="/teach-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◇</div>
+      <div class="jobs-tab-label">Teach</div>
+    </a>
+    <a href="#" class="jobs-tab active">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">AI</div>
+    </a>
+  </div>
+  
+  <script>
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Spotlight search
+    function showSpotlight() {
+      const query = prompt('Search AI services and tools...');
+      if (query) {
+        console.log('Searching for:', query);
+        filterAIContent(query);
+      }
+    }
+    
+    // Filter AI content based on search
+    function filterAIContent(query) {
+      const cards = document.querySelectorAll('.jobs-ai-card');
+      const lowerQuery = query.toLowerCase();
+      
+      cards.forEach(card => {
+        const title = card.querySelector('.jobs-ai-title').textContent.toLowerCase();
+        const description = card.querySelector('.jobs-ai-description').textContent.toLowerCase();
+        const type = card.querySelector('.jobs-ai-type').textContent.toLowerCase();
+        
+        if (title.includes(lowerQuery) || description.includes(lowerQuery) || type.includes(lowerQuery)) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+    
+    // Chat functionality
+    function sendMessage() {
+      const input = document.getElementById('chat-input');
+      const message = input.value.trim();
+      
+      if (!message) return;
+      
+      const messagesContainer = document.getElementById('chat-messages');
+      const aiSelector = document.getElementById('ai-selector');
+      const selectedAI = aiSelector.value;
+      
+      // Add user message
+      const userMessage = document.createElement('div');
+      userMessage.className = 'jobs-message user';
+      userMessage.innerHTML = `
+        <div>${message}</div>
+        <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
+      `;
+      messagesContainer.appendChild(userMessage);
+      
+      // Clear input
+      input.value = '';
+      
+      // Scroll to bottom
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      
+      // Simulate AI response
+      setTimeout(() => {
+        const aiResponse = generateAIResponse(message, selectedAI);
+        const aiMessage = document.createElement('div');
+        aiMessage.className = `jobs-message ai ${selectedAI === 'auto' ? 'supabase' : selectedAI}`;
+        aiMessage.innerHTML = `
+          <div>${aiResponse}</div>
+          <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
+        `;
+        messagesContainer.appendChild(aiMessage);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 1000);
+    }
+    
+    // Generate AI response
+    function generateAIResponse(message, aiType) {
+      const responses = {
+        'grok': [
+          'Based on current market conditions and my analysis, here are the key insights...',
+          'Let me analyze this from multiple angles. The data suggests...',
+          'Interesting question! My reasoning indicates that...',
+          'From a strategic perspective, I recommend...'
+        ],
+        'perplexity': [
+          'I\'ve searched the latest financial news and research. Here\'s what I found...',
+          'According to recent reports from Bloomberg and Reuters...',
+          'Based on comprehensive web research and analysis...',
+          'The latest market data and expert opinions suggest...'
+        ],
+        'supabase': [
+          'Querying the Supabase database for relevant financial data...',
+          'I found the following information in our portfolio database...',
+          'Based on historical data in our system...',
+          'The database shows the following trends...'
+        ],
+        'auto': [
+          'I\'ve analyzed your query and selected the best AI system to help...',
+          'Using multiple AI sources to provide comprehensive insights...',
+          'Combining database analysis with external research...',
+          'Here\'s what our integrated AI systems found...'
+        ]
+      };
+      
+      const typeResponses = responses[aiType] || responses['auto'];
+      return typeResponses[Math.floor(Math.random() * typeResponses.length)];
+    }
+    
+    // Data source toggle
+    document.querySelectorAll('.jobs-data-source').forEach(source => {
+      source.addEventListener('click', () => {
+        source.classList.toggle('active');
+        console.log('Toggled data source:', source.dataset.source);
+      });
+    });
+    
+    // Enter key to send message
+    document.getElementById('chat-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    
+    // Auto-resize textarea
+    document.getElementById('chat-input').addEventListener('input', (e) => {
+      e.target.style.height = 'auto';
+      e.target.style.height = e.target.scrollHeight + 'px';
+    });
+    
+    // AI Service functions
+    function openAIService(service) {
+      console.log('Opening AI service:', service);
+      alert(`Opening ${service} service interface...\n\nThis would provide:\n- Service configuration\n- API management\n- Usage analytics\n- Performance monitoring`);
+    }
+    
+    function quickQuery(service) {
+      const query = prompt(`Quick query for ${service}:\n\nWhat would you like to ask?`);
+      if (query) {
+        console.log('Quick query:', service, query);
+        alert(`Processing query with ${service}...\n\nQuery: ${query}\n\nResponse would appear here in real implementation.`);
+      }
+    }
+    
+    function viewHistory(service) {
+      console.log('Viewing history for:', service);
+      alert(`${service} History:\n\n- Recent queries\n- Performance metrics\n- Response times\n- Usage patterns`);
+    }
+    
+    // Integration functions
+    function openIntegration(integration) {
+      console.log('Opening integration:', integration);
+      alert(`Integration: ${integration}\n\nThis would show:\n- Connection status\n- Data flow monitoring\n- Configuration options\n- Error logs`);
+    }
+    
+    function manageIntegration(integration) {
+      console.log('Managing integration:', integration);
+      alert(`Managing ${integration}:\n\n- Add/remove data sources\n- Configure API keys\n- Set update frequencies\n- Monitor data quality`);
+    }
+    
+    function viewIntegration(integration) {
+      console.log('Viewing integration:', integration);
+      alert(`Viewing ${integration} data:\n\n- Real-time data feeds\n- Historical data\n- Quality metrics\n- Processing status`);
+    }
+    
+    // AI Tool functions
+    function openAITool(tool) {
+      console.log('Opening AI tool:', tool);
+      alert(`AI Tool: ${tool}\n\nThis would provide:\n- Tool interface\n- Configuration options\n- Usage examples\n- Results history`);
+    }
+    
+    function generateSummary() {
+      alert('Generating financial summary...\n\nThis would:\n- Analyze portfolio performance\n- Summarize market conditions\n- Generate insights\n- Create formatted report');
+    }
+    
+    function assessRisk() {
+      alert('Assessing portfolio risk...\n\nThis would:\n- Analyze risk metrics\n- Predict volatility\n- Identify risk factors\n- Provide recommendations');
+    }
+    
+    function predictMarket() {
+      alert('Predicting market trends...\n\nThis would:\n- Analyze market data\n- Apply ML models\n- Generate forecasts\n- Provide confidence intervals');
+    }
+    
+    function viewTemplates() {
+      alert('Available report templates:\n\n- Portfolio Performance\n- Risk Assessment\n- Market Analysis\n- Compliance Report');
+    }
+    
+    function viewRiskMetrics() {
+      alert('Risk metrics dashboard:\n\n- VaR calculations\n- Stress test results\n- Correlation analysis\n- Risk attribution');
+    }
+    
+    function viewPredictions() {
+      alert('Market predictions:\n\n- Price forecasts\n- Trend analysis\n- Volatility predictions\n- Trading signals');
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // Auto-refresh AI metrics
+    function refreshAIMetrics() {
+      const metrics = {
+        'queries-today': Math.floor(Math.random() * 100) + 1200,
+        'processing-queue': Math.floor(Math.random() * 10) + 5,
+        'insights-generated': Math.floor(Math.random() * 50) + 320,
+        'avg-response-time': `${(Math.random() * 0.5 + 0.6).toFixed(1)}s`,
+        'data-sources': Math.floor(Math.random() * 3) + 14
+      };
+      
+      Object.entries(metrics).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+          element.textContent = value;
+        }
+      });
+    }
+    
+    // Refresh metrics every 30 seconds
+    setInterval(refreshAIMetrics, 30000);
+    
+    // Add keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.metaKey && e.key === 'k') {
+        e.preventDefault();
+        showSpotlight();
+      }
+      if (e.key === 'r' && e.metaKey) {
+        e.preventDefault();
+        refreshAIMetrics();
+      }
+    });
+    
+    // Initialize AI card animations
+    document.querySelectorAll('.jobs-ai-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-2px) scale(1.01)';
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+    
+    // Simulate chat activity
+    function simulateChatActivity() {
+      const processingElement = document.getElementById('processing-queue');
+      if (processingElement) {
+        const current = parseInt(processingElement.textContent);
+        const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+        const newValue = Math.max(0, Math.min(20, current + change));
+        processingElement.textContent = newValue;
+      }
+    }
+    
+    // Update processing queue every 10 seconds
+    setInterval(simulateChatActivity, 10000);
+  </script>
+</body>
+</html>

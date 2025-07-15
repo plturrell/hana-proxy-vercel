@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinSight Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
+  <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <style>
+    /* Jobs/Ive Minimalist Design System */
+    :root {
+      /* Simplified Color Palette */
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      
+      /* Typography */
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-hero: 48px;
+      --jobs-font-size-title: 34px;
+      --jobs-font-size-headline: 28px;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      /* Spacing */
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      /* Animation */
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    /* Dark mode */
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .jobs-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .jobs-metric-label {
+      color: #8E8E93;
+    }
+    
+    body.dark-mode .jobs-nav {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    
+    /* Minimal Navigation */
+    .jobs-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .jobs-nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      align-items: center;
+    }
+    
+    .jobs-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Main Container */
+    .jobs-container {
+      padding-top: 48px;
+      min-height: 100vh;
+    }
+    
+    /* Hero Section */
+    .jobs-hero {
+      text-align: center;
+      padding: var(--jobs-spacing-xxl) var(--jobs-spacing-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .jobs-hero-value {
+      font-size: var(--jobs-font-size-hero);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.1;
+    }
+    
+    .jobs-hero-label {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      margin-top: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-hero-change {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 500;
+      margin-top: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-hero-change.positive {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-hero-change.negative {
+      color: var(--jobs-red);
+    }
+    
+    /* Card Grid */
+    .jobs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      padding: 0 var(--jobs-spacing-lg) var(--jobs-spacing-xxl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    /* Cards with your existing design */
+    .jobs-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-card:active {
+      transform: translateY(0);
+    }
+    
+    .jobs-metric-value {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.2;
+    }
+    
+    .jobs-metric-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-metric-change {
+      font-size: var(--jobs-font-size-body);
+      margin-top: var(--jobs-spacing-sm);
+    }
+    
+    .jobs-metric-change.positive {
+      color: var(--jobs-green);
+    }
+    
+    .jobs-metric-change.negative {
+      color: var(--jobs-red);
+    }
+    
+    /* Action Cards */
+    .jobs-action-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--jobs-spacing-lg);
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    body.dark-mode .jobs-action-card {
+      background: #2C2C2E;
+    }
+    
+    .jobs-action-card:hover {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-action-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+    }
+    
+    .jobs-action-subtitle {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-top: var(--jobs-spacing-xs);
+    }
+    
+    .jobs-action-card:hover .jobs-action-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    /* Bottom Tab Bar */
+    .jobs-tabbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 49px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    body.dark-mode .jobs-tabbar {
+      background: rgba(0, 0, 0, 0.95);
+      border-top-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .jobs-tab {
+      flex: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      text-decoration: none;
+      color: var(--jobs-gray);
+    }
+    
+    .jobs-tab:hover,
+    .jobs-tab.active {
+      color: var(--jobs-blue);
+    }
+    
+    .jobs-tab-icon {
+      font-size: 24px;
+      margin-bottom: 2px;
+    }
+    
+    .jobs-tab-label {
+      font-size: 10px;
+      font-weight: 500;
+    }
+    
+    /* Gesture hints */
+    .jobs-gesture-hint {
+      position: absolute;
+      top: var(--jobs-spacing-md);
+      right: var(--jobs-spacing-md);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      opacity: 0;
+      transition: opacity var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-card:hover .jobs-gesture-hint {
+      opacity: 1;
+    }
+    
+    /* Loading state */
+    .jobs-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--jobs-light-gray);
+      border-radius: 50%;
+      border-top-color: var(--jobs-blue);
+      animation: jobs-spin 0.8s linear infinite;
+    }
+    
+    @keyframes jobs-spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Voice indicator */
+    .jobs-voice-indicator {
+      position: fixed;
+      bottom: 68px;
+      right: var(--jobs-spacing-lg);
+      width: 56px;
+      height: 56px;
+      background: var(--jobs-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--jobs-white);
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-voice-indicator:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+    }
+    
+    .jobs-voice-indicator.listening {
+      animation: jobs-pulse 1.5s ease-in-out infinite;
+    }
+    
+    @keyframes jobs-pulse {
+      0% { box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
+      50% { box-shadow: 0 4px 20px rgba(0, 122, 255, 0.6); }
+      100% { box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3); }
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Minimal Navigation -->
+  <nav class="jobs-nav">
+    <div class="jobs-nav-title">FinSight Intelligence</div>
+    <div class="jobs-nav-actions">
+      <span style="font-size: 13px; color: var(--jobs-gray);">Good morning, Sarah</span>
+      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="jobs-container">
+    <!-- Hero Section -->
+    <div class="jobs-hero">
+      <h1 class="jobs-hero-value">$127.3M</h1>
+      <p class="jobs-hero-label">Total Portfolio Value</p>
+      <p class="jobs-hero-change positive">↗ +$5.2M today</p>
+    </div>
+    
+    <!-- Key Metrics Grid -->
+    <div class="jobs-grid">
+      <div class="jobs-card" onclick="navigate('analyze', 'portfolio')">
+        <div class="jobs-gesture-hint">Long press for details</div>
+        <div class="jobs-metric-label">Daily P&L</div>
+        <div class="jobs-metric-value">+$847K</div>
+        <div class="jobs-metric-change positive">↗ +12.3%</div>
+      </div>
+      
+      <div class="jobs-card" onclick="navigate('analyze', 'risk')">
+        <div class="jobs-metric-label">Risk Score</div>
+        <div class="jobs-metric-value">Low</div>
+        <div class="jobs-metric-change positive">98.7% healthy</div>
+      </div>
+      
+      <div class="jobs-card" onclick="navigate('analyze', 'treasury')">
+        <div class="jobs-metric-label">Cash Position</div>
+        <div class="jobs-metric-value">$25.0M</div>
+        <div class="jobs-metric-change positive">↗ +4.1%</div>
+      </div>
+    </div>
+    
+    <!-- Actions Section -->
+    <div style="padding: 0 var(--jobs-spacing-lg); max-width: 1200px; margin: var(--jobs-spacing-xxl) auto 100px;">
+      <h2 style="font-size: var(--jobs-font-size-headline); font-weight: 600; margin-bottom: var(--jobs-spacing-lg);">Actions Needed</h2>
+      
+      <div style="display: grid; gap: var(--jobs-spacing-md);">
+        <div class="jobs-action-card" onclick="handleAction('approve-trade')">
+          <div>
+            <div class="jobs-action-title">Approve Treasury Allocation</div>
+            <div class="jobs-action-subtitle">$5M reallocation awaiting approval</div>
+          </div>
+          <div style="font-size: 20px;">→</div>
+        </div>
+        
+        <div class="jobs-action-card" onclick="handleAction('review-risk')">
+          <div>
+            <div class="jobs-action-title">Review Risk Alert</div>
+            <div class="jobs-action-subtitle">Volatility spike in tech holdings</div>
+          </div>
+          <div style="font-size: 20px;">→</div>
+        </div>
+        
+        <div class="jobs-action-card" onclick="handleAction('scenario-analysis')">
+          <div>
+            <div class="jobs-action-title">Run Scenario Analysis</div>
+            <div class="jobs-action-subtitle">Rate hike impact assessment due</div>
+          </div>
+          <div style="font-size: 20px;">→</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bottom Tab Bar (iOS style) -->
+  <div class="jobs-tabbar">
+    <a href="#" class="jobs-tab active">
+      <div class="jobs-tab-icon">◉</div>
+      <div class="jobs-tab-label">Today</div>
+    </a>
+    <a href="/analyze-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◎</div>
+      <div class="jobs-tab-label">Analyze</div>
+    </a>
+    <a href="/control-jobs.html" class="jobs-tab" id="control-tab" style="display: none;">
+      <div class="jobs-tab-icon">◈</div>
+      <div class="jobs-tab-label">Control</div>
+    </a>
+    <a href="/model-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◆</div>
+      <div class="jobs-tab-label">Model</div>
+    </a>
+    <a href="/teach-jobs.html" class="jobs-tab">
+      <div class="jobs-tab-icon">◇</div>
+      <div class="jobs-tab-label">Teach</div>
+    </a>
+  </div>
+  
+  <!-- Voice Assistant Button -->
+  <div class="jobs-voice-indicator" onclick="startVoiceCommand()">
+    <span>🎤</span>
+  </div>
+  
+  <script>
+    // Check user role
+    const userRole = localStorage.getItem('userRole') || 'Finance';
+    if (userRole === 'Technology') {
+      document.getElementById('control-tab').style.display = 'flex';
+    }
+    
+    // Navigation
+    function navigate(screen, section) {
+      if (screen === 'analyze') {
+        window.location.href = `/analyze-jobs.html${section ? '#' + section : ''}`;
+      }
+    }
+    
+    // Handle actions
+    function handleAction(action) {
+      // In real implementation, these would open in-place overlays
+      console.log('Handling action:', action);
+      // For now, navigate to analyze
+      navigate('analyze', action);
+    }
+    
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Spotlight search
+    function showSpotlight() {
+      // In real implementation, this would show a spotlight-style search
+      const query = prompt('Search FinSight...');
+      if (query) {
+        console.log('Searching for:', query);
+      }
+    }
+    
+    // Voice command
+    function startVoiceCommand() {
+      const indicator = document.querySelector('.jobs-voice-indicator');
+      indicator.classList.add('listening');
+      
+      // Simulate voice recognition
+      setTimeout(() => {
+        indicator.classList.remove('listening');
+        // In real implementation, this would use Web Speech API
+        console.log('Voice command completed');
+      }, 3000);
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // Add touch gestures
+    let touchStartY = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchend', (e) => {
+      const touchEndY = e.changedTouches[0].clientY;
+      const diff = touchStartY - touchEndY;
+      
+      // Swipe up to refresh
+      if (diff < -100) {
+        location.reload();
+      }
+    });
+  </script>
+</body>
+</html>
