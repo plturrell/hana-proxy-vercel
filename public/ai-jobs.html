@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <script src="shared-hamburger-nav.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -75,10 +76,7 @@
       border-bottom-color: rgba(255, 255, 255, 0.1);
     }
     
-    body.dark-mode .jobs-tabbar {
-      background: rgba(0, 0, 0, 0.95);
-      border-top-color: rgba(255, 255, 255, 0.1);
-    }
+    /* Dark mode tabbar styles - removed */
     
     body.dark-mode .jobs-ai-card {
       background: #1C1C1E;
@@ -113,56 +111,13 @@
       background: #2C2C2E;
     }
     
-    /* Navigation */
-    .jobs-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 48px;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--jobs-spacing-lg);
-    }
-    
-    .jobs-nav-title {
-      font-size: var(--jobs-font-size-body);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    
-    .jobs-nav-actions {
-      display: flex;
-      gap: var(--jobs-spacing-md);
-      align-items: center;
-    }
-    
-    .jobs-nav-button {
-      background: none;
-      border: none;
-      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
-      font-size: var(--jobs-font-size-caption);
-      color: var(--jobs-blue);
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-    }
-    
-    .jobs-nav-button:hover {
-      background: rgba(0, 122, 255, 0.1);
-    }
+    /* Navigation - will be replaced by hamburger nav */
     
     /* Main Container */
     .jobs-container {
       padding-top: 48px;
       min-height: 100vh;
-      padding-bottom: 70px;
+      padding-bottom: var(--jobs-spacing-lg);
     }
     
     /* Header */
@@ -609,50 +564,7 @@
       background: var(--jobs-red);
     }
     
-    /* Bottom Tab Bar */
-    .jobs-tabbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 49px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .jobs-tab {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-      text-decoration: none;
-      color: var(--jobs-gray);
-    }
-    
-    .jobs-tab:hover,
-    .jobs-tab.active {
-      color: var(--jobs-blue);
-    }
-    
-    .jobs-tab-icon {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    
-    .jobs-tab-label {
-      font-size: 10px;
-      font-weight: 500;
-    }
+    /* Bottom Tab Bar - Removed */
     
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -676,15 +588,8 @@
   </style>
 </head>
 <body class="dark-mode">
-  <!-- Navigation -->
-  <nav class="jobs-nav">
-    <div class="jobs-nav-title">FinSight AI</div>
-    <div class="jobs-nav-actions">
-      <span style="font-size: 13px; color: var(--jobs-gray);">AI Assistant</span>
-      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
-      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
-    </div>
-  </nav>
+  <!-- Navigation will be inserted here -->
+  <div id="navigation-container"></div>
   
   <!-- Main Container -->
   <div class="jobs-container">
@@ -1016,58 +921,26 @@
           <button class="jobs-action-button" onclick="event.stopPropagation(); viewRiskMetrics()">View Metrics</button>
         </div>
       </div>
-      
-      <div class="jobs-ai-card" onclick="openAITool('market-prediction')">
-        <div class="jobs-ai-header">
-          <h3 class="jobs-ai-title">Market Prediction Engine</h3>
-          <div class="jobs-ai-status processing"></div>
-        </div>
-        <div class="jobs-ai-type">AI-Powered Forecasting</div>
-        <div class="jobs-ai-description">
-          Machine learning models combined with Grok-4 reasoning for market trend prediction and investment recommendations
-        </div>
-        <div class="jobs-ai-actions">
-          <button class="jobs-action-button primary" onclick="event.stopPropagation(); predictMarket()">Predict Trends</button>
-          <button class="jobs-action-button" onclick="event.stopPropagation(); viewPredictions()">View Forecasts</button>
-        </div>
-      </div>
     </div>
   </div>
   
-  <!-- Bottom Tab Bar -->
-  <div class="jobs-tabbar">
-    <a href="/index-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◉</div>
-      <div class="jobs-tab-label">Today</div>
-    </a>
-    <a href="/analyze-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◎</div>
-      <div class="jobs-tab-label">Analyze</div>
-    </a>
-    <a href="/control-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">Control</div>
-    </a>
-    <a href="/model-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◆</div>
-      <div class="jobs-tab-label">Model</div>
-    </a>
-    <a href="/teach-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◇</div>
-      <div class="jobs-tab-label">Teach</div>
-    </a>
-    <a href="#" class="jobs-tab active">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">AI</div>
-    </a>
-  </div>
-  
   <script>
-    // Dark mode toggle
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
+    // Initialize hamburger navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add hamburger CSS to the page
+      const style = document.createElement('style');
+      style.innerHTML = getHamburgerCSS();
+      document.head.appendChild(style);
+      
+      // Add hamburger navigation
+      const navContainer = document.getElementById('navigation-container');
+      if (navContainer) {
+        navContainer.innerHTML = createHamburgerNav();
+      }
+      
+      // Initialize hamburger functionality
+      initHamburgerNav();
+    });
     
     // Spotlight search
     function showSpotlight() {
@@ -1256,10 +1129,7 @@
       alert('Market predictions:\n\n- Price forecasts\n- Trend analysis\n- Volatility predictions\n- Trading signals');
     }
     
-    // Load saved preferences
-    if (localStorage.getItem('darkMode') === 'false') {
-      document.body.classList.remove('dark-mode');
-    }
+    // Load saved preferences - handled by hamburger nav
     
     // Auto-refresh AI metrics
     function refreshAIMetrics() {

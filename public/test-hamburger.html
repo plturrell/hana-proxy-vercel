@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Hamburger Navigation</title>
+  <script src="shared-hamburger-nav.js"></script>
+  <style>
+    :root {
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      --jobs-teal: #5AC8FA;
+      --jobs-pink: #FF2D92;
+      
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    .main-content {
+      padding-top: 48px;
+      min-height: 100vh;
+      padding: 48px 24px 24px;
+    }
+    
+    .test-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    body.dark-mode .test-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    h1 {
+      font-size: 34px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+    
+    .subtitle {
+      color: var(--jobs-gray);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .test-info {
+      margin-bottom: 16px;
+      padding: 16px;
+      background: var(--jobs-light-gray);
+      border-radius: 8px;
+    }
+    
+    body.dark-mode .test-info {
+      background: #2C2C2E;
+    }
+    
+    .test-info strong {
+      color: var(--jobs-blue);
+    }
+    
+    .test-button {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-right: 12px;
+      margin-bottom: 8px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .test-button:hover {
+      background: var(--jobs-purple);
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Navigation will be inserted here -->
+  <div id="navigation-container"></div>
+  
+  <div class="main-content">
+    <h1>Hamburger Navigation Test</h1>
+    <p class="subtitle">Test page for verifying hamburger navigation functionality</p>
+    
+    <div class="test-card">
+      <div class="test-info">
+        <strong>Test Instructions:</strong>
+        <ul>
+          <li>Click the hamburger menu button (☰) in the top left</li>
+          <li>Verify the sidebar opens with navigation options</li>
+          <li>Test navigation links work correctly</li>
+          <li>Verify overlay closes sidebar when clicked</li>
+          <li>Test hamburger animation (→ X)</li>
+          <li>Test dark mode toggle works</li>
+        </ul>
+      </div>
+      
+      <div class="test-info">
+        <strong>Expected Navigation Items:</strong>
+        <ul>
+          <li>Today (index.html)</li>
+          <li>Analyze (analyze-jobs.html)</li>
+          <li>Machine Learning (model-jobs.html)</li>
+          <li>Adaptive Learning (teach-jobs.html)</li>
+          <li>AI Assistant (ai-jobs.html)</li>
+          <li>Control Centre (control-jobs.html) - only for Tech role</li>
+        </ul>
+      </div>
+      
+      <button class="test-button" onclick="testHamburgerFunctionality()">Test Hamburger</button>
+      <button class="test-button" onclick="testDarkMode()">Toggle Dark Mode</button>
+      <button class="test-button" onclick="testRoleSwitch()">Switch Role</button>
+    </div>
+  </div>
+  
+  <script>
+    // Initialize hamburger navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add hamburger CSS to the page
+      const style = document.createElement('style');
+      style.innerHTML = getHamburgerCSS();
+      document.head.appendChild(style);
+      
+      // Add hamburger navigation
+      const navContainer = document.getElementById('navigation-container');
+      if (navContainer) {
+        navContainer.innerHTML = createHamburgerNav();
+      }
+      
+      // Initialize hamburger functionality
+      initHamburgerNav();
+    });
+    
+    // Test functions
+    function testHamburgerFunctionality() {
+      console.log('Testing hamburger functionality...');
+      toggleSidebar();
+    }
+    
+    function testDarkMode() {
+      console.log('Testing dark mode toggle...');
+      toggleDarkMode();
+    }
+    
+    function testRoleSwitch() {
+      const currentRole = localStorage.getItem('userRole') || 'Finance';
+      const newRole = currentRole === 'Finance' ? 'Technology' : 'Finance';
+      localStorage.setItem('userRole', newRole);
+      
+      console.log('Role switched to:', newRole);
+      alert(`Role switched to: ${newRole}\\nRefresh the page to see the change.`);
+    }
+    
+    // Spotlight search
+    function showSpotlight() {
+      const query = prompt('Search FinSight test...');
+      if (query) {
+        console.log('Searching for:', query);
+        alert(`Would search for: ${query}`);
+      }
+    }
+  </script>
+</body>
+</html>

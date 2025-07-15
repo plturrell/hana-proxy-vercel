@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <script src="shared-hamburger-nav.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -73,10 +74,7 @@
       border-bottom-color: rgba(255, 255, 255, 0.1);
     }
     
-    body.dark-mode .jobs-tabbar {
-      background: rgba(0, 0, 0, 0.95);
-      border-top-color: rgba(255, 255, 255, 0.1);
-    }
+    /* Dark mode tabbar styles - removed */
     
     body.dark-mode .jobs-curriculum-card {
       background: #1C1C1E;
@@ -101,56 +99,13 @@
       background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
     }
     
-    /* Navigation */
-    .jobs-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 48px;
-      background: rgba(255, 255, 255, 0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--jobs-spacing-lg);
-    }
-    
-    .jobs-nav-title {
-      font-size: var(--jobs-font-size-body);
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    
-    .jobs-nav-actions {
-      display: flex;
-      gap: var(--jobs-spacing-md);
-      align-items: center;
-    }
-    
-    .jobs-nav-button {
-      background: none;
-      border: none;
-      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
-      font-size: var(--jobs-font-size-caption);
-      color: var(--jobs-blue);
-      cursor: pointer;
-      border-radius: 6px;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-    }
-    
-    .jobs-nav-button:hover {
-      background: rgba(0, 122, 255, 0.1);
-    }
+    /* Navigation - will be replaced by hamburger nav */
     
     /* Main Container */
     .jobs-container {
       padding-top: 48px;
       min-height: 100vh;
-      padding-bottom: 70px;
+      padding-bottom: var(--jobs-spacing-lg);
     }
     
     /* Header */
@@ -571,50 +526,7 @@
       font-weight: 600;
     }
     
-    /* Bottom Tab Bar */
-    .jobs-tabbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 49px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .jobs-tab {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-      text-decoration: none;
-      color: var(--jobs-gray);
-    }
-    
-    .jobs-tab:hover,
-    .jobs-tab.active {
-      color: var(--jobs-blue);
-    }
-    
-    .jobs-tab-icon {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    
-    .jobs-tab-label {
-      font-size: 10px;
-      font-weight: 500;
-    }
+    /* Bottom Tab Bar - Removed */
     
     /* Responsive Design */
     @media (max-width: 768px) {
@@ -639,15 +551,8 @@
   </style>
 </head>
 <body class="dark-mode">
-  <!-- Navigation -->
-  <nav class="jobs-nav">
-    <div class="jobs-nav-title">FinSight Teach</div>
-    <div class="jobs-nav-actions">
-      <span style="font-size: 13px; color: var(--jobs-gray);">Learning Hub</span>
-      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
-      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
-    </div>
-  </nav>
+  <!-- Navigation will be inserted here -->
+  <div id="navigation-container"></div>
   
   <!-- Main Container -->
   <div class="jobs-container">
@@ -1065,51 +970,6 @@
           <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('advanced-rl')">View Curriculum</button>
         </div>
       </div>
-      
-      <div class="jobs-curriculum-card" onclick="openCurriculumDetails('nlp-finance')">
-        <div class="jobs-curriculum-header">
-          <h3 class="jobs-curriculum-title">NLP for Financial Analysis</h3>
-          <div class="jobs-curriculum-badge intermediate">Intermediate</div>
-        </div>
-        <div class="jobs-curriculum-description">
-          Natural language processing techniques for financial news analysis, sentiment analysis, and knowledge extraction
-        </div>
-        <div class="jobs-curriculum-modules">
-          <div class="jobs-module-item">
-            <div class="jobs-module-icon completed">✓</div>
-            <span class="jobs-module-text completed">Text Preprocessing</span>
-          </div>
-          <div class="jobs-module-item">
-            <div class="jobs-module-icon completed">✓</div>
-            <span class="jobs-module-text completed">Entity Recognition</span>
-          </div>
-          <div class="jobs-module-item">
-            <div class="jobs-module-icon completed">✓</div>
-            <span class="jobs-module-text completed">Sentiment Analysis</span>
-          </div>
-          <div class="jobs-module-item">
-            <div class="jobs-module-icon completed">✓</div>
-            <span class="jobs-module-text completed">Knowledge Graphs</span>
-          </div>
-          <div class="jobs-module-item">
-            <div class="jobs-module-icon active">5</div>
-            <span class="jobs-module-text active">Financial Document Analysis</span>
-          </div>
-        </div>
-        <div class="jobs-progress-container">
-          <div class="jobs-progress-label">
-            <span class="jobs-progress-text">Course Progress</span>
-            <span class="jobs-progress-percentage">80%</span>
-          </div>
-          <div class="jobs-progress-bar">
-            <div class="jobs-progress-fill" style="width: 80%"></div>
-          </div>
-        </div>
-        <div class="jobs-learning-actions">
-          <button class="jobs-action-button primary" onclick="event.stopPropagation(); continueCurriculum('nlp-finance')">Continue Learning</button>
-          <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('nlp-finance')">View Curriculum</button>
-        </div>
-      </div>
     </div>
     
     <!-- Contextual Learning Section -->
@@ -1234,40 +1094,23 @@
     </div>
   </div>
   
-  <!-- Bottom Tab Bar -->
-  <div class="jobs-tabbar">
-    <a href="/index-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◉</div>
-      <div class="jobs-tab-label">Today</div>
-    </a>
-    <a href="/analyze-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◎</div>
-      <div class="jobs-tab-label">Analyze</div>
-    </a>
-    <a href="/control-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">Control</div>
-    </a>
-    <a href="/model-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◆</div>
-      <div class="jobs-tab-label">Model</div>
-    </a>
-    <a href="#" class="jobs-tab active">
-      <div class="jobs-tab-icon">◇</div>
-      <div class="jobs-tab-label">Teach</div>
-    </a>
-    <a href="/ai-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">AI</div>
-    </a>
-  </div>
-  
   <script>
-    // Dark mode toggle
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
+    // Initialize hamburger navigation
+    document.addEventListener('DOMContentLoaded', function() {
+      // Add hamburger CSS to the page
+      const style = document.createElement('style');
+      style.innerHTML = getHamburgerCSS();
+      document.head.appendChild(style);
+      
+      // Add hamburger navigation
+      const navContainer = document.getElementById('navigation-container');
+      if (navContainer) {
+        navContainer.innerHTML = createHamburgerNav();
+      }
+      
+      // Initialize hamburger functionality
+      initHamburgerNav();
+    });
     
     // Spotlight search
     function showSpotlight() {
@@ -1404,10 +1247,7 @@
       return details[curriculumId] || 'Curriculum details will be displayed here.';
     }
     
-    // Load saved preferences
-    if (localStorage.getItem('darkMode') === 'false') {
-      document.body.classList.remove('dark-mode');
-    }
+    // Load saved preferences - handled by hamburger nav
     
     // Auto-refresh learning metrics
     function refreshLearningMetrics() {

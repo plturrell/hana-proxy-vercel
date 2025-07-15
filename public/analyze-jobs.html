@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <script src="shared-hamburger-nav.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -18,6 +19,7 @@
       --jobs-green: #34C759;
       --jobs-red: #FF3B30;
       --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
       
       --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
       --jobs-font-size-hero: 48px;
@@ -72,7 +74,7 @@
       border-color: #38383A;
     }
     
-    /* Navigation */
+    /* Navigation with Hamburger */
     .jobs-nav {
       position: fixed;
       top: 0;
@@ -88,6 +90,127 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .jobs-hamburger {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .jobs-hamburger-line {
+      width: 18px;
+      height: 2px;
+      background: var(--jobs-black);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    body.dark-mode .jobs-hamburger-line {
+      background: var(--jobs-white);
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(2) {
+      opacity: 0;
+    }
+    
+    .jobs-hamburger.active .jobs-hamburger-line:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+    
+    /* Side Menu */
+    .jobs-sidebar {
+      position: fixed;
+      top: 48px;
+      left: -280px;
+      width: 280px;
+      height: calc(100vh - 48px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      z-index: 999;
+      transition: left var(--jobs-duration) var(--jobs-animation);
+      overflow-y: auto;
+      padding: var(--jobs-spacing-lg);
+    }
+    
+    .jobs-sidebar.open {
+      left: 0;
+    }
+    
+    body.dark-mode .jobs-sidebar {
+      background: rgba(28, 28, 30, 0.95);
+      border-right-color: #38383A;
+    }
+    
+    .jobs-sidebar-section {
+      margin-bottom: var(--jobs-spacing-xl);
+    }
+    
+    .jobs-sidebar-title {
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .jobs-sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      margin-bottom: var(--jobs-spacing-xs);
+      text-decoration: none;
+      color: var(--jobs-black);
+    }
+    
+    body.dark-mode .jobs-sidebar-item {
+      color: var(--jobs-white);
+    }
+    
+    .jobs-sidebar-item:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    .jobs-sidebar-item.active {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .jobs-sidebar-icon {
+      font-size: 16px;
+    }
+    
+    .jobs-sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      z-index: 998;
+    }
+    
+    .jobs-sidebar-overlay.open {
+      opacity: 1;
+      visibility: visible;
     }
     
     body.dark-mode .jobs-nav {
@@ -120,6 +243,26 @@
     
     .jobs-nav-button:hover {
       background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Cards with gradient accent lines */
+    .jobs-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-green));
+      border-radius: 12px 12px 0 0;
+    }
+    
+    .jobs-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--jobs-green), #00C7BE);
+    }
+    
+    .jobs-card:nth-child(3)::before {
+      background: linear-gradient(90deg, var(--jobs-purple), var(--jobs-blue));
     }
     
     /* Section Navigation */
@@ -166,7 +309,7 @@
     .jobs-container {
       padding-top: 92px;
       min-height: 100vh;
-      padding-bottom: 100px;
+      padding-bottom: var(--jobs-spacing-xxl);
     }
     
     /* Section */
@@ -380,55 +523,6 @@
       letter-spacing: 0.05em;
     }
     
-    /* Bottom Tab Bar */
-    .jobs-tabbar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 49px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-top: 0.5px solid rgba(0, 0, 0, 0.1);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    body.dark-mode .jobs-tabbar {
-      background: rgba(0, 0, 0, 0.95);
-      border-top-color: rgba(255, 255, 255, 0.1);
-    }
-    
-    .jobs-tab {
-      flex: 1;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-      text-decoration: none;
-      color: var(--jobs-gray);
-    }
-    
-    .jobs-tab:hover,
-    .jobs-tab.active {
-      color: var(--jobs-blue);
-    }
-    
-    .jobs-tab-icon {
-      font-size: 24px;
-      margin-bottom: 2px;
-    }
-    
-    .jobs-tab-label {
-      font-size: 10px;
-      font-weight: 500;
-    }
     
     /* Responsive */
     @media (max-width: 768px) {
@@ -448,14 +542,7 @@
   </style>
 </head>
 <body class="dark-mode">
-  <!-- Navigation -->
-  <nav class="jobs-nav">
-    <div class="jobs-nav-title">Analyze</div>
-    <div class="jobs-nav-actions">
-      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
-      <button class="jobs-nav-button" onclick="showSpotlight()">⌘K</button>
-    </div>
-  </nav>
+  <script>document.body.innerHTML = createHamburgerNav() + document.body.innerHTML;</script>
   
   <!-- Section Navigation -->
   <div class="jobs-section-nav">
@@ -708,40 +795,10 @@
     </div>
   </div>
   
-  <!-- Bottom Tab Bar -->
-  <div class="jobs-tabbar">
-    <a href="/index-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◉</div>
-      <div class="jobs-tab-label">Today</div>
-    </a>
-    <a href="#" class="jobs-tab active">
-      <div class="jobs-tab-icon">◎</div>
-      <div class="jobs-tab-label">Analyze</div>
-    </a>
-    <a href="/control-jobs.html" class="jobs-tab" id="control-tab" style="display: none;">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">Control</div>
-    </a>
-    <a href="/model-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◆</div>
-      <div class="jobs-tab-label">Model</div>
-    </a>
-    <a href="/teach-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◇</div>
-      <div class="jobs-tab-label">Teach</div>
-    </a>
-    <a href="/ai-jobs.html" class="jobs-tab">
-      <div class="jobs-tab-icon">◈</div>
-      <div class="jobs-tab-label">AI</div>
-    </a>
-  </div>
   
   <script>
-    // Check user role
-    const userRole = localStorage.getItem('userRole') || 'Finance';
-    if (userRole === 'Technology') {
-      document.getElementById('control-tab').style.display = 'flex';
-    }
+    // Initialize hamburger navigation
+    initHamburgerNav();
     
     // Section navigation
     function showSection(sectionId) {
@@ -861,24 +918,6 @@
       alert(`Running ${type} scenario analysis...`);
     }
     
-    // Dark mode toggle
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-    }
-    
-    // Spotlight search
-    function showSpotlight() {
-      const query = prompt('Search FinSight...');
-      if (query) {
-        console.log('Searching for:', query);
-      }
-    }
-    
-    // Load saved preferences
-    if (localStorage.getItem('darkMode') === 'false') {
-      document.body.classList.remove('dark-mode');
-    }
     
     // Handle URL hash
     if (window.location.hash) {
