@@ -460,6 +460,160 @@
       overflow: hidden;
     }
     
+    /* A2A Agent Metadata */
+    .a2a-agent-header {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-md);
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .a2a-agent-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--jobs-white);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    
+    .a2a-agent-icon.analytics {
+      background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-teal));
+    }
+    
+    .a2a-agent-icon.financial {
+      background: linear-gradient(135deg, var(--jobs-green), #00C7BE);
+    }
+    
+    .a2a-agent-icon.ml {
+      background: linear-gradient(135deg, var(--jobs-purple), var(--jobs-pink));
+    }
+    
+    .a2a-agent-icon.nlp {
+      background: linear-gradient(135deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .a2a-agent-icon.data {
+      background: linear-gradient(135deg, var(--jobs-teal), var(--jobs-green));
+    }
+    
+    .a2a-agent-identity {
+      flex: 1;
+    }
+    
+    .a2a-agent-name {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .a2a-agent-id {
+      font-size: 11px;
+      color: var(--jobs-gray);
+      font-family: monospace;
+      margin-top: 2px;
+    }
+    
+    .a2a-agent-status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-green);
+      animation: pulse 2s infinite;
+    }
+    
+    .a2a-agent-status-indicator.inactive {
+      background: var(--jobs-gray);
+      animation: none;
+    }
+    
+    .a2a-capabilities {
+      background: var(--jobs-light-gray);
+      border-radius: 8px;
+      padding: var(--jobs-spacing-sm);
+      margin: var(--jobs-spacing-sm) 0;
+    }
+    
+    body.dark-mode .a2a-capabilities {
+      background: #2C2C2E;
+    }
+    
+    .a2a-capability-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .a2a-capability-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--jobs-spacing-xs);
+    }
+    
+    .a2a-capability-tag {
+      background: var(--jobs-white);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    
+    body.dark-mode .a2a-capability-tag {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    .a2a-agent-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    .a2a-protocol-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--jobs-spacing-md);
+      padding-top: var(--jobs-spacing-md);
+      border-top: 1px solid var(--jobs-light-gray);
+    }
+    
+    body.dark-mode .a2a-protocol-info {
+      border-top-color: #38383A;
+    }
+    
+    .a2a-protocol-version {
+      font-size: 11px;
+      color: var(--jobs-gray);
+    }
+    
+    .a2a-agent-status {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+    }
+    
+    .a2a-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--jobs-green);
+    }
+    
+    .a2a-status-dot.inactive {
+      background: var(--jobs-gray);
+    }
+    
     .jobs-model-card:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -710,15 +864,15 @@
     <!-- Overview Section -->
     <div id="overview" class="jobs-section active">
       <div class="jobs-header">
-        <h1 class="jobs-header-title">Supabase Functions</h1>
-        <p class="jobs-header-subtitle">Real-time financial analytics and AI-powered intelligence</p>
+        <h1 class="jobs-header-title">A2A Agent Network</h1>
+        <p class="jobs-header-subtitle">Autonomous agents for real-time financial analytics and AI-powered intelligence</p>
       </div>
     
       <!-- Function Overview -->
       <div class="jobs-overview-grid">
         <div class="jobs-overview-card">
           <div class="jobs-overview-value online" id="total-functions">35</div>
-          <div class="jobs-overview-label">Total Functions</div>
+          <div class="jobs-overview-label">Active Agents</div>
         </div>
         
         <div class="jobs-overview-card">
@@ -750,264 +904,362 @@
       </div>
       
       <div class="jobs-models-grid">
-        <!-- Function 1 -->
+        <!-- Function 1 - Pearson Correlation Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_pearson_correlation">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Pearson Correlation</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon analytics">PCA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Pearson Correlation Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.pearson_correlation</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_pearson_correlation</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">json-array-input</span>
+              <span class="a2a-capability-tag">numeric-output</span>
+              <span class="a2a-capability-tag">statistical-analysis</span>
+              <span class="a2a-capability-tag">correlation-testing</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Statistical correlation analysis between financial metrics with significance testing
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 1</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Stats</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.05s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_pearson_correlation')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.pearson_correlation')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.pearson_correlation')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 2 -->
+        <!-- Function 2 - VaR Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_var">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Value at Risk (VaR)</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon analytics">VAR</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Value at Risk Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.value_at_risk</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_var</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">portfolio-input</span>
+              <span class="a2a-capability-tag">risk-output</span>
+              <span class="a2a-capability-tag">parametric-method</span>
+              <span class="a2a-capability-tag">monte-carlo</span>
+              <span class="a2a-capability-tag">historical-simulation</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Calculate Value at Risk using multiple methods: parametric, historical, Monte Carlo
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 2</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Risk</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.08s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_var')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.value_at_risk')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.value_at_risk')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 3 -->
+        <!-- Function 3 - Thompson Sampling Agent -->
         <div class="jobs-model-card reinforcement" data-function="update_thompson_sampling">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Thompson Sampling</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">TSA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Thompson Sampling Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.thompson_sampling</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">update_thompson_sampling</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">decision-input</span>
+              <span class="a2a-capability-tag">action-output</span>
+              <span class="a2a-capability-tag">reinforcement-learning</span>
+              <span class="a2a-capability-tag">exploration-exploitation</span>
+              <span class="a2a-capability-tag">bayesian-inference</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Reinforcement learning algorithm for optimal decision making with exploration-exploitation balance
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 3</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">RL</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.03s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_thompson_sampling')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.thompson_sampling')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.thompson_sampling')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 4 -->
+        <!-- Function 4 - Sentiment Analysis Agent -->
         <div class="jobs-model-card nlp" data-function="calculate_sentiment_score">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Sentiment Analysis</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon nlp">SEN</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Sentiment Analysis Agent</h3>
+              <div class="a2a-agent-id">finsight.nlp.sentiment_analysis</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_sentiment_score</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">text-input</span>
+              <span class="a2a-capability-tag">sentiment-output</span>
+              <span class="a2a-capability-tag">nlp-processing</span>
+              <span class="a2a-capability-tag">news-analysis</span>
+              <span class="a2a-capability-tag">confidence-scoring</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Analyze sentiment from financial news and social media with confidence scores
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 4</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">NLP</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.12s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_sentiment_score')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.nlp.sentiment_analysis')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.nlp.sentiment_analysis')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 5 -->
+        <!-- Function 5 - Portfolio Risk Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_portfolio_risk">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Portfolio Risk Metrics</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon analytics">PRA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Portfolio Risk Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.portfolio_risk</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_portfolio_risk</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">portfolio-input</span>
+              <span class="a2a-capability-tag">metrics-output</span>
+              <span class="a2a-capability-tag">risk-assessment</span>
+              <span class="a2a-capability-tag">volatility-analysis</span>
+              <span class="a2a-capability-tag">sharpe-calculation</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Comprehensive portfolio risk analysis including volatility, beta, Sharpe ratio
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 5</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Risk</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.10s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_portfolio_risk')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.portfolio_risk')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.portfolio_risk')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 6 -->
+        <!-- Function 6 - Trend Detection Agent -->
         <div class="jobs-model-card supervised" data-function="detect_trend">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Trend Detection</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon analytics">TDA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Trend Detection Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.trend_detection</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">detect_trend</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">time-series-input</span>
+              <span class="a2a-capability-tag">trend-output</span>
+              <span class="a2a-capability-tag">moving-averages</span>
+              <span class="a2a-capability-tag">linear-regression</span>
+              <span class="a2a-capability-tag">change-detection</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Time series trend analysis using moving averages, linear regression, and change detection
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 6</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">TS</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.07s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('detect_trend')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.trend_detection')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.trend_detection')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 7 -->
+        <!-- Function 7 - Anomaly Detection Agent -->
         <div class="jobs-model-card supervised" data-function="detect_anomaly">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Anomaly Detection</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">ADA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Anomaly Detection Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.anomaly_detection</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">detect_anomaly</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">data-input</span>
+              <span class="a2a-capability-tag">anomaly-output</span>
+              <span class="a2a-capability-tag">z-score-method</span>
+              <span class="a2a-capability-tag">isolation-forest</span>
+              <span class="a2a-capability-tag">outlier-detection</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Multi-algorithm anomaly detection: Z-score, IQR, Isolation Forest, LOF
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 7</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">ML</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.15s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('detect_anomaly')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.anomaly_detection')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.anomaly_detection')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 8 -->
+        <!-- Function 8 - LinUCB Bandit Agent -->
         <div class="jobs-model-card reinforcement" data-function="update_linucb_arm">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">LinUCB Bandit</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">LBA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">LinUCB Bandit Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.linucb_bandit</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">update_linucb_arm</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">context-input</span>
+              <span class="a2a-capability-tag">action-output</span>
+              <span class="a2a-capability-tag">online-learning</span>
+              <span class="a2a-capability-tag">contextual-bandit</span>
+              <span class="a2a-capability-tag">decision-optimization</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Contextual bandit algorithm for online learning and decision optimization
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 8</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">RL</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.05s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_linucb_arm')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.linucb_bandit')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.linucb_bandit')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 9 -->
+        <!-- Function 9 - Neural Bandit Agent -->
         <div class="jobs-model-card reinforcement" data-function="record_neural_bandit_decision">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Neural Bandit</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">NBA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Neural Bandit Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.neural_bandit</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">record_neural_bandit_decision</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">neural-input</span>
+              <span class="a2a-capability-tag">decision-output</span>
+              <span class="a2a-capability-tag">deep-learning</span>
+              <span class="a2a-capability-tag">complex-decisions</span>
+              <span class="a2a-capability-tag">adaptive-learning</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Deep learning enhanced bandit algorithm for complex decision making
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 9</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">DL</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.20s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('record_neural_bandit_decision')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.neural_bandit')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.neural_bandit')">Agent Card</button>
           </div>
         </div>
       </div>
@@ -1020,177 +1272,243 @@
       </div>
       
       <div class="jobs-models-grid">
-        <!-- Function 21 -->
+        <!-- Function 21 - Portfolio Risk Metrics Agent -->
         <div class="jobs-model-card supervised" data-function="get_portfolio_risk_metrics">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Portfolio Risk Metrics</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">PRM</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Portfolio Risk Metrics Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.portfolio_risk_metrics</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">get_portfolio_risk_metrics</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">portfolio-input</span>
+              <span class="a2a-capability-tag">risk-metrics-output</span>
+              <span class="a2a-capability-tag">var-calculation</span>
+              <span class="a2a-capability-tag">sharpe-ratio</span>
+              <span class="a2a-capability-tag">beta-analysis</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Calculate VaR, Sharpe ratio, Beta, and other portfolio risk metrics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 21</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Risk</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.15s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('get_portfolio_risk_metrics')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.portfolio_risk_metrics')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.portfolio_risk_metrics')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 22 -->
+        <!-- Function 22 - Basel III Ratios Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_basel_ratios">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Basel III Ratios</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">BSL</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Basel III Ratios Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.basel_ratios</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_basel_ratios</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">bank-data-input</span>
+              <span class="a2a-capability-tag">regulatory-output</span>
+              <span class="a2a-capability-tag">capital-adequacy</span>
+              <span class="a2a-capability-tag">liquidity-coverage</span>
+              <span class="a2a-capability-tag">leverage-ratio</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Calculate Basel III capital adequacy, liquidity coverage, and leverage ratios
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 22</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Regulatory</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.12s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_basel_ratios')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.basel_ratios')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.basel_ratios')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 23 -->
+        <!-- Function 23 - Options Greeks Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_options_greeks">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Options Greeks</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">OPG</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Options Greeks Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.options_greeks</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_options_greeks</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">options-input</span>
+              <span class="a2a-capability-tag">greeks-output</span>
+              <span class="a2a-capability-tag">black-scholes</span>
+              <span class="a2a-capability-tag">derivatives-pricing</span>
+              <span class="a2a-capability-tag">risk-sensitivities</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Calculate Black-Scholes Greeks: Delta, Gamma, Theta, Vega, Rho
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 23</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Derivatives</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.08s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_options_greeks')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.options_greeks')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.options_greeks')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 24 -->
+        <!-- Function 24 - Yield Curve Analysis Agent -->
         <div class="jobs-model-card supervised" data-function="analyze_yield_curve">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Yield Curve Analysis</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">YCA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Yield Curve Analysis Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.yield_curve</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">analyze_yield_curve</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">yield-data-input</span>
+              <span class="a2a-capability-tag">curve-analysis-output</span>
+              <span class="a2a-capability-tag">fixed-income</span>
+              <span class="a2a-capability-tag">spread-analysis</span>
+              <span class="a2a-capability-tag">term-structure</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Analyze yield curve shape, spread analysis, and term structure
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 24</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Fixed Income</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.10s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('analyze_yield_curve')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.yield_curve')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.yield_curve')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 25 -->
+        <!-- Function 25 - Credit Risk Scoring Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_credit_risk_score">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Credit Risk Scoring</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">CRS</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Credit Risk Scoring Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.credit_risk</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_credit_risk_score</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">credit-data-input</span>
+              <span class="a2a-capability-tag">risk-score-output</span>
+              <span class="a2a-capability-tag">multi-factor-analysis</span>
+              <span class="a2a-capability-tag">financial-ratios</span>
+              <span class="a2a-capability-tag">behavioral-scoring</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Multi-factor credit risk assessment with financial ratios and behavioral scoring
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 25</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Credit</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.18s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_credit_risk_score')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.credit_risk')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.credit_risk')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 26 -->
+        <!-- Function 26 - Stress Test Scenarios Agent -->
         <div class="jobs-model-card supervised" data-function="run_stress_test">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Stress Test Scenarios</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon financial">STS</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Stress Test Scenarios Agent</h3>
+              <div class="a2a-agent-id">finsight.financial.stress_test</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">run_stress_test</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">scenario-input</span>
+              <span class="a2a-capability-tag">impact-output</span>
+              <span class="a2a-capability-tag">market-shocks</span>
+              <span class="a2a-capability-tag">portfolio-stress</span>
+              <span class="a2a-capability-tag">risk-scenarios</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Run comprehensive stress test scenarios with market shocks and portfolio impact
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 26</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Risk</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.25s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('run_stress_test')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.stress_test')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.financial.stress_test')">Agent Card</button>
           </div>
         </div>
       </div>
@@ -1203,322 +1521,443 @@
       </div>
       
       <div class="jobs-models-grid">
-        <!-- Function 10 -->
+        <!-- Function 10 - Collaborative Learning Agent -->
         <div class="jobs-model-card reinforcement" data-function="update_collaborative_learning">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Collaborative Learning</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">CLA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Collaborative Learning Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.collaborative_learning</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">update_collaborative_learning</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">user-item-input</span>
+              <span class="a2a-capability-tag">recommendation-output</span>
+              <span class="a2a-capability-tag">matrix-factorization</span>
+              <span class="a2a-capability-tag">collaborative-filtering</span>
+              <span class="a2a-capability-tag">deep-learning</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Matrix factorization and deep collaborative filtering for recommendations
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 10</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">ML</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.12s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_collaborative_learning')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.collaborative_learning')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.collaborative_learning')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 11 -->
+        <!-- Function 11 - Adaptive Caching Agent -->
         <div class="jobs-model-card unsupervised" data-function="get_cache_recommendations">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Adaptive Caching</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">ACA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Adaptive Caching Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.adaptive_cache</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">get_cache_recommendations</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">usage-pattern-input</span>
+              <span class="a2a-capability-tag">cache-strategy-output</span>
+              <span class="a2a-capability-tag">ml-optimization</span>
+              <span class="a2a-capability-tag">frequency-analysis</span>
+              <span class="a2a-capability-tag">recency-weighting</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             ML-based cache optimization using frequency-recency analysis
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 11</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Optimization</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.02s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('get_cache_recommendations')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.adaptive_cache')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.adaptive_cache')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 12 -->
+        <!-- Function 12 - Model Performance Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_model_performance">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Model Performance</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">MPA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Model Performance Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.model_performance</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_model_performance</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">predictions-input</span>
+              <span class="a2a-capability-tag">metrics-output</span>
+              <span class="a2a-capability-tag">model-monitoring</span>
+              <span class="a2a-capability-tag">regression-metrics</span>
+              <span class="a2a-capability-tag">classification-metrics</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Comprehensive model monitoring with regression, classification, and ranking metrics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 12</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Monitoring</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.05s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_model_performance')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.model_performance')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.model_performance')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 13 -->
+        <!-- Function 13 - Feature Importance Agent -->
         <div class="jobs-model-card unsupervised" data-function="calculate_feature_importance">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Feature Importance</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">FIA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Feature Importance Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.feature_importance</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">calculate_feature_importance</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">dataset-input</span>
+              <span class="a2a-capability-tag">importance-output</span>
+              <span class="a2a-capability-tag">feature-analysis</span>
+              <span class="a2a-capability-tag">mutual-information</span>
+              <span class="a2a-capability-tag">permutation-testing</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Feature analysis using correlation, mutual information, and permutation importance
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 13</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Analysis</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.15s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_feature_importance')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.feature_importance')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.feature_importance')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 14 -->
+        <!-- Function 14 - Synthetic Data Agent -->
         <div class="jobs-model-card unsupervised" data-function="generate_synthetic_data">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Synthetic Data</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">SDA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Synthetic Data Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.synthetic_data</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">generate_synthetic_data</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">distribution-input</span>
+              <span class="a2a-capability-tag">synthetic-output</span>
+              <span class="a2a-capability-tag">monte-carlo</span>
+              <span class="a2a-capability-tag">copula-modeling</span>
+              <span class="a2a-capability-tag">data-generation</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Generate synthetic data using Monte Carlo simulation and copulas
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 14</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Generation</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.25s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_synthetic_data')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.synthetic_data')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.synthetic_data')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 15 -->
+        <!-- Function 15 - Knowledge Graph Agent -->
         <div class="jobs-model-card nlp" data-function="generate_knowledge_graph">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Knowledge Graph</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon nlp">KGA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Knowledge Graph Agent</h3>
+              <div class="a2a-agent-id">finsight.nlp.knowledge_graph</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">generate_knowledge_graph</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">text-input</span>
+              <span class="a2a-capability-tag">graph-output</span>
+              <span class="a2a-capability-tag">entity-extraction</span>
+              <span class="a2a-capability-tag">relationship-inference</span>
+              <span class="a2a-capability-tag">graph-analytics</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Entity extraction, relationship inference, and graph analytics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 15</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">NLP</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.30s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_knowledge_graph')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.nlp.knowledge_graph')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.nlp.knowledge_graph')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 16 -->
+        <!-- Function 16 - Entity Materialization Agent -->
         <div class="jobs-model-card nlp" data-function="materialize_entities">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Entity Materialization</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon nlp">EMA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Entity Materialization Agent</h3>
+              <div class="a2a-agent-id">finsight.nlp.entity_materialization</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">materialize_entities</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">financial-text-input</span>
+              <span class="a2a-capability-tag">entity-output</span>
+              <span class="a2a-capability-tag">ner-extraction</span>
+              <span class="a2a-capability-tag">confidence-scoring</span>
+              <span class="a2a-capability-tag">entity-linking</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Extract and materialize entities from financial text with confidence scoring
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 16</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">NLP</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.18s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('materialize_entities')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.nlp.entity_materialization')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.nlp.entity_materialization')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 17 -->
+        <!-- Function 17 - Temporal Correlations Agent -->
         <div class="jobs-model-card supervised" data-function="generate_temporal_correlations">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Temporal Correlations</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">TCA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Temporal Correlations Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.temporal_correlations</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">generate_temporal_correlations</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">time-series-input</span>
+              <span class="a2a-capability-tag">correlation-output</span>
+              <span class="a2a-capability-tag">lagged-analysis</span>
+              <span class="a2a-capability-tag">temporal-patterns</span>
+              <span class="a2a-capability-tag">causality-testing</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Analyze time-based correlations and lagged relationships
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 17</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Time Series</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.20s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_temporal_correlations')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.temporal_correlations')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.temporal_correlations')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 18 -->
+        <!-- Function 18 - Swift Query Agent -->
         <div class="jobs-model-card ai-integration" data-function="answer_swift_query">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Swift Query (iOS)</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon ml">SQA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Swift Query Agent</h3>
+              <div class="a2a-agent-id">finsight.ml.swift_query</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">answer_swift_query</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">swift-code-input</span>
+              <span class="a2a-capability-tag">query-output</span>
+              <span class="a2a-capability-tag">ios-integration</span>
+              <span class="a2a-capability-tag">mobile-analytics</span>
+              <span class="a2a-capability-tag">native-processing</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             iOS integration for Swift-based financial queries and analytics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 18</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Mobile</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.10s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('answer_swift_query')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.ml.swift_query')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.ml.swift_query')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 19 -->
+        <!-- Function 19 - Entity Evolution Agent -->
         <div class="jobs-model-card nlp" data-function="entity_evolution_analysis">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Entity Evolution</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon nlp">EEA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Entity Evolution Agent</h3>
+              <div class="a2a-agent-id">finsight.nlp.entity_evolution</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">entity_evolution_analysis</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">entity-history-input</span>
+              <span class="a2a-capability-tag">evolution-output</span>
+              <span class="a2a-capability-tag">change-tracking</span>
+              <span class="a2a-capability-tag">temporal-analysis</span>
+              <span class="a2a-capability-tag">trend-detection</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Track entity changes and evolution over time
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 19</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Tracking</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.22s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('entity_evolution_analysis')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.nlp.entity_evolution')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.nlp.entity_evolution')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 20 -->
+        <!-- Function 20 - Metric Correlations Agent -->
         <div class="jobs-model-card supervised" data-function="metric_correlation_analysis">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Metric Correlations</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon analytics">MCA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Metric Correlations Agent</h3>
+              <div class="a2a-agent-id">finsight.analytics.metric_correlations</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">metric_correlation_analysis</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">multi-metric-input</span>
+              <span class="a2a-capability-tag">correlation-matrix-output</span>
+              <span class="a2a-capability-tag">financial-analysis</span>
+              <span class="a2a-capability-tag">cross-correlation</span>
+              <span class="a2a-capability-tag">statistical-testing</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Analyze correlations between multiple financial metrics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 20</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Analysis</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.16s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('metric_correlation_analysis')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.analytics.metric_correlations')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.analytics.metric_correlations')">Agent Card</button>
           </div>
         </div>
       </div>
@@ -1531,264 +1970,363 @@
       </div>
       
       <div class="jobs-models-grid">
-        <!-- Function 27 -->
+        <!-- Function 27 - News Processing Agent -->
         <div class="jobs-model-card nlp" data-function="process_news_content">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">News Processing</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">NPA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">News Processing Agent</h3>
+              <div class="a2a-agent-id">finsight.data.news_processing</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">process_news_content</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">news-feed-input</span>
+              <span class="a2a-capability-tag">processed-output</span>
+              <span class="a2a-capability-tag">entity-extraction</span>
+              <span class="a2a-capability-tag">sentiment-analysis</span>
+              <span class="a2a-capability-tag">content-enrichment</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Process financial news with entity extraction and sentiment analysis
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 27</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">NLP</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.25s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('process_news_content')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.news_processing')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.news_processing')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 28 -->
+        <!-- Function 28 - Loading Status Agent -->
         <div class="jobs-model-card supervised" data-function="update_news_loading_status">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Loading Status</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">LSA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Loading Status Agent</h3>
+              <div class="a2a-agent-id">finsight.data.loading_status</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">update_news_loading_status</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">status-input</span>
+              <span class="a2a-capability-tag">update-output</span>
+              <span class="a2a-capability-tag">progress-tracking</span>
+              <span class="a2a-capability-tag">batch-monitoring</span>
+              <span class="a2a-capability-tag">real-time-updates</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Track and update news data loading status
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 28</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Tracking</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.02s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_news_loading_status')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.loading_status')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.loading_status')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 29 -->
+        <!-- Function 29 - News Archival Agent -->
         <div class="jobs-model-card supervised" data-function="cleanup_old_news">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">News Archival</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">NAA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">News Archival Agent</h3>
+              <div class="a2a-agent-id">finsight.data.news_archival</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">cleanup_old_news</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">news-data-input</span>
+              <span class="a2a-capability-tag">archive-output</span>
+              <span class="a2a-capability-tag">data-cleanup</span>
+              <span class="a2a-capability-tag">storage-optimization</span>
+              <span class="a2a-capability-tag">retention-policy</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Archive and cleanup old news data
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 29</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Maintenance</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.05s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('cleanup_old_news')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.news_archival')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.news_archival')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 30 -->
+        <!-- Function 30 - News Statistics Agent -->
         <div class="jobs-model-card supervised" data-function="update_news_statistics">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">News Statistics</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">NSA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">News Statistics Agent</h3>
+              <div class="a2a-agent-id">finsight.data.news_statistics</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">update_news_statistics</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">news-metrics-input</span>
+              <span class="a2a-capability-tag">statistics-output</span>
+              <span class="a2a-capability-tag">analytics-processing</span>
+              <span class="a2a-capability-tag">volume-tracking</span>
+              <span class="a2a-capability-tag">performance-metrics</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Calculate and update news processing statistics
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 30</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Analytics</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.08s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_news_statistics')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.news_statistics')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.news_statistics')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 31 -->
+        <!-- Function 31 - Trending Analysis Agent -->
         <div class="jobs-model-card nlp" data-function="analyze_trending_topics">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Trending Analysis</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">TAA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Trending Analysis Agent</h3>
+              <div class="a2a-agent-id">finsight.data.trending_analysis</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">analyze_trending_topics</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">news-stream-input</span>
+              <span class="a2a-capability-tag">trends-output</span>
+              <span class="a2a-capability-tag">topic-modeling</span>
+              <span class="a2a-capability-tag">trend-identification</span>
+              <span class="a2a-capability-tag">social-signals</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Identify and analyze trending topics in financial news
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 31</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">NLP</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.20s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('analyze_trending_topics')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.trending_analysis')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.trending_analysis')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 32 -->
+        <!-- Function 32 - Data Validation Agent -->
         <div class="jobs-model-card supervised" data-function="validate_data_quality">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Data Validation</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">DVA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Data Validation Agent</h3>
+              <div class="a2a-agent-id">finsight.data.validation</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">validate_data_quality</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">raw-data-input</span>
+              <span class="a2a-capability-tag">quality-report-output</span>
+              <span class="a2a-capability-tag">completeness-check</span>
+              <span class="a2a-capability-tag">accuracy-validation</span>
+              <span class="a2a-capability-tag">anomaly-detection</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Validate data quality with completeness and accuracy checks
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 32</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">QA</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.12s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('validate_data_quality')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.validation')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.validation')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 33 -->
+        <!-- Function 33 - Data Normalization Agent -->
         <div class="jobs-model-card supervised" data-function="normalize_data">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Data Normalization</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">DNA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Data Normalization Agent</h3>
+              <div class="a2a-agent-id">finsight.data.normalization</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">normalize_data</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">multi-format-input</span>
+              <span class="a2a-capability-tag">normalized-output</span>
+              <span class="a2a-capability-tag">schema-mapping</span>
+              <span class="a2a-capability-tag">format-conversion</span>
+              <span class="a2a-capability-tag">data-standardization</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Normalize financial data across different sources and formats
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 33</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">ETL</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.10s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('normalize_data')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.normalization')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.normalization')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 34 -->
+        <!-- Function 34 - Batch Processing Agent -->
         <div class="jobs-model-card supervised" data-function="execute_batch_operation">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Batch Processing</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">BPA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Batch Processing Agent</h3>
+              <div class="a2a-agent-id">finsight.data.batch_processing</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">execute_batch_operation</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">bulk-data-input</span>
+              <span class="a2a-capability-tag">batch-output</span>
+              <span class="a2a-capability-tag">parallel-processing</span>
+              <span class="a2a-capability-tag">large-datasets</span>
+              <span class="a2a-capability-tag">efficient-execution</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Execute batch operations on large datasets efficiently
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 34</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Processing</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.50s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('execute_batch_operation')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.batch_processing')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.batch_processing')">Agent Card</button>
           </div>
         </div>
         
-        <!-- Function 35 -->
+        <!-- Function 35 - Complex Aggregations Agent -->
         <div class="jobs-model-card supervised" data-function="perform_complex_aggregation">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Complex Aggregations</h3>
-            <div class="jobs-model-status online"></div>
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon data">CAA</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">Complex Aggregations Agent</h3>
+              <div class="a2a-agent-id">finsight.data.complex_aggregations</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
           </div>
-          <div class="jobs-model-type">perform_complex_aggregation</div>
-          <div class="jobs-model-description">
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Agent Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">multi-dimensional-input</span>
+              <span class="a2a-capability-tag">aggregate-output</span>
+              <span class="a2a-capability-tag">cube-processing</span>
+              <span class="a2a-capability-tag">pivot-operations</span>
+              <span class="a2a-capability-tag">hierarchical-rollup</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
             Perform complex data aggregations with multiple dimensions
           </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Function 35</div>
-              <div class="jobs-metric-label">ID</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Analytics</div>
-              <div class="jobs-metric-label">Type</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.35s</div>
-              <div class="jobs-metric-label">Avg Time</div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
             </div>
           </div>
+          
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('perform_complex_aggregation')">Test Function</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.data.complex_aggregations')">Connect Agent</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('finsight.data.complex_aggregations')">Agent Card</button>
           </div>
         </div>
       </div>
@@ -1924,43 +2462,102 @@
     
     
 
-    // Test Supabase function
-    async function testFunction(functionName) {
-      console.log('Testing function:', functionName);
+    // Connect to A2A Agent
+    async function connectAgent(agentId) {
+      console.log('Connecting to agent:', agentId);
       
       // Show loading state
       const button = event.target;
       const originalText = button.textContent;
-      button.textContent = 'Testing...';
+      button.textContent = 'Connecting...';
       button.disabled = true;
       
       try {
-        // Here you would call the actual Supabase function
-        // For now, we'll simulate it
-        const response = await simulateSupabaseCall(functionName);
+        // Simulate A2A agent connection
+        const response = await simulateAgentConnection(agentId);
         
         // Show success message
-        alert(`Function Test: ${functionName}\n\nResult: Success\n\nThis would call the actual Supabase function with appropriate test parameters.`);
+        alert(`A2A Agent Connected!\n\nAgent ID: ${agentId}\nProtocol: A2A v1.0\nStatus: Active\n\nThe agent is now ready to receive requests and communicate with other agents in the network.`);
         
       } catch (error) {
-        alert(`Function Test Failed: ${functionName}\n\nError: ${error.message}`);
+        alert(`Agent Connection Failed: ${agentId}\n\nError: ${error.message}`);
       } finally {
         button.textContent = originalText;
         button.disabled = false;
       }
     }
     
-    // Simulate Supabase function call
-    async function simulateSupabaseCall(functionName) {
+    // View Agent Card
+    function viewAgentCard(agentId) {
+      console.log('Viewing agent card:', agentId);
+      
+      // Extract agent info from ID
+      const parts = agentId.split('.');
+      const category = parts[1];
+      const functionName = parts[2];
+      
+      // Get agent capabilities based on category
+      const capabilities = getAgentCapabilities(category, functionName);
+      
+      alert(`A2A Agent Card\n\nAgent: ${agentId}\nCategory: ${category}\nFunction: ${functionName}\n\nCapabilities:\n${capabilities.join('\n')}\n\nProtocol: A2A v1.0\nNetwork: FinSight Intelligence\nStatus: Active`);
+    }
+    
+    // Simulate A2A agent connection
+    async function simulateAgentConnection(agentId) {
       // Simulate network delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Return mock success
       return {
         success: true,
-        functionName: functionName,
-        timestamp: new Date().toISOString()
+        agentId: agentId,
+        protocol: 'A2A v1.0',
+        timestamp: new Date().toISOString(),
+        capabilities: getAgentCapabilities(agentId.split('.')[1], agentId.split('.')[2])
       };
+    }
+    
+    // Get agent capabilities
+    function getAgentCapabilities(category, functionName) {
+      const capabilityMap = {
+        'analytics': [
+          '• Real-time data processing',
+          '• Statistical analysis',
+          '• Risk assessment',
+          '• Trend detection',
+          '• Correlation analysis'
+        ],
+        'financial': [
+          '• Portfolio analysis',
+          '• Risk modeling',
+          '• Regulatory compliance',
+          '• Options pricing',
+          '• Credit assessment'
+        ],
+        'ml': [
+          '• Machine learning models',
+          '• Deep learning networks',
+          '• Reinforcement learning',
+          '• Feature engineering',
+          '• Model optimization'
+        ],
+        'nlp': [
+          '• Natural language processing',
+          '• Entity extraction',
+          '• Sentiment analysis',
+          '• Knowledge graphs',
+          '• Text classification'
+        ],
+        'data': [
+          '• Data processing',
+          '• ETL operations',
+          '• Data validation',
+          '• Batch processing',
+          '• Real-time streaming'
+        ]
+      };
+      
+      return capabilityMap[category] || ['• General processing capabilities'];
     }
 
     // Auto-refresh model metrics
