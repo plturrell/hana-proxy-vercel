@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { getRealTimeMarketData, getHistoricalPrices, monteCarloSimulation, monteCarloOptionPrice } from './real-market-data.js';
+import { getSimpleMarketData } from './simple-market-data.js';
 
 // Initialize Supabase client with optimized settings
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -252,8 +252,8 @@ async function handleTreasuryCalculation(body) {
         let marketDataFromAPI = null;
         
         try {
-          // Fetch REAL market data from free APIs
-          const realData = await getRealTimeMarketData(symbol);
+          // Fetch REAL market data
+          const realData = await getSimpleMarketData(symbol);
           
           if (realData) {
             marketDataFromAPI = {
@@ -662,65 +662,138 @@ async function handleMonteCarlo(body) {
   
   try {
     // Get real market data
-    const marketData = await getRealTimeMarketData(symbol);
+    const marketData = await getSimpleMarketData(symbol);
     
     if (!marketData) {
       throw new Error(`Unable to fetch market data for ${symbol}`);
     }
     
-    // Get historical data for better volatility calculation
-    const historical = await getHistoricalPrices(symbol, 30);
-    const volatility = historical?.volatility || marketData.volatility || 0.25;
+    const volatility = marketData.volatility || 0.25;
+    const currentPrice = marketData.price;
+    const riskFreeRate = parameters.risk_free_rate || 0.045;
     
     if (type === 'simulation') {
-      // Run full Monte Carlo simulation
-      const result = await monteCarloSimulation({
-        symbol: symbol,
-        currentPrice: marketData.price,
-        volatility: volatility,
-        riskFreeRate: parameters.risk_free_rate || 0.045,
-        timeHorizon: parameters.time_horizon || 252,
-        numSimulations: parameters.num_simulations || 10000,
-        confidenceLevel: parameters.confidence_level || 0.95
-      });
+      // Run Monte Carlo simulation
+      const numSimulations = parameters.num_simulations || 10000;
+      const timeHorizon = parameters.time_horizon || 252;
+      const confidenceLevel = parameters.confidence_level || 0.95;
+      
+      const dt = 1 / 252;
+      const sqrtDt = Math.sqrt(dt);
+      const finalValues = [];
+      
+      // Run simulations
+      for (let sim = 0; sim < numSimulations; sim++) {
+        let price = currentPrice;
+        
+        // Simulate price path
+        for (let t = 0; t < timeHorizon; t++) {
+          const z = gaussianRandom();
+          const drift = (riskFreeRate - 0.5 * volatility * volatility) * dt;
+          const diffusion = volatility * sqrtDt * z;
+          price = price * Math.exp(drift + diffusion);
+        }
+        
+        finalValues.push(price);
+      }
+      
+      // Sort for percentiles
+      finalValues.sort((a, b) => a - b);
+      
+      // Calculate statistics
+      const mean = finalValues.reduce((a, b) => a + b, 0) / numSimulations;
+      const varIndex = Math.floor((1 - confidenceLevel) * numSimulations);
+      const var95 = currentPrice - finalValues[varIndex];
+      const profitableScenarios = finalValues.filter(v => v > currentPrice).length;
       
       return {
         success: true,
         type: 'monte_carlo_simulation',
         symbol: symbol,
         marketData: {
-          currentPrice: marketData.price,
+          currentPrice: currentPrice,
+          volatility: volatility,
           source: marketData.source,
           timestamp: marketData.timestamp
         },
-        simulation: result,
+        simulation: {
+          results: {
+            meanPrice: mean,
+            medianPrice: finalValues[Math.floor(numSimulations / 2)],
+            valueAtRisk95: var95,
+            probabilityOfProfit: profitableScenarios / numSimulations,
+            percentiles: {
+              p5: finalValues[Math.floor(0.05 * numSimulations)],
+              p25: finalValues[Math.floor(0.25 * numSimulations)],
+              p50: finalValues[Math.floor(0.50 * numSimulations)],
+              p75: finalValues[Math.floor(0.75 * numSimulations)],
+              p95: finalValues[Math.floor(0.95 * numSimulations)]
+            }
+          },
+          parameters: {
+            numSimulations,
+            timeHorizon,
+            volatility,
+            riskFreeRate
+          }
+        },
         usingRealData: true
       };
       
     } else if (type === 'option_pricing') {
       // Monte Carlo option pricing
-      const result = await monteCarloOptionPrice({
-        symbol: symbol,
-        spotPrice: marketData.price,
-        strikePrice: parameters.strike_price || marketData.price,
-        volatility: volatility,
-        riskFreeRate: parameters.risk_free_rate || 0.045,
-        timeToExpiry: parameters.time_to_expiry || 0.25,
-        optionType: parameters.option_type || 'call',
-        numSimulations: parameters.num_simulations || 50000
-      });
+      const strikePrice = parameters.strike_price || currentPrice;
+      const timeToExpiry = parameters.time_to_expiry || 0.25;
+      const optionType = parameters.option_type || 'call';
+      const numSimulations = parameters.num_simulations || 50000;
+      
+      const timeSteps = Math.floor(timeToExpiry * 252);
+      const dt = timeToExpiry / timeSteps;
+      const sqrtDt = Math.sqrt(dt);
+      
+      let payoffSum = 0;
+      
+      for (let sim = 0; sim < numSimulations; sim++) {
+        let price = currentPrice;
+        
+        // Simulate to expiry
+        for (let t = 0; t < timeSteps; t++) {
+          const z = gaussianRandom();
+          const drift = (riskFreeRate - 0.5 * volatility * volatility) * dt;
+          const diffusion = volatility * sqrtDt * z;
+          price = price * Math.exp(drift + diffusion);
+        }
+        
+        // Calculate payoff
+        const payoff = optionType === 'call' 
+          ? Math.max(price - strikePrice, 0)
+          : Math.max(strikePrice - price, 0);
+        
+        payoffSum += payoff;
+      }
+      
+      // Discount to present value
+      const optionPrice = (payoffSum / numSimulations) * Math.exp(-riskFreeRate * timeToExpiry);
       
       return {
         success: true,
         type: 'monte_carlo_option',
         symbol: symbol,
         marketData: {
-          currentPrice: marketData.price,
+          currentPrice: currentPrice,
           volatility: volatility,
           source: marketData.source
         },
-        optionPrice: result.optionPrice,
-        parameters: result.parameters,
+        optionPrice: optionPrice,
+        parameters: {
+          spotPrice: currentPrice,
+          strikePrice: strikePrice,
+          volatility: volatility,
+          riskFreeRate: riskFreeRate,
+          timeToExpiry: timeToExpiry,
+          optionType: optionType,
+          numSimulations: numSimulations
+        },
         usingRealData: true
       };
     }
@@ -733,6 +806,13 @@ async function handleMonteCarlo(body) {
       symbol: symbol
     };
   }
+}
+
+// Gaussian random number generator (Box-Muller transform)
+function gaussianRandom() {
+  const u1 = Math.random();
+  const u2 = Math.random();
+  return Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
 }
 
 // Error function approximation

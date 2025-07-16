@@ -1,5 +1,5 @@
 // Real-time market data service with multiple provider support
-import fetch from 'node-fetch';
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 // Cache for market data (5 minute expiry)
 const marketDataCache = new Map();
