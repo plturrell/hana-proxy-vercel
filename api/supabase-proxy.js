@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getRealTimeMarketData, getHistoricalPrices, monteCarloSimulation, monteCarloOptionPrice } from './real-market-data.js';
 
 // Initialize Supabase client with optimized settings
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -117,6 +118,10 @@ export default async function handler(req, res) {
 
       case 'calculate_treasury':
         result = await withTimeout(handleTreasuryCalculation(req.body), 45000);
+        break;
+
+      case 'monte_carlo':
+        result = await withTimeout(handleMonteCarlo(req.body), 60000);
         break;
 
       case 'health':
@@ -247,37 +252,26 @@ async function handleTreasuryCalculation(body) {
         let marketDataFromAPI = null;
         
         try {
-          // Use realistic market data based on symbol
-          // In production, this would come from real APIs
-          const marketPrices = {
-            'AAPL': { price: 189.15, volatility: 0.22, volume: 54321000 },
-            'MSFT': { price: 412.33, volatility: 0.19, volume: 23456000 },
-            'GOOGL': { price: 156.78, volatility: 0.25, volume: 19876000 },
-            'TSLA': { price: 243.92, volatility: 0.45, volume: 98765000 },
-            'JPM': { price: 168.45, volatility: 0.18, volume: 12345000 },
-            'GS': { price: 389.20, volatility: 0.21, volume: 8765000 },
-            'BAC': { price: 32.15, volatility: 0.20, volume: 45678000 },
-            'WFC': { price: 45.83, volatility: 0.19, volume: 34567000 }
-          };
+          // Fetch REAL market data from free APIs
+          const realData = await getRealTimeMarketData(symbol);
           
-          const symbolData = marketPrices[symbol] || { 
-            price: 100 + Math.random() * 50, 
-            volatility: 0.2 + Math.random() * 0.1,
-            volume: 10000000
-          };
-          
-          marketDataFromAPI = {
-            price: symbolData.price,
-            volatility: symbolData.volatility,
-            beta: 1.0 + (Math.random() - 0.5) * 0.4,
-            data_quality_score: 0.95,
-            volume: symbolData.volume,
-            timestamp: new Date().toISOString()
-          };
-          
-          console.log(`Market data prepared:`, JSON.stringify(marketDataFromAPI));
+          if (realData) {
+            marketDataFromAPI = {
+              price: realData.price,
+              volatility: realData.volatility || 0.25,
+              beta: 1.0 + (Math.random() - 0.5) * 0.4,
+              data_quality_score: 0.98, // High confidence for real data
+              volume: realData.volume,
+              timestamp: realData.timestamp,
+              source: realData.source
+            };
+            
+            console.log(`Real market data fetched for ${symbol}:`, JSON.stringify(marketDataFromAPI));
+          } else {
+            console.log(`Real data unavailable for ${symbol}, using fallback`);
+          }
         } catch (apiError) {
-          console.log('Market data preparation failed:', apiError.message);
+          console.log('Real market data fetch failed:', apiError.message);
         }
         
         // Try database first, fallback to direct API
@@ -297,7 +291,7 @@ async function handleTreasuryCalculation(body) {
           parameters.volatility = marketDataFromAPI.volatility;
           parameters.beta = marketDataFromAPI.beta;
           parameters.data_quality_score = marketDataFromAPI.data_quality_score;
-          usingRealData = 'direct_api';
+          usingRealData = `real_${marketDataFromAPI.source}`;
           
           // If we need Grok-enhanced parameters, call Grok AI directly
           if (inputParams.use_grok_enhancement) {
@@ -378,7 +372,7 @@ async function handleTreasuryCalculation(body) {
       parameters: parameters,
       executionTime: executionTime,
       dataSource: usingRealData === 'grok_enhanced' ? 'real_data_grok_enhanced' : 
-                  usingRealData === 'direct_api' ? 'direct_api_finnhub' :
+                  typeof usingRealData === 'string' && usingRealData.startsWith('real_') ? usingRealData :
                   usingRealData ? 'real_market_data' : 'fallback_calculation',
       usingRealData: !!usingRealData,
       grokEnhanced: usingRealData === 'grok_enhanced'
@@ -658,6 +652,85 @@ async function handleChainedCalculation(body) {
     return {
       success: false,
       error: error.message
+    };
+  }
+}
+
+// Handle Monte Carlo simulation
+async function handleMonteCarlo(body) {
+  const { symbol, type = 'simulation', parameters = {} } = body;
+  
+  try {
+    // Get real market data
+    const marketData = await getRealTimeMarketData(symbol);
+    
+    if (!marketData) {
+      throw new Error(`Unable to fetch market data for ${symbol}`);
+    }
+    
+    // Get historical data for better volatility calculation
+    const historical = await getHistoricalPrices(symbol, 30);
+    const volatility = historical?.volatility || marketData.volatility || 0.25;
+    
+    if (type === 'simulation') {
+      // Run full Monte Carlo simulation
+      const result = await monteCarloSimulation({
+        symbol: symbol,
+        currentPrice: marketData.price,
+        volatility: volatility,
+        riskFreeRate: parameters.risk_free_rate || 0.045,
+        timeHorizon: parameters.time_horizon || 252,
+        numSimulations: parameters.num_simulations || 10000,
+        confidenceLevel: parameters.confidence_level || 0.95
+      });
+      
+      return {
+        success: true,
+        type: 'monte_carlo_simulation',
+        symbol: symbol,
+        marketData: {
+          currentPrice: marketData.price,
+          source: marketData.source,
+          timestamp: marketData.timestamp
+        },
+        simulation: result,
+        usingRealData: true
+      };
+      
+    } else if (type === 'option_pricing') {
+      // Monte Carlo option pricing
+      const result = await monteCarloOptionPrice({
+        symbol: symbol,
+        spotPrice: marketData.price,
+        strikePrice: parameters.strike_price || marketData.price,
+        volatility: volatility,
+        riskFreeRate: parameters.risk_free_rate || 0.045,
+        timeToExpiry: parameters.time_to_expiry || 0.25,
+        optionType: parameters.option_type || 'call',
+        numSimulations: parameters.num_simulations || 50000
+      });
+      
+      return {
+        success: true,
+        type: 'monte_carlo_option',
+        symbol: symbol,
+        marketData: {
+          currentPrice: marketData.price,
+          volatility: volatility,
+          source: marketData.source
+        },
+        optionPrice: result.optionPrice,
+        parameters: result.parameters,
+        usingRealData: true
+      };
+    }
+    
+  } catch (error) {
+    console.error('Monte Carlo simulation error:', error);
+    return {
+      success: false,
+      error: error.message,
+      symbol: symbol
     };
   }
 }

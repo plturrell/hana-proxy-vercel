@@ -58,24 +58,7 @@
   transform: scale(1.05);
 }
 
-/* Natural Language Names */
-.a2a-agent-name {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  margin: 0;
-  color: var(--text-primary);
-}
-
-/* Beautiful Descriptions */
-.a2a-agent-description {
-  font-size: 16px;
-  line-height: 1.5;
-  color: var(--text-secondary);
-  margin: 16px 0;
-  height: auto;
-  opacity: 0.9;
-}
+/* Keep Original Styling - Just Enhance */
 
 /* Keep Original Button Styling - Don't Override */
 .jobs-action-button.primary {
@@ -299,12 +282,7 @@
   animation: connectionSuccess 0.6s var(--delight-curve);
 }
 
-/* Remove All Borders */
-.jobs-model-card,
-.jobs-overview-card,
-.jobs-action-button {
-  border: none !important;
-}
+/* Keep Original Borders */
 
 /* Floating Labels */
 .floating-insight {

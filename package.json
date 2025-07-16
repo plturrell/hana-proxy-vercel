@@ -10,7 +10,8 @@
     "@sap/hana-client": "^2.19.21",
     "hdb": "^0.19.8",
     "ws": "^8.16.0",
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "node-fetch": "^3.3.2"
   },
   "devDependencies": {
     "vercel": "^32.0.0"
