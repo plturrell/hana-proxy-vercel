@@ -131,6 +131,14 @@ export default async function handler(req, res) {
         result = await withTimeout(handleCheckTables(), 10000);
         break;
 
+      case 'populate_real_data':
+        result = await withTimeout(handlePopulateRealData(req.body), 30000);
+        break;
+
+      case 'execute_chained_calculation':
+        result = await withTimeout(handleChainedCalculation(req.body), 45000);
+        break;
+
       default:
         throw new Error(`Unknown action: ${action}`);
     }
@@ -227,28 +235,63 @@ async function handleTreasuryCalculation(body) {
   const { formula, symbol, user_id, parameters: inputParams = {} } = body;
   
   try {
-    // Simplified parameter gathering - avoid complex nested queries
     let parameters = { ...inputParams };
+    let usingRealData = false;
     
-    // Only get essential data to avoid timeouts
+    // Try to get real market data first
     if (symbol && !parameters.spot_price) {
       try {
-        const { data: marketData } = await supabase
-          .rpc('get_current_market_data', { p_symbol: symbol });
+        const { data: realMarketData } = await supabase
+          .rpc('get_current_market_data_real', { p_symbol: symbol });
         
-        if (marketData && !marketData.error) {
-          parameters.spot_price = marketData.price || 100;
-          parameters.volatility = marketData.volatility || 0.2;
+        if (realMarketData && realMarketData.length > 0) {
+          const marketData = realMarketData[0];
+          parameters.spot_price = marketData.price;
+          parameters.volatility = marketData.volatility;
+          parameters.beta = marketData.beta;
+          parameters.data_quality_score = marketData.data_quality_score;
+          usingRealData = true;
+          
+          // If we need Grok-enhanced parameters, call the derivation service
+          if (inputParams.use_grok_enhancement) {
+            try {
+              const grokResponse = await fetch(`${supabaseUrl}/functions/v1/real-data-ingestion`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${supabaseKey}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  action: 'derive_parameters_with_grok',
+                  calculation_request: {
+                    model_name: formula,
+                    symbol: symbol,
+                    base_parameters: parameters
+                  }
+                })
+              });
+              
+              if (grokResponse.ok) {
+                const grokData = await grokResponse.json();
+                parameters = { ...parameters, ...grokData.derived_parameters };
+                usingRealData = 'grok_enhanced';
+              }
+            } catch (grokError) {
+              console.log('Grok enhancement failed, using market data only:', grokError.message);
+            }
+          }
         }
       } catch (e) {
-        // Use fallback values if market data fails
-        parameters.spot_price = parameters.spot_price || 100;
-        parameters.volatility = parameters.volatility || 0.2;
+        console.log('Real market data unavailable, using fallbacks:', e.message);
       }
     }
     
-    // Set reasonable defaults for missing parameters
-    parameters.risk_free_rate = parameters.risk_free_rate || 0.05;
+    // Fallback to reasonable defaults if no real data
+    if (!usingRealData) {
+      parameters.spot_price = parameters.spot_price || 100;
+      parameters.volatility = parameters.volatility || 0.2;
+      parameters.beta = parameters.beta || 1.0;
+    }
     
     // Simple calculation without complex dependencies
     const startTime = Date.now();
@@ -278,7 +321,10 @@ async function handleTreasuryCalculation(body) {
       result: result.result || result.value || result,
       parameters: parameters,
       executionTime: executionTime,
-      dataSource: 'optimized_calculation'
+      dataSource: usingRealData === 'grok_enhanced' ? 'real_data_grok_enhanced' : 
+                  usingRealData ? 'real_market_data' : 'fallback_calculation',
+      usingRealData: !!usingRealData,
+      grokEnhanced: usingRealData === 'grok_enhanced'
     };
     
   } catch (error) {
@@ -438,6 +484,91 @@ function calculateSharpeRatio(returns, riskFreeRate) {
 function calculateDuration(params) {
   const { yield_to_maturity = 0.05, time_to_maturity = 5 } = params;
   return time_to_maturity / (1 + yield_to_maturity); // Simplified Macaulay duration
+}
+
+// Populate real market data for testing
+async function handlePopulateRealData(body) {
+  const { symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'JPM'] } = body;
+  
+  try {
+    // Call our real data ingestion function
+    const response = await fetch(`${supabaseUrl}/functions/v1/real-data-ingestion`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'ingest_market_data',
+        symbols: symbols
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Data ingestion failed: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    return {
+      success: true,
+      message: 'Real market data populated successfully',
+      results: result.results,
+      symbols_processed: symbols.length
+    };
+    
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message,
+      fallback_message: 'Using fallback data population'
+    };
+  }
+}
+
+// Execute chained calculations with dependencies
+async function handleChainedCalculation(body) {
+  const { flow_name, models, symbol, user_id } = body;
+  
+  try {
+    const response = await fetch(`${supabaseUrl}/functions/v1/real-data-ingestion`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        action: 'execute_chained_calculation',
+        calculation_request: {
+          flow_name,
+          models_sequence: models,
+          symbol,
+          user_id,
+          flow_parameters: body.parameters || {}
+        }
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Chained calculation failed: ${response.status}`);
+    }
+    
+    const result = await response.json();
+    
+    return {
+      success: true,
+      flow_name,
+      symbol,
+      results: result.results,
+      flow_id: result.flow_id
+    };
+    
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
 }
 
 // Error function approximation
