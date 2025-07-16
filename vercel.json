@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/supabase-proxy.js": {
-      "maxDuration": 30
+      "maxDuration": 60
     }
   },
   "rewrites": [

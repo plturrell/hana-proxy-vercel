@@ -336,6 +336,427 @@
       background: #3A3A3C;
     }
 
+    /* Agent Detail Screen Styles */
+    .agent-detail-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--jobs-white);
+      z-index: 10000;
+      transform: translateX(100%);
+      transition: transform var(--jobs-duration) var(--jobs-animation);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .agent-detail-screen.show {
+      transform: translateX(0);
+    }
+
+    body.dark-mode .agent-detail-screen {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+
+    .agent-detail-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--jobs-light-gray);
+      padding: var(--jobs-spacing-lg) var(--jobs-spacing-xl);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    body.dark-mode .agent-detail-header {
+      background: rgba(0, 0, 0, 0.95);
+      border-bottom-color: #38383A;
+    }
+
+    .agent-detail-back {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      color: var(--jobs-blue);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      border: none;
+      background: none;
+      font-size: var(--jobs-font-size-body);
+    }
+
+    .agent-detail-back:hover {
+      background: var(--jobs-light-gray);
+      transform: translateX(-2px);
+    }
+
+    body.dark-mode .agent-detail-back:hover {
+      background: #2C2C2E;
+    }
+
+    .agent-detail-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .agent-detail-content {
+      padding: 0 var(--jobs-spacing-xl) var(--jobs-spacing-xxl);
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .agent-detail-hero {
+      padding: var(--jobs-spacing-xxl) 0;
+      text-align: center;
+      border-bottom: 1px solid var(--jobs-light-gray);
+      margin-bottom: var(--jobs-spacing-xxl);
+    }
+
+    body.dark-mode .agent-detail-hero {
+      border-bottom-color: #38383A;
+    }
+
+    .agent-detail-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 48px;
+      color: white;
+      margin: 0 auto var(--jobs-spacing-lg);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .agent-detail-icon.analytics { background: linear-gradient(135deg, var(--jobs-blue), #5AC8FA); }
+    .agent-detail-icon.financial { background: linear-gradient(135deg, var(--jobs-green), #32D74B); }
+    .agent-detail-icon.ml { background: linear-gradient(135deg, var(--jobs-purple), #BF5AF2); }
+    .agent-detail-icon.nlp { background: linear-gradient(135deg, var(--jobs-orange), #FF9F0A); }
+    .agent-detail-icon.data { background: linear-gradient(135deg, var(--jobs-teal), #64D2FF); }
+
+    .agent-detail-name {
+      font-size: var(--jobs-font-size-hero);
+      font-weight: 700;
+      margin: 0 0 var(--jobs-spacing-sm) 0;
+      line-height: 1.1;
+    }
+
+    .agent-detail-tagline {
+      font-size: var(--jobs-font-size-title);
+      color: var(--jobs-gray);
+      margin: 0 0 var(--jobs-spacing-lg) 0;
+      font-weight: 400;
+    }
+
+    .agent-detail-technical-id {
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      background: var(--jobs-light-gray);
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    body.dark-mode .agent-detail-technical-id {
+      background: #2C2C2E;
+    }
+
+    .agent-detail-section {
+      margin-bottom: var(--jobs-spacing-xxl);
+    }
+
+    .agent-detail-section-title {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      margin: 0 0 var(--jobs-spacing-lg) 0;
+      color: var(--jobs-black);
+    }
+
+    body.dark-mode .agent-detail-section-title {
+      color: var(--jobs-white);
+    }
+
+    .agent-detail-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: var(--jobs-spacing-lg);
+      margin-bottom: var(--jobs-spacing-xl);
+    }
+
+    .agent-detail-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 16px;
+      padding: var(--jobs-spacing-xl);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .agent-detail-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-green));
+      border-radius: 16px 16px 0 0;
+    }
+
+    .agent-detail-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark-mode .agent-detail-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+
+    .agent-detail-card-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0 0 var(--jobs-spacing-md) 0;
+      color: var(--jobs-black);
+    }
+
+    body.dark-mode .agent-detail-card-title {
+      color: var(--jobs-white);
+    }
+
+    .agent-detail-card-content {
+      color: var(--jobs-gray);
+      line-height: 1.6;
+    }
+
+    .latex-formula {
+      background: #F8F9FA;
+      border: 1px solid #E9ECEF;
+      border-radius: 8px;
+      padding: var(--jobs-spacing-md);
+      margin: var(--jobs-spacing-md) 0;
+      font-family: 'Times New Roman', serif;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    body.dark-mode .latex-formula {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: var(--jobs-white);
+    }
+
+    .process-flow {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-md);
+      margin: var(--jobs-spacing-lg) 0;
+      flex-wrap: wrap;
+    }
+
+    .process-step {
+      flex: 1;
+      min-width: 120px;
+      text-align: center;
+      padding: var(--jobs-spacing-md);
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    body.dark-mode .process-step {
+      background: #2C2C2E;
+    }
+
+    .process-step::after {
+      content: '→';
+      position: absolute;
+      right: -20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--jobs-gray);
+      font-size: 18px;
+    }
+
+    .process-step:last-child::after {
+      display: none;
+    }
+
+    .process-step-number {
+      width: 24px;
+      height: 24px;
+      background: var(--jobs-blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 0 auto var(--jobs-spacing-xs);
+    }
+
+    .process-step-title {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+
+    .process-step-desc {
+      font-size: 12px;
+      color: var(--jobs-gray);
+    }
+
+    .agent-detail-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--jobs-spacing-md);
+      margin: var(--jobs-spacing-lg) 0;
+    }
+
+    .agent-detail-metric {
+      text-align: center;
+      padding: var(--jobs-spacing-lg);
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+    }
+
+    body.dark-mode .agent-detail-metric {
+      background: #2C2C2E;
+    }
+
+    .agent-detail-metric-value {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      color: var(--jobs-blue);
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+
+    .agent-detail-metric-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .code-example {
+      background: #F8F9FA;
+      border: 1px solid #E9ECEF;
+      border-radius: 8px;
+      padding: var(--jobs-spacing-md);
+      margin: var(--jobs-spacing-md) 0;
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+      font-size: 14px;
+      overflow-x: auto;
+    }
+
+    body.dark-mode .code-example {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: var(--jobs-white);
+    }
+
+    .integration-diagram {
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-xl);
+      margin: var(--jobs-spacing-lg) 0;
+      text-align: center;
+    }
+
+    body.dark-mode .integration-diagram {
+      background: #2C2C2E;
+    }
+
+    .diagram-node {
+      display: inline-block;
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      background: var(--jobs-white);
+      border: 2px solid var(--jobs-blue);
+      border-radius: 8px;
+      margin: var(--jobs-spacing-sm);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    body.dark-mode .diagram-node {
+      background: #1C1C1E;
+      color: var(--jobs-white);
+    }
+
+    .agent-detail-actions {
+      position: sticky;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--jobs-light-gray);
+      padding: var(--jobs-spacing-lg) var(--jobs-spacing-xl);
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      justify-content: center;
+    }
+
+    body.dark-mode .agent-detail-actions {
+      background: rgba(0, 0, 0, 0.95);
+      border-top-color: #38383A;
+    }
+
+    .agent-detail-action-button {
+      flex: 1;
+      max-width: 200px;
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      border-radius: 12px;
+      border: none;
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+
+    .agent-detail-action-button.primary {
+      background: var(--jobs-blue);
+      color: white;
+    }
+
+    .agent-detail-action-button.primary:hover {
+      background: #0056CC;
+      transform: scale(1.02);
+    }
+
+    .agent-detail-action-button.secondary {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+    }
+
+    .agent-detail-action-button.secondary:hover {
+      background: var(--jobs-gray);
+      color: white;
+    }
+
+    body.dark-mode .agent-detail-action-button.secondary {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+
+    body.dark-mode .agent-detail-action-button.secondary:hover {
+      background: #3A3A3C;
+    }
+
     /* Dark mode tabbar styles - removed */
     
     body.dark-mode .jobs-model-card {
@@ -2855,7 +3276,7 @@
         
         <div class="jobs-model-actions">
           <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('${agent.agent_id}')">Connect</button>
-          <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('${agent.agent_id}')">Details</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); showAgentDetailScreen('${agent.agent_id}')">Details</button>
         </div>
       `;
       
@@ -3302,6 +3723,151 @@
           <button class="agent-modal-button primary" id="modal-connect-btn" onclick="connectAgentFromModal()">Connect Agent</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Agent Detail Screen -->
+  <div class="agent-detail-screen" id="agent-detail-screen">
+    <div class="agent-detail-header">
+      <button class="agent-detail-back" onclick="closeAgentDetailScreen()">
+        ← Back to Agents
+      </button>
+      <h1 class="agent-detail-title" id="detail-screen-title">Agent Details</h1>
+    </div>
+
+    <div class="agent-detail-content">
+      <!-- Hero Section -->
+      <div class="agent-detail-hero">
+        <div class="agent-detail-icon" id="detail-agent-icon">AG</div>
+        <h1 class="agent-detail-name" id="detail-agent-name">Agent Name</h1>
+        <p class="agent-detail-tagline" id="detail-agent-tagline">Advanced AI agent for financial intelligence</p>
+        <div class="agent-detail-technical-id" id="detail-agent-id">agent.id</div>
+      </div>
+
+      <!-- Performance Metrics -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">Live Performance</h2>
+        <div class="agent-detail-metrics">
+          <div class="agent-detail-metric">
+            <div class="agent-detail-metric-value" id="detail-response-time">--ms</div>
+            <div class="agent-detail-metric-label">Avg Response</div>
+          </div>
+          <div class="agent-detail-metric">
+            <div class="agent-detail-metric-value" id="detail-success-rate">--%</div>
+            <div class="agent-detail-metric-label">Success Rate</div>
+          </div>
+          <div class="agent-detail-metric">
+            <div class="agent-detail-metric-value" id="detail-requests">--</div>
+            <div class="agent-detail-metric-label">Total Requests</div>
+          </div>
+          <div class="agent-detail-metric">
+            <div class="agent-detail-metric-value" id="detail-uptime">--%</div>
+            <div class="agent-detail-metric-label">Uptime</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Understanding Section -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">Understanding This Agent</h2>
+        <div class="agent-detail-cards-grid">
+          <div class="agent-detail-card">
+            <h3 class="agent-detail-card-title">What It Does</h3>
+            <div class="agent-detail-card-content" id="detail-what-it-does">
+              This agent processes financial data using advanced algorithms to provide insights and recommendations.
+            </div>
+          </div>
+          
+          <div class="agent-detail-card">
+            <h3 class="agent-detail-card-title">Why It Matters</h3>
+            <div class="agent-detail-card-content" id="detail-why-it-matters">
+              This capability is essential for making informed financial decisions and managing risk effectively.
+            </div>
+          </div>
+          
+          <div class="agent-detail-card">
+            <h3 class="agent-detail-card-title">When To Use</h3>
+            <div class="agent-detail-card-content" id="detail-when-to-use">
+              Use this agent when you need accurate, real-time analysis of financial data and market conditions.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mathematical Foundation -->
+      <div class="agent-detail-section" id="mathematical-section">
+        <h2 class="agent-detail-section-title">Mathematical Foundation</h2>
+        <div class="agent-detail-card">
+          <h3 class="agent-detail-card-title">Core Formula</h3>
+          <div class="agent-detail-card-content">
+            <div class="latex-formula" id="detail-formula">
+              Loading mathematical definition...
+            </div>
+            <p>This formula represents the mathematical foundation that powers the agent's calculations and decision-making process.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- How It Works -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">How It Works</h2>
+        <div class="agent-detail-card">
+          <h3 class="agent-detail-card-title">Process Flow</h3>
+          <div class="agent-detail-card-content">
+            <div class="process-flow" id="detail-process-flow">
+              <!-- Process steps will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integration -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">System Integration</h2>
+        <div class="agent-detail-card">
+          <h3 class="agent-detail-card-title">Data Flow</h3>
+          <div class="agent-detail-card-content">
+            <div class="integration-diagram" id="detail-integration">
+              <div class="diagram-node">Market Data</div>
+              <div class="diagram-node">This Agent</div>
+              <div class="diagram-node">Analysis Results</div>
+              <div class="diagram-node">User Interface</div>
+            </div>
+            <p>This agent seamlessly integrates with our financial data pipeline to provide real-time insights.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Code Example -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">Usage Example</h2>
+        <div class="agent-detail-card">
+          <h3 class="agent-detail-card-title">API Integration</h3>
+          <div class="agent-detail-card-content">
+            <div class="code-example" id="detail-code-example">
+// Connect to agent
+const response = await fetch('/api/supabase-proxy', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    action: 'rpc',
+    function_name: 'agent_function_name',
+    params: { /* your parameters */ }
+  })
+});
+
+const result = await response.json();
+console.log('Agent result:', result);
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Bar -->
+    <div class="agent-detail-actions">
+      <button class="agent-detail-action-button secondary" onclick="closeAgentDetailScreen()">Close</button>
+      <button class="agent-detail-action-button primary" id="detail-connect-btn" onclick="connectAgentFromDetail()">Connect Agent</button>
     </div>
   </div>
 

@@ -255,7 +255,7 @@ async function handleTreasuryCalculation(body) {
     const result = calculateFormula(formula, parameters);
     const executionTime = Date.now() - startTime;
     
-    // Store result asynchronously (don't wait for it) - only if function exists
+    // Store result asynchronously (don't wait for it)
     setImmediate(async () => {
       try {
         await supabase.rpc('store_calculation_result', {
@@ -267,8 +267,7 @@ async function handleTreasuryCalculation(body) {
           p_execution_time_ms: executionTime
         });
       } catch (e) {
-        // Silently ignore if function doesn't exist
-        console.log('Note: store_calculation_result function not available');
+        console.log('Failed to store calculation result:', e.message);
       }
     });
     
@@ -293,28 +292,11 @@ async function handleTreasuryCalculation(body) {
 
 async function handleHealth() {
   // Simple health check without complex queries
-  try {
-    // Test if we can connect to Supabase by trying a simple query
-    const { error } = await supabase
-      .from('news_articles')
-      .select('count')
-      .limit(1);
-    
-    return { 
-      healthy: !error,
-      status: 'ok',
-      supabase_configured: !!(supabaseUrl && supabaseKey),
-      database_accessible: !error
-    };
-  } catch (e) {
-    return { 
-      healthy: true, // Still healthy even if no tables exist
-      status: 'ok',
-      supabase_configured: !!(supabaseUrl && supabaseKey),
-      database_accessible: false,
-      note: 'Database tables may not be set up yet'
-    };
-  }
+  return { 
+    healthy: true,
+    status: 'ok',
+    supabase_configured: !!(supabaseUrl && supabaseKey)
+  };
 }
 
 async function handleCheckFunctions() {
