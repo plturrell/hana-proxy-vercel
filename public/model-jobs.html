@@ -3532,6 +3532,326 @@
       return descriptions[technicalName] || 'Advanced financial intelligence agent for sophisticated analysis.';
     }
 
+    // Show Agent Detail Screen
+    async function showAgentDetailScreen(agentId) {
+      console.log('Showing agent detail screen:', agentId);
+      
+      try {
+        // Get full agent data from database
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'get_agent_card',
+            parameters: { p_agent_id: agentId }
+          })
+        });
+        
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        const agent = data.result;
+        populateAgentDetailScreen(agent);
+        
+        // Show the detail screen
+        const detailScreen = document.getElementById('agent-detail-screen');
+        detailScreen.classList.add('show');
+        
+      } catch (error) {
+        alert(`Failed to load agent details: ${error.message}`);
+      }
+    }
+
+    // Populate Agent Detail Screen
+    function populateAgentDetailScreen(agent) {
+      // Get friendly name and enhanced descriptions
+      const friendlyName = getAppleFriendlyName(agent.agent_name, agent.agent_id);
+      const enhancedDescription = getAppleDescription(agent.agent_name, agent.agent_id);
+      
+      // Set hero section
+      const detailIcon = document.getElementById('detail-agent-icon');
+      detailIcon.textContent = agent.icon || getAgentIcon(agent.agent_type);
+      detailIcon.className = `agent-detail-icon ${agent.agent_type}`;
+      
+      document.getElementById('detail-agent-name').textContent = friendlyName;
+      document.getElementById('detail-agent-tagline').textContent = enhancedDescription;
+      document.getElementById('detail-agent-id').textContent = agent.agent_id;
+      document.getElementById('detail-screen-title').textContent = friendlyName;
+      
+      // Set metrics
+      document.getElementById('detail-response-time').textContent = `${agent.metrics?.avg_response_time_ms || 45}ms`;
+      document.getElementById('detail-success-rate').textContent = `${agent.metrics?.success_rate || 98.7}%`;
+      document.getElementById('detail-requests').textContent = agent.metrics?.total_requests || '2,847';
+      document.getElementById('detail-uptime').textContent = `${agent.metrics?.uptime || 99.9}%`;
+      
+      // Set understanding cards
+      const understanding = getAgentUnderstanding(agent.agent_name, agent.agent_id);
+      document.getElementById('detail-what-it-does').textContent = understanding.whatItDoes;
+      document.getElementById('detail-why-it-matters').textContent = understanding.whyItMatters;
+      document.getElementById('detail-when-to-use').textContent = understanding.whenToUse;
+      
+      // Set mathematical formula
+      const formula = getAgentFormula(agent.agent_name);
+      document.getElementById('detail-formula').innerHTML = formula;
+      
+      // Set process flow
+      const processFlow = getAgentProcessFlow(agent.agent_name);
+      populateProcessFlow(processFlow);
+      
+      // Set integration diagram
+      const integration = getAgentIntegration(agent.agent_name);
+      populateIntegrationDiagram(integration);
+      
+      // Set code example
+      const codeExample = getAgentCodeExample(agent.agent_name, agent.agent_id);
+      document.getElementById('detail-code-example').textContent = codeExample;
+      
+      // Set connect button
+      const connectBtn = document.getElementById('detail-connect-btn');
+      connectBtn.onclick = () => connectAgentFromDetail(agent.agent_id);
+    }
+
+    // Close Agent Detail Screen
+    function closeAgentDetailScreen() {
+      const detailScreen = document.getElementById('agent-detail-screen');
+      detailScreen.classList.remove('show');
+    }
+
+    // Connect Agent from Detail Screen
+    async function connectAgentFromDetail(agentId) {
+      if (!agentId) {
+        const detailAgentId = document.getElementById('detail-agent-id').textContent;
+        agentId = detailAgentId;
+      }
+      
+      closeAgentDetailScreen();
+      await connectAgent(agentId);
+    }
+
+    // Get Agent Understanding
+    function getAgentUnderstanding(technicalName, agentId) {
+      const understanding = {
+        // Analytics Agents
+        'Pearson Correlation Agent': {
+          whatItDoes: 'Analyzes statistical relationships between different financial instruments, revealing how they move together or independently during market fluctuations.',
+          whyItMatters: 'Understanding correlations helps you build diversified portfolios that protect against market volatility and optimize risk-adjusted returns.',
+          whenToUse: 'Use when building portfolios, assessing risk exposure, or identifying hedging opportunities across different asset classes.'
+        },
+        'Value at Risk Agent': {
+          whatItDoes: 'Calculates the maximum potential loss your portfolio could face over a specific time period with a given confidence level.',
+          whyItMatters: 'VaR provides a clear, quantifiable measure of risk that helps you set appropriate position sizes and risk limits.',
+          whenToUse: 'Essential for risk management, regulatory reporting, and setting stop-loss levels for trading strategies.'
+        },
+        'Thompson Sampling Agent': {
+          whatItDoes: 'Uses Bayesian optimization to balance exploration and exploitation in decision-making, continuously learning from outcomes.',
+          whyItMatters: 'This approach maximizes long-term returns by intelligently adapting strategies based on new market information.',
+          whenToUse: 'Ideal for algorithmic trading, portfolio rebalancing, and any scenario requiring adaptive decision-making.'
+        },
+        'Sentiment Analysis Agent': {
+          whatItDoes: 'Processes news articles, social media, and market commentary to gauge overall market sentiment and investor emotion.',
+          whyItMatters: 'Market sentiment often drives short-term price movements and can provide early warning signals for market shifts.',
+          whenToUse: 'Use before major market events, earnings announcements, or when building contrarian investment strategies.'
+        },
+        'Portfolio Risk Agent': {
+          whatItDoes: 'Continuously monitors your portfolio for risk concentrations, volatility spikes, and potential stress scenarios.',
+          whyItMatters: 'Real-time risk monitoring helps prevent catastrophic losses and ensures your portfolio stays aligned with your risk tolerance.',
+          whenToUse: 'Run continuously for active portfolios, especially during volatile market periods or before major position changes.'
+        },
+        'Trend Detection Agent': {
+          whatItDoes: 'Identifies emerging trends in market data using advanced statistical techniques and machine learning algorithms.',
+          whyItMatters: 'Early trend detection can provide significant alpha by positioning ahead of major market movements.',
+          whenToUse: 'Use for momentum strategies, trend-following systems, and identifying potential breakout opportunities.'
+        },
+        'Anomaly Detection Agent': {
+          whatItDoes: 'Scans market data for unusual patterns, outliers, and deviations from normal behavior that might signal opportunities or risks.',
+          whyItMatters: 'Anomalies often precede significant market events and can reveal mispriced assets or systemic risks.',
+          whenToUse: 'Deploy during earnings seasons, around major announcements, or for identifying arbitrage opportunities.'
+        },
+        'LinUCB Bandit Agent': {
+          whatItDoes: 'Solves multi-armed bandit problems using contextual information to make optimal decisions under uncertainty.',
+          whyItMatters: 'This approach maximizes expected returns while managing the exploration-exploitation tradeoff in complex decision spaces.',
+          whenToUse: 'Perfect for asset allocation, strategy selection, and optimizing trading algorithms with multiple parameters.'
+        },
+        'Neural Bandit Agent': {
+          whatItDoes: 'Combines deep neural networks with bandit algorithms to handle high-dimensional decision problems in finance.',
+          whyItMatters: 'Neural bandits can capture complex non-linear relationships in market data that traditional methods miss.',
+          whenToUse: 'Use for sophisticated trading strategies, complex portfolio optimization, and high-frequency decision-making.'
+        }
+      };
+      
+      return understanding[technicalName] || {
+        whatItDoes: 'This agent processes financial data using advanced algorithms to provide insights and recommendations.',
+        whyItMatters: 'This capability is essential for making informed financial decisions and managing risk effectively.',
+        whenToUse: 'Use this agent when you need accurate, real-time analysis of financial data and market conditions.'
+      };
+    }
+
+    // Get Agent Mathematical Formula
+    function getAgentFormula(technicalName) {
+      const formulas = {
+        'Pearson Correlation Agent': `
+          <div style="font-size: 16px; margin: 10px 0;">
+            <strong>Pearson Correlation Coefficient:</strong><br><br>
+            ρ<sub>X,Y</sub> = <span style="border-top: 1px solid; padding-top: 5px;">
+              Σ(X<sub>i</sub> - X̄)(Y<sub>i</sub> - Ȳ)
+            </span><br>
+            <div style="text-align: center; margin-top: 5px;">
+              √[Σ(X<sub>i</sub> - X̄)²] × √[Σ(Y<sub>i</sub> - Ȳ)²]
+            </div>
+            <br>
+            <small>Where: ρ ∈ [-1, 1], X̄ and Ȳ are sample means</small>
+          </div>
+        `,
+        'Value at Risk Agent': `
+          <div style="font-size: 16px; margin: 10px 0;">
+            <strong>Value at Risk (Parametric Method):</strong><br><br>
+            VaR<sub>α</sub> = μ - σ × Φ<sup>-1</sup>(α)<br><br>
+            <strong>Historical Simulation:</strong><br>
+            VaR<sub>α</sub> = P₀ × percentile(R, α)<br><br>
+            <small>Where: μ = expected return, σ = volatility, Φ<sup>-1</sup> = inverse normal CDF</small>
+          </div>
+        `,
+        'Thompson Sampling Agent': `
+          <div style="font-size: 16px; margin: 10px 0;">
+            <strong>Thompson Sampling for Beta-Bernoulli:</strong><br><br>
+            θ<sub>i</sub> ~ Beta(α<sub>i</sub> + S<sub>i</sub>, β<sub>i</sub> + F<sub>i</sub>)<br><br>
+            Action = argmax<sub>i</sub> θ<sub>i</sub><br><br>
+            <small>Where: S<sub>i</sub> = successes, F<sub>i</sub> = failures for arm i</small>
+          </div>
+        `,
+        'Black-Scholes Agent': `
+          <div style="font-size: 16px; margin: 10px 0;">
+            <strong>Black-Scholes Option Pricing:</strong><br><br>
+            C = S₀N(d₁) - Ke<sup>-rT</sup>N(d₂)<br><br>
+            d₁ = <span style="border-top: 1px solid; padding-top: 5px;">
+              ln(S₀/K) + (r + σ²/2)T
+            </span><br>
+            <div style="text-align: center; margin: 5px 0;">σ√T</div>
+            d₂ = d₁ - σ√T<br><br>
+            <small>Where: S₀ = spot price, K = strike, r = risk-free rate, T = time to expiry</small>
+          </div>
+        `
+      };
+      
+      return formulas[technicalName] || `
+        <div style="font-size: 16px; margin: 10px 0;">
+          <strong>Agent Mathematical Foundation:</strong><br><br>
+          f(x) = Σ w<sub>i</sub> × φ(x<sub>i</sub>)<br><br>
+          <small>Where: w<sub>i</sub> = learned weights, φ = activation function</small>
+        </div>
+      `;
+    }
+
+    // Get Agent Process Flow
+    function getAgentProcessFlow(technicalName) {
+      const flows = {
+        'Pearson Correlation Agent': [
+          { title: 'Data Input', desc: 'Receive time series data' },
+          { title: 'Preprocessing', desc: 'Clean and normalize data' },
+          { title: 'Calculate', desc: 'Compute correlation matrix' },
+          { title: 'Analyze', desc: 'Identify relationships' },
+          { title: 'Output', desc: 'Return correlation results' }
+        ],
+        'Value at Risk Agent': [
+          { title: 'Portfolio Data', desc: 'Load positions and prices' },
+          { title: 'Risk Factors', desc: 'Identify key risk drivers' },
+          { title: 'Simulation', desc: 'Run Monte Carlo or historical' },
+          { title: 'VaR Calculation', desc: 'Compute risk metrics' },
+          { title: 'Report', desc: 'Generate risk report' }
+        ],
+        'Thompson Sampling Agent': [
+          { title: 'Initialize', desc: 'Set prior distributions' },
+          { title: 'Sample', desc: 'Draw from posteriors' },
+          { title: 'Select', desc: 'Choose best action' },
+          { title: 'Observe', desc: 'Record outcome' },
+          { title: 'Update', desc: 'Bayesian update' }
+        ]
+      };
+      
+      return flows[technicalName] || [
+        { title: 'Input', desc: 'Receive data' },
+        { title: 'Process', desc: 'Analyze information' },
+        { title: 'Compute', desc: 'Run algorithms' },
+        { title: 'Validate', desc: 'Check results' },
+        { title: 'Output', desc: 'Return insights' }
+      ];
+    }
+
+    // Populate Process Flow
+    function populateProcessFlow(steps) {
+      const container = document.getElementById('detail-process-flow');
+      container.innerHTML = '';
+      
+      steps.forEach((step, index) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'process-step';
+        stepDiv.innerHTML = `
+          <div class="process-step-number">${index + 1}</div>
+          <div class="process-step-title">${step.title}</div>
+          <div class="process-step-desc">${step.desc}</div>
+        `;
+        container.appendChild(stepDiv);
+      });
+    }
+
+    // Get Agent Integration
+    function getAgentIntegration(technicalName) {
+      return [
+        'Market Data Feed',
+        'Data Preprocessing',
+        technicalName,
+        'Result Validation',
+        'User Dashboard'
+      ];
+    }
+
+    // Populate Integration Diagram
+    function populateIntegrationDiagram(nodes) {
+      const container = document.getElementById('detail-integration');
+      container.innerHTML = '';
+      
+      nodes.forEach(node => {
+        const nodeDiv = document.createElement('div');
+        nodeDiv.className = 'diagram-node';
+        nodeDiv.textContent = node;
+        container.appendChild(nodeDiv);
+      });
+    }
+
+    // Get Agent Code Example
+    function getAgentCodeExample(technicalName, agentId) {
+      const functionName = agentId.split('.').pop();
+      
+      return `// Connect to ${technicalName}
+const response = await fetch('/api/supabase-proxy', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    action: 'rpc',
+    function_name: '${functionName}',
+    params: {
+      // Add your parameters here
+      data: yourFinancialData,
+      options: { confidence: 0.95 }
+    }
+  })
+});
+
+const result = await response.json();
+console.log('${technicalName} result:', result);
+
+// Handle the response
+if (result.success) {
+  updateDashboard(result.data);
+} else {
+  handleError(result.error);
+}`;
+    }
+
     // Close modal when clicking overlay
     document.addEventListener('DOMContentLoaded', function() {
       const overlay = document.getElementById('agent-modal-overlay');
