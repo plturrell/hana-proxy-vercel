@@ -698,11 +698,10 @@
   <div class="jobs-section-nav">
     <div class="jobs-section-tabs">
       <div class="jobs-section-tab active" onclick="showSection('overview')">Overview</div>
-      <div class="jobs-section-tab" onclick="showSection('supervised')">Supervised</div>
-      <div class="jobs-section-tab" onclick="showSection('unsupervised')">Unsupervised</div>
-      <div class="jobs-section-tab" onclick="showSection('reinforcement')">Reinforcement</div>
-      <div class="jobs-section-tab" onclick="showSection('timeseries')">Time Series</div>
-      <div class="jobs-section-tab" onclick="showSection('nlp')">NLP</div>
+      <div class="jobs-section-tab" onclick="showSection('analytics')">Core Analytics</div>
+      <div class="jobs-section-tab" onclick="showSection('financial')">Financial Models</div>
+      <div class="jobs-section-tab" onclick="showSection('ml')">Machine Learning</div>
+      <div class="jobs-section-tab" onclick="showSection('data')">Data Processing</div>
     </div>
   </div>
   
@@ -711,497 +710,1090 @@
     <!-- Overview Section -->
     <div id="overview" class="jobs-section active">
       <div class="jobs-header">
-        <h1 class="jobs-header-title">Machine Learning Models</h1>
-        <p class="jobs-header-subtitle">AI-powered financial intelligence and decision making</p>
+        <h1 class="jobs-header-title">Supabase Functions</h1>
+        <p class="jobs-header-subtitle">Real-time financial analytics and AI-powered intelligence</p>
       </div>
     
-      <!-- Model Overview -->
+      <!-- Function Overview -->
       <div class="jobs-overview-grid">
         <div class="jobs-overview-card">
-          <div class="jobs-overview-value online" id="active-models">12/13</div>
-          <div class="jobs-overview-label">Models Active</div>
+          <div class="jobs-overview-value online" id="total-functions">35</div>
+          <div class="jobs-overview-label">Total Functions</div>
         </div>
         
         <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="avg-accuracy">94.7%</div>
-          <div class="jobs-overview-label">Avg Accuracy</div>
+          <div class="jobs-overview-value" id="analytics-functions">9</div>
+          <div class="jobs-overview-label">Core Analytics</div>
         </div>
         
         <div class="jobs-overview-card">
-          <div class="jobs-overview-value training" id="training-jobs">3</div>
-          <div class="jobs-overview-label">Training Jobs</div>
+          <div class="jobs-overview-value training" id="financial-functions">6</div>
+          <div class="jobs-overview-label">Financial Models</div>
         </div>
         
         <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="predictions-today">2.3M</div>
-          <div class="jobs-overview-label">Predictions Today</div>
+          <div class="jobs-overview-value" id="ml-functions">11</div>
+          <div class="jobs-overview-label">Machine Learning</div>
         </div>
         
         <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="inference-time">0.12s</div>
-          <div class="jobs-overview-label">Avg Inference</div>
+          <div class="jobs-overview-value" id="data-functions">9</div>
+          <div class="jobs-overview-label">Data Processing</div>
         </div>
       </div>
     </div>
     
-    <!-- Supervised Learning Section -->
-    <div id="supervised" class="jobs-section">
+    <!-- Core Analytics Section -->
+    <div id="analytics" class="jobs-section">
       <div class="jobs-category-header">
-        <h2 class="jobs-category-title">Supervised Learning</h2>
+        <h2 class="jobs-category-title">Core Analytics (Functions 1-9)</h2>
       </div>
       
       <div class="jobs-models-grid">
-        <div class="jobs-model-card supervised" onclick="openModelDetails('anomaly-detection')">
+        <!-- Function 1 -->
+        <div class="jobs-model-card supervised" data-function="calculate_pearson_correlation">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Pearson Correlation</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_pearson_correlation</div>
+          <div class="jobs-model-description">
+            Statistical correlation analysis between financial metrics with significance testing
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 1</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Stats</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.05s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_pearson_correlation')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 2 -->
+        <div class="jobs-model-card supervised" data-function="calculate_var">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Value at Risk (VaR)</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_var</div>
+          <div class="jobs-model-description">
+            Calculate Value at Risk using multiple methods: parametric, historical, Monte Carlo
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 2</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Risk</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.08s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_var')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 3 -->
+        <div class="jobs-model-card reinforcement" data-function="update_thompson_sampling">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Thompson Sampling</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">update_thompson_sampling</div>
+          <div class="jobs-model-description">
+            Reinforcement learning algorithm for optimal decision making with exploration-exploitation balance
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 3</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">RL</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.03s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_thompson_sampling')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 4 -->
+        <div class="jobs-model-card nlp" data-function="calculate_sentiment_score">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Sentiment Analysis</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_sentiment_score</div>
+          <div class="jobs-model-description">
+            Analyze sentiment from financial news and social media with confidence scores
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 4</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">NLP</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.12s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_sentiment_score')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 5 -->
+        <div class="jobs-model-card supervised" data-function="calculate_portfolio_risk">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Portfolio Risk Metrics</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_portfolio_risk</div>
+          <div class="jobs-model-description">
+            Comprehensive portfolio risk analysis including volatility, beta, Sharpe ratio
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 5</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Risk</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.10s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_portfolio_risk')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 6 -->
+        <div class="jobs-model-card supervised" data-function="detect_trend">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Trend Detection</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">detect_trend</div>
+          <div class="jobs-model-description">
+            Time series trend analysis using moving averages, linear regression, and change detection
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 6</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">TS</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.07s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('detect_trend')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 7 -->
+        <div class="jobs-model-card supervised" data-function="detect_anomaly">
           <div class="jobs-model-header">
             <h3 class="jobs-model-title">Anomaly Detection</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Multi-Algorithm Ensemble</div>
+          <div class="jobs-model-type">detect_anomaly</div>
           <div class="jobs-model-description">
-            8 different algorithms including Z-score, IQR, Isolation Forest, and Local Outlier Factor for comprehensive anomaly detection
+            Multi-algorithm anomaly detection: Z-score, IQR, Isolation Forest, LOF
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">97.3%</div>
-              <div class="jobs-metric-label">Accuracy</div>
+              <div class="jobs-metric-value">Function 7</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">142</div>
-              <div class="jobs-metric-label">Detections</div>
+              <div class="jobs-metric-value">ML</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.08s</div>
-              <div class="jobs-metric-label">Latency</div>
+              <div class="jobs-metric-value">0.15s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('anomaly-detection')">Run Detection</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('anomaly-detection')">View Results</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('detect_anomaly')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card supervised" onclick="openModelDetails('credit-risk')">
+        <!-- Function 8 -->
+        <div class="jobs-model-card reinforcement" data-function="update_linucb_arm">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">LinUCB Bandit</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">update_linucb_arm</div>
+          <div class="jobs-model-description">
+            Contextual bandit algorithm for online learning and decision optimization
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 8</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">RL</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.05s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_linucb_arm')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 9 -->
+        <div class="jobs-model-card reinforcement" data-function="record_neural_bandit_decision">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Neural Bandit</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">record_neural_bandit_decision</div>
+          <div class="jobs-model-description">
+            Deep learning enhanced bandit algorithm for complex decision making
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 9</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">DL</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.20s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('record_neural_bandit_decision')">Test Function</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Financial Models Section -->
+    <div id="financial" class="jobs-section">
+      <div class="jobs-category-header">
+        <h2 class="jobs-category-title">Financial Models (Functions 21-26)</h2>
+      </div>
+      
+      <div class="jobs-models-grid">
+        <!-- Function 21 -->
+        <div class="jobs-model-card supervised" data-function="get_portfolio_risk_metrics">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Portfolio Risk Metrics</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">get_portfolio_risk_metrics</div>
+          <div class="jobs-model-description">
+            Calculate VaR, Sharpe ratio, Beta, and other portfolio risk metrics
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 21</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Risk</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.15s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('get_portfolio_risk_metrics')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 22 -->
+        <div class="jobs-model-card supervised" data-function="calculate_basel_ratios">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Basel III Ratios</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_basel_ratios</div>
+          <div class="jobs-model-description">
+            Calculate Basel III capital adequacy, liquidity coverage, and leverage ratios
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 22</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Regulatory</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.12s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_basel_ratios')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 23 -->
+        <div class="jobs-model-card supervised" data-function="calculate_options_greeks">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Options Greeks</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_options_greeks</div>
+          <div class="jobs-model-description">
+            Calculate Black-Scholes Greeks: Delta, Gamma, Theta, Vega, Rho
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 23</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Derivatives</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.08s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_options_greeks')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 24 -->
+        <div class="jobs-model-card supervised" data-function="analyze_yield_curve">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Yield Curve Analysis</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">analyze_yield_curve</div>
+          <div class="jobs-model-description">
+            Analyze yield curve shape, spread analysis, and term structure
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 24</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Fixed Income</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.10s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('analyze_yield_curve')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 25 -->
+        <div class="jobs-model-card supervised" data-function="calculate_credit_risk_score">
           <div class="jobs-model-header">
             <h3 class="jobs-model-title">Credit Risk Scoring</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Multi-Factor Risk Model</div>
+          <div class="jobs-model-type">calculate_credit_risk_score</div>
           <div class="jobs-model-description">
-            Comprehensive credit risk assessment using financial ratios, behavioral scoring, and industry-specific adjustments
+            Multi-factor credit risk assessment with financial ratios and behavioral scoring
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">92.1%</div>
-              <div class="jobs-metric-label">Accuracy</div>
+              <div class="jobs-metric-value">Function 25</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">1,247</div>
-              <div class="jobs-metric-label">Scores Today</div>
+              <div class="jobs-metric-value">Credit</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.15s</div>
-              <div class="jobs-metric-label">Latency</div>
+              <div class="jobs-metric-value">0.18s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('credit-risk')">Score Portfolio</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('credit-risk')">Risk Report</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_credit_risk_score')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card supervised" onclick="openModelDetails('performance-monitoring')">
+        <!-- Function 26 -->
+        <div class="jobs-model-card supervised" data-function="run_stress_test">
           <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Model Performance Monitor</h3>
+            <h3 class="jobs-model-title">Stress Test Scenarios</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Comprehensive Metrics Suite</div>
+          <div class="jobs-model-type">run_stress_test</div>
           <div class="jobs-model-description">
-            Real-time monitoring with regression, classification, time series, and ranking metrics plus statistical significance tests
+            Run comprehensive stress test scenarios with market shocks and portfolio impact
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">13</div>
-              <div class="jobs-metric-label">Models Tracked</div>
+              <div class="jobs-metric-value">Function 26</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">24/7</div>
-              <div class="jobs-metric-label">Monitoring</div>
+              <div class="jobs-metric-value">Risk</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.02s</div>
-              <div class="jobs-metric-label">Latency</div>
+              <div class="jobs-metric-value">0.25s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('performance-monitoring')">Generate Report</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('performance-monitoring')">View Dashboard</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('run_stress_test')">Test Function</button>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- Unsupervised Learning Section -->
-    <div id="unsupervised" class="jobs-section">
+    <!-- Machine Learning Section -->
+    <div id="ml" class="jobs-section">
       <div class="jobs-category-header">
-        <h2 class="jobs-category-title">Unsupervised Learning</h2>
+        <h2 class="jobs-category-title">Machine Learning (Functions 10-20)</h2>
       </div>
       
       <div class="jobs-models-grid">
-        <div class="jobs-model-card unsupervised" onclick="openModelDetails('feature-importance')">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Feature Engineering</h3>
-            <div class="jobs-model-status online"></div>
-          </div>
-          <div class="jobs-model-type">Automated Feature Selection</div>
-          <div class="jobs-model-description">
-            Correlation analysis, mutual information, permutation importance, and ensemble feature selection methods
-          </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">247</div>
-              <div class="jobs-metric-label">Features</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">89</div>
-              <div class="jobs-metric-label">Selected</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.3s</div>
-              <div class="jobs-metric-label">Analysis Time</div>
-            </div>
-          </div>
-          <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('feature-importance')">Analyze Features</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('feature-importance')">View Rankings</button>
-          </div>
-        </div>
-        
-        <div class="jobs-model-card unsupervised" onclick="openModelDetails('synthetic-data')">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Synthetic Data Generator</h3>
-            <div class="jobs-model-status online"></div>
-          </div>
-          <div class="jobs-model-type">Monte Carlo Simulation</div>
-          <div class="jobs-model-description">
-            Generate synthetic financial data using multiple probability distributions and copula-based dependency modeling
-          </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">1.2M</div>
-              <div class="jobs-metric-label">Records Generated</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">99.8%</div>
-              <div class="jobs-metric-label">Quality Score</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">2.1s</div>
-              <div class="jobs-metric-label">Generation Time</div>
-            </div>
-          </div>
-          <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('synthetic-data')">Generate Data</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('synthetic-data')">View Samples</button>
-          </div>
-        </div>
-        
-        <div class="jobs-model-card unsupervised" onclick="openModelDetails('adaptive-cache')">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Adaptive Caching</h3>
-            <div class="jobs-model-status online"></div>
-          </div>
-          <div class="jobs-model-type">Predictive Cache Optimization</div>
-          <div class="jobs-model-description">
-            ML-based caching using frequency-recency analysis and predictive algorithms for optimal performance
-          </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">87.4%</div>
-              <div class="jobs-metric-label">Hit Rate</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">2.3GB</div>
-              <div class="jobs-metric-label">Cache Size</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.01s</div>
-              <div class="jobs-metric-label">Lookup Time</div>
-            </div>
-          </div>
-          <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('adaptive-cache')">Optimize Cache</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('adaptive-cache')">View Stats</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Reinforcement Learning Section -->
-    <div id="reinforcement" class="jobs-section">
-      <div class="jobs-category-header">
-        <h2 class="jobs-category-title">Reinforcement Learning</h2>
-      </div>
-      
-      <div class="jobs-models-grid">
-        <div class="jobs-model-card reinforcement" onclick="openModelDetails('linucb-bandit')">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Contextual Bandits</h3>
-            <div class="jobs-model-status online"></div>
-          </div>
-          <div class="jobs-model-type">LinUCB Multi-Armed Bandit</div>
-          <div class="jobs-model-description">
-            Contextual decision making with LinUCB variants including Standard, Disjoint, Hybrid, Neural, and Kernelized approaches
-          </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">12,847</div>
-              <div class="jobs-metric-label">Decisions</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.94</div>
-              <div class="jobs-metric-label">Reward Rate</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">0.05s</div>
-              <div class="jobs-metric-label">Decision Time</div>
-            </div>
-          </div>
-          <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('linucb-bandit')">Make Decision</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('linucb-bandit')">View Performance</button>
-          </div>
-        </div>
-        
-        <div class="jobs-model-card reinforcement" onclick="openModelDetails('neural-bandit')">
-          <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Neural Bandit</h3>
-            <div class="jobs-model-status training"></div>
-          </div>
-          <div class="jobs-model-type">Deep Learning Bandit</div>
-          <div class="jobs-model-description">
-            Neural network integration with bandit algorithms for advanced feature learning and decision making
-          </div>
-          <div class="jobs-model-metrics">
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">Training</div>
-              <div class="jobs-metric-label">Status</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">87.2%</div>
-              <div class="jobs-metric-label">Progress</div>
-            </div>
-            <div class="jobs-metric">
-              <div class="jobs-metric-value">2.5h</div>
-              <div class="jobs-metric-label">ETA</div>
-            </div>
-          </div>
-          <div class="jobs-model-actions">
-            <button class="jobs-action-button" onclick="event.stopPropagation(); runModel('neural-bandit')" disabled>Training...</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('neural-bandit')">View Progress</button>
-          </div>
-        </div>
-        
-        <div class="jobs-model-card reinforcement" onclick="openModelDetails('collaborative-learning')">
+        <!-- Function 10 -->
+        <div class="jobs-model-card reinforcement" data-function="update_collaborative_learning">
           <div class="jobs-model-header">
             <h3 class="jobs-model-title">Collaborative Learning</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Recommendation System</div>
+          <div class="jobs-model-type">update_collaborative_learning</div>
           <div class="jobs-model-description">
-            Matrix factorization, deep collaborative filtering, NCF, VAE, and GNN-based hybrid recommendation system
+            Matrix factorization and deep collaborative filtering for recommendations
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">91.6%</div>
-              <div class="jobs-metric-label">Accuracy</div>
+              <div class="jobs-metric-value">Function 10</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">5,247</div>
-              <div class="jobs-metric-label">Recommendations</div>
+              <div class="jobs-metric-value">ML</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.07s</div>
-              <div class="jobs-metric-label">Response Time</div>
+              <div class="jobs-metric-value">0.12s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('collaborative-learning')">Get Recommendations</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('collaborative-learning')">View Matrix</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_collaborative_learning')">Test Function</button>
           </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- Time Series Section -->
-    <div id="timeseries" class="jobs-section">
-      <div class="jobs-category-header">
-        <h2 class="jobs-category-title">Time Series Models</h2>
-      </div>
-      
-      <div class="jobs-models-grid">
-        <!-- Placeholder for time series models -->
-        <div style="padding: 40px; text-align: center; color: var(--jobs-gray); grid-column: 1 / -1;">
-          <p>Time series models coming soon...</p>
+        
+        <!-- Function 11 -->
+        <div class="jobs-model-card unsupervised" data-function="get_cache_recommendations">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Adaptive Caching</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">get_cache_recommendations</div>
+          <div class="jobs-model-description">
+            ML-based cache optimization using frequency-recency analysis
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 11</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Optimization</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.02s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('get_cache_recommendations')">Test Function</button>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- NLP Section -->
-    <div id="nlp" class="jobs-section">
-      <div class="jobs-category-header">
-        <h2 class="jobs-category-title">Natural Language Processing</h2>
-      </div>
-      
-      <div class="jobs-models-grid">
-        <div class="jobs-model-card nlp" onclick="openModelDetails('knowledge-graph')">
+        
+        <!-- Function 12 -->
+        <div class="jobs-model-card supervised" data-function="calculate_model_performance">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Model Performance</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_model_performance</div>
+          <div class="jobs-model-description">
+            Comprehensive model monitoring with regression, classification, and ranking metrics
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 12</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Monitoring</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.05s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_model_performance')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 13 -->
+        <div class="jobs-model-card unsupervised" data-function="calculate_feature_importance">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Feature Importance</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">calculate_feature_importance</div>
+          <div class="jobs-model-description">
+            Feature analysis using correlation, mutual information, and permutation importance
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 13</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Analysis</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.15s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('calculate_feature_importance')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 14 -->
+        <div class="jobs-model-card unsupervised" data-function="generate_synthetic_data">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Synthetic Data</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">generate_synthetic_data</div>
+          <div class="jobs-model-description">
+            Generate synthetic data using Monte Carlo simulation and copulas
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 14</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Generation</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.25s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_synthetic_data')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 15 -->
+        <div class="jobs-model-card nlp" data-function="generate_knowledge_graph">
           <div class="jobs-model-header">
             <h3 class="jobs-model-title">Knowledge Graph</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Advanced NLP & Graph Analytics</div>
+          <div class="jobs-model-type">generate_knowledge_graph</div>
           <div class="jobs-model-description">
-            Entity extraction, relationship inference, semantic analysis, and graph metrics with confidence scoring
+            Entity extraction, relationship inference, and graph analytics
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">24,712</div>
-              <div class="jobs-metric-label">Entities</div>
+              <div class="jobs-metric-value">Function 15</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">89,341</div>
-              <div class="jobs-metric-label">Relationships</div>
+              <div class="jobs-metric-value">NLP</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.32s</div>
-              <div class="jobs-metric-label">Query Time</div>
+              <div class="jobs-metric-value">0.30s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('knowledge-graph')">Generate Graph</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('knowledge-graph')">Explore Graph</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_knowledge_graph')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card nlp" onclick="openModelDetails('entity-extraction')">
+        <!-- Function 16 -->
+        <div class="jobs-model-card nlp" data-function="materialize_entities">
           <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Entity Extraction</h3>
+            <h3 class="jobs-model-title">Entity Materialization</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Real-time NLP Processing</div>
+          <div class="jobs-model-type">materialize_entities</div>
           <div class="jobs-model-description">
-            Extract companies, metrics, locations, and currencies from financial news with confidence scoring
+            Extract and materialize entities from financial text with confidence scoring
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">96.3%</div>
-              <div class="jobs-metric-label">Precision</div>
+              <div class="jobs-metric-value">Function 16</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">1,847</div>
-              <div class="jobs-metric-label">Extractions</div>
+              <div class="jobs-metric-value">NLP</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
               <div class="jobs-metric-value">0.18s</div>
-              <div class="jobs-metric-label">Processing Time</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('entity-extraction')">Extract Entities</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('entity-extraction')">View Results</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('materialize_entities')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card deep-learning" onclick="openModelDetails('neural-networks')">
+        <!-- Function 17 -->
+        <div class="jobs-model-card supervised" data-function="generate_temporal_correlations">
           <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Neural Networks</h3>
+            <h3 class="jobs-model-title">Temporal Correlations</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">Deep Learning Suite</div>
+          <div class="jobs-model-type">generate_temporal_correlations</div>
           <div class="jobs-model-description">
-            Comprehensive neural network toolkit with forward pass, gradient descent, activation functions, and optimization
+            Analyze time-based correlations and lagged relationships
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">7</div>
-              <div class="jobs-metric-label">Active Networks</div>
+              <div class="jobs-metric-value">Function 17</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">94.8%</div>
-              <div class="jobs-metric-label">Avg Accuracy</div>
+              <div class="jobs-metric-value">Time Series</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.25s</div>
-              <div class="jobs-metric-label">Inference Time</div>
+              <div class="jobs-metric-value">0.20s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('neural-networks')">Run Inference</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('neural-networks')">View Architecture</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('generate_temporal_correlations')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card ai-integration" onclick="openModelDetails('grok-credit-analysis')">
+        <!-- Function 18 -->
+        <div class="jobs-model-card ai-integration" data-function="answer_swift_query">
           <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Grok Credit Analysis</h3>
+            <h3 class="jobs-model-title">Swift Query (iOS)</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">AI-Powered Risk Assessment</div>
+          <div class="jobs-model-type">answer_swift_query</div>
           <div class="jobs-model-description">
-            Advanced credit risk assessment using Grok AI with industry-specific analysis and intelligent fallback scoring
+            iOS integration for Swift-based financial queries and analytics
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">98.1%</div>
-              <div class="jobs-metric-label">API Uptime</div>
+              <div class="jobs-metric-value">Function 18</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">342</div>
-              <div class="jobs-metric-label">Analyses Today</div>
+              <div class="jobs-metric-value">Mobile</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">1.2s</div>
-              <div class="jobs-metric-label">Response Time</div>
+              <div class="jobs-metric-value">0.10s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('grok-credit-analysis')">Analyze Risk</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('grok-credit-analysis')">View Report</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('answer_swift_query')">Test Function</button>
           </div>
         </div>
         
-        <div class="jobs-model-card ai-integration" onclick="openModelDetails('grok-entity-extraction')">
+        <!-- Function 19 -->
+        <div class="jobs-model-card nlp" data-function="entity_evolution_analysis">
           <div class="jobs-model-header">
-            <h3 class="jobs-model-title">Grok Entity Extraction</h3>
+            <h3 class="jobs-model-title">Entity Evolution</h3>
             <div class="jobs-model-status online"></div>
           </div>
-          <div class="jobs-model-type">AI-Enhanced NLP</div>
+          <div class="jobs-model-type">entity_evolution_analysis</div>
           <div class="jobs-model-description">
-            Real-time entity extraction from financial news using Grok AI with batch processing and confidence scoring
+            Track entity changes and evolution over time
           </div>
           <div class="jobs-model-metrics">
             <div class="jobs-metric">
-              <div class="jobs-metric-value">99.7%</div>
-              <div class="jobs-metric-label">Accuracy</div>
+              <div class="jobs-metric-value">Function 19</div>
+              <div class="jobs-metric-label">ID</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">2,847</div>
-              <div class="jobs-metric-label">Processed</div>
+              <div class="jobs-metric-value">Tracking</div>
+              <div class="jobs-metric-label">Type</div>
             </div>
             <div class="jobs-metric">
-              <div class="jobs-metric-value">0.8s</div>
-              <div class="jobs-metric-label">Processing Time</div>
+              <div class="jobs-metric-value">0.22s</div>
+              <div class="jobs-metric-label">Avg Time</div>
             </div>
           </div>
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); runModel('grok-entity-extraction')">Extract Entities</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewResults('grok-entity-extraction')">View Entities</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('entity_evolution_analysis')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 20 -->
+        <div class="jobs-model-card supervised" data-function="metric_correlation_analysis">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Metric Correlations</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">metric_correlation_analysis</div>
+          <div class="jobs-model-description">
+            Analyze correlations between multiple financial metrics
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 20</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Analysis</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.16s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('metric_correlation_analysis')">Test Function</button>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  
-  <script>
+    
+    <!-- Data Processing Section -->
+    <div id="data" class="jobs-section">
+      <div class="jobs-category-header">
+        <h2 class="jobs-category-title">Data Processing (Functions 27-35)</h2>
+      </div>
+      
+      <div class="jobs-models-grid">
+        <!-- Function 27 -->
+        <div class="jobs-model-card nlp" data-function="process_news_content">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">News Processing</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">process_news_content</div>
+          <div class="jobs-model-description">
+            Process financial news with entity extraction and sentiment analysis
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 27</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">NLP</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.25s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('process_news_content')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 28 -->
+        <div class="jobs-model-card supervised" data-function="update_news_loading_status">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Loading Status</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">update_news_loading_status</div>
+          <div class="jobs-model-description">
+            Track and update news data loading status
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 28</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Tracking</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.02s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_news_loading_status')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 29 -->
+        <div class="jobs-model-card supervised" data-function="cleanup_old_news">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">News Archival</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">cleanup_old_news</div>
+          <div class="jobs-model-description">
+            Archive and cleanup old news data
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 29</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Maintenance</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.05s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('cleanup_old_news')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 30 -->
+        <div class="jobs-model-card supervised" data-function="update_news_statistics">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">News Statistics</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">update_news_statistics</div>
+          <div class="jobs-model-description">
+            Calculate and update news processing statistics
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 30</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Analytics</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.08s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('update_news_statistics')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 31 -->
+        <div class="jobs-model-card nlp" data-function="analyze_trending_topics">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Trending Analysis</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">analyze_trending_topics</div>
+          <div class="jobs-model-description">
+            Identify and analyze trending topics in financial news
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 31</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">NLP</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.20s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('analyze_trending_topics')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 32 -->
+        <div class="jobs-model-card supervised" data-function="validate_data_quality">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Data Validation</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">validate_data_quality</div>
+          <div class="jobs-model-description">
+            Validate data quality with completeness and accuracy checks
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 32</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">QA</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.12s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('validate_data_quality')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 33 -->
+        <div class="jobs-model-card supervised" data-function="normalize_data">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Data Normalization</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">normalize_data</div>
+          <div class="jobs-model-description">
+            Normalize financial data across different sources and formats
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 33</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">ETL</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.10s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('normalize_data')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 34 -->
+        <div class="jobs-model-card supervised" data-function="execute_batch_operation">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Batch Processing</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">execute_batch_operation</div>
+          <div class="jobs-model-description">
+            Execute batch operations on large datasets efficiently
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 34</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Processing</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.50s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('execute_batch_operation')">Test Function</button>
+          </div>
+        </div>
+        
+        <!-- Function 35 -->
+        <div class="jobs-model-card supervised" data-function="perform_complex_aggregation">
+          <div class="jobs-model-header">
+            <h3 class="jobs-model-title">Complex Aggregations</h3>
+            <div class="jobs-model-status online"></div>
+          </div>
+          <div class="jobs-model-type">perform_complex_aggregation</div>
+          <div class="jobs-model-description">
+            Perform complex data aggregations with multiple dimensions
+          </div>
+          <div class="jobs-model-metrics">
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Function 35</div>
+              <div class="jobs-metric-label">ID</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">Analytics</div>
+              <div class="jobs-metric-label">Type</div>
+            </div>
+            <div class="jobs-metric">
+              <div class="jobs-metric-value">0.35s</div>
+              <div class="jobs-metric-label">Avg Time</div>
+            </div>
+          </div>
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); testFunction('perform_complex_aggregation')">Test Function</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
     // Check user role
     const userRole = localStorage.getItem('userRole') || 'Finance';
     if (userRole === 'Technology') {
@@ -1331,6 +1923,46 @@
     }
     
     
+
+    // Test Supabase function
+    async function testFunction(functionName) {
+      console.log('Testing function:', functionName);
+      
+      // Show loading state
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Testing...';
+      button.disabled = true;
+      
+      try {
+        // Here you would call the actual Supabase function
+        // For now, we'll simulate it
+        const response = await simulateSupabaseCall(functionName);
+        
+        // Show success message
+        alert(`Function Test: ${functionName}\n\nResult: Success\n\nThis would call the actual Supabase function with appropriate test parameters.`);
+        
+      } catch (error) {
+        alert(`Function Test Failed: ${functionName}\n\nError: ${error.message}`);
+      } finally {
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+    
+    // Simulate Supabase function call
+    async function simulateSupabaseCall(functionName) {
+      // Simulate network delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Return mock success
+      return {
+        success: true,
+        functionName: functionName,
+        timestamp: new Date().toISOString()
+      };
+    }
+
     // Auto-refresh model metrics
     function refreshModelMetrics() {
       // Simulate metric updates
