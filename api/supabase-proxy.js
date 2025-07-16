@@ -238,8 +238,8 @@ async function handleTreasuryCalculation(body) {
     let parameters = { ...inputParams };
     let usingRealData = false;
     
-    // Try to get real market data first
-    if (symbol && !parameters.spot_price) {
+    // Always try to get real market data for any symbol
+    if (symbol) {
       console.log(`Attempting to fetch real market data for ${symbol}`);
       try {
         // Try direct market data API call if database doesn't have it  
