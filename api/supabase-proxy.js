@@ -241,7 +241,7 @@ async function handleTreasuryCalculation(body) {
     // Try to get real market data first
     if (symbol && !parameters.spot_price) {
       try {
-        // Try direct market data API call if database doesn't have it
+        // Try direct market data API call if database doesn't have it  
         const finnhubApiKey = 'ct4l329r01qntnfkqhpgct4l329r01qntnfkqhq0';
         let marketDataFromAPI = null;
         

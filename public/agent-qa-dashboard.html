@@ -755,7 +755,7 @@
     }
 
     async function runFullAudit() {
-      if (!confirm('Run full audit on all agents? This may take several minutes.')) return;
+      if (!confirm('Run full Grok AI audit on all agents? This may take several minutes.')) return;
       
       try {
         showLoading(true);
@@ -767,13 +767,13 @@
         });
         
         const result = await response.json();
-        console.log('Audit completed:', result);
+        console.log('Grok audit completed:', result);
         
         await loadDashboardData();
-        alert(`Audit completed! Evaluated ${result.successful} agents successfully.`);
+        alert(`Grok AI audit completed! Evaluated ${result.successful} agents successfully.`);
       } catch (error) {
-        console.error('Audit failed:', error);
-        alert('Audit failed: ' + error.message);
+        console.error('Grok audit failed:', error);
+        alert('Grok audit failed: ' + error.message);
       } finally {
         showLoading(false);
       }

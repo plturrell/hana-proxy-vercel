@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS agent_versions (
     UNIQUE(agent_id, version_number)
 );
 
--- Table for GPT-4 evaluations
+-- Table for Grok AI evaluations
 CREATE TABLE IF NOT EXISTS agent_evaluations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     agent_version_id UUID REFERENCES agent_versions(id),
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS agent_evaluations (
     
     -- Evaluation metadata
     evaluation_timestamp TIMESTAMP WITH TIME ZONE DEFAULT now(),
-    gpt4_model_version TEXT DEFAULT 'gpt-4',
+    grok_model_version TEXT DEFAULT 'grok-beta',
     evaluation_type TEXT, -- full_audit, display_check, implementation_review
     
     -- Core ratings (/100)
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS agent_evaluations (
     weaknesses JSONB, -- Array of identified issues
     discrepancies JSONB, -- Specific display vs implementation gaps
     
-    -- GPT-4 raw outputs
-    full_gpt4_response JSONB,
+    -- Grok AI raw outputs
+    full_grok_response JSONB,
     evaluation_prompt TEXT,
     
     -- Status
@@ -220,8 +220,8 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to run automated GPT-4 evaluation (placeholder for API call)
-CREATE OR REPLACE FUNCTION trigger_gpt4_evaluation(p_agent_id TEXT)
+-- Function to run automated Grok evaluation (placeholder for API call)
+CREATE OR REPLACE FUNCTION trigger_grok_evaluation(p_agent_id TEXT)
 RETURNS UUID AS $$
 DECLARE
     evaluation_id UUID;
@@ -237,7 +237,7 @@ BEGIN
         'pending'
     ) RETURNING id INTO evaluation_id;
     
-    -- Note: Actual GPT-4 API call would be made by the application layer
+    -- Note: Actual Grok API call would be made by the application layer
     -- This function just creates the tracking record
     
     RETURN evaluation_id;
@@ -311,6 +311,6 @@ VALUES
 ON CONFLICT (agent_id, version_number) DO NOTHING;
 
 COMMENT ON TABLE agent_versions IS 'Version control for all agent implementations and display configurations';
-COMMENT ON TABLE agent_evaluations IS 'GPT-4 powered evaluations comparing agent display vs actual implementation';
+COMMENT ON TABLE agent_evaluations IS 'Grok AI powered evaluations comparing agent display vs actual implementation';
 COMMENT ON TABLE agent_recommendations IS 'Prioritized recommendations for agent improvements';
 COMMENT ON TABLE agent_enhancement_backlog IS 'Product backlog for agent enhancements with business prioritization';
