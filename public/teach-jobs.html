@@ -89,6 +89,11 @@
       border-color: #38383A;
     }
     
+    body.dark-mode .jobs-curriculum-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
     body.dark-mode .jobs-category-header {
       background: rgba(28, 28, 30, 0.95);
       border-bottom-color: #38383A;
@@ -399,8 +404,9 @@
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      background: linear-gradient(90deg, var(--jobs-blue), #AF52DE);
       border-radius: 12px 12px 0 0;
+      z-index: 1;
     }
     
     .jobs-learning-card.reinforcement::before {
@@ -605,8 +611,9 @@
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--jobs-green), var(--jobs-teal));
+      background: linear-gradient(90deg, var(--jobs-green), #5AC8FA);
       border-radius: 12px 12px 0 0;
+      z-index: 1;
     }
     
     .jobs-curriculum-card:nth-child(2)::before {
