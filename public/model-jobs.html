@@ -82,6 +82,11 @@
       border-color: #38383A;
     }
     
+    body.dark-mode .jobs-overview-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
     body.dark-mode .jobs-category-header {
       background: rgba(28, 28, 30, 0.95);
       border-bottom-color: #38383A;
@@ -298,6 +303,36 @@
       padding: var(--jobs-spacing-lg);
       text-align: center;
       transition: all var(--jobs-duration) var(--jobs-animation);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .jobs-overview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-green));
+      border-radius: 12px 12px 0 0;
+      z-index: 1;
+    }
+    
+    .jobs-overview-card:nth-child(2)::before {
+      background: linear-gradient(90deg, var(--jobs-green), #00C7BE);
+    }
+    
+    .jobs-overview-card:nth-child(3)::before {
+      background: linear-gradient(90deg, #AF52DE, var(--jobs-blue));
+    }
+    
+    .jobs-overview-card:nth-child(4)::before {
+      background: linear-gradient(90deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .jobs-overview-card:nth-child(5)::before {
+      background: linear-gradient(90deg, #5AC8FA, #32D74B);
     }
     
     .jobs-overview-card:hover {
@@ -384,8 +419,9 @@
       left: 0;
       right: 0;
       height: 3px;
-      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      background: linear-gradient(90deg, var(--jobs-blue), #AF52DE);
       border-radius: 12px 12px 0 0;
+      z-index: 1;
     }
     
     .jobs-model-card.supervised::before {
