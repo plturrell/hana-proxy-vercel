@@ -176,6 +176,42 @@ export default async function handler(req, res) {
         if (rpcError) throw rpcError;
         return res.status(200).json({ data: rpcData });
 
+      // A2A Agent Functions
+      case 'get_all_a2a_agents':
+        const { data: allAgents, error: agentsError } = await supabase
+          .rpc('get_all_a2a_agents');
+        
+        if (agentsError) throw agentsError;
+        return res.status(200).json({ result: allAgents });
+
+      case 'get_agent_card':
+        const { p_agent_id } = req.body.parameters;
+        const { data: agentCard, error: cardError } = await supabase
+          .rpc('get_agent_card', { p_agent_id });
+        
+        if (cardError) throw cardError;
+        return res.status(200).json({ result: agentCard });
+
+      case 'discover_agents':
+        const { p_capability } = req.body.parameters;
+        const { data: discoveredAgents, error: discoverError } = await supabase
+          .rpc('discover_agents', { p_capability });
+        
+        if (discoverError) throw discoverError;
+        return res.status(200).json({ result: discoveredAgents });
+
+      case 'connect_agents':
+        const { p_source_agent_id, p_target_agent_id, p_connection_type } = req.body.parameters;
+        const { data: connectionResult, error: connectError } = await supabase
+          .rpc('connect_agents', { 
+            p_source_agent_id, 
+            p_target_agent_id, 
+            p_connection_type: p_connection_type || 'data-flow' 
+          });
+        
+        if (connectError) throw connectError;
+        return res.status(200).json({ result: connectionResult });
+
       case 'health':
         // Test connection with a simple query
         const { error: healthError } = await supabase

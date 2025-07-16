@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Model - FinSight Intelligence</title>
+  <title>Agents - FinSight Intelligence</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
@@ -75,6 +75,267 @@
       border-bottom-color: rgba(255, 255, 255, 0.1);
     }
     
+    /* Agent Modal Styles */
+    .agent-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--jobs-spacing-lg);
+    }
+
+    .agent-modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .agent-modal {
+      background: var(--jobs-white);
+      border-radius: 20px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+      transform: scale(0.8) translateY(40px);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      position: relative;
+    }
+
+    .agent-modal-overlay.show .agent-modal {
+      transform: scale(1) translateY(0);
+    }
+
+    body.dark-mode .agent-modal {
+      background: #1C1C1E;
+      color: var(--jobs-white);
+    }
+
+    .agent-modal-header {
+      padding: var(--jobs-spacing-xl) var(--jobs-spacing-xl) var(--jobs-spacing-lg);
+      border-bottom: 1px solid var(--jobs-light-gray);
+      position: relative;
+    }
+
+    body.dark-mode .agent-modal-header {
+      border-bottom-color: #38383A;
+    }
+
+    .agent-modal-close {
+      position: absolute;
+      top: var(--jobs-spacing-lg);
+      right: var(--jobs-spacing-lg);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--jobs-light-gray);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--jobs-gray);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+
+    .agent-modal-close:hover {
+      background: var(--jobs-gray);
+      color: var(--jobs-white);
+      transform: scale(1.1);
+    }
+
+    body.dark-mode .agent-modal-close {
+      background: #38383A;
+      color: #8E8E93;
+    }
+
+    body.dark-mode .agent-modal-close:hover {
+      background: #48484A;
+      color: var(--jobs-white);
+    }
+
+    .agent-modal-agent-header {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-md);
+      margin-bottom: var(--jobs-spacing-lg);
+    }
+
+    .agent-modal-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 20px;
+      color: white;
+    }
+
+    .agent-modal-icon.analytics { background: linear-gradient(135deg, var(--jobs-blue), #5AC8FA); }
+    .agent-modal-icon.financial { background: linear-gradient(135deg, var(--jobs-green), #32D74B); }
+    .agent-modal-icon.ml { background: linear-gradient(135deg, var(--jobs-purple), #BF5AF2); }
+    .agent-modal-icon.nlp { background: linear-gradient(135deg, var(--jobs-orange), #FF9F0A); }
+    .agent-modal-icon.data { background: linear-gradient(135deg, var(--jobs-teal), #64D2FF); }
+
+    .agent-modal-identity h2 {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      margin: 0 0 var(--jobs-spacing-xs) 0;
+      line-height: 1.2;
+    }
+
+    .agent-modal-agent-id {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    }
+
+    .agent-modal-content {
+      padding: 0 var(--jobs-spacing-xl) var(--jobs-spacing-xl);
+    }
+
+    .agent-modal-section {
+      margin-bottom: var(--jobs-spacing-xl);
+    }
+
+    .agent-modal-section-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin-bottom: var(--jobs-spacing-md);
+      color: var(--jobs-black);
+    }
+
+    body.dark-mode .agent-modal-section-title {
+      color: var(--jobs-white);
+    }
+
+    .agent-modal-description {
+      font-size: var(--jobs-font-size-body);
+      line-height: 1.5;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-lg);
+    }
+
+    .agent-modal-capability-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--jobs-spacing-sm);
+      margin-bottom: var(--jobs-spacing-lg);
+    }
+
+    .agent-modal-capability-tag {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    body.dark-mode .agent-modal-capability-tag {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+
+    .agent-modal-metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--jobs-spacing-md);
+    }
+
+    .agent-modal-metric {
+      text-align: center;
+      padding: var(--jobs-spacing-md);
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+    }
+
+    body.dark-mode .agent-modal-metric {
+      background: #2C2C2E;
+    }
+
+    .agent-modal-metric-value {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      color: var(--jobs-blue);
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+
+    .agent-modal-metric-label {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .agent-modal-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      padding-top: var(--jobs-spacing-lg);
+      border-top: 1px solid var(--jobs-light-gray);
+    }
+
+    body.dark-mode .agent-modal-actions {
+      border-top-color: #38383A;
+    }
+
+    .agent-modal-button {
+      flex: 1;
+      padding: var(--jobs-spacing-md) var(--jobs-spacing-lg);
+      border-radius: 12px;
+      border: none;
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+
+    .agent-modal-button.primary {
+      background: var(--jobs-blue);
+      color: white;
+    }
+
+    .agent-modal-button.primary:hover {
+      background: #0056CC;
+      transform: scale(1.02);
+    }
+
+    .agent-modal-button.secondary {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+    }
+
+    .agent-modal-button.secondary:hover {
+      background: var(--jobs-gray);
+      color: white;
+    }
+
+    body.dark-mode .agent-modal-button.secondary {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+
+    body.dark-mode .agent-modal-button.secondary:hover {
+      background: #3A3A3C;
+    }
+
     /* Dark mode tabbar styles - removed */
     
     body.dark-mode .jobs-model-card {
@@ -518,6 +779,15 @@
       font-family: monospace;
       margin-top: 2px;
     }
+
+    .a2a-technical-name {
+      font-size: 10px;
+      color: var(--jobs-gray);
+      opacity: 0.7;
+      font-style: italic;
+      line-height: 1.3;
+      margin-top: 1px;
+    }
     
     .a2a-agent-status-indicator {
       width: 8px;
@@ -831,7 +1101,7 @@
       </a>
       <a href="/model-jobs.html" class="jobs-sidebar-item active">
         <div class="jobs-sidebar-icon">◆</div>
-        <span>Model</span>
+        <span>Agents</span>
       </a>
       <a href="/teach-jobs.html" class="jobs-sidebar-item">
         <div class="jobs-sidebar-icon">◇</div>
@@ -909,8 +1179,9 @@
           <div class="a2a-agent-header">
             <div class="a2a-agent-icon analytics">PCA</div>
             <div class="a2a-agent-identity">
-              <h3 class="a2a-agent-name">Pearson Correlation Agent</h3>
+              <h3 class="a2a-agent-name">Portfolio Correlation</h3>
               <div class="a2a-agent-id">finsight.analytics.pearson_correlation</div>
+              <div class="a2a-technical-name">Pearson Correlation Agent</div>
             </div>
             <div class="a2a-agent-status-indicator"></div>
           </div>
@@ -926,7 +1197,7 @@
           </div>
           
           <div class="a2a-agent-description">
-            Statistical correlation analysis between financial metrics with significance testing
+            Discover hidden relationships between your investments with intelligent correlation analysis.
           </div>
           
           <div class="a2a-protocol-info">
@@ -948,8 +1219,9 @@
           <div class="a2a-agent-header">
             <div class="a2a-agent-icon analytics">VAR</div>
             <div class="a2a-agent-identity">
-              <h3 class="a2a-agent-name">Value at Risk Agent</h3>
+              <h3 class="a2a-agent-name">Risk Calculator</h3>
               <div class="a2a-agent-id">finsight.analytics.value_at_risk</div>
+              <div class="a2a-technical-name">Value at Risk Agent</div>
             </div>
             <div class="a2a-agent-status-indicator"></div>
           </div>
@@ -2462,6 +2734,134 @@
     
     
 
+    // Load agents from database
+    async function loadAgentsFromDatabase() {
+      try {
+        // Call Supabase to get all A2A agents
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'get_all_a2a_agents'
+          })
+        });
+        
+        const data = await response.json();
+        if (data.error) {
+          console.error('Error loading agents:', data.error);
+          return;
+        }
+        
+        // Group agents by type
+        const agentsByType = {
+          analytics: [],
+          financial: [],
+          ml: [],
+          nlp: [],
+          data: []
+        };
+        
+        data.result.forEach(agent => {
+          if (agentsByType[agent.agent_type]) {
+            agentsByType[agent.agent_type].push(agent);
+          }
+        });
+        
+        // Update UI with real agents
+        updateAgentCards(agentsByType);
+        
+      } catch (error) {
+        console.error('Failed to load agents:', error);
+      }
+    }
+    
+    // Update agent cards in UI
+    function updateAgentCards(agentsByType) {
+      // Update each section with real agents
+      Object.entries(agentsByType).forEach(([type, agents]) => {
+        const sectionId = getSectionIdForType(type);
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        const grid = section.querySelector('.jobs-models-grid');
+        if (!grid) return;
+        
+        // Clear existing cards
+        grid.innerHTML = '';
+        
+        // Add cards for each agent
+        agents.forEach(agent => {
+          const card = createAgentCard(agent);
+          grid.appendChild(card);
+        });
+      });
+    }
+    
+    // Map agent type to section ID
+    function getSectionIdForType(type) {
+      const mapping = {
+        'analytics': 'analytics',
+        'financial': 'financial',
+        'ml': 'ml-rl',
+        'nlp': 'analytics', // NLP agents go in analytics section
+        'data': 'data-news'
+      };
+      return mapping[type] || 'analytics';
+    }
+    
+    // Create agent card element
+    function createAgentCard(agent) {
+      const card = document.createElement('div');
+      card.className = 'jobs-model-card supervised';
+      card.setAttribute('data-function', agent.function_name);
+      
+      // Get friendly name and enhanced description
+      const friendlyName = getAppleFriendlyName(agent.agent_name, agent.agent_id);
+      const enhancedDescription = getAppleDescription(agent.agent_name, agent.agent_id);
+      
+      card.innerHTML = `
+        <div class="a2a-agent-header">
+          <div class="a2a-agent-icon ${agent.agent_type}">${agent.icon}</div>
+          <div class="a2a-agent-identity">
+            <h3 class="a2a-agent-name">${friendlyName}</h3>
+            <div class="a2a-agent-id">${agent.agent_id}</div>
+            <div class="a2a-technical-name">${agent.agent_name}</div>
+          </div>
+          <div class="a2a-agent-status-indicator"></div>
+        </div>
+        
+        <div class="a2a-capabilities">
+          <div class="a2a-capability-label">Capabilities</div>
+          <div class="a2a-capability-list">
+            ${agent.capabilities.domains.map(domain => 
+              `<span class="a2a-capability-tag">${domain}</span>`
+            ).join('')}
+          </div>
+        </div>
+        
+        <div class="a2a-agent-description">
+          ${enhancedDescription}
+        </div>
+        
+        <div class="a2a-protocol-info">
+          <span class="a2a-protocol-version">${agent.protocol_version || 'A2A Protocol v1.0'}</span>
+          <div class="a2a-agent-status">
+            <span class="a2a-status-dot"></span>
+            <span>${agent.status || 'Active'}</span>
+          </div>
+        </div>
+        
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('${agent.agent_id}')">Connect</button>
+          <button class="jobs-action-button" onclick="event.stopPropagation(); viewAgentCard('${agent.agent_id}')">Details</button>
+        </div>
+      `;
+      
+      return card;
+    }
+
     // Connect to A2A Agent
     async function connectAgent(agentId) {
       console.log('Connecting to agent:', agentId);
@@ -2473,11 +2873,27 @@
       button.disabled = true;
       
       try {
-        // Simulate A2A agent connection
-        const response = await simulateAgentConnection(agentId);
+        // Get agent card from database
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'get_agent_card',
+            parameters: { p_agent_id: agentId }
+          })
+        });
         
-        // Show success message
-        alert(`A2A Agent Connected!\n\nAgent ID: ${agentId}\nProtocol: A2A v1.0\nStatus: Active\n\nThe agent is now ready to receive requests and communicate with other agents in the network.`);
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        const agentCard = data.result;
+        
+        // Show success message with real agent data
+        alert(`A2A Agent Connected!\n\nAgent: ${agentCard.agent_name}\nID: ${agentCard.agent_id}\nProtocol: ${agentCard.protocol_version}\nStatus: ${agentCard.status}\n\nCapabilities:\n${agentCard.capabilities.domains.join(', ')}\n\nThe agent is now ready to receive requests and communicate with other agents in the network.`);
         
       } catch (error) {
         alert(`Agent Connection Failed: ${agentId}\n\nError: ${error.message}`);
@@ -2488,19 +2904,222 @@
     }
     
     // View Agent Card
-    function viewAgentCard(agentId) {
+    async function viewAgentCard(agentId) {
       console.log('Viewing agent card:', agentId);
       
-      // Extract agent info from ID
-      const parts = agentId.split('.');
-      const category = parts[1];
-      const functionName = parts[2];
-      
-      // Get agent capabilities based on category
-      const capabilities = getAgentCapabilities(category, functionName);
-      
-      alert(`A2A Agent Card\n\nAgent: ${agentId}\nCategory: ${category}\nFunction: ${functionName}\n\nCapabilities:\n${capabilities.join('\n')}\n\nProtocol: A2A v1.0\nNetwork: FinSight Intelligence\nStatus: Active`);
+      try {
+        // Get full agent card from database
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action: 'get_agent_card',
+            parameters: { p_agent_id: agentId }
+          })
+        });
+        
+        const data = await response.json();
+        if (data.error) {
+          throw new Error(data.error);
+        }
+        
+        const agent = data.result;
+        showAgentModal(agent);
+        
+      } catch (error) {
+        alert(`Failed to load agent card: ${error.message}`);
+      }
     }
+
+    // Show Agent Modal
+    function showAgentModal(agent) {
+      // Set agent icon and type
+      const modalIcon = document.getElementById('modal-agent-icon');
+      modalIcon.textContent = agent.icon || getAgentIcon(agent.agent_type);
+      modalIcon.className = `agent-modal-icon ${agent.agent_type}`;
+      
+      // Get friendly name and enhanced description
+      const friendlyName = getAppleFriendlyName(agent.agent_name, agent.agent_id);
+      const enhancedDescription = getAppleDescription(agent.agent_name, agent.agent_id);
+      
+      // Set agent details
+      document.getElementById('modal-agent-name').textContent = friendlyName;
+      document.getElementById('modal-agent-id').textContent = agent.agent_id;
+      document.getElementById('modal-agent-description').textContent = enhancedDescription;
+      
+      // Set capabilities
+      const capabilitiesContainer = document.getElementById('modal-agent-capabilities');
+      capabilitiesContainer.innerHTML = '';
+      
+      if (agent.capabilities && agent.capabilities.domains) {
+        agent.capabilities.domains.forEach(domain => {
+          const tag = document.createElement('div');
+          tag.className = 'agent-modal-capability-tag';
+          tag.textContent = domain;
+          capabilitiesContainer.appendChild(tag);
+        });
+      }
+      
+      // Set metrics
+      document.getElementById('modal-response-time').textContent = `${agent.metrics?.avg_response_time_ms || '--'}ms`;
+      document.getElementById('modal-success-rate').textContent = `${agent.metrics?.success_rate || '--'}%`;
+      document.getElementById('modal-requests').textContent = agent.metrics?.total_requests || '--';
+      
+      // Set connect button
+      const connectBtn = document.getElementById('modal-connect-btn');
+      connectBtn.onclick = () => connectAgentFromModal(agent.agent_id);
+      
+      // Show modal
+      const overlay = document.getElementById('agent-modal-overlay');
+      overlay.classList.add('show');
+    }
+
+    // Close Agent Modal
+    function closeAgentModal() {
+      const overlay = document.getElementById('agent-modal-overlay');
+      overlay.classList.remove('show');
+    }
+
+    // Connect Agent from Modal
+    async function connectAgentFromModal(agentId) {
+      if (!agentId) {
+        const modalAgentId = document.getElementById('modal-agent-id').textContent;
+        agentId = modalAgentId;
+      }
+      
+      closeAgentModal();
+      await connectAgent(agentId);
+    }
+
+    // Get agent icon helper
+    function getAgentIcon(agentType) {
+      const icons = {
+        'analytics': 'AN',
+        'financial': 'FN',
+        'ml': 'ML', 
+        'nlp': 'NL',
+        'data': 'DT'
+      };
+      return icons[agentType] || 'AG';
+    }
+
+    // Apple-style user-friendly agent names mapping
+    function getAppleFriendlyName(technicalName, agentId) {
+      const friendlyNames = {
+        // Analytics Agents
+        'Pearson Correlation Agent': 'Portfolio Correlation',
+        'Value at Risk Agent': 'Risk Calculator',
+        'Thompson Sampling Agent': 'Smart Sampling',
+        'Sentiment Analysis Agent': 'Market Sentiment',
+        'Portfolio Risk Agent': 'Risk Monitor',
+        'Trend Detection Agent': 'Trend Spotter',
+        'Anomaly Detection Agent': 'Anomaly Finder',
+        'LinUCB Bandit Agent': 'Smart Decision',
+        'Neural Bandit Agent': 'AI Decision',
+        
+        // Financial Agents
+        'Portfolio Risk Metrics Agent': 'Portfolio Health',
+        'Basel III Ratios Agent': 'Compliance Check',
+        'Options Greeks Agent': 'Options Analytics',
+        'Yield Curve Analysis Agent': 'Yield Analyzer',
+        'Credit Risk Scoring Agent': 'Credit Score',
+        'Stress Test Scenario Agent': 'Stress Testing',
+        
+        // Machine Learning Agents
+        'Monte Carlo Simulation Agent': 'Monte Carlo',
+        'Portfolio Optimization Agent': 'Portfolio Optimizer',
+        'Black-Scholes Agent': 'Options Pricing',
+        'LinUCB Multi-Armed Bandit Agent': 'Multi-Armed Bandit',
+        'Neural Network Decision Agent': 'Neural Networks',
+        'Collaborative Learning Agent': 'Smart Recommendations',
+        'Model Performance Agent': 'Performance Monitor',
+        'Feature Importance Agent': 'Feature Analyzer',
+        'Synthetic Data Agent': 'Data Generator',
+        'Adaptive Cache Agent': 'Smart Cache',
+        'Neural Networks Agent': 'Deep Learning',
+        
+        // Data Processing Agents
+        'Knowledge Graph Agent': 'Knowledge Graph',
+        'Entity Materialization Agent': 'Entity Extractor',
+        'Temporal Correlations Agent': 'Time Correlations',
+        'Swift Query Agent': 'Quick Query',
+        'Entity Evolution Agent': 'Entity Tracker',
+        'Metric Correlation Agent': 'Metric Insights',
+        'News Content Processing Agent': 'News Processor',
+        'News Loading Status Agent': 'News Monitor',
+        'News Cleanup Archival Agent': 'News Archiver',
+        'News Statistics Agent': 'News Analytics',
+        'Data Sufficiency Agent': 'Data Quality',
+        'Feature Availability Matrix Agent': 'Feature Matrix'
+      };
+      
+      return friendlyNames[technicalName] || technicalName;
+    }
+
+    // Get Apple-style description
+    function getAppleDescription(technicalName, agentId) {
+      const descriptions = {
+        // Analytics
+        'Pearson Correlation Agent': 'Discover hidden relationships between your investments with intelligent correlation analysis.',
+        'Value at Risk Agent': 'Calculate your maximum potential loss with precision and confidence.',
+        'Thompson Sampling Agent': 'Make optimal decisions using advanced Bayesian sampling techniques.',
+        'Sentiment Analysis Agent': 'Understand market emotions through intelligent news and social media analysis.',
+        'Portfolio Risk Agent': 'Monitor your portfolio health with real-time risk assessment.',
+        'Trend Detection Agent': 'Identify emerging market trends before they become obvious.',
+        'Anomaly Detection Agent': 'Spot unusual patterns that could signal opportunities or risks.',
+        'LinUCB Bandit Agent': 'Make confident decisions using contextual multi-armed bandit algorithms.',
+        'Neural Bandit Agent': 'Leverage deep learning for sophisticated decision-making processes.',
+        
+        // Financial
+        'Portfolio Risk Metrics Agent': 'Get comprehensive insights into your portfolio\'s risk profile and performance.',
+        'Basel III Ratios Agent': 'Ensure regulatory compliance with automated Basel III ratio calculations.',
+        'Options Greeks Agent': 'Master options trading with real-time Greeks calculations and analysis.',
+        'Yield Curve Analysis Agent': 'Analyze yield curves to understand interest rate environments.',
+        'Credit Risk Scoring Agent': 'Assess creditworthiness with advanced scoring algorithms.',
+        'Stress Test Scenario Agent': 'Test your portfolio against extreme market conditions.',
+        
+        // Machine Learning
+        'Monte Carlo Simulation Agent': 'Run thousands of scenarios to model potential investment outcomes.',
+        'Portfolio Optimization Agent': 'Optimize your portfolio allocation using advanced mathematical models.',
+        'Black-Scholes Agent': 'Price options accurately with the classic Black-Scholes model.',
+        'LinUCB Multi-Armed Bandit Agent': 'Solve complex allocation problems with contextual bandits.',
+        'Neural Network Decision Agent': 'Harness the power of neural networks for complex decision-making.',
+        'Collaborative Learning Agent': 'Get personalized recommendations based on collective intelligence.',
+        'Model Performance Agent': 'Monitor and optimize your AI models\' performance continuously.',
+        'Feature Importance Agent': 'Understand which factors matter most in your predictions.',
+        'Synthetic Data Agent': 'Generate high-quality synthetic data for testing and modeling.',
+        'Adaptive Cache Agent': 'Optimize system performance with intelligent caching strategies.',
+        'Neural Networks Agent': 'Deploy sophisticated deep learning models for complex analysis.',
+        
+        // Data Processing
+        'Knowledge Graph Agent': 'Build and query intelligent knowledge graphs of financial relationships.',
+        'Entity Materialization Agent': 'Extract and organize entities from unstructured financial data.',
+        'Temporal Correlations Agent': 'Analyze how financial relationships change over time.',
+        'Swift Query Agent': 'Get lightning-fast answers to complex financial queries.',
+        'Entity Evolution Agent': 'Track how financial entities and relationships evolve.',
+        'Metric Correlation Agent': 'Discover hidden connections between different financial metrics.',
+        'News Content Processing Agent': 'Transform raw news into actionable financial intelligence.',
+        'News Loading Status Agent': 'Monitor the health and status of your news data pipeline.',
+        'News Cleanup Archival Agent': 'Maintain clean, organized historical news archives.',
+        'News Statistics Agent': 'Generate insights from news volume, sentiment, and trends.',
+        'Data Sufficiency Agent': 'Ensure you have enough quality data for reliable analysis.',
+        'Feature Availability Matrix Agent': 'Visualize and manage feature availability across your datasets.'
+      };
+      
+      return descriptions[technicalName] || 'Advanced financial intelligence agent for sophisticated analysis.';
+    }
+
+    // Close modal when clicking overlay
+    document.addEventListener('DOMContentLoaded', function() {
+      const overlay = document.getElementById('agent-modal-overlay');
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          closeAgentModal();
+        }
+      });
+    });
     
     // Simulate A2A agent connection
     async function simulateAgentConnection(agentId) {
@@ -2582,6 +3201,9 @@
     // Refresh metrics every 30 seconds
     setInterval(refreshModelMetrics, 30000);
     
+    // Load agents from database when page loads
+    document.addEventListener('DOMContentLoaded', loadAgentsFromDatabase);
+    
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (e.metaKey && e.key === 'k') {
@@ -2628,5 +3250,60 @@
       });
     });
   </script>
+  <!-- Agent Modal -->
+  <div class="agent-modal-overlay" id="agent-modal-overlay">
+    <div class="agent-modal">
+      <div class="agent-modal-header">
+        <button class="agent-modal-close" onclick="closeAgentModal()">×</button>
+        <div class="agent-modal-agent-header">
+          <div class="agent-modal-icon" id="modal-agent-icon">AG</div>
+          <div class="agent-modal-identity">
+            <h2 id="modal-agent-name">Agent Name</h2>
+            <div class="agent-modal-agent-id" id="modal-agent-id">agent.id</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="agent-modal-content">
+        <div class="agent-modal-section">
+          <div class="agent-modal-section-title">Description</div>
+          <div class="agent-modal-description" id="modal-agent-description">
+            Agent description will appear here.
+          </div>
+        </div>
+        
+        <div class="agent-modal-section">
+          <div class="agent-modal-section-title">Capabilities</div>
+          <div class="agent-modal-capability-grid" id="modal-agent-capabilities">
+            <!-- Capability tags will be inserted here -->
+          </div>
+        </div>
+        
+        <div class="agent-modal-section">
+          <div class="agent-modal-section-title">Performance Metrics</div>
+          <div class="agent-modal-metrics">
+            <div class="agent-modal-metric">
+              <div class="agent-modal-metric-value" id="modal-response-time">--</div>
+              <div class="agent-modal-metric-label">Avg Response</div>
+            </div>
+            <div class="agent-modal-metric">
+              <div class="agent-modal-metric-value" id="modal-success-rate">--</div>
+              <div class="agent-modal-metric-label">Success Rate</div>
+            </div>
+            <div class="agent-modal-metric">
+              <div class="agent-modal-metric-value" id="modal-requests">--</div>
+              <div class="agent-modal-metric-label">Total Requests</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="agent-modal-actions">
+          <button class="agent-modal-button secondary" onclick="closeAgentModal()">Close</button>
+          <button class="agent-modal-button primary" id="modal-connect-btn" onclick="connectAgentFromModal()">Connect Agent</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
