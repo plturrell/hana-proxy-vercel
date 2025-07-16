@@ -1,63 +1,63 @@
 // Insanely Great Experience - Steve Jobs & Jony Ive Edition
 
-// Natural language mappings - no technical jargon
+// Natural language mappings - CFA Professional Edition
 const naturalNames = {
-  // Analytics (Simple & Clear)
-  'finsight.analytics.pearson_correlation': 'Relationship Finder',
-  'finsight.analytics.value_at_risk': 'Risk Shield',
-  'finsight.analytics.monte_carlo_simulation': 'Future Simulator',
-  'finsight.analytics.portfolio_optimization': 'Smart Balance',
-  'finsight.analytics.regression_analysis': 'Trend Predictor',
-  'finsight.analytics.time_series_forecast': 'Crystal Ball',
-  'finsight.analytics.volatility_modeling': 'Market Pulse',
-  'finsight.analytics.factor_analysis': 'Hidden Forces',
-  'finsight.analytics.stress_testing': 'Worst Case Guardian',
+  // Core Analytics
+  'finsight.analytics.pearson_correlation': 'Correlation Analysis',
+  'finsight.analytics.value_at_risk': 'Value at Risk',
+  'finsight.analytics.monte_carlo_simulation': 'Monte Carlo',
+  'finsight.analytics.portfolio_optimization': 'Portfolio Optimizer',
+  'finsight.analytics.regression_analysis': 'Regression Analysis',
+  'finsight.analytics.time_series_forecast': 'Time Series Forecast',
+  'finsight.analytics.volatility_modeling': 'Volatility Models',
+  'finsight.analytics.factor_analysis': 'Factor Analysis',
+  'finsight.analytics.stress_testing': 'Stress Testing',
   
-  // ML (Magical)
-  'finsight.ml.thompson_sampling': 'Smart Decisions',
-  'finsight.ml.neural_network': 'Deep Intelligence',
-  'finsight.ml.linucb_bandit': 'Learning Explorer',
-  'finsight.ml.collaborative_filtering': 'Wisdom Network',
-  'finsight.ml.reinforcement_learning': 'Adaptive Genius',
-  'finsight.ml.anomaly_detection': 'Pattern Guardian',
-  'finsight.ml.clustering': 'Natural Groups',
-  'finsight.ml.ensemble_methods': 'Collective Intelligence',
-  'finsight.ml.transfer_learning': 'Knowledge Transfer',
-  'finsight.ml.active_learning': 'Curious Mind',
-  'finsight.ml.meta_learning': 'Learning to Learn',
+  // Machine Learning
+  'finsight.ml.thompson_sampling': 'Bayesian Optimization',
+  'finsight.ml.neural_network': 'Neural Networks',
+  'finsight.ml.linucb_bandit': 'Contextual Bandits',
+  'finsight.ml.collaborative_filtering': 'Collaborative Filtering',
+  'finsight.ml.reinforcement_learning': 'Reinforcement Learning',
+  'finsight.ml.anomaly_detection': 'Anomaly Detection',
+  'finsight.ml.clustering': 'Cluster Analysis',
+  'finsight.ml.ensemble_methods': 'Ensemble Methods',
+  'finsight.ml.transfer_learning': 'Transfer Learning',
+  'finsight.ml.active_learning': 'Active Learning',
+  'finsight.ml.meta_learning': 'Meta Learning',
   
-  // Financial (Human Terms)
-  'finsight.treasury.black_scholes': 'Options Genius',
-  'finsight.treasury.bond_pricing': 'Bond Value',
-  'finsight.treasury.yield_curve': 'Rate Forecast',
-  'finsight.treasury.greeks_calculation': 'Risk Dimensions',
-  'finsight.treasury.fx_hedging': 'Currency Shield',
-  'finsight.treasury.credit_risk': 'Trust Score',
+  // Treasury & Derivatives
+  'finsight.treasury.black_scholes': 'Black-Scholes',
+  'finsight.treasury.bond_pricing': 'Bond Pricing',
+  'finsight.treasury.yield_curve': 'Yield Curve',
+  'finsight.treasury.greeks_calculation': 'Option Greeks',
+  'finsight.treasury.fx_hedging': 'FX Hedging',
+  'finsight.treasury.credit_risk': 'Credit Risk Scoring',
   
-  // NLP (Conversational)
-  'finsight.nlp.sentiment_analysis': 'Market Mood',
-  'finsight.nlp.entity_extraction': 'Key Players',
-  'finsight.nlp.topic_modeling': 'Theme Finder',
-  'finsight.nlp.summarization': 'Quick Insights',
-  'finsight.nlp.question_answering': 'Smart Answers',
+  // Natural Language Processing
+  'finsight.nlp.sentiment_analysis': 'Sentiment Analysis',
+  'finsight.nlp.entity_extraction': 'Entity Recognition',
+  'finsight.nlp.topic_modeling': 'Topic Modeling',
+  'finsight.nlp.summarization': 'Text Summarization',
+  'finsight.nlp.question_answering': 'Q&A Engine',
   
-  // Data (Simple)
-  'finsight.data.real_time_ingestion': 'Live Stream',
-  'finsight.data.batch_processing': 'Big Processor',
-  'finsight.data.quality_monitoring': 'Trust Guard',
-  'finsight.data.feature_engineering': 'Smart Features'
+  // Data Infrastructure
+  'finsight.data.real_time_ingestion': 'Real-Time Data',
+  'finsight.data.batch_processing': 'Batch Processing',
+  'finsight.data.quality_monitoring': 'Data Quality',
+  'finsight.data.feature_engineering': 'Feature Engineering'
 };
 
-// Delightful descriptions - focus on benefits, not features
+// Professional descriptions - CFA focused benefits
 const magicalDescriptions = {
-  'finsight.analytics.pearson_correlation': 'Instantly see which investments move together',
-  'finsight.analytics.value_at_risk': 'Know your maximum loss before it happens',
-  'finsight.analytics.monte_carlo_simulation': 'See thousands of possible futures in seconds',
-  'finsight.analytics.portfolio_optimization': 'Perfect balance between risk and reward',
-  'finsight.ml.thompson_sampling': 'Makes smarter choices with every decision',
-  'finsight.ml.neural_network': 'Thinks like the best traders in the world',
-  'finsight.treasury.black_scholes': 'Price any option with Nobel Prize math',
-  'finsight.nlp.sentiment_analysis': 'Feel the market\'s emotions in real-time'
+  'finsight.analytics.pearson_correlation': 'Measure portfolio diversification with statistical precision',
+  'finsight.analytics.value_at_risk': 'Calculate potential losses at any confidence level',
+  'finsight.analytics.monte_carlo_simulation': 'Run thousands of market scenarios instantly',
+  'finsight.analytics.portfolio_optimization': 'Maximize Sharpe ratio with efficient frontier analysis',
+  'finsight.ml.thompson_sampling': 'Optimal asset allocation through Bayesian inference',
+  'finsight.ml.neural_network': 'Deep learning for alpha generation',
+  'finsight.treasury.black_scholes': 'Nobel Prize-winning option pricing model',
+  'finsight.nlp.sentiment_analysis': 'Quantify market sentiment from news and social data'
 };
 
 // Initialize magical experience
@@ -97,13 +97,16 @@ function transformToInsanelyGreat() {
       descElement.textContent = magicalDescriptions[agentId];
     }
     
-    // Simplify the button
+    // Keep original button but add magic on click
     const primaryButton = card.querySelector('.jobs-action-button.primary');
     if (primaryButton) {
-      primaryButton.textContent = 'Use Now';
+      // Don't change the text, keep "Connect Agent"
+      const originalOnclick = primaryButton.onclick;
       primaryButton.onclick = (e) => {
         e.stopPropagation();
-        magicalConnect(agentId, card);
+        // Add magic to existing functionality
+        createSparkles(card);
+        if (originalOnclick) originalOnclick.call(primaryButton, e);
       };
     }
     
@@ -123,8 +126,8 @@ function transformToInsanelyGreat() {
     instant.className = 'instant-intelligence';
     card.appendChild(instant);
     
-    // Progressive reveal on click
-    card.addEventListener('click', () => showMagicalDetails(agentId));
+    // Keep original detail screen functionality
+    // The "Agent Card" button already calls showAgentDetailScreen
   });
 }
 
@@ -149,13 +152,17 @@ function findAgentId(card) {
 // Get contextual insight
 function getInsight(agentId) {
   const insights = {
-    'finsight.analytics.pearson_correlation': 'Used by 84% of users',
-    'finsight.analytics.value_at_risk': 'Prevents 95% of losses',
-    'finsight.ml.thompson_sampling': 'Learns in real-time',
-    'finsight.treasury.black_scholes': 'Institutional grade'
+    'finsight.analytics.pearson_correlation': '95% confidence intervals',
+    'finsight.analytics.value_at_risk': '99% VaR calculation',
+    'finsight.ml.thompson_sampling': 'MAB optimization',
+    'finsight.treasury.black_scholes': 'Implied volatility',
+    'finsight.analytics.monte_carlo_simulation': '10,000 simulations',
+    'finsight.analytics.portfolio_optimization': 'Markowitz efficient',
+    'finsight.ml.neural_network': 'LSTM architecture',
+    'finsight.nlp.sentiment_analysis': 'NLP powered'
   };
   
-  return insights[agentId] || 'AI Enhanced';
+  return insights[agentId] || 'Grok Enhanced';
 }
 
 // Magical connection with delight
@@ -213,10 +220,14 @@ function createSparkles(element) {
 // Show instant results without complexity
 function showInstantResults(agentId) {
   const results = {
-    'finsight.analytics.pearson_correlation': 'AAPL ↔ MSFT: 0.89 correlation',
-    'finsight.analytics.value_at_risk': 'Maximum loss today: $4,250',
-    'finsight.ml.thompson_sampling': 'Best action: Buy NVDA',
-    'finsight.treasury.black_scholes': 'Fair value: $145.32'
+    'finsight.analytics.pearson_correlation': 'ρ = 0.89 (p < 0.001)',
+    'finsight.analytics.value_at_risk': '1-day 99% VaR: $4.25M',
+    'finsight.ml.thompson_sampling': 'Optimal allocation: 65% equities',
+    'finsight.treasury.black_scholes': 'Call option: $14.53 (IV: 28.5%)',
+    'finsight.analytics.monte_carlo_simulation': 'Expected return: 12.3% ± 2.1%',
+    'finsight.analytics.portfolio_optimization': 'Sharpe ratio: 1.85',
+    'finsight.ml.neural_network': 'Signal: Strong Buy (87% confidence)',
+    'finsight.nlp.sentiment_analysis': 'Market sentiment: Bullish (0.73)'
   };
   
   if (results[agentId]) {

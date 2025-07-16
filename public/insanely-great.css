@@ -8,30 +8,17 @@
   --magic-gradient: linear-gradient(135deg, #007AFF 0%, #5AC8FA 50%, #AF52DE 100%);
 }
 
-/* Hide ALL Technical Complexity */
-.a2a-agent-id,
-.a2a-technical-name,
-.a2a-protocol-version,
-.a2a-capability-label,
-.a2a-capability-tag,
-.jobs-model-status,
-.jobs-model-type {
+/* Hide ONLY Technical Jargon - Keep Original Card Structure */
+.a2a-protocol-version {
   display: none !important;
 }
 
-/* Magical Agent Cards */
+/* Keep Original Card Design - Just Add Magic */
 .jobs-model-card {
   position: relative;
   overflow: visible;
-  transition: all var(--magic-duration) var(--silk-curve);
-  border: none;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.dark-mode .jobs-model-card {
-  background: rgba(28, 28, 30, 0.95);
+  transition: transform var(--magic-duration) var(--silk-curve), 
+              box-shadow var(--magic-duration) var(--silk-curve);
 }
 
 /* Magical Hover State */
@@ -62,31 +49,13 @@
     0 0 80px -20px var(--glow-color);
 }
 
-/* Beautiful Agent Icons */
+/* Keep Original Agent Icons - Just Add Subtle Animation */
 .a2a-agent-icon {
-  width: 60px;
-  height: 60px;
-  font-size: 24px;
-  font-weight: 700;
-  border-radius: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--magic-gradient);
-  color: white;
-  position: relative;
-  overflow: hidden;
+  transition: transform 0.3s var(--delight-curve);
 }
 
-/* Icon Glow Animation */
-@keyframes iconPulse {
-  0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.4); }
-  70% { box-shadow: 0 0 0 15px rgba(0, 122, 255, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
-}
-
-.a2a-agent-icon {
-  animation: iconPulse 3s infinite;
+.jobs-model-card:hover .a2a-agent-icon {
+  transform: scale(1.05);
 }
 
 /* Natural Language Names */
@@ -108,18 +77,11 @@
   opacity: 0.9;
 }
 
-/* Magic Button */
+/* Keep Original Button Styling - Don't Override */
 .jobs-action-button.primary {
-  background: var(--magic-gradient);
-  border: none;
-  color: white;
-  font-weight: 600;
-  padding: 12px 24px;
-  font-size: 16px;
-  letter-spacing: -0.2px;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .jobs-action-button.primary::after {
@@ -130,7 +92,7 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.2);
   transform: translate(-50%, -50%);
   transition: width 0.6s, height 0.6s;
 }
@@ -141,41 +103,27 @@
 }
 
 .jobs-action-button.primary:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 24px -8px rgba(0, 122, 255, 0.4);
+  transform: scale(1.02);
 }
 
-/* Hide Secondary Button */
+/* Keep Secondary Button Visible */
 .jobs-action-button:not(.primary) {
-  display: none;
+  transition: opacity 0.2s ease;
 }
 
-/* Progressive Disclosure */
+.jobs-action-button:not(.primary):hover {
+  opacity: 0.8;
+}
+
+/* Keep Original Layout */
 .a2a-agent-header {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 0;
 }
 
 .a2a-agent-identity {
   flex: 1;
-}
-
-.a2a-capabilities,
-.a2a-protocol-info {
-  height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: all var(--magic-duration) var(--silk-curve);
-}
-
-/* Show Details on Hover */
-.jobs-model-card:hover .a2a-capabilities,
-.jobs-model-card:hover .a2a-protocol-info {
-  height: auto;
-  opacity: 1;
-  margin-top: 16px;
 }
 
 /* Simplified Status */
