@@ -240,15 +240,19 @@ async function handleTreasuryCalculation(body) {
     
     // Try to get real market data first
     if (symbol && !parameters.spot_price) {
+      console.log(`Attempting to fetch real market data for ${symbol}`);
       try {
         // Try direct market data API call if database doesn't have it  
         const finnhubApiKey = 'ct4l329r01qntnfkqhpgct4l329r01qntnfkqhq0';
         let marketDataFromAPI = null;
         
         try {
+          console.log(`Calling Finnhub API for ${symbol}`);
           const finnhubResponse = await fetch(`https://finnhub.io/api/v1/quote?symbol=${symbol}&token=${finnhubApiKey}`);
+          console.log(`Finnhub response status: ${finnhubResponse.status}`);
           if (finnhubResponse.ok) {
             const finnhubData = await finnhubResponse.json();
+            console.log(`Finnhub data received:`, JSON.stringify(finnhubData));
             if (finnhubData.c) {
               marketDataFromAPI = {
                 price: finnhubData.c,
@@ -256,6 +260,7 @@ async function handleTreasuryCalculation(body) {
                 beta: 1.0,
                 data_quality_score: 0.95
               };
+              console.log(`Market data prepared:`, JSON.stringify(marketDataFromAPI));
             }
           }
         } catch (apiError) {
