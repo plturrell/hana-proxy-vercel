@@ -7,8 +7,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <link href="card-styling-fix.css" rel="stylesheet">
   <script src="insanely-great-minimal.js" defer></script>
-  <script src="card-expand-enhanced.js" defer></script>
+  <script src="a2a-ord-metadata.js" defer></script>
+  <script src="a2a-ord-display.js" defer></script>
+  <script src="card-expand-fixed.js" defer></script>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -674,14 +678,135 @@
 
     .integration-diagram {
       background: var(--jobs-light-gray);
-      border-radius: 12px;
-      padding: var(--jobs-spacing-xl);
+      border-radius: 8px;
+      padding: var(--jobs-spacing-lg);
       margin: var(--jobs-spacing-lg) 0;
-      text-align: center;
+      position: relative;
     }
 
     body.dark-mode .integration-diagram {
-      background: #2C2C2E;
+      background: #1C1C1E;
+    }
+
+    /* Agent Details Sidebar Styles */
+    .jobs-agent-details-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 400px;
+      height: 100vh;
+      background: var(--jobs-white);
+      border-left: 1px solid var(--jobs-light-gray);
+      z-index: 10000;
+      transition: right 0.3s ease;
+      overflow-y: auto;
+    }
+
+    body.dark-mode .jobs-agent-details-sidebar {
+      background: #1C1C1E;
+      border-left-color: #38383A;
+    }
+
+    .jobs-agent-details-sidebar.open {
+      right: 0;
+    }
+
+    .jobs-agent-details-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--jobs-spacing-lg);
+      border-bottom: 1px solid var(--jobs-light-gray);
+    }
+
+    body.dark-mode .jobs-agent-details-header {
+      border-bottom-color: #38383A;
+    }
+
+    .jobs-agent-details-content {
+      padding: var(--jobs-spacing-lg);
+    }
+
+    .jobs-close-button {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--jobs-gray);
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 4px;
+    }
+
+    .jobs-close-button:hover {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+    }
+
+    body.dark-mode .jobs-close-button:hover {
+      background: #38383A;
+      color: var(--jobs-white);
+    }
+
+    /* Network Visualization Styles */
+    .jobs-network-container {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    body.dark-mode .jobs-network-container {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+
+    .jobs-network-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+
+    .jobs-network-controls {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+    }
+
+    /* Network SVG Styles */
+    .network-node {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .network-node:hover {
+      stroke-width: 3px;
+      r: 18;
+    }
+
+    .network-node.selected {
+      stroke: var(--jobs-blue);
+      stroke-width: 4px;
+    }
+
+    .network-link {
+      stroke: #ccc;
+      stroke-opacity: 0.6;
+      stroke-width: 2px;
+    }
+
+    .network-node-label {
+      font-family: 'SF Pro Text', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-anchor: middle;
+      fill: var(--jobs-white);
+      pointer-events: none;
     }
 
     .diagram-node {
@@ -1186,6 +1311,10 @@
       background: linear-gradient(135deg, var(--jobs-teal), var(--jobs-green));
     }
     
+    .a2a-agent-icon.trust {
+      background: linear-gradient(135deg, var(--jobs-purple), #BF5AF2);
+    }
+    
     .a2a-agent-identity {
       flex: 1;
     }
@@ -1489,6 +1618,352 @@
         text-align: left;
       }
     }
+  
+  /* A2A Network Visualization Styles */
+  .jobs-network-container {
+    background: var(--jobs-bg-color);
+    border: 1px solid var(--jobs-border-color);
+    border-radius: 12px;
+    padding: var(--jobs-spacing-md);
+    margin-top: var(--jobs-spacing-md);
+  }
+  
+  .jobs-network-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--jobs-spacing-md);
+    padding-bottom: var(--jobs-spacing-sm);
+    border-bottom: 1px solid var(--jobs-border-color);
+  }
+  
+  .jobs-network-header h3 {
+    font-size: var(--jobs-font-size-title);
+    font-weight: 600;
+    color: var(--jobs-text-color);
+    margin: 0;
+  }
+  
+  .jobs-network-controls {
+    display: flex;
+    gap: var(--jobs-spacing-sm);
+  }
+  
+  .jobs-network-visualization {
+    background: var(--jobs-bg-color);
+    border: 1px solid var(--jobs-border-color);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  #network-svg {
+    display: block;
+    background: var(--jobs-bg-color);
+  }
+  
+  .jobs-agent-details-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background: var(--jobs-bg-color);
+    border-left: 1px solid var(--jobs-border-color);
+    z-index: 1000;
+    transition: right var(--jobs-duration) var(--jobs-animation);
+    overflow-y: auto;
+  }
+  
+  .jobs-agent-details-sidebar.open {
+    right: 0;
+  }
+  
+  .jobs-agent-details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--jobs-spacing-md);
+    border-bottom: 1px solid var(--jobs-border-color);
+    background: var(--jobs-bg-color);
+    position: sticky;
+    top: 0;
+  }
+  
+  .jobs-agent-details-header h3 {
+    font-size: var(--jobs-font-size-title);
+    font-weight: 600;
+    color: var(--jobs-text-color);
+    margin: 0;
+  }
+  
+  .jobs-close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--jobs-gray);
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--jobs-duration) var(--jobs-animation);
+  }
+  
+  .jobs-close-button:hover {
+    background: var(--jobs-light-gray);
+    color: var(--jobs-text-color);
+  }
+  
+  .jobs-agent-details-content {
+    padding: var(--jobs-spacing-md);
+  }
+  
+  /* Network node styles */
+  .network-node {
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .network-node:hover {
+    stroke-width: 3px;
+  }
+  
+  .network-node.selected {
+    stroke: var(--jobs-blue);
+    stroke-width: 3px;
+  }
+  
+  .network-link {
+    stroke: var(--jobs-gray);
+    stroke-opacity: 0.3;
+    stroke-width: 1px;
+  }
+  
+  .network-link.highlighted {
+    stroke: var(--jobs-blue);
+    stroke-opacity: 0.8;
+    stroke-width: 2px;
+  }
+  
+  /* Real connection styles */
+  .network-link.real-connection {
+    stroke-opacity: 0.8;
+  }
+  
+  .network-link.synthetic-connection {
+    stroke-opacity: 0.3;
+  }
+  
+  .network-link.message-link {
+    stroke: #007AFF;
+  }
+  
+  .network-link.consensus-link {
+    stroke: #34C759;
+  }
+  
+  .network-link.hybrid-link {
+    stroke: #FF9500;
+  }
+  
+  .network-node-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-anchor: middle;
+    fill: white;
+    pointer-events: none;
+  }
+  
+  body.dark-mode .jobs-network-container {
+    background: #1C1C1E;
+    border-color: #2C2C2E;
+  }
+  
+  body.dark-mode .jobs-network-visualization {
+    background: #1C1C1E;
+    border-color: #2C2C2E;
+  }
+  
+  body.dark-mode #network-svg {
+    background: #1C1C1E;
+  }
+  
+  body.dark-mode .jobs-agent-details-sidebar {
+    background: #1C1C1E;
+    border-color: #2C2C2E;
+  }
+  
+  body.dark-mode .jobs-agent-details-header {
+    background: #1C1C1E;
+    border-color: #2C2C2E;
+  }
+  
+  /* Blockchain Metadata Styles */
+  .a2a-blockchain-metadata {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: var(--jobs-spacing-sm);
+    margin: var(--jobs-spacing-sm) 0;
+    font-size: 12px;
+  }
+  
+  body.dark-mode .a2a-blockchain-metadata {
+    background: linear-gradient(135deg, #2c2c2e, #1c1c1e);
+    border-color: #38383a;
+  }
+  
+  .blockchain-status-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--jobs-spacing-xs);
+    font-weight: 500;
+  }
+  
+  .blockchain-icon {
+    font-size: 14px;
+    margin-right: var(--jobs-spacing-xs);
+  }
+  
+  .blockchain-consensus {
+    color: var(--jobs-blue);
+    font-weight: 600;
+    font-size: 11px;
+  }
+  
+  .verification-badge {
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .verification-badge.verified {
+    background: var(--jobs-green);
+    color: white;
+  }
+  
+  .verification-badge.pending {
+    background: var(--jobs-orange);
+    color: white;
+  }
+  
+  .blockchain-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--jobs-spacing-xs);
+  }
+  
+  .blockchain-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .metric-label {
+    font-size: 9px;
+    color: var(--jobs-gray);
+    margin-bottom: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  
+  .metric-value {
+    font-weight: 600;
+    font-size: 11px;
+  }
+  
+  .trust-score {
+    color: var(--jobs-green);
+  }
+  
+  .participation-score {
+    color: var(--jobs-blue);
+  }
+  
+  .uptime-score {
+    color: var(--jobs-purple);
+  }
+  
+  .a2a-capability-tag.blockchain-enabled {
+    background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
+    color: white;
+    font-weight: 600;
+    border: none;
+  }
+  
+  /* Modal Blockchain Styles */
+  .modal-blockchain-section {
+    margin-top: var(--jobs-spacing-md);
+    padding: var(--jobs-spacing-md);
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+  }
+  
+  body.dark-mode .modal-blockchain-section {
+    background: linear-gradient(135deg, #2c2c2e, #1c1c1e);
+    border-color: #38383a;
+  }
+  
+  .blockchain-section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 var(--jobs-spacing-sm) 0;
+    color: var(--jobs-text-color);
+  }
+  
+  .blockchain-modal-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--jobs-spacing-sm);
+  }
+  
+  .blockchain-modal-metric {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--jobs-spacing-xs);
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 6px;
+  }
+  
+  body.dark-mode .blockchain-modal-metric {
+    background: rgba(0, 0, 0, 0.3);
+  }
+  
+  .agent-modal-capability-tag.blockchain-enabled {
+    background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
+    color: white;
+    font-weight: 600;
+    border: none;
+  }
+  
+  .verification-verified {
+    color: var(--jobs-green);
+    font-weight: 700;
+  }
+  
+  .verification-pending {
+    color: var(--jobs-orange);
+    font-weight: 700;
+  }
+  
+  .did-value {
+    font-family: monospace;
+    font-size: 10px;
+    color: var(--jobs-gray);
+    word-break: break-all;
+  }
+  
   </style>
 </head>
 <body class="dark-mode">
@@ -1545,10 +2020,11 @@
   <div class="jobs-section-nav">
     <div class="jobs-section-tabs">
       <div class="jobs-section-tab active" onclick="showSection('overview')">Overview</div>
-      <div class="jobs-section-tab" onclick="showSection('analytics')">Core Analytics</div>
-      <div class="jobs-section-tab" onclick="showSection('financial')">Financial Models</div>
-      <div class="jobs-section-tab" onclick="showSection('ml')">Machine Learning</div>
-      <div class="jobs-section-tab" onclick="showSection('data')">Data Processing</div>
+      <div class="jobs-section-tab" onclick="showSection('analytics')">Analytics</div>
+      <div class="jobs-section-tab" onclick="showSection('financial')">Financial</div>
+      <div class="jobs-section-tab" onclick="showSection('ml')">ML</div>
+      <div class="jobs-section-tab" onclick="showSection('data')">Data</div>
+      <div class="jobs-section-tab" onclick="showSection('trust')">Trust</div>
     </div>
   </div>
   
@@ -1561,31 +2037,62 @@
         <p class="jobs-header-subtitle">Autonomous agents for real-time financial analytics and AI-powered intelligence</p>
       </div>
     
-      <!-- Function Overview -->
-      <div class="jobs-overview-grid">
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value online" id="total-functions">35</div>
-          <div class="jobs-overview-label">Active Agents</div>
+      <!-- Agent Overview Grid -->
+      <div class="jobs-models-grid" id="overview-agents-grid">
+        <!-- Agent cards will be populated here from database -->
+      </div>
+      
+      <!-- Network Statistics -->
+      <div class="jobs-section-spacing">
+        <h2 class="jobs-section-title">Network Statistics</h2>
+        <div class="jobs-overview-grid">
+          <div class="jobs-overview-card">
+            <div class="jobs-overview-value" id="network-total-agents">32</div>
+            <div class="jobs-overview-label">Total Agents</div>
+          </div>
+          
+          <div class="jobs-overview-card">
+            <div class="jobs-overview-value active" id="network-active-agents">32</div>
+            <div class="jobs-overview-label">Active Agents</div>
+          </div>
+          
+          <div class="jobs-overview-card">
+            <div class="jobs-overview-value" id="network-connections">45</div>
+            <div class="jobs-overview-label">Connections (Simulated)</div>
+          </div>
+          
+          <div class="jobs-overview-card">
+            <div class="jobs-overview-value training" id="network-consensus-rounds">3</div>
+            <div class="jobs-overview-label">Consensus Rounds</div>
+          </div>
+        </div>
+      </div>
+        
+      <!-- Network Visualization -->
+      <div class="jobs-section-spacing">
+        <div class="jobs-network-header">
+          <h2 class="jobs-section-title">Agent Network Graph</h2>
+          <div class="jobs-network-controls">
+            <button class="jobs-action-button" onclick="resetNetworkView()">Reset View</button>
+            <button class="jobs-action-button" onclick="refreshNetworkData()">Refresh</button>
+            <button id="connection-status-btn" class="jobs-action-button secondary" onclick="showConnectionInfo()" title="Click for connection details">⚠️ Simulated</button>
+          </div>
         </div>
         
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="analytics-functions">9</div>
-          <div class="jobs-overview-label">Core Analytics</div>
+        <div class="jobs-network-container">
+          <svg id="network-svg" width="100%" height="600"></svg>
         </div>
+      </div>
         
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value training" id="financial-functions">6</div>
-          <div class="jobs-overview-label">Financial Models</div>
-        </div>
-        
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="ml-functions">11</div>
-          <div class="jobs-overview-label">Machine Learning</div>
-        </div>
-        
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="data-functions">9</div>
-          <div class="jobs-overview-label">Data Processing</div>
+        <!-- Agent Details Sidebar -->
+        <div id="agent-details-sidebar" class="jobs-agent-details-sidebar">
+          <div class="jobs-agent-details-header">
+            <h3 id="agent-details-title">Agent Details</h3>
+            <button class="jobs-close-button" onclick="closeAgentDetails()">×</button>
+          </div>
+          <div id="agent-details-content" class="jobs-agent-details-content">
+            <p>Select an agent node to view details</p>
+          </div>
         </div>
       </div>
     </div>
@@ -1597,6 +2104,7 @@
       </div>
       
       <div class="jobs-models-grid">
+        <!-- PLACEHOLDER CARDS - These will be replaced by real agents from database on page load -->
         <!-- Function 1 - Pearson Correlation Agent -->
         <div class="jobs-model-card supervised" data-function="calculate_pearson_correlation">
           <div class="a2a-agent-header">
@@ -2204,6 +2712,46 @@
           <div class="jobs-model-actions">
             <button class="jobs-action-button primary" onclick="event.stopPropagation(); connectAgent('finsight.financial.stress_test')">Connect Agent</button>
             <button class="jobs-action-button" onclick="event.stopPropagation(); showAgentDetailScreen('finsight.financial.stress_test')">Agent Card</button>
+          </div>
+        </div>
+        
+        <!-- A2A Visual Builder -->
+        <div class="jobs-model-card trust" data-function="visual_trust_builder">
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon trust">VTB</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">A2A Visual Trust Builder</h3>
+              <div class="a2a-agent-id">finsight.a2a.visual_builder</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
+          </div>
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Trust Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">visual-design</span>
+              <span class="a2a-capability-tag">trust-contracts</span>
+              <span class="a2a-capability-tag">agent-orchestration</span>
+              <span class="a2a-capability-tag">smart-contracts</span>
+              <span class="a2a-capability-tag">real-network</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
+            Drag-and-drop visual builder for A2A trust processes with real network integration
+          </div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v2.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Active</span>
+            </div>
+          </div>
+          
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); window.open('/visual-builder-real.html', '_blank')">Open Visual Builder</button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); showVisualBuilderInfo()">Learn More</button>
           </div>
         </div>
       </div>
@@ -3026,6 +3574,58 @@
         </div>
       </div>
     </div>
+    
+    <!-- Trust Section -->
+    <div id="trust" class="jobs-section">
+      <div class="jobs-models-grid">
+        <!-- A2A Visual Trust Builder -->
+        <div class="jobs-model-card trust" data-function="visual_trust_builder">
+          <div class="a2a-agent-header">
+            <div class="a2a-agent-icon trust">🛡️</div>
+            <div class="a2a-agent-identity">
+              <h3 class="a2a-agent-name">A2A Visual Trust Builder</h3>
+              <div class="a2a-agent-id">a2a.trust.visual_builder</div>
+              <div class="a2a-technical-name">Visual Process Builder</div>
+            </div>
+            <div class="a2a-agent-status-indicator"></div>
+          </div>
+          
+          <div class="a2a-capabilities">
+            <div class="a2a-capability-label">Builder Capabilities</div>
+            <div class="a2a-capability-list">
+              <span class="a2a-capability-tag">drag-drop-interface</span>
+              <span class="a2a-capability-tag">real-agent-integration</span>
+              <span class="a2a-capability-tag">smart-contract-generation</span>
+              <span class="a2a-capability-tag">trust-pattern-templates</span>
+              <span class="a2a-capability-tag">live-network-deployment</span>
+            </div>
+          </div>
+          
+          <div class="a2a-agent-description">
+            Visual interface for building A2A trust processes with real agents and smart contracts. Drag and drop components to create complex trust relationships, then deploy directly to the live A2A network.
+          </div>
+          
+          <div class="a2a-protocol-info">
+            <span class="a2a-protocol-version">A2A Protocol v1.0</span>
+            <div class="a2a-agent-status">
+              <span class="a2a-status-dot"></span>
+              <span>Connected to Real Network</span>
+            </div>
+          </div>
+          
+          <div class="jobs-model-actions">
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); window.open('/visual-builder-real.html', '_blank')">
+              Open Visual Builder
+            </button>
+            <button class="jobs-action-button" onclick="event.stopPropagation(); window.open('/a2a-network.html', '_blank')">
+              View Network Status
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
     <script>
     // Check user role
     const userRole = localStorage.getItem('userRole') || 'Finance';
@@ -3186,7 +3786,7 @@
           data: []
         };
         
-        data.result.forEach(agent => {
+        data.data.forEach(agent => {
           if (agentsByType[agent.agent_type]) {
             agentsByType[agent.agent_type].push(agent);
           }
@@ -3227,9 +3827,9 @@
       const mapping = {
         'analytics': 'analytics',
         'financial': 'financial',
-        'ml': 'ml-rl',
+        'ml': 'ml',
         'nlp': 'analytics', // NLP agents go in analytics section
-        'data': 'data-news'
+        'data': 'data'
       };
       return mapping[type] || 'analytics';
     }
@@ -3243,6 +3843,15 @@
       // Get friendly name and enhanced description
       const friendlyName = getAppleFriendlyName(agent.agent_name, agent.agent_id);
       const enhancedDescription = getAppleDescription(agent.agent_name, agent.agent_id);
+      
+      // Extract blockchain metadata
+      const blockchainData = agent.connection_config?.blockchain || {};
+      const blockchainEnabled = agent.capabilities?.blockchain?.enabled || false;
+      const verificationStatus = blockchainData.identity?.verification_status || 'pending';
+      const trustScore = blockchainData.reputation?.trust_score || 0;
+      const participationScore = blockchainData.consensus?.participation_score || 0;
+      const consensusType = blockchainData.real_time?.database_consensus || 'ACID';
+      const uptimePercentage = blockchainData.reputation?.uptime_percentage || 99;
       
       card.innerHTML = `
         <div class="a2a-agent-header">
@@ -3261,8 +3870,33 @@
             ${agent.capabilities.domains.map(domain => 
               `<span class="a2a-capability-tag">${domain}</span>`
             ).join('')}
+            ${blockchainEnabled ? '<span class="a2a-capability-tag blockchain-enabled">🔗 Blockchain</span>' : ''}
           </div>
         </div>
+        
+        ${blockchainEnabled ? `
+        <div class="a2a-blockchain-metadata">
+          <div class="blockchain-status-header">
+            <span class="blockchain-icon">⛓️</span>
+            <span class="blockchain-consensus">${consensusType} Consensus</span>
+            <span class="verification-badge ${verificationStatus}">${verificationStatus.toUpperCase()}</span>
+          </div>
+          <div class="blockchain-metrics">
+            <div class="blockchain-metric">
+              <span class="metric-label">Trust Score</span>
+              <span class="metric-value trust-score">${Math.round(trustScore)}/100</span>
+            </div>
+            <div class="blockchain-metric">
+              <span class="metric-label">Participation</span>
+              <span class="metric-value participation-score">${Math.round(participationScore)}%</span>
+            </div>
+            <div class="blockchain-metric">
+              <span class="metric-label">Uptime</span>
+              <span class="metric-value uptime-score">${Math.round(uptimePercentage)}%</span>
+            </div>
+          </div>
+        </div>
+        ` : ''}
         
         <div class="a2a-agent-description">
           ${enhancedDescription}
@@ -3383,12 +4017,60 @@
           tag.textContent = domain;
           capabilitiesContainer.appendChild(tag);
         });
+        
+        // Add blockchain capability if enabled
+        const blockchainEnabled = agent.capabilities?.blockchain?.enabled || false;
+        if (blockchainEnabled) {
+          const blockchainTag = document.createElement('div');
+          blockchainTag.className = 'agent-modal-capability-tag blockchain-enabled';
+          blockchainTag.innerHTML = '🔗 Blockchain';
+          capabilitiesContainer.appendChild(blockchainTag);
+        }
       }
       
-      // Set metrics
+      // Set standard metrics
       document.getElementById('modal-response-time').textContent = `${agent.metrics?.avg_response_time_ms || '--'}ms`;
       document.getElementById('modal-success-rate').textContent = `${agent.metrics?.success_rate || '--'}%`;
       document.getElementById('modal-requests').textContent = agent.metrics?.total_requests || '--';
+      
+      // Add blockchain metrics if available
+      const blockchainData = agent.connection_config?.blockchain || {};
+      const blockchainEnabled = agent.capabilities?.blockchain?.enabled || false;
+      
+      // Find or create blockchain metrics container
+      let blockchainContainer = document.getElementById('modal-blockchain-metrics');
+      if (!blockchainContainer && blockchainEnabled) {
+        blockchainContainer = document.createElement('div');
+        blockchainContainer.id = 'modal-blockchain-metrics';
+        blockchainContainer.className = 'modal-blockchain-section';
+        blockchainContainer.innerHTML = `
+          <h4 class="blockchain-section-title">🔗 Blockchain Identity</h4>
+          <div class="blockchain-modal-metrics">
+            <div class="blockchain-modal-metric">
+              <span class="metric-label">Verification Status</span>
+              <span class="metric-value verification-${blockchainData.identity?.verification_status || 'pending'}">${(blockchainData.identity?.verification_status || 'pending').toUpperCase()}</span>
+            </div>
+            <div class="blockchain-modal-metric">
+              <span class="metric-label">Trust Score</span>
+              <span class="metric-value trust-score">${Math.round(blockchainData.reputation?.trust_score || 0)}/100</span>
+            </div>
+            <div class="blockchain-modal-metric">
+              <span class="metric-label">Consensus Participation</span>
+              <span class="metric-value participation-score">${Math.round(blockchainData.consensus?.participation_score || 0)}%</span>
+            </div>
+            <div class="blockchain-modal-metric">
+              <span class="metric-label">DID</span>
+              <span class="metric-value did-value">${blockchainData.identity?.decentralized_id || 'N/A'}</span>
+            </div>
+          </div>
+        `;
+        
+        // Insert after existing metrics
+        const metricsSection = document.querySelector('.agent-modal-metrics');
+        if (metricsSection) {
+          metricsSection.parentNode.insertBefore(blockchainContainer, metricsSection.nextSibling);
+        }
+      }
       
       // Set connect button
       const connectBtn = document.getElementById('modal-connect-btn');
@@ -3992,6 +4674,532 @@ if (result.success) {
         card.style.transform = 'translateY(0) scale(1)';
       });
     });
+    
+    // A2A Network Visualization Code
+    let networkData = { nodes: [], links: [] };
+    let simulation, svg, link, node, nodeLabels;
+    let selectedNode = null;
+    
+    // Initialize network visualization when A2A network section is shown
+    function initializeNetworkVisualization() {
+      if (document.getElementById('network-svg').children.length > 0) {
+        return; // Already initialized
+      }
+      
+      const svgElement = document.getElementById('network-svg');
+      const width = svgElement.clientWidth;
+      const height = 600;
+      
+      svg = d3.select('#network-svg')
+        .attr('width', width)
+        .attr('height', height);
+      
+      // Add zoom behavior
+      const zoom = d3.zoom()
+        .scaleExtent([0.1, 4])
+        .on('zoom', (event) => {
+          svg.selectAll('g').attr('transform', event.transform);
+        });
+      
+      svg.call(zoom);
+      
+      // Create main group for zooming
+      const g = svg.append('g');
+      
+      // Create links group
+      link = g.append('g')
+        .attr('class', 'links')
+        .selectAll('line');
+      
+      // Create nodes group
+      node = g.append('g')
+        .attr('class', 'nodes')
+        .selectAll('circle');
+      
+      // Create labels group
+      nodeLabels = g.append('g')
+        .attr('class', 'labels')
+        .selectAll('text');
+      
+      // Initialize force simulation
+      simulation = d3.forceSimulation()
+        .force('link', d3.forceLink().id(d => d.id).distance(100))
+        .force('charge', d3.forceManyBody().strength(-300))
+        .force('center', d3.forceCenter(width / 2, height / 2))
+        .force('collision', d3.forceCollide(25));
+      
+      // Load initial data
+      loadNetworkData();
+      
+      // Handle window resize
+      window.addEventListener('resize', () => {
+        const newWidth = svgElement.clientWidth;
+        svg.attr('width', newWidth);
+        simulation.force('center', d3.forceCenter(newWidth / 2, height / 2));
+        simulation.alpha(0.3).restart();
+      });
+    }
+    
+    // Load network data from API
+    async function loadNetworkData() {
+      try {
+        // Fetch agents
+        const agentResponse = await fetch('/api/unified?action=a2a_agents');
+        const agentData = await agentResponse.json();
+        
+        // The API returns { agents: [...], count: n, active: n }
+        const agents = agentData.agents || agentData;
+        
+        // Transform agents to nodes
+        networkData.nodes = agents.map(agent => ({
+          id: agent.agent_id,
+          name: agent.agent_name,
+          type: agent.agent_type,
+          status: agent.status || 'active',
+          capabilities: agent.capabilities || [],
+          description: agent.description || 'Advanced AI agent for financial intelligence and real-time decision making.',
+          ...agent
+        }));
+        
+        // Fetch real A2A network connections
+        try {
+          const networkResponse = await fetch('/api/unified?action=a2a_network');
+          const networkData_resp = await networkResponse.json();
+          
+          if (networkData_resp.isReal && networkData_resp.connections) {
+            console.log('✅ Using REAL A2A network connections:', networkData_resp.totalConnections);
+            
+            // Map real connections to network links
+            networkData.links = networkData_resp.connections.map(conn => ({
+              source: conn.source,
+              target: conn.target,
+              type: conn.type, // 'message', 'consensus', or 'hybrid'
+              count: conn.count,
+              lastActivity: conn.lastActivity,
+              status: conn.status,
+              real: true
+            })).filter(link => {
+              // Only include links where both source and target nodes exist
+              return networkData.nodes.some(n => n.id === link.source) && 
+                     networkData.nodes.some(n => n.id === link.target);
+            });
+            
+            // Update overview with real connection data
+            updateNetworkOverviewReal(networkData_resp);
+          } else {
+            console.log('⚠️ Falling back to synthetic links');
+            networkData.links = generateSyntheticLinks(networkData.nodes);
+            updateNetworkOverview();
+            updateConnectionStatusButton();
+          }
+        } catch (networkError) {
+          console.log('⚠️ Network fetch failed, using synthetic links:', networkError.message);
+          networkData.links = generateSyntheticLinks(networkData.nodes);
+          updateNetworkOverview();
+          updateConnectionStatusButton();
+        }
+        
+        // Render the network
+        renderNetwork();
+      } catch (error) {
+        console.error('Error loading network data:', error);
+        // Use fallback data
+        networkData = generateFallbackNetworkData();
+        updateNetworkOverview();
+        renderNetwork();
+      }
+    }
+    
+    // Generate synthetic links between agents
+    function generateSyntheticLinks(nodes) {
+      const links = [];
+      const linkCount = Math.min(nodes.length * 2, 50); // Limit links for performance
+      
+      for (let i = 0; i < linkCount; i++) {
+        const sourceIndex = Math.floor(Math.random() * nodes.length);
+        let targetIndex = Math.floor(Math.random() * nodes.length);
+        
+        // Avoid self-links
+        while (targetIndex === sourceIndex) {
+          targetIndex = Math.floor(Math.random() * nodes.length);
+        }
+        
+        // Check if link already exists
+        const existingLink = links.find(l => 
+          (l.source === nodes[sourceIndex].id && l.target === nodes[targetIndex].id) ||
+          (l.source === nodes[targetIndex].id && l.target === nodes[sourceIndex].id)
+        );
+        
+        if (!existingLink) {
+          links.push({
+            source: nodes[sourceIndex].id,
+            target: nodes[targetIndex].id,
+            strength: Math.random() * 0.5 + 0.5
+          });
+        }
+      }
+      
+      return links;
+    }
+    
+    // Generate fallback network data
+    function generateFallbackNetworkData() {
+      const nodes = [];
+      const types = ['analytics', 'financial', 'ml', 'data'];
+      
+      for (let i = 0; i < 20; i++) {
+        nodes.push({
+          id: `agent-${i}`,
+          name: `Agent ${i}`,
+          type: types[i % types.length],
+          status: Math.random() > 0.2 ? 'active' : 'inactive'
+        });
+      }
+      
+      return {
+        nodes,
+        links: generateSyntheticLinks(nodes)
+      };
+    }
+    
+    // Update network overview cards
+    function updateNetworkOverview() {
+      const totalAgents = networkData.nodes.length;
+      const activeAgents = networkData.nodes.filter(n => n.status === 'active').length;
+      const connections = networkData.links.length;
+      
+      document.getElementById('network-total-agents').textContent = totalAgents;
+      document.getElementById('network-active-agents').textContent = activeAgents;
+      document.getElementById('network-connections').textContent = connections;
+      document.getElementById('network-consensus-rounds').textContent = '3';
+    }
+    
+    // Update network overview cards with real data
+    function updateNetworkOverviewReal(networkResp) {
+      const totalAgents = networkData.nodes.length;
+      const activeAgents = networkData.nodes.filter(n => n.status === 'active').length;
+      const connections = networkResp.totalConnections;
+      const consensusRounds = networkResp.consensusConnections;
+      
+      document.getElementById('network-total-agents').textContent = totalAgents;
+      document.getElementById('network-active-agents').textContent = activeAgents;
+      document.getElementById('network-connections').textContent = `${connections} REAL`;
+      document.getElementById('network-consensus-rounds').textContent = consensusRounds;
+      
+      // Update connection status button
+      updateConnectionStatusButton();
+      
+      console.log('🌐 Network Overview Updated with Real Data:', {
+        totalAgents,
+        activeAgents,
+        totalConnections: connections,
+        messageConnections: networkResp.messageConnections,
+        consensusConnections: networkResp.consensusConnections
+      });
+    }
+    
+    // Update connection status button based on real vs simulated data
+    function updateConnectionStatusButton() {
+      const btn = document.getElementById('connection-status-btn');
+      const hasRealConnections = networkData.links.some(link => link.real);
+      const realConnections = networkData.links.filter(link => link.real).length;
+      
+      if (hasRealConnections) {
+        btn.innerHTML = `✅ ${realConnections} Real`;
+        btn.className = 'jobs-action-button primary';
+        btn.title = `${realConnections} real connections from Supabase A2A system`;
+      } else {
+        btn.innerHTML = '⚠️ Simulated';
+        btn.className = 'jobs-action-button secondary';
+        btn.title = 'Currently showing simulated connections';
+      }
+    }
+    
+    // Render the network visualization
+    function renderNetwork() {
+      // Update links
+      link = link.data(networkData.links);
+      link.exit().remove();
+      link = link.enter().append('line')
+        .attr('class', d => `network-link ${d.real ? 'real-connection' : 'synthetic-connection'} ${d.type || 'message'}-link`)
+        .attr('stroke', d => getLinkColor(d))
+        .attr('stroke-width', d => getLinkWidth(d))
+        .attr('stroke-dasharray', d => d.type === 'consensus' ? '5,5' : null)
+        .merge(link);
+      
+      // Update nodes
+      node = node.data(networkData.nodes);
+      node.exit().remove();
+      node = node.enter().append('circle')
+        .attr('class', 'network-node')
+        .attr('r', 15)
+        .attr('fill', d => getNodeColor(d.type, d.status))
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 2)
+        .call(d3.drag()
+          .on('start', dragstarted)
+          .on('drag', dragged)
+          .on('end', dragended))
+        .on('click', handleNodeClick)
+        .merge(node);
+      
+      // Update labels
+      nodeLabels = nodeLabels.data(networkData.nodes);
+      nodeLabels.exit().remove();
+      nodeLabels = nodeLabels.enter().append('text')
+        .attr('class', 'network-node-label')
+        .text(d => getNodeLabel(d.name))
+        .merge(nodeLabels);
+      
+      // Update simulation
+      simulation.nodes(networkData.nodes);
+      simulation.force('link').links(networkData.links);
+      simulation.alpha(1).restart();
+      
+      // Update positions on tick
+      simulation.on('tick', () => {
+        link
+          .attr('x1', d => d.source.x)
+          .attr('y1', d => d.source.y)
+          .attr('x2', d => d.target.x)
+          .attr('y2', d => d.target.y);
+        
+        node
+          .attr('cx', d => d.x)
+          .attr('cy', d => d.y);
+        
+        nodeLabels
+          .attr('x', d => d.x)
+          .attr('y', d => d.y + 4);
+      });
+    }
+    
+    // Get node color based on type and status
+    function getNodeColor(type, status) {
+      if (status === 'inactive') return '#8E8E93';
+      
+      const colors = {
+        'analytics': '#007AFF',
+        'financial': '#34C759',
+        'ml': '#FF9500',
+        'data': '#AF52DE'
+      };
+      
+      return colors[type] || '#007AFF';
+    }
+    
+    // Get node label (initials)
+    function getNodeLabel(name) {
+      return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase().slice(0, 2);
+    }
+    
+    // Get link color based on connection type
+    function getLinkColor(link) {
+      if (!link.real) return '#8E8E93'; // Gray for synthetic
+      
+      switch (link.type) {
+        case 'message': return '#007AFF'; // Blue for messages
+        case 'consensus': return '#34C759'; // Green for consensus
+        case 'hybrid': return '#FF9500'; // Orange for both
+        default: return '#007AFF';
+      }
+    }
+    
+    // Get link width based on connection activity
+    function getLinkWidth(link) {
+      if (!link.real) return 1;
+      
+      // Thicker lines for more active connections
+      const baseWidth = 2;
+      const count = link.count || 1;
+      return Math.min(baseWidth + (count * 0.5), 6);
+    }
+    
+    // Handle node click
+    function handleNodeClick(event, d) {
+      event.stopPropagation();
+      
+      // Clear previous selection
+      node.classed('selected', false);
+      
+      // Select clicked node
+      d3.select(this).classed('selected', true);
+      selectedNode = d;
+      
+      // Show agent details
+      showAgentDetails(d);
+    }
+    
+    // Show agent details in sidebar
+    function showAgentDetails(agent) {
+      const sidebar = document.getElementById('agent-details-sidebar');
+      const content = document.getElementById('agent-details-content');
+      
+      content.innerHTML = `
+        <div class="a2a-agent-header">
+          <div class="a2a-agent-icon ${agent.type}">${getNodeLabel(agent.name)}</div>
+          <div class="a2a-agent-identity">
+            <h3 class="a2a-agent-name">${agent.name}</h3>
+            <div class="a2a-agent-id">${agent.id}</div>
+          </div>
+          <div class="a2a-agent-status-indicator ${agent.status === 'active' ? '' : 'inactive'}"></div>
+        </div>
+        
+        <div class="a2a-capabilities">
+          <div class="a2a-capability-label">Agent Capabilities</div>
+          <div class="a2a-capability-list">
+            ${(agent.capabilities || ['real-time-processing', 'data-analysis', 'decision-making'])
+              .map(cap => `<span class="a2a-capability-tag">${cap}</span>`)
+              .join('')}
+          </div>
+        </div>
+        
+        <div class="a2a-agent-description">
+          ${agent.description || 'Advanced AI agent for financial intelligence and real-time decision making.'}
+        </div>
+        
+        <div class="jobs-model-actions">
+          <button class="jobs-action-button primary" onclick="sendMessageToAgent('${agent.id}')">Send Message</button>
+          <button class="jobs-action-button" onclick="viewAgentLogs('${agent.id}')">View Logs</button>
+        </div>
+      `;
+      
+      sidebar.classList.add('open');
+    }
+    
+    // Close agent details sidebar
+    function closeAgentDetails() {
+      const sidebar = document.getElementById('agent-details-sidebar');
+      sidebar.classList.remove('open');
+      
+      // Clear selection if nodes exist
+      if (typeof node !== 'undefined' && node) {
+        node.classed('selected', false);
+      }
+      selectedNode = null;
+    }
+    
+    // Network control functions
+    function resetNetworkView() {
+      if (svg) {
+        svg.transition().duration(750).call(
+          d3.zoom().transform,
+          d3.zoomIdentity
+        );
+      }
+    }
+    
+    function refreshNetworkData() {
+      console.log('Refreshing network data...');
+      loadNetworkVisualization(true);
+    }
+    
+    function showConnectionInfo() {
+      const hasRealConnections = networkData.links.some(link => link.real);
+      const realConnections = networkData.links.filter(link => link.real).length;
+      const totalConnections = networkData.links.length;
+      
+      if (hasRealConnections) {
+        alert(`✅ Network Connections Status\n\nDisplaying REAL agent-to-agent connections from Supabase!\n\nConnection Details:\n• ${realConnections} real connections\n• ${totalConnections - realConnections} synthetic connections\n• Real connections include:\n  - A2A message communications (blue lines)\n  - Consensus voting connections (green dashed lines)\n  - Hybrid connections (orange lines)\n\nData Source: Live Supabase A2A messages and consensus votes`);
+      } else {
+        alert('⚠️ Network Connections Status\n\nCurrently displaying SIMULATED connections between agents for visualization purposes.\n\nTo see real agent-to-agent connections:\n• Real connections are tracked in Supabase A2A messages table\n• Use the A2A Visual Trust Builder to create real connections\n• Deploy agents to live network for authentic interactions\n\nClick "Trust" tab to access the Visual Trust Builder.');
+      }
+    }
+    
+    // Drag handlers
+    function dragstarted(event, d) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+    
+    function dragged(event, d) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+    
+    function dragended(event, d) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+    
+    // Placeholder functions for agent interaction
+    function sendMessageToAgent(agentId) {
+      console.log('Sending message to agent:', agentId);
+      alert(`Message interface for ${agentId} would open here`);
+    }
+    
+    function viewAgentLogs(agentId) {
+      console.log('Viewing logs for agent:', agentId);
+      alert(`Logs for ${agentId} would be displayed here`);
+    }
+    
+    // Initialize network visualization when page loads (since it's in overview)
+    let networkInitialized = false;
+    let agentsLoaded = false;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      // Only load once
+      if (!agentsLoaded) {
+        loadOverviewAgents();
+        agentsLoaded = true;
+      }
+      
+      // Initialize network visualization after page loads
+      if (!networkInitialized) {
+        setTimeout(() => {
+          initializeNetworkVisualization();
+          networkInitialized = true;
+        }, 1000);
+      }
+    });
+    
+    // Load agent cards for overview section
+    async function loadOverviewAgents() {
+      if (agentsLoaded) return; // Prevent duplicate loading
+      
+      try {
+        const response = await fetch('/api/unified?action=a2a_agents');
+        const data = await response.json();
+        const agents = data.agents || data;
+        
+        const grid = document.getElementById('overview-agents-grid');
+        if (!grid) {
+          console.error('Overview agents grid not found');
+          return;
+        }
+        
+        grid.innerHTML = ''; // Clear existing content
+        
+        // Show first 8 agents in overview
+        agents.slice(0, 8).forEach(agent => {
+          const card = createAgentCard(agent);
+          if (card) {
+            grid.appendChild(card);
+          }
+        });
+        
+        agentsLoaded = true;
+      } catch (error) {
+        console.error('Error loading overview agents:', error);
+      }
+    }
+    
+    // Enhanced showSection function to initialize network when overview is shown
+    const originalShowSection = showSection;
+    showSection = function(sectionId) {
+      originalShowSection(sectionId);
+      
+      // If showing overview section and not initialized, initialize network
+      if (sectionId === 'overview' && !networkInitialized) {
+        setTimeout(() => {
+          initializeNetworkVisualization();
+          networkInitialized = true;
+        }, 300);
+      }
+    };
+    
   </script>
   <!-- Agent Modal -->
   <div class="agent-modal-overlay" id="agent-modal-overlay">
@@ -4192,6 +5400,8 @@ console.log('Agent result:', result);
       <button class="agent-detail-action-button primary" id="detail-connect-btn" onclick="connectAgentFromDetail()">Connect Agent</button>
     </div>
   </div>
+  
+  </script>
 
 </body>
 </html>
