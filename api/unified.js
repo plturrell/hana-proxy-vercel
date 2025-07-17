@@ -916,18 +916,18 @@ function generateSmartContractExplanation(sourceCode, contractName) {
     explanation += `### Multiple Approval System\nThis contract requires several people to agree before any transaction happens. It's like needing multiple signatures on a check - no single person can act alone.\n\n**Security benefits:**\n- Shared responsibility across multiple people\n- Protection against single points of failure\n- Democratic approach to financial decisions\n\n`;
   }
   
-  explanation += `### Technical Details\nThis smart contract contains ${codeLines} lines of code and includes several important features:\n\n`;
+  explanation += `### Key Features\nThis contract includes several important capabilities:\n\n`;
   
   if (hasEvents) {
-    explanation += `- **Activity Logging**: Every important action gets recorded permanently\n`;
+    explanation += `- **Complete Record Keeping**: Every transaction and decision is permanently recorded\n`;
   }
   
   if (hasModifiers) {
-    explanation += `- **Access Control**: Only authorized people can perform certain actions\n`;
+    explanation += `- **Permission Controls**: Only people you authorize can make changes\n`;
   }
   
-  explanation += `- **Gas Efficiency**: Designed to minimize transaction costs\n`;
-  explanation += `- **Security Focus**: Built using proven, secure patterns\n\n`;
+  explanation += `- **Cost Effective**: Designed to keep transaction fees reasonable\n`;
+  explanation += `- **Proven Security**: Uses time-tested methods trusted by major organizations\n\n`;
   
   explanation += `### Common Use Cases\n`;
   
@@ -939,17 +939,17 @@ function generateSmartContractExplanation(sourceCode, contractName) {
     explanation += `This contract works well for:\n- **Business Partnerships**: Where partners share control of funds\n- **Family Trusts**: Where multiple family members must agree on distributions\n- **High-Security Operations**: Where multiple approvals add safety\n\n`;
   }
   
-  explanation += `### Important Things to Know\n`;
-  explanation += `- Test everything on a test network first\n`;
-  explanation += `- Understand the transaction costs involved\n`;
-  explanation += `- Make sure all authorized users know how to use their wallets\n`;
-  explanation += `- Keep backup access methods secure\n\n`;
+  explanation += `### Before You Start\n`;
+  explanation += `- **Practice First**: Try it out with small amounts to learn how it works\n`;
+  explanation += `- **Understand Costs**: Each transaction has a small fee (typically $10-50)\n`;
+  explanation += `- **Train Your Team**: Make sure everyone knows how to use their digital wallet\n`;
+  explanation += `- **Have Backups**: Keep secure backup access in case someone loses their wallet\n\n`;
   
-  explanation += `### Getting Started\n`;
-  explanation += `1. **Verify the Contract**: Check that the code is legitimate on Etherscan\n`;
-  explanation += `2. **Start Small**: Begin with small amounts to test the process\n`;
-  explanation += `3. **Set Up Monitoring**: Get notifications when things happen\n`;
-  explanation += `4. **Plan Ahead**: Think about how you'll handle future needs\n\n`;
+  explanation += `### Setting It Up\n`;
+  explanation += `1. **Verify Legitimacy**: Confirm the contract is authentic (we can help with this)\n`;
+  explanation += `2. **Start Small**: Begin with small amounts while everyone learns\n`;
+  explanation += `3. **Set Up Alerts**: Get email or text notifications when transactions happen\n`;
+  explanation += `4. **Plan for Growth**: Consider how your needs might change over time\n\n`;
   
   return explanation;
 }
@@ -990,17 +990,19 @@ Think of it like a bank vault that needs multiple keys to open, but everything i
   
   // Cost-related questions
   if (lowerQuestion.includes('gas') || lowerQuestion.includes('cost') || lowerQuestion.includes('expensive') || lowerQuestion.includes('fee')) {
-    return `The costs are pretty reasonable:
+    return `The costs are quite reasonable compared to traditional business banking:
 
-**Setting it up** - Usually costs around $50-150 depending on network congestion.
+**Initial Setup** - About $50-150 one time (like opening a business bank account)
 
-**Regular transactions** - Each approval or execution costs about $10-30.
+**Each Transaction** - Around $10-30 per approval or payment (much less than wire transfer fees)
 
-**Viewing information** - Checking balances and history is free.
+**Checking Balances** - Free (just like checking your bank balance online)
 
-**Money-saving tips** - You can batch multiple actions together to save on fees, or use layer 2 networks like Polygon where fees are under $1.
+**Real Example**: If your business makes 10 payments per month, you'd pay roughly $100-300 in transaction fees. Compare this to traditional business banking where wire transfers can cost $25-50 each.
 
-The cost is worth it for the security you get, especially if you're managing significant amounts.`;
+**Money-saving tip**: You can use alternative networks like Polygon where fees are under $1 per transaction.
+
+For most businesses managing substantial funds, these costs are minimal compared to the security benefits and are often less than traditional banking fees.`;
   }
   
   // How it works questions
@@ -1036,14 +1038,17 @@ Most people are up and running within a day. The hardest part is usually just co
   // Default response for general questions
   return `I understand you're asking about "${question}".
 
-This ${contractName} is essentially a smart contract that requires multiple people to approve transactions before they happen. It's commonly used by:
+This ${contractName} is essentially a digital safe that requires multiple people to agree before any money can be moved. Think of it like a business bank account that needs several signatures.
 
-**Businesses** - For managing company funds safely
-**DAOs** - For community treasury management  
-**Partnerships** - For shared investment accounts
-**Families** - For managing inheritances or trusts
+**Common uses:**
+- **Small Businesses**: Partners managing company funds together
+- **Nonprofits**: Board members controlling donations and grants
+- **Investment Groups**: Friends or family pooling money for investments
+- **Estate Planning**: Multiple family members managing inherited assets
 
-The main benefit is that no single person can move the money alone, which prevents theft, mistakes, or unauthorized spending.
+**Real example**: A startup with 3 founders could set this up so any 2 of the 3 need to approve before spending company money. This prevents any single person from making unauthorized purchases.
 
-What specific situation are you planning to use this for? That would help me give you more targeted advice.`;
+The main benefit is safety - no single person can move the money alone, which prevents theft, mistakes, or disagreements about spending.
+
+What's your specific situation? Are you looking to manage business funds, family money, or something else? That would help me give you better advice.`;
 }
