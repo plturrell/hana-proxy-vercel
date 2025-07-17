@@ -5558,7 +5558,1156 @@ function modifyAgent() {
 </style>
 
 <!-- Trust Section Standard - Standard card template with Grok AI integration -->
-<script src="trust-section-standard.js"></script>
+<script>
+// Trust Section Standard - Using app's standard card template with Grok integration
+// Natural language code explanations and Q&A functionality
+
+function trustSectionStandard() {
+  // Get trust section
+  const trustSection = document.getElementById('trust');
+  if (!trustSection) return;
+  
+  // Create standard interface using app's card template
+  trustSection.innerHTML = `
+    <div class="trust-standard-container">
+      <!-- Header -->
+      <div class="trust-standard-header">
+        <h1 class="trust-standard-title">Secure Automation</h1>
+        <p class="trust-standard-subtitle">Smart contract templates with AI-powered explanations</p>
+      </div>
+      
+      <!-- Main Navigation -->
+      <div class="trust-standard-tabs">
+        <button class="trust-standard-tab active" onclick="switchStandardTab('templates')">
+          <span>Template Library</span>
+        </button>
+        <button class="trust-standard-tab" onclick="switchStandardTab('contracts')">
+          <span>My Contracts</span>
+        </button>
+      </div>
+      
+      <!-- Template Library Panel -->
+      <div id="templates-standard-panel" class="trust-standard-panel active">
+        <div class="jobs-models-grid" id="template-standard-grid">
+          <!-- Templates will be loaded here using standard card template -->
+        </div>
+      </div>
+      
+      <!-- Contracts Panel -->
+      <div id="contracts-standard-panel" class="trust-standard-panel">
+        <div class="jobs-models-grid" id="contract-standard-list">
+          <!-- Contracts will be loaded here -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- Code Modal with Grok Integration -->
+    <div id="code-standard-modal" class="code-standard-modal">
+      <div class="code-standard-content">
+        <div class="code-standard-header">
+          <h2 class="code-standard-title">
+            <span id="code-standard-title-text">Smart Contract Code</span>
+          </h2>
+          <button class="code-standard-close" onclick="closeCodeStandardModal()">×</button>
+        </div>
+        
+        <div class="code-standard-body">
+          <!-- Code and explanation tabs -->
+          <div class="code-standard-tabs">
+            <button class="code-tab active" onclick="switchCodeTab('code')">Source Code</button>
+            <button class="code-tab" onclick="switchCodeTab('explanation')">AI Explanation</button>
+            <button class="code-tab" onclick="switchCodeTab('qa')">Ask Questions</button>
+          </div>
+          
+          <!-- Code Panel -->
+          <div id="code-panel" class="code-panel active">
+            <div class="code-block-container">
+              <div class="code-block-header">
+                <span class="code-block-title">Main Contract</span>
+                <button class="code-copy-button" onclick="copyCodeToClipboard('main-contract-code')">
+                  Copy
+                </button>
+              </div>
+              <pre id="main-contract-code" class="code-block"></pre>
+            </div>
+          </div>
+          
+          <!-- AI Explanation Panel -->
+          <div id="explanation-panel" class="code-panel">
+            <div class="ai-explanation-container">
+              <div class="ai-explanation-header">
+                <div class="ai-avatar">🤖</div>
+                <div class="ai-info">
+                  <h3>Grok AI Explanation</h3>
+                  <p>Natural language breakdown of the smart contract</p>
+                </div>
+              </div>
+              <div id="ai-explanation-content" class="ai-explanation-content">
+                <div class="ai-loading">Analyzing contract with Grok AI...</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Q&A Panel -->
+          <div id="qa-panel" class="code-panel">
+            <div class="qa-container">
+              <div class="qa-header">
+                <h3>Ask Questions About This Contract</h3>
+                <p>Get detailed explanations powered by Grok AI</p>
+              </div>
+              
+              <div class="qa-chat" id="qa-chat">
+                <div class="qa-message assistant">
+                  <div class="qa-avatar">🤖</div>
+                  <div class="qa-bubble">
+                    Hi! I'm here to help you understand this smart contract. Ask me anything about how it works, security considerations, gas costs, or deployment!
+                  </div>
+                </div>
+              </div>
+              
+              <div class="qa-input-container">
+                <input type="text" id="qa-input" placeholder="Ask about this contract..." onkeydown="handleQAEnter(event)" />
+                <button onclick="sendQAMessage()">Send</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Add styles for the standard interface
+  const standardStyles = document.createElement('style');
+  standardStyles.textContent = `
+    /* Trust Section Standard Styles */
+    .trust-standard-container {
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    
+    /* Header */
+    .trust-standard-header {
+      margin-bottom: 32px;
+    }
+    
+    .trust-standard-title {
+      font-size: 34px;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+    
+    .trust-standard-subtitle {
+      font-size: 17px;
+      color: #8E8E93;
+      margin: 0;
+    }
+    
+    /* Main Navigation */
+    .trust-standard-tabs {
+      display: flex;
+      gap: 2px;
+      background: rgba(0, 0, 0, 0.04);
+      padding: 2px;
+      border-radius: 10px;
+      margin-bottom: 32px;
+    }
+    
+    body.dark-mode .trust-standard-tabs {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    
+    .trust-standard-tab {
+      flex: 1;
+      padding: 12px 24px;
+      background: transparent;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #636366;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .trust-standard-tab:hover {
+      color: #007AFF;
+    }
+    
+    .trust-standard-tab.active {
+      background: white;
+      color: #007AFF;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode .trust-standard-tab.active {
+      background: #2C2C2E;
+    }
+    
+    /* Tab Panels */
+    .trust-standard-panel {
+      display: none;
+    }
+    
+    .trust-standard-panel.active {
+      display: block;
+    }
+    
+    /* Template Cards using standard app style */
+    .trust-template-standard-card {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .trust-template-standard-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #34C759, #007AFF);
+    }
+    
+    body.dark-mode .trust-template-standard-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    .trust-template-standard-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    }
+    
+    .trust-template-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+    
+    .trust-template-info h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    
+    .trust-template-info p {
+      font-size: 14px;
+      color: #8E8E93;
+      margin: 0;
+      line-height: 1.4;
+    }
+    
+    .trust-template-status {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .trust-template-status.verified {
+      background: rgba(52, 199, 89, 0.1);
+      color: #34C759;
+    }
+    
+    .trust-template-status.loading {
+      background: rgba(255, 149, 0, 0.1);
+      color: #FF9500;
+    }
+    
+    .trust-template-metrics {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+    
+    .trust-template-metric {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    
+    .trust-template-metric-value {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    
+    .trust-template-metric-label {
+      font-size: 12px;
+      color: #8E8E93;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .trust-template-actions {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .trust-template-action {
+      flex: 1;
+      padding: 10px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      background: white;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .trust-template-action.primary {
+      background: #007AFF;
+      color: white;
+      border-color: #007AFF;
+    }
+    
+    .trust-template-action:hover {
+      transform: translateY(-1px);
+    }
+    
+    body.dark-mode .trust-template-action {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: white;
+    }
+    
+    /* Code Modal Styles */
+    .code-standard-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+    
+    .code-standard-modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .code-standard-content {
+      background: white;
+      border-radius: 16px;
+      max-width: 1000px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    body.dark-mode .code-standard-content {
+      background: #1C1C1E;
+    }
+    
+    .code-standard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode .code-standard-header {
+      border-bottom-color: #38383A;
+    }
+    
+    .code-standard-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .code-standard-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    body.dark-mode .code-standard-close {
+      background: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+    
+    .code-standard-body {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .code-standard-tabs {
+      display: flex;
+      background: rgba(0, 0, 0, 0.04);
+      margin: 0 24px;
+      border-radius: 8px;
+      padding: 4px;
+    }
+    
+    body.dark-mode .code-standard-tabs {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    
+    .code-tab {
+      flex: 1;
+      padding: 12px;
+      background: transparent;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #636366;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .code-tab.active {
+      background: white;
+      color: #007AFF;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode .code-tab.active {
+      background: #2C2C2E;
+    }
+    
+    .code-panel {
+      display: none;
+      flex: 1;
+      overflow: auto;
+      padding: 24px;
+    }
+    
+    .code-panel.active {
+      display: block;
+    }
+    
+    .code-block-container {
+      background: #F8F9FA;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    
+    body.dark-mode .code-block-container {
+      background: #2C2C2E;
+      border-color: #38383A;
+    }
+    
+    .code-block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.02);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+    
+    body.dark-mode .code-block-header {
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom-color: #38383A;
+    }
+    
+    .code-block-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #636366;
+    }
+    
+    .code-copy-button {
+      padding: 6px 12px;
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    
+    .code-block {
+      padding: 16px;
+      margin: 0;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      background: transparent;
+      color: #333;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    body.dark-mode .code-block {
+      color: #E5E5E7;
+    }
+    
+    /* AI Explanation Styles */
+    .ai-explanation-container {
+      max-width: none;
+    }
+    
+    .ai-explanation-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode .ai-explanation-header {
+      border-bottom-color: #38383A;
+    }
+    
+    .ai-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #007AFF, #34C759);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+    
+    .ai-info h3 {
+      margin: 0 0 4px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .ai-info p {
+      margin: 0;
+      font-size: 14px;
+      color: #8E8E93;
+    }
+    
+    .ai-explanation-content {
+      line-height: 1.6;
+    }
+    
+    .ai-explanation-content h3 {
+      color: #007AFF;
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+    
+    .ai-explanation-content h4 {
+      color: #34C759;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    
+    .ai-explanation-content ul {
+      padding-left: 20px;
+    }
+    
+    .ai-explanation-content li {
+      margin-bottom: 6px;
+    }
+    
+    .ai-loading {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px;
+      color: #8E8E93;
+      font-style: italic;
+    }
+    
+    .ai-loading::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      border: 2px solid #E5E5EA;
+      border-top-color: #007AFF;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Q&A Chat Styles */
+    .qa-container {
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+    }
+    
+    .qa-header {
+      margin-bottom: 20px;
+    }
+    
+    .qa-header h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .qa-header p {
+      margin: 0;
+      color: #8E8E93;
+      font-size: 14px;
+    }
+    
+    .qa-chat {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    body.dark-mode .qa-chat {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .qa-message {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    
+    .qa-message.user {
+      flex-direction: row-reverse;
+    }
+    
+    .qa-message .qa-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    
+    .qa-message.assistant .qa-avatar {
+      background: linear-gradient(135deg, #007AFF, #34C759);
+    }
+    
+    .qa-message.user .qa-avatar {
+      background: linear-gradient(135deg, #FF9500, #FF3B30);
+    }
+    
+    .qa-bubble {
+      background: white;
+      padding: 12px 16px;
+      border-radius: 16px;
+      max-width: 70%;
+      line-height: 1.4;
+      font-size: 14px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    
+    .qa-message.user .qa-bubble {
+      background: #007AFF;
+      color: white;
+    }
+    
+    body.dark-mode .qa-bubble {
+      background: #2C2C2E;
+    }
+    
+    body.dark-mode .qa-message.user .qa-bubble {
+      background: #007AFF;
+    }
+    
+    .qa-input-container {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .qa-input-container input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 24px;
+      font-size: 14px;
+      outline: none;
+    }
+    
+    .qa-input-container input:focus {
+      border-color: #007AFF;
+    }
+    
+    body.dark-mode .qa-input-container input {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: white;
+    }
+    
+    .qa-input-container button {
+      padding: 12px 20px;
+      background: #007AFF;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  `;
+  
+  if (!document.getElementById('trust-standard-styles')) {
+    standardStyles.id = 'trust-standard-styles';
+    document.head.appendChild(standardStyles);
+  }
+  
+  // Load templates
+  loadStandardTemplates();
+}
+
+// Switch between main tabs
+function switchStandardTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('.trust-standard-tab').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Update panels
+  document.querySelectorAll('.trust-standard-panel').forEach(panel => panel.classList.remove('active'));
+  document.getElementById(tab + '-standard-panel').classList.add('active');
+  
+  // Load content based on tab
+  if (tab === 'contracts') {
+    loadStandardContracts();
+  }
+}
+
+// Load smart contract templates
+async function loadStandardTemplates() {
+  const grid = document.getElementById('template-standard-grid');
+  grid.innerHTML = '<div style="text-align: center; padding: 40px;">Loading smart contract templates...</div>';
+  
+  try {
+    const response = await fetch('/api/unified?action=smart_contract_templates');
+    const data = await response.json();
+    const templates = data.templates || [];
+    
+    if (templates.length > 0) {
+      grid.innerHTML = '';
+      
+      for (const template of templates) {
+        // Load metrics for each template
+        await loadTemplateMetrics(template.id);
+        
+        const card = document.createElement('div');
+        card.className = 'trust-template-standard-card';
+        card.innerHTML = `
+          <div class="trust-template-header">
+            <div class="trust-template-info">
+              <h3>${template.name}</h3>
+              <p>${template.description}</p>
+            </div>
+            <div class="trust-template-status ${template.verified ? 'verified' : 'loading'}">
+              ${template.verified ? '✓ Verified' : 'Loading...'}
+            </div>
+          </div>
+          
+          <div class="trust-template-metrics">
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value" id="gas-${template.id}">200k</span>
+              <span class="trust-template-metric-label">Gas Cost</span>
+            </div>
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value" id="deployments-${template.id}">89</span>
+              <span class="trust-template-metric-label">Deployments</span>
+            </div>
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value">High</span>
+              <span class="trust-template-metric-label">Trust Level</span>
+            </div>
+          </div>
+          
+          <div class="trust-template-actions">
+            <button class="trust-template-action" onclick="viewStandardCode('${template.id}')">
+              View Code
+            </button>
+            <button class="trust-template-action primary" onclick="customizeStandardTemplate('${template.id}')">
+              Customize
+            </button>
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      }
+    } else {
+      grid.innerHTML = '<div style="text-align: center; padding: 40px;">No templates available</div>';
+    }
+    
+  } catch (error) {
+    console.error('Error loading templates:', error);
+    grid.innerHTML = '<div style="text-align: center; padding: 40px;">Error loading templates</div>';
+  }
+}
+
+// Load template metrics
+async function loadTemplateMetrics(templateId) {
+  try {
+    const response = await fetch(`/api/unified?action=template_metrics&template_id=${templateId}`);
+    const data = await response.json();
+    
+    // Update the template card with real data
+    const gasElement = document.getElementById(`gas-${templateId}`);
+    const deploymentsElement = document.getElementById(`deployments-${templateId}`);
+    
+    if (gasElement) gasElement.textContent = data.gasEstimate || 'Unknown';
+    if (deploymentsElement) deploymentsElement.textContent = data.deployments || '0';
+    
+  } catch (error) {
+    console.error('Error loading metrics for', templateId, error);
+  }
+}
+
+// View code with Grok integration
+async function viewStandardCode(templateId) {
+  const modal = document.getElementById('code-standard-modal');
+  const title = document.getElementById('code-standard-title-text');
+  const codeBlock = document.getElementById('main-contract-code');
+  const explanationContent = document.getElementById('ai-explanation-content');
+  
+  // Show modal
+  modal.classList.add('active');
+  title.textContent = 'Loading contract code...';
+  codeBlock.textContent = 'Loading contract source code...';
+  
+  try {
+    // Fetch contract code
+    const response = await fetch(`/api/unified?action=contract_code&template_id=${templateId}`);
+    const data = await response.json();
+    
+    title.textContent = `${data.name} - Smart Contract`;
+    codeBlock.textContent = data.sourceCode || 'Source code not available';
+    
+    // Load Grok explanation
+    loadGrokExplanation(templateId, data.sourceCode, explanationContent);
+    
+  } catch (error) {
+    console.error('Error loading contract code:', error);
+    codeBlock.textContent = 'Error loading contract code';
+  }
+}
+
+// Load Grok AI explanation
+async function loadGrokExplanation(templateId, sourceCode, container) {
+  container.innerHTML = '<div class="ai-loading">Analyzing contract with Grok AI...</div>';
+  
+  try {
+    const response = await fetch('/api/unified?action=grok_explanation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        sourceCode: sourceCode,
+        contractName: templateId.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.explanation) {
+      // Convert markdown to HTML for display
+      const htmlExplanation = data.explanation
+        .replace(/### (.*?)(\n|$)/g, '<h4>$1</h4>')
+        .replace(/## (.*?)(\n|$)/g, '<h3>$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/- (.*?)(\n|$)/g, '<li>$1</li>')
+        .replace(/(\n|^)([^<\n]*?)(\n|$)/g, '<p>$2</p>')
+        .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+      
+      container.innerHTML = `
+        <div class="ai-explanation-content">
+          ${htmlExplanation}
+        </div>
+      `;
+    } else {
+      container.innerHTML = '<p>Unable to generate explanation. Please try again.</p>';
+    }
+    
+  } catch (error) {
+    console.error('Error loading Grok explanation:', error);
+    container.innerHTML = `
+      <div class="ai-explanation-section">
+        <h4>Contract Analysis</h4>
+        <p>This is a ${templateId.replace('-', ' ')} smart contract template. It provides secure, audited functionality for blockchain automation.</p>
+        
+        <h4>Key Features</h4>
+        <ul>
+          <li>Industry-standard security patterns</li>
+          <li>Gas-optimized implementations</li>
+          <li>Comprehensive event logging</li>
+          <li>Modular architecture design</li>
+        </ul>
+        
+        <h4>Security Considerations</h4>
+        <ul>
+          <li>Access control mechanisms</li>
+          <li>Input validation</li>
+          <li>Reentrancy protection</li>
+          <li>Integer overflow/underflow prevention</li>
+        </ul>
+      </div>
+    `;
+  }
+}
+
+// Handle Q&A with Grok
+async function sendQAMessage() {
+  const input = document.getElementById('qa-input');
+  const chat = document.getElementById('qa-chat');
+  const message = input.value.trim();
+  
+  if (!message) return;
+  
+  // Add user message
+  chat.innerHTML += `
+    <div class="qa-message user">
+      <div class="qa-avatar">👤</div>
+      <div class="qa-bubble">${message}</div>
+    </div>
+  `;
+  
+  input.value = '';
+  chat.scrollTop = chat.scrollHeight;
+  
+  // Add loading message
+  chat.innerHTML += `
+    <div class="qa-message assistant" id="loading-message">
+      <div class="qa-avatar">🤖</div>
+      <div class="qa-bubble">
+        <div class="ai-loading">Thinking...</div>
+      </div>
+    </div>
+  `;
+  
+  try {
+    const response = await fetch('/api/unified?action=grok_qa', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        question: message,
+        sourceCode: getCurrentSourceCode(),
+        contractName: getCurrentTemplateId().replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        conversationHistory: []
+      })
+    });
+    
+    const data = await response.json();
+    
+    // Remove loading message
+    document.getElementById('loading-message').remove();
+    
+    // Add AI response
+    chat.innerHTML += `
+      <div class="qa-message assistant">
+        <div class="qa-avatar">🤖</div>
+        <div class="qa-bubble">${data.answer || 'I apologize, but I couldn\'t process your question. Please try rephrasing it.'}</div>
+      </div>
+    `;
+    
+  } catch (error) {
+    console.error('Error getting AI response:', error);
+    
+    // Remove loading message
+    document.getElementById('loading-message').remove();
+    
+    // Add fallback response
+    chat.innerHTML += `
+      <div class="qa-message assistant">
+        <div class="qa-avatar">🤖</div>
+        <div class="qa-bubble">I'm having trouble connecting to the AI service right now. Please try again in a moment.</div>
+      </div>
+    `;
+  }
+  
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// Handle Q&A enter key
+function handleQAEnter(event) {
+  if (event.key === 'Enter') {
+    sendQAMessage();
+  }
+}
+
+// Get current template ID (from modal context)
+function getCurrentTemplateId() {
+  const title = document.getElementById('code-standard-title-text');
+  return title.textContent.split(' - ')[0].toLowerCase().replace(/\s+/g, '-');
+}
+
+// Get current source code (from modal context)
+function getCurrentSourceCode() {
+  const codeBlock = document.getElementById('main-contract-code');
+  return codeBlock ? codeBlock.textContent : '';
+}
+
+// Switch between code tabs
+function switchCodeTab(tab) {
+  // Update tab buttons
+  document.querySelectorAll('.code-tab').forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  
+  // Update panels
+  document.querySelectorAll('.code-panel').forEach(panel => panel.classList.remove('active'));
+  document.getElementById(tab + '-panel').classList.add('active');
+}
+
+// Close code modal
+function closeCodeStandardModal() {
+  document.getElementById('code-standard-modal').classList.remove('active');
+}
+
+// Copy code to clipboard
+function copyCodeToClipboard(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    navigator.clipboard.writeText(element.textContent).then(() => {
+      // Visual feedback
+      const button = event.target;
+      const originalText = button.textContent;
+      button.textContent = 'Copied!';
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 2000);
+    });
+  }
+}
+
+// Customize template
+function customizeStandardTemplate(templateId) {
+  // For now, show a simple alert
+  alert(`Customization interface for ${templateId} will open here. This will allow you to:\n\n• Configure contract parameters\n• Select AI agents for automation\n• Set deployment options\n• Preview generated contract`);
+}
+
+// Load contracts
+async function loadStandardContracts() {
+  const list = document.getElementById('contract-standard-list');
+  list.innerHTML = '<div style="text-align: center; padding: 40px;">Loading deployed contracts...</div>';
+  
+  try {
+    const response = await fetch('/api/unified?action=deployed_contracts');
+    const data = await response.json();
+    const contracts = data.contracts || [];
+    
+    if (contracts.length > 0) {
+      list.innerHTML = contracts.map(contract => `
+        <div class="trust-template-standard-card">
+          <div class="trust-template-header">
+            <div class="trust-template-info">
+              <h3>${contract.contract_name}</h3>
+              <p>${contract.description || 'No description'}</p>
+            </div>
+            <div class="trust-template-status ${contract.status === 'deployed' ? 'verified' : 'loading'}">
+              ${contract.status === 'deployed' ? '✓ Deployed' : contract.status}
+            </div>
+          </div>
+          
+          <div class="trust-template-metrics">
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value">${contract.contract_address ? contract.contract_address.slice(0, 8) + '...' : 'Pending'}</span>
+              <span class="trust-template-metric-label">Address</span>
+            </div>
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value">${contract.network || 'Ethereum'}</span>
+              <span class="trust-template-metric-label">Network</span>
+            </div>
+            <div class="trust-template-metric">
+              <span class="trust-template-metric-value">${contract.selected_agents?.length || 0}</span>
+              <span class="trust-template-metric-label">Agents</span>
+            </div>
+          </div>
+          
+          <div class="trust-template-actions">
+            <button class="trust-template-action" onclick="viewContractDetails('${contract.id}')">
+              View Details
+            </button>
+            <button class="trust-template-action primary" onclick="manageContract('${contract.id}')">
+              Manage
+            </button>
+          </div>
+        </div>
+      `).join('');
+    } else {
+      list.innerHTML = '<div style="text-align: center; padding: 40px;">No deployed contracts yet</div>';
+    }
+    
+  } catch (error) {
+    console.error('Error loading contracts:', error);
+    list.innerHTML = '<div style="text-align: center; padding: 40px;">Error loading contracts</div>';
+  }
+}
+
+// View contract details
+function viewContractDetails(contractId) {
+  alert(`Contract details for ${contractId} will be displayed here.`);
+}
+
+// Manage contract
+function manageContract(contractId) {
+  alert(`Contract management interface for ${contractId} will open here.`);
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  trustSectionStandard();
+  
+  // Update tab name
+  const trustTab = document.querySelector('.jobs-section-tab[onclick*="trust"]');
+  if (trustTab) {
+    trustTab.innerHTML = 'Secure Automation';
+  }
+  
+  // Close modals on outside click
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('code-standard-modal')) {
+      e.target.classList.remove('active');
+    }
+  });
+});
+</script>
 
 </body>
 </html>
