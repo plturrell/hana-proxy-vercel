@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Automation - FinSight Intelligence</title>
+  <style>
+    /* Jobs/Ive Design Excellence */
+    :root {
+      --trust-primary: #007AFF;
+      --trust-secure: #34C759;
+      --trust-premium: #AF52DE;
+      --trust-warning: #FF9500;
+      --trust-bg: #FFFFFF;
+      --trust-card: #F2F2F7;
+      --trust-text: #000000;
+      --trust-subtle: #8E8E93;
+      --trust-border: rgba(0, 0, 0, 0.08);
+      
+      --animation-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --animation-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .trust-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* Hero Section - Emotional Connection */
+    .trust-hero {
+      text-align: center;
+      margin-bottom: 60px;
+      animation: fadeInUp 0.8s var(--animation-smooth);
+    }
+
+    .trust-hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, var(--trust-secure), var(--trust-primary));
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+
+    .trust-hero-title {
+      font-size: 48px;
+      font-weight: 700;
+      margin: 0 0 16px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, var(--trust-primary), var(--trust-premium));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .trust-hero-subtitle {
+      font-size: 24px;
+      color: var(--trust-subtle);
+      margin: 0 0 24px;
+      font-weight: 400;
+    }
+
+    .trust-hero-description {
+      font-size: 17px;
+      line-height: 1.6;
+      color: var(--trust-text);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+
+    /* Quick Start CTA */
+    .trust-quick-start {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--trust-primary);
+      color: white;
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-smooth);
+      box-shadow: 0 4px 16px rgba(0, 122, 255, 0.3);
+    }
+
+    .trust-quick-start:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 122, 255, 0.4);
+    }
+
+    .trust-quick-start-icon {
+      font-size: 24px;
+      animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Trust Benefits Grid */
+    .trust-benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 60px;
+    }
+
+    .trust-benefit-card {
+      background: var(--trust-card);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s var(--animation-smooth);
+      border: 1px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trust-benefit-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--trust-primary);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .trust-benefit-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      border-radius: 20px;
+      position: relative;
+    }
+
+    .trust-benefit-icon.secure {
+      background: linear-gradient(135deg, #34C759, #30D158);
+      color: white;
+    }
+
+    .trust-benefit-icon.automated {
+      background: linear-gradient(135deg, #007AFF, #5AC8FA);
+      color: white;
+    }
+
+    .trust-benefit-icon.verified {
+      background: linear-gradient(135deg, #AF52DE, #BF5AF2);
+      color: white;
+    }
+
+    .trust-benefit-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 12px;
+    }
+
+    .trust-benefit-description {
+      font-size: 15px;
+      color: var(--trust-subtle);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Templates Showcase */
+    .trust-templates {
+      margin-bottom: 60px;
+    }
+
+    .trust-templates-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .trust-templates-title {
+      font-size: 34px;
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .trust-templates-subtitle {
+      font-size: 17px;
+      color: var(--trust-subtle);
+      margin: 0;
+    }
+
+    .trust-templates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .trust-template-card {
+      background: white;
+      border: 1px solid var(--trust-border);
+      border-radius: 12px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-smooth);
+      position: relative;
+    }
+
+    .trust-template-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      border-color: var(--trust-primary);
+    }
+
+    .trust-template-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: var(--trust-secure);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .trust-template-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .trust-template-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--trust-card);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .trust-template-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .trust-template-description {
+      font-size: 15px;
+      color: var(--trust-subtle);
+      line-height: 1.5;
+      margin: 0 0 16px;
+    }
+
+    .trust-template-stats {
+      display: flex;
+      gap: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--trust-border);
+    }
+
+    .trust-template-stat {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .trust-template-stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--trust-primary);
+    }
+
+    .trust-template-stat-label {
+      font-size: 13px;
+      color: var(--trust-subtle);
+    }
+
+    /* Visual Builder Preview */
+    .trust-builder-preview {
+      background: var(--trust-card);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trust-builder-preview::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 122, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .trust-builder-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .trust-builder-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 16px;
+    }
+
+    .trust-builder-steps {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin: 32px 0;
+    }
+
+    .trust-builder-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .trust-builder-step-number {
+      width: 48px;
+      height: 48px;
+      background: var(--trust-primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .trust-builder-step-label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    /* Trust Indicators */
+    .trust-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 40px 0;
+      flex-wrap: wrap;
+    }
+
+    .trust-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--trust-subtle);
+    }
+
+    .trust-indicator-icon {
+      color: var(--trust-secure);
+      font-size: 20px;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-on-scroll {
+      opacity: 0;
+      animation: fadeInUp 0.8s var(--animation-smooth) forwards;
+    }
+
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+
+    /* A2A Agent Card - Simplified */
+    .trust-agent-card {
+      background: white;
+      border: 1px solid var(--trust-border);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      max-width: 400px;
+      margin: 0 auto;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .trust-agent-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--trust-premium), var(--trust-primary));
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      font-weight: 600;
+    }
+
+    .trust-agent-name {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 8px;
+    }
+
+    .trust-agent-tagline {
+      font-size: 17px;
+      color: var(--trust-subtle);
+      margin: 0 0 24px;
+    }
+
+    .trust-agent-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .trust-agent-feature {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      text-align: left;
+    }
+
+    .trust-agent-feature-icon {
+      color: var(--trust-secure);
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .trust-agent-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .trust-agent-button {
+      flex: 1;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s var(--animation-smooth);
+    }
+
+    .trust-agent-button.primary {
+      background: var(--trust-primary);
+      color: white;
+    }
+
+    .trust-agent-button.primary:hover {
+      background: #0051D5;
+      transform: translateY(-1px);
+    }
+
+    .trust-agent-button.secondary {
+      background: var(--trust-card);
+      color: var(--trust-text);
+    }
+
+    .trust-agent-button.secondary:hover {
+      background: #E5E5EA;
+    }
+
+    /* Dark mode support */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --trust-bg: #000000;
+        --trust-card: #1C1C1E;
+        --trust-text: #FFFFFF;
+        --trust-border: rgba(255, 255, 255, 0.08);
+      }
+
+      .trust-template-card {
+        background: var(--trust-card);
+      }
+
+      .trust-agent-card {
+        background: var(--trust-card);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .trust-hero-title {
+        font-size: 34px;
+      }
+
+      .trust-hero-subtitle {
+        font-size: 20px;
+      }
+
+      .trust-builder-steps {
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .trust-indicators {
+        flex-direction: column;
+        gap: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Trust Section - Renamed to "Secure Automation" -->
+  <div id="trust" class="jobs-section trust-section">
+    
+    <!-- Hero Section with Emotional Connection -->
+    <div class="trust-hero">
+      <div class="trust-hero-badge">
+        <span>🛡️</span>
+        <span>Bank-Level Security</span>
+      </div>
+      <h1 class="trust-hero-title">Secure Automation</h1>
+      <p class="trust-hero-subtitle">Set it and forget it. With confidence.</p>
+      <p class="trust-hero-description">
+        Create automated workflows that execute exactly as planned. 
+        Like a vending machine for your financial strategies - insert conditions, get guaranteed results.
+      </p>
+      <button class="trust-quick-start" onclick="startAutomationWizard()">
+        <span class="trust-quick-start-icon">✨</span>
+        <span>Build Your First Automation</span>
+      </button>
+    </div>
+
+    <!-- Trust Benefits -->
+    <div class="trust-benefits">
+      <div class="trust-benefit-card animate-on-scroll delay-1">
+        <div class="trust-benefit-icon secure">🔒</div>
+        <h3 class="trust-benefit-title">Always Secure</h3>
+        <p class="trust-benefit-description">
+          Every action is encrypted and verified. Your strategies are protected by military-grade security.
+        </p>
+      </div>
+
+      <div class="trust-benefit-card animate-on-scroll delay-2">
+        <div class="trust-benefit-icon automated">⚡</div>
+        <h3 class="trust-benefit-title">Fully Automated</h3>
+        <p class="trust-benefit-description">
+          Set your rules once. Your agents work 24/7, executing trades while you sleep.
+        </p>
+      </div>
+
+      <div class="trust-benefit-card animate-on-scroll delay-3">
+        <div class="trust-benefit-icon verified">✓</div>
+        <h3 class="trust-benefit-title">Tamper-Proof</h3>
+        <p class="trust-benefit-description">
+          Once deployed, your automation can't be changed by anyone - not even us. Total transparency.
+        </p>
+      </div>
+    </div>
+
+    <!-- Templates Section -->
+    <div class="trust-templates">
+      <div class="trust-templates-header">
+        <h2 class="trust-templates-title">Start with Proven Templates</h2>
+        <p class="trust-templates-subtitle">Copy, customize, and deploy in minutes</p>
+      </div>
+
+      <div class="trust-templates-grid">
+        <!-- Stop Loss Template -->
+        <div class="trust-template-card" onclick="useTemplate('stop-loss')">
+          <span class="trust-template-badge">Most Popular</span>
+          <div class="trust-template-header">
+            <div class="trust-template-icon">🛑</div>
+            <h3 class="trust-template-name">Smart Stop Loss</h3>
+          </div>
+          <p class="trust-template-description">
+            Automatically sell when losses exceed your threshold. Protects your portfolio 24/7.
+          </p>
+          <div class="trust-template-stats">
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">2.3M</span>
+              <span class="trust-template-stat-label">Users</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">$847M</span>
+              <span class="trust-template-stat-label">Saved</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">4.8</span>
+              <span class="trust-template-stat-label">Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profit Taking Template -->
+        <div class="trust-template-card" onclick="useTemplate('profit-taking')">
+          <div class="trust-template-header">
+            <div class="trust-template-icon">💰</div>
+            <h3 class="trust-template-name">Profit Guardian</h3>
+          </div>
+          <p class="trust-template-description">
+            Lock in gains automatically when targets are hit. Never miss a profit opportunity again.
+          </p>
+          <div class="trust-template-stats">
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">1.8M</span>
+              <span class="trust-template-stat-label">Users</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">+23%</span>
+              <span class="trust-template-stat-label">Avg Gain</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">4.9</span>
+              <span class="trust-template-stat-label">Rating</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rebalancing Template -->
+        <div class="trust-template-card" onclick="useTemplate('rebalancing')">
+          <div class="trust-template-header">
+            <div class="trust-template-icon">⚖️</div>
+            <h3 class="trust-template-name">Auto Rebalance</h3>
+          </div>
+          <p class="trust-template-description">
+            Keep your portfolio balanced automatically. Maintains your target allocations effortlessly.
+          </p>
+          <div class="trust-template-stats">
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">923K</span>
+              <span class="trust-template-stat-label">Users</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">Daily</span>
+              <span class="trust-template-stat-label">Checks</span>
+            </div>
+            <div class="trust-template-stat">
+              <span class="trust-template-stat-value">4.7</span>
+              <span class="trust-template-stat-label">Rating</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Builder Preview -->
+    <div class="trust-builder-preview">
+      <div class="trust-builder-content">
+        <h2 class="trust-builder-title">Build Custom Automations in 3 Clicks</h2>
+        
+        <div class="trust-builder-steps">
+          <div class="trust-builder-step">
+            <div class="trust-builder-step-number">1</div>
+            <div class="trust-builder-step-label">Choose Trigger</div>
+          </div>
+          <div class="trust-builder-step">
+            <div class="trust-builder-step-number">2</div>
+            <div class="trust-builder-step-label">Set Action</div>
+          </div>
+          <div class="trust-builder-step">
+            <div class="trust-builder-step-number">3</div>
+            <div class="trust-builder-step-label">Deploy Safely</div>
+          </div>
+        </div>
+
+        <button class="trust-quick-start" onclick="openVisualBuilder()">
+          <span>🎨</span>
+          <span>Open Visual Builder</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Trust Indicators -->
+    <div class="trust-indicators">
+      <div class="trust-indicator">
+        <span class="trust-indicator-icon">✓</span>
+        <span>SOC 2 Certified</span>
+      </div>
+      <div class="trust-indicator">
+        <span class="trust-indicator-icon">✓</span>
+        <span>256-bit Encryption</span>
+      </div>
+      <div class="trust-indicator">
+        <span class="trust-indicator-icon">✓</span>
+        <span>99.99% Uptime</span>
+      </div>
+      <div class="trust-indicator">
+        <span class="trust-indicator-icon">✓</span>
+        <span>Zero Access Architecture</span>
+      </div>
+    </div>
+
+    <!-- Simplified A2A Agent Card -->
+    <div class="trust-agent-card">
+      <div class="trust-agent-icon">🤖</div>
+      <h3 class="trust-agent-name">Automation Guardian</h3>
+      <p class="trust-agent-tagline">Your 24/7 Trading Assistant</p>
+      
+      <div class="trust-agent-features">
+        <div class="trust-agent-feature">
+          <span class="trust-agent-feature-icon">✓</span>
+          <span>Executes trades automatically based on your rules</span>
+        </div>
+        <div class="trust-agent-feature">
+          <span class="trust-agent-feature-icon">✓</span>
+          <span>Monitors markets continuously, even while you sleep</span>
+        </div>
+        <div class="trust-agent-feature">
+          <span class="trust-agent-feature-icon">✓</span>
+          <span>Sends instant alerts when actions are taken</span>
+        </div>
+        <div class="trust-agent-feature">
+          <span class="trust-agent-feature-icon">✓</span>
+          <span>Full audit trail of every decision made</span>
+        </div>
+      </div>
+
+      <div class="trust-agent-actions">
+        <button class="trust-agent-button primary" onclick="activateGuardian()">
+          Activate Guardian
+        </button>
+        <button class="trust-agent-button secondary" onclick="learnMore()">
+          See Demo
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Simple interaction handlers
+    function startAutomationWizard() {
+      console.log('Starting automation wizard...');
+      // Show wizard modal
+    }
+
+    function useTemplate(templateType) {
+      console.log('Using template:', templateType);
+      // Load template
+    }
+
+    function openVisualBuilder() {
+      window.location.href = '/visual-builder-real.html';
+    }
+
+    function activateGuardian() {
+      console.log('Activating automation guardian...');
+      // Start activation flow
+    }
+
+    function learnMore() {
+      console.log('Showing demo...');
+      // Show interactive demo
+    }
+
+    // Animate elements on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.animationPlayState = 'running';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+</body>
+</html>

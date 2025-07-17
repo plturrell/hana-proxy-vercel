@@ -1,6 +1,12 @@
 {
   "functions": {
     "api/supabase-proxy.js": {
+      "maxDuration": 30
+    },
+    "api/visual-builder-real.js": {
+      "maxDuration": 30
+    },
+    "api/a2a-blockchain-bridge.js": {
       "maxDuration": 60
     }
   },

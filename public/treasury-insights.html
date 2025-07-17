@@ -1,769 +1,768 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Treasury Insights - FinSight Intelligence</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-  <link href="shared-sidebar-styles.css" rel="stylesheet">
-  <link href="palantir-slate-layout.css" rel="stylesheet">
-  <link href="apple-hybrid-safe.css" rel="stylesheet">
-  <link href="universal-consistency-fix.css" rel="stylesheet">  <style>
-    /* Blueprint Design System CSS Variables */
-    :root {
-      --bp3-grid-size: 10px;
-      --bp3-black: #111418;
-      --bp3-dark-gray1: #1C2127;
-      --bp3-dark-gray2: #252A31;
-      --bp3-dark-gray3: #2F343C;
-      --bp3-dark-gray4: #383E47;
-      --bp3-dark-gray5: #404854;
-      --bp3-gray1: #5C7080;
-      --bp3-gray2: #738091;
-      --bp3-gray3: #8A9BA8;
-      --bp3-gray4: #A7B6C2;
-      --bp3-gray5: #BFCCD6;
-      --bp3-light-gray1: #CED9E0;
-      --bp3-light-gray2: #D8E1E8;
-      --bp3-light-gray3: #E1E8ED;
-      --bp3-light-gray4: #EBF1F5;
-      --bp3-light-gray5: #F5F8FA;
-      --bp3-white: #FFFFFF;
-      --bp3-blue1: #0E5A8A;
-      --bp3-blue2: #106BA3;
-      --bp3-blue3: #137CBD;
-      --bp3-blue4: #2B95D6;
-      --bp3-blue5: #48AFF0;
-      --bp3-green1: #0A6640;
-      --bp3-green2: #0D8050;
-      --bp3-green3: #0F9960;
-      --bp3-green4: #15B371;
-      --bp3-green5: #3DCC91;
-      --bp3-orange1: #A66321;
-      --bp3-orange2: #BF7326;
-      --bp3-orange3: #D9822B;
-      --bp3-orange4: #F29D49;
-      --bp3-orange5: #FFB366;
-      --bp3-red1: #A82A2A;
-      --bp3-red2: #C23030;
-      --bp3-red3: #DB3737;
-      --bp3-red4: #F55656;
-      --bp3-red5: #FF7373;
-      --bp3-intent-primary: var(--bp3-blue3);
-      --bp3-intent-success: var(--bp3-green3);
-      --bp3-intent-warning: var(--bp3-orange3);
-      --bp3-intent-danger: var(--bp3-red3);
-      --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
-      --bp3-font-size: 14px;
-      --bp3-font-size-large: 16px;
-      --bp3-line-height: 18px;
-      --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
-      --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
-      --bp3-border-radius: 3px;
-      --bp3-transition-duration: 100ms;
-      --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
-      --bp3-text-color: #182026;
-      --bp3-text-color-muted: #5C7080;
-      --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
-      --bp3-heading-color: #182026;
-      --bp3-link-color: var(--bp3-blue2);
-      --bp3-app-background-color: var(--bp3-light-gray5);
-      --bp3-divider-color: rgba(17, 20, 24, 0.15);
-    }
-
-    .bp3-dark {
-      --bp3-text-color: rgba(255, 255, 255, 0.9);
-      --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
-      --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
-      --bp3-heading-color: rgba(255, 255, 255, 0.9);
-      --bp3-link-color: var(--bp3-blue4);
-      --bp3-app-background-color: var(--bp3-dark-gray2);
-      --bp3-divider-color: rgba(255, 255, 255, 0.15);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--bp3-font-family);
-      font-size: var(--bp3-font-size);
-      line-height: var(--bp3-line-height);
-      color: var(--bp3-text-color);
-      background-color: var(--bp3-app-background-color);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-    }
-
-    .bp3-dark {
-      background-color: var(--bp3-dark-gray2);
-      color: var(--bp3-text-color);
-    }
-
-    .bp3-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .bp3-navbar {
-      flex-shrink: 0;
-    }
-
-    .app-content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .bp3-sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background-color: var(--bp3-light-gray5);
-      border-right: 1px solid var(--bp3-divider-color);
-      overflow-y: auto;
-    }
-
-    .bp3-dark .bp3-sidebar {
-      background-color: var(--bp3-dark-gray3);
-      border-right-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .bp3-menu-item.bp3-active {
-      background-color: var(--bp3-intent-primary);
-      color: white;
-    }
-
-    .bp3-menu-item.bp3-active .bp3-icon {
-      color: white;
-    }
-
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: calc(var(--bp3-grid-size) / 2);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--bp3-gray3);
-    }
-
-    .status-dot.connected {
-      background-color: var(--bp3-intent-success);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    .content-header {
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-      padding-bottom: calc(var(--bp3-grid-size) * 2);
-      border-bottom: 1px solid var(--bp3-divider-color);
-    }
-
-    .treasury-metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: calc(var(--bp3-grid-size) * 2);
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .analytics-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: calc(var(--bp3-grid-size) * 3);
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .metric-value {
-      font-size: 24px;
-      font-weight: 600;
-      margin-bottom: calc(var(--bp3-grid-size) / 2);
-    }
-
-    .metric-value.positive {
-      color: var(--bp3-intent-success);
-    }
-
-    .metric-value.negative {
-      color: var(--bp3-intent-danger);
-    }
-
-    .metric-value.neutral {
-      color: var(--bp3-intent-primary);
-    }
-
-    .metric-label {
-      color: var(--bp3-text-color-muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .treasury-chart {
-      height: 400px;
-      background: var(--bp3-dark-gray5);
-      border-radius: var(--bp3-border-radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--bp3-text-color-muted);
-    }
-
-    .liquidity-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: calc(var(--bp3-grid-size) * 2);
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .instrument-table {
-      margin-top: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .progress-bar-container {
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .progress-label {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: calc(var(--bp3-grid-size) / 2);
-      font-size: 12px;
-    }
-
-    .cash-flow-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: calc(var(--bp3-grid-size) * 1);
-      border-bottom: 1px solid var(--bp3-divider-color);
-    }
-
-    .cash-flow-item:last-child {
-      border-bottom: none;
-    }
-
-    .flow-amount {
-      font-weight: 600;
-    }
-
-    .flow-amount.inflow {
-      color: var(--bp3-intent-success);
-    }
-
-    .flow-amount.outflow {
-      color: var(--bp3-intent-danger);
-    }
-  </style>
-  <link href="blueprint-reconcile.css" rel="stylesheet">
-  <link href="light-mode-fix.css" rel="stylesheet">  <link href="no-icons-override.css" rel="stylesheet"></head>
-<body class="bp3-dark" data-density="normal">
-  <div class="bp3-app slate-app-container">
-    <!-- Top Navigation Bar -->
-    <nav class="bp3-navbar bp3-dark">
-      <div class="bp3-navbar-group bp3-align-left">
-        <div class="bp3-navbar-heading">FinSight Intelligence</div>
-        <span class="bp3-navbar-divider"></span>
-        <div class="status-indicator">
-          <span class="status-dot" id="status-dot"></span>
-          <span id="status-text">System Online</span>
-        </div>
-      </div>
-      <div class="bp3-navbar-group bp3-align-right">
-        <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-        <span class="bp3-navbar-divider"></span>
-        <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-          
-          <span>Dark Mode</span>
-        </button>
-        <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-          
-          <span id="user-role-label">Finance User</span>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Application Content -->
-    <div class="app-content slate-layout-container">
-      <!-- Left Sidebar -->
-      
-  <aside class="bp3-sidebar">
-    <ul class="bp3-menu bp3-large">
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Analytics</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/portfolio-analyser.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights.html" class="bp3-active">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-        </a>
-      </li>
-      
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Knowledge</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/news-market-data-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider"></div>
-      <div class="bp3-menu-header">
-        <h6 class="bp3-heading">Tools</h6>
-      </div>
-      <li>
-        <a class="bp3-menu-item" href="/calculation-tester.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analysis.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider technology-only" ></div>
-      <div class="bp3-menu-header technology-only" >
-        <h6 class="bp3-heading">System</h6>
-      </div>
-      <li >
-        <a class="bp3-menu-item" href="/command-centre.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculation-manager-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/ml-models-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculations-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/news-market-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/deployment.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/system-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-        </a>
-      </li>
-    </ul>
-  </aside>
-
-      <!-- Main Content Area -->
-      <main class="main-content slate-content-primary">
-        <div class="content-header">
-          <h1 class="bp3-heading">Treasury Insights</h1>
-          <p class="bp3-text-muted">Real-time treasury management and cash flow analytics</p>
-        </div>
-
-        <!-- Treasury Metrics -->
-        <div class="treasury-metrics apple-data-grid" style="margin-bottom: 30px;">
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Total Cash Position</div>
-            <div class="apple-metric-value" id="totalCash">$25.0M</div>
-            <div class="apple-metric-change positive">↗ +4.1%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Net Cash Flow</div>
-            <div class="apple-metric-value" id="netCashFlow">+$2.1M</div>
-            <div class="apple-metric-change positive">↗ +12.5%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Liquidity Ratio</div>
-            <div class="apple-metric-value" id="liquidityRatio">1.58</div>
-            <div class="apple-metric-change positive">↗ +0.03</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Working Capital</div>
-            <div class="apple-metric-value" id="workingCapital">$8.5M</div>
-            <div class="apple-metric-change positive">↗ +8.2%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Yield</div>
-            <div class="apple-metric-value" id="yield">5.25%</div>
-            <div class="apple-metric-change positive">↗ +0.15%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Duration</div>
-            <div class="apple-metric-value" id="duration">2.3 yrs</div>
-            <div class="apple-metric-change neutral">→ Stable</div>
-          </div>
-        </div>
-
-        <!-- Analytics Section -->
-        <div class="analytics-grid">
-          <div class="bp3-card bp3-elevation-1 apple-enhanced">
-            <h3 class="bp3-heading apple-font-system">Cash Flow Forecast</h3>
-            <div class="treasury-chart">
-              
-              <span style="margin-left: 20px;" class="apple-font-system">Cash flow forecast visualization will be implemented here</span>
-            </div>
-          </div>
-
-          <div class="bp3-card bp3-elevation-1 apple-enhanced">
-            <h3 class="bp3-heading apple-font-system">Cash Flow Summary</h3>
-            <div style="margin-top: 20px;">
-              <div class="cash-flow-item apple-flex apple-justify-between apple-p-sm apple-rounded-md" style="margin-bottom: 8px;">
-                <div>
-                  <div class="apple-font-medium">Operating Cash Flow</div>
-                  <div class="bp3-text-muted bp3-text-small">Last 30 days</div>
-                </div>
-                <div class="flow-amount inflow apple-font-mono apple-font-semibold">+$2.5M</div>
-              </div>
-              <div class="cash-flow-item apple-flex apple-justify-between apple-p-sm apple-rounded-md" style="margin-bottom: 8px;">
-                <div>
-                  <div class="apple-font-medium">Investment Cash Flow</div>
-                  <div class="bp3-text-muted bp3-text-small">Last 30 days</div>
-                </div>
-                <div class="flow-amount outflow apple-font-mono apple-font-semibold">-$1.2M</div>
-              </div>
-              <div class="cash-flow-item apple-flex apple-justify-between apple-p-sm apple-rounded-md" style="margin-bottom: 8px;">
-                <div>
-                  <div class="apple-font-medium">Financing Cash Flow</div>
-                  <div class="bp3-text-muted bp3-text-small">Last 30 days</div>
-                </div>
-                <div class="flow-amount inflow apple-font-mono apple-font-semibold">+$0.8M</div>
-              </div>
-              <div class="cash-flow-item apple-flex apple-justify-between apple-p-sm apple-rounded-md" style="border-top: 2px solid var(--bp3-divider-color); margin-top: 10px; padding-top: 10px;">
-                <div>
-                  <strong class="apple-font-medium">Net Change</strong>
-                </div>
-                <div class="flow-amount inflow apple-font-mono"><strong>+$2.1M</strong></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Liquidity Management -->
-        <div class="liquidity-grid">
-          <div class="bp3-card bp3-elevation-1 apple-enhanced">
-            <h3 class="bp3-heading apple-font-system">Liquidity Coverage</h3>
-            
-            <div class="progress-bar-container">
-              <div class="progress-label">
-                <span>Short-term Liquidity</span>
-                <span>158%</span>
-              </div>
-              <div class="bp3-progress-bar bp3-intent-success">
-                <div class="bp3-progress-meter" style="width: 100%"></div>
-              </div>
-            </div>
-
-            <div class="progress-bar-container">
-              <div class="progress-label">
-                <span>Medium-term Liquidity</span>
-                <span>112%</span>
-              </div>
-              <div class="bp3-progress-bar bp3-intent-success">
-                <div class="bp3-progress-meter" style="width: 100%"></div>
-              </div>
-            </div>
-
-            <div class="progress-bar-container">
-              <div class="progress-label">
-                <span>Long-term Liquidity</span>
-                <span>87%</span>
-              </div>
-              <div class="bp3-progress-bar bp3-intent-warning">
-                <div class="bp3-progress-meter" style="width: 87%"></div>
-              </div>
-            </div>
-
-            <div class="bp3-callout bp3-intent-primary" style="margin-top: 15px;">
-              <h4 class="bp3-callout-title">Liquidity Status</h4>
-              <p>All liquidity ratios are within acceptable ranges. Long-term liquidity approaching attention threshold.</p>
-            </div>
-          </div>
-
-          <div class="bp3-card bp3-elevation-1 apple-enhanced">
-            <h3 class="bp3-heading apple-font-system">Investment Allocation</h3>
-            <div style="margin-top: 20px;">
-              <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span>Money Market Funds</span>
-                <span style="font-weight: 600;">35%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span>Treasury Bills</span>
-                <span style="font-weight: 600;">25%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span>Corporate Bonds</span>
-                <span style="font-weight: 600;">20%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                <span>Term Deposits</span>
-                <span style="font-weight: 600;">15%</span>
-              </div>
-              <div style="display: flex; justify-content: space-between;">
-                <span>Cash & Equivalents</span>
-                <span style="font-weight: 600;">5%</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="bp3-card bp3-elevation-1 apple-enhanced">
-            <h3 class="bp3-heading apple-font-system">Risk Metrics</h3>
-            <div style="margin-top: 20px;">
-              <div style="margin-bottom: 20px;">
-                <div class="metric-label">Interest Rate Risk</div>
-                <div class="bp3-tag bp3-intent-warning bp3-large">MODERATE</div>
-              </div>
-              <div style="margin-bottom: 20px;">
-                <div class="metric-label">Credit Risk</div>
-                <div class="bp3-tag bp3-intent-success bp3-large">LOW</div>
-              </div>
-              <div style="margin-bottom: 20px;">
-                <div class="metric-label">Currency Risk</div>
-                <div class="bp3-tag bp3-intent-primary bp3-large">HEDGED</div>
-              </div>
-              <div>
-                <div class="metric-label">Counterparty Risk</div>
-                <div class="bp3-tag bp3-intent-success bp3-large">LOW</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Treasury Instruments Table -->
-        <div class="instrument-table">
-          <div class="bp3-card bp3-elevation-1">
-            <h3 class="bp3-heading">Active Treasury Instruments</h3>
-            <table class="bp3-html-table bp3-html-table-striped" style="width: 100%; margin-top: 20px;">
-              <thead>
-                <tr>
-                  <th>Instrument</th>
-                  <th>Type</th>
-                  <th>Amount</th>
-                  <th>Maturity</th>
-                  <th>Yield</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="instrumentsTableBody">
-                <tr>
-                  <td><strong>US T-Bill 3M</strong></td>
-                  <td>Treasury Bill</td>
-                  <td>$5,000,000</td>
-                  <td>Mar 15, 2024</td>
-                  <td class="bp3-text-intent-success">5.25%</td>
-                  <td><span class="bp3-tag bp3-intent-success">Active</span></td>
-                </tr>
-                <tr>
-                  <td><strong>MMF-Prime</strong></td>
-                  <td>Money Market</td>
-                  <td>$8,750,000</td>
-                  <td>Daily</td>
-                  <td class="bp3-text-intent-success">5.10%</td>
-                  <td><span class="bp3-tag bp3-intent-success">Active</span></td>
-                </tr>
-                <tr>
-                  <td><strong>Corp Bond AAA</strong></td>
-                  <td>Corporate Bond</td>
-                  <td>$3,000,000</td>
-                  <td>Jun 30, 2024</td>
-                  <td class="bp3-text-intent-success">5.75%</td>
-                  <td><span class="bp3-tag bp3-intent-success">Active</span></td>
-                </tr>
-                <tr>
-                  <td><strong>Term Deposit</strong></td>
-                  <td>Fixed Deposit</td>
-                  <td>$2,500,000</td>
-                  <td>Apr 1, 2024</td>
-                  <td class="bp3-text-intent-success">5.50%</td>
-                  <td><span class="bp3-tag bp3-intent-warning">Maturing Soon</span></td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div style="margin-top: 30px;" class="apple-flex apple-gap-md">
-          <button class="bp3-button bp3-intent-primary apple-enhanced" onclick="optimizeTreasury()">
-            
-            Optimize Allocation
-          </button>
-          <button class="bp3-button apple-enhanced" onclick="generateReport()">
-            
-            Generate Report
-          </button>
-          <button class="bp3-button apple-enhanced" onclick="runScenarioAnalysis()">
-            
-            Scenario Analysis
-          </button>
-        </div>
-      </main>
-    </div>
-  </div>
-  
-  <script>
-    const API_URL = '/api/supabase-proxy';
-
-    // Load treasury data
-    async function loadTreasuryData() {
-      try {
-        // Simulate treasury data - in real implementation, fetch from API
-        const treasuryData = {
-          totalCash: 25000000,
-          netCashFlow: 2100000,
-          liquidityRatio: 1.58,
-          workingCapital: 8500000,
-          yield: 0.0525,
-          duration: 2.3
-        };
-
-        // Data is now pre-loaded, just update any dynamic values if needed
-        document.getElementById('totalCash').textContent = '$' + (treasuryData.totalCash / 1000000).toFixed(1) + 'M';
-        document.getElementById('netCashFlow').textContent = '+$' + (treasuryData.netCashFlow / 1000000).toFixed(1) + 'M';
-        document.getElementById('liquidityRatio').textContent = treasuryData.liquidityRatio.toFixed(2);
-        document.getElementById('workingCapital').textContent = '$' + (treasuryData.workingCapital / 1000000).toFixed(1) + 'M';
-        document.getElementById('yield').textContent = (treasuryData.yield * 100).toFixed(2) + '%';
-        document.getElementById('duration').textContent = treasuryData.duration.toFixed(1) + ' yrs';
-
-      } catch (error) {
-        console.error('Failed to load treasury data:', error);
-      }
-    }
-
-    async function optimizeTreasury() {
-      // Simulate optimization
-      const result = confirm('Run treasury optimization analysis?\n\nThis will analyze current positions and suggest optimal allocation based on:\n- Risk tolerance\n- Liquidity requirements\n- Yield objectives');
-      
-      if (result) {
-        alert('Treasury optimization complete!\n\nSuggested reallocation:\n- Increase T-Bills by 5%\n- Reduce MMF by 3%\n- Add 2% to Corporate Bonds\n\nExpected yield improvement: +0.15%');
-      }
-    }
-
-    function generateReport() {
-      alert('Generating treasury report...\n\nReport will include:\n- Cash position analysis\n- Liquidity metrics\n- Investment performance\n- Risk assessment\n\nDownloading: Treasury_Report_2024_01.pdf');
-    }
-
-    function runScenarioAnalysis() {
-      // Redirect to scenario analysis page
-      window.location.href = '/scenario-analyser-config.html';
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle('bp3-dark');
-      const button = document.getElementById('theme-toggle');
-      if (document.body.classList.contains('bp3-dark')) {
-        button.className = 'bp3-button bp3-minimal bp3-icon-flash';
-      } else {
-        button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-      }
-    }
-
-    // Check system status
-    async function checkStatus() {
-      try {
-        const response = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'health' })
-        });
-        
-        const data = await response.json();
-        const dot = document.getElementById('status-dot');
-        const text = document.getElementById('status-text');
-        
-        if (data.healthy) {
-          dot.className = 'status-dot connected';
-          text.textContent = 'System Online';
-        } else {
-          dot.className = 'status-dot';
-          text.textContent = 'System Offline';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasury Insights - Financial Analytics Platform</title>
+    <style>
+        :root {
+            --bg: #000;
+            --bg-secondary: #0a0a0a;
+            --border: #333;
+            --text: #fff;
+            --text-secondary: #999;
+            --accent: #3ecf8e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
         }
         
-        // Check function count
-        const functionsResponse = await fetch(API_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'check_functions' })
-        });
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
-        const functionsData = await functionsResponse.json();
-        document.getElementById('function-count').textContent = `${functionsData.deployed_count || 0}/32 functions`;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
         
-      } catch (error) {
-        document.getElementById('status-dot').className = 'status-dot';
-        document.getElementById('status-text').textContent = 'Connection Error';
-      }
-    }
-
-    // Auto-refresh treasury data
-    function startAutoRefresh() {
-      setInterval(() => {
-        // Update last refresh time
-        const now = new Date();
-        const timeString = now.toLocaleTimeString();
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
         
-        // Simulate small changes in values
-        const netCashFlowElement = document.getElementById('netCashFlow');
-        const currentValue = parseFloat(netCashFlowElement.textContent.replace(/[^0-9.-]/g, ''));
-        const change = (Math.random() - 0.5) * 0.1; // Small random change
-        const newValue = currentValue + change;
-        netCashFlowElement.textContent = (newValue >= 0 ? '+$' : '-$') + Math.abs(newValue).toFixed(1) + 'M';
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
         
-      }, 10000); // Refresh every 10 seconds
-    }
-
-    // Initialize
-    loadTreasuryData();
-    checkStatus();
-    setInterval(checkStatus, 30000);
-    startAutoRefresh();
-  </script>
-  <script src="shared-header.js"></script>
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .back-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .treasury-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .overview-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .overview-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .overview-value {
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        
+        .overview-change {
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+        
+        .positive {
+            color: var(--accent);
+        }
+        
+        .negative {
+            color: var(--danger);
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .analytics-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .time-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .time-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+        }
+        
+        .time-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+        
+        .yield-curve {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        .yield-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg);
+            border-radius: 6px;
+        }
+        
+        .yield-maturity {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .yield-rate {
+            font-weight: 600;
+        }
+        
+        .yield-bar {
+            flex: 1;
+            height: 4px;
+            background: var(--border);
+            margin: 0 1rem;
+            border-radius: 2px;
+            position: relative;
+        }
+        
+        .yield-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .duration-analysis {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .duration-metric {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .bond-pricing {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .input-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .input-field {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .result-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            border-top-color: var(--accent);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>Treasury Insights</h1>
+                <p style="color: var(--text-secondary);">Fixed income analytics and treasury management</p>
+            </div>
+            <a href="/" class="back-btn">← Back to Dashboard</a>
+        </div>
+        
+        <div class="treasury-overview">
+            <div class="overview-card">
+                <div class="overview-label">10Y Treasury Yield</div>
+                <div class="overview-value" id="yield10Y">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change" id="yield10YChange"></div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">Yield Spread (10Y-2Y)</div>
+                <div class="overview-value" id="yieldSpread">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change" id="spreadChange"></div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">Portfolio Duration</div>
+                <div class="overview-value" id="portfolioDuration">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change">Modified Duration</div>
+            </div>
+            <div class="overview-card">
+                <div class="overview-label">DV01</div>
+                <div class="overview-value" id="dv01Value">
+                    <span class="loading"></span>
+                </div>
+                <div class="overview-change">Per $1M notional</div>
+            </div>
+        </div>
+        
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h2 class="card-title">Yield Curve</h2>
+                    <div class="time-selector">
+                        <button class="time-btn active" onclick="updateYieldCurve('current')">Current</button>
+                        <button class="time-btn" onclick="updateYieldCurve('1m')">1M Ago</button>
+                        <button class="time-btn" onclick="updateYieldCurve('3m')">3M Ago</button>
+                    </div>
+                </div>
+                <div class="yield-curve" id="yieldCurve">
+                    <div class="yield-item">
+                        <span class="yield-maturity">3M</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">6M</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">2Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">5Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">10Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                    <div class="yield-item">
+                        <span class="yield-maturity">30Y</span>
+                        <div class="yield-bar">
+                            <div class="yield-fill" style="width: 0%"></div>
+                        </div>
+                        <span class="yield-rate">--%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h2 class="card-title">Duration Analysis</h2>
+                </div>
+                <div class="duration-analysis">
+                    <div class="duration-metric">
+                        <div class="metric-label">Macaulay Duration</div>
+                        <div class="metric-value" id="macaulayDuration">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Modified Duration</div>
+                        <div class="metric-value" id="modifiedDuration">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Convexity</div>
+                        <div class="metric-value" id="convexity">-</div>
+                    </div>
+                    <div class="duration-metric">
+                        <div class="metric-label">Yield to Maturity</div>
+                        <div class="metric-value" id="ytm">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bond-pricing">
+            <h2 class="card-title" style="margin-bottom: 1.5rem;">Bond Pricing Calculator</h2>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label class="input-label">Face Value ($)</label>
+                    <input type="number" class="input-field" id="faceValue" value="1000" step="100">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Coupon Rate (%)</label>
+                    <input type="number" class="input-field" id="couponRate" value="5" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Years to Maturity</label>
+                    <input type="number" class="input-field" id="yearsToMaturity" value="10" step="0.5">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Yield to Maturity (%)</label>
+                    <input type="number" class="input-field" id="yieldToMaturity" value="4" step="0.1">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">Frequency</label>
+                    <select class="input-field" id="frequency">
+                        <option value="2">Semi-Annual</option>
+                        <option value="1">Annual</option>
+                        <option value="4">Quarterly</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn" onclick="calculateBondPrice()">Calculate Bond Price</button>
+            <div id="bondPriceResult" class="result-box" style="display: none;"></div>
+        </div>
+        
+        <div class="analytics-card">
+            <div class="card-header">
+                <h2 class="card-title">Forward Rate Analysis</h2>
+                <button class="btn" onclick="calculateForwardRates()">Calculate Forward Rates</button>
+            </div>
+            <div id="forwardRatesResult" style="margin-top: 1rem;"></div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = '/api/supabase-proxy';
+        
+        // Sample yield curve data (in production, this would come from market data feed)
+        const yieldCurveData = {
+            current: {
+                '3M': 5.25,
+                '6M': 5.30,
+                '2Y': 4.85,
+                '5Y': 4.42,
+                '10Y': 4.51,
+                '30Y': 4.67
+            },
+            '1m': {
+                '3M': 5.15,
+                '6M': 5.20,
+                '2Y': 4.75,
+                '5Y': 4.35,
+                '10Y': 4.45,
+                '30Y': 4.62
+            },
+            '3m': {
+                '3M': 4.95,
+                '6M': 5.00,
+                '2Y': 4.55,
+                '5Y': 4.25,
+                '10Y': 4.35,
+                '30Y': 4.55
+            }
+        };
+        
+        async function loadTreasuryData() {
+            try {
+                // Load current yields
+                const currentYields = yieldCurveData.current;
+                const previousYields = yieldCurveData['1m'];
+                
+                // Update 10Y yield
+                const yield10Y = currentYields['10Y'];
+                const yield10YPrev = previousYields['10Y'];
+                const yield10YChange = yield10Y - yield10YPrev;
+                
+                document.getElementById('yield10Y').textContent = yield10Y.toFixed(2) + '%';
+                document.getElementById('yield10YChange').innerHTML = `
+                    <span class="${yield10YChange >= 0 ? 'positive' : 'negative'}">
+                        ${yield10YChange >= 0 ? '↑' : '↓'} ${Math.abs(yield10YChange).toFixed(2)}bps
+                    </span>
+                `;
+                
+                // Update yield spread
+                const spread = currentYields['10Y'] - currentYields['2Y'];
+                const prevSpread = previousYields['10Y'] - previousYields['2Y'];
+                const spreadChange = spread - prevSpread;
+                
+                document.getElementById('yieldSpread').textContent = spread.toFixed(2) + 'bps';
+                document.getElementById('spreadChange').innerHTML = `
+                    <span class="${spreadChange >= 0 ? 'positive' : 'negative'}">
+                        ${spreadChange >= 0 ? '↑' : '↓'} ${Math.abs(spreadChange).toFixed(2)}bps
+                    </span>
+                `;
+                
+                // Calculate portfolio duration
+                await calculatePortfolioDuration();
+                
+                // Update yield curve
+                updateYieldCurve('current');
+                
+            } catch (error) {
+                console.error('Failed to load treasury data:', error);
+            }
+        }
+        
+        async function calculatePortfolioDuration() {
+            try {
+                // Sample bond portfolio
+                const cashFlows = [50, 50, 50, 50, 50, 50, 50, 50, 50, 1050]; // 10Y bond with 5% coupon
+                const yieldRate = 0.0451; // 4.51% YTM
+                
+                const durationResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_duration',
+                        params: {
+                            cash_flows: cashFlows,
+                            yield_rate: yieldRate,
+                            frequency: 2
+                        }
+                    })
+                });
+                
+                const durationData = await durationResponse.json();
+                if (durationData.data) {
+                    const macaulay = durationData.data.macaulay_duration;
+                    const modified = durationData.data.modified_duration;
+                    
+                    document.getElementById('portfolioDuration').textContent = modified.toFixed(2) + ' years';
+                    document.getElementById('macaulayDuration').textContent = macaulay.toFixed(2);
+                    document.getElementById('modifiedDuration').textContent = modified.toFixed(2);
+                    
+                    // Calculate DV01
+                    const dv01 = modified * 1000000 * 0.0001; // $1M notional, 1bp move
+                    document.getElementById('dv01Value').textContent = '$' + dv01.toFixed(0);
+                }
+                
+                // Calculate convexity
+                const convexityResponse = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_convexity',
+                        params: {
+                            cash_flows: cashFlows,
+                            yield_rate: yieldRate,
+                            frequency: 2
+                        }
+                    })
+                });
+                
+                const convexityData = await convexityResponse.json();
+                if (convexityData.data !== undefined) {
+                    document.getElementById('convexity').textContent = convexityData.data.toFixed(2);
+                }
+                
+                document.getElementById('ytm').textContent = (yieldRate * 100).toFixed(2) + '%';
+                
+            } catch (error) {
+                console.error('Failed to calculate duration:', error);
+                document.getElementById('portfolioDuration').textContent = 'Error';
+            }
+        }
+        
+        function updateYieldCurve(period) {
+            // Update button states
+            document.querySelectorAll('.time-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update yield curve display
+            const yields = yieldCurveData[period];
+            const maxYield = Math.max(...Object.values(yields));
+            
+            const yieldItems = document.querySelectorAll('.yield-item');
+            const maturities = ['3M', '6M', '2Y', '5Y', '10Y', '30Y'];
+            
+            yieldItems.forEach((item, index) => {
+                const maturity = maturities[index];
+                const yield = yields[maturity];
+                const percentage = (yield / maxYield) * 100;
+                
+                item.querySelector('.yield-rate').textContent = yield.toFixed(2) + '%';
+                item.querySelector('.yield-fill').style.width = percentage + '%';
+            });
+        }
+        
+        async function calculateBondPrice() {
+            const faceValue = parseFloat(document.getElementById('faceValue').value);
+            const couponRate = parseFloat(document.getElementById('couponRate').value) / 100;
+            const yearsToMaturity = parseFloat(document.getElementById('yearsToMaturity').value);
+            const yieldToMaturity = parseFloat(document.getElementById('yieldToMaturity').value) / 100;
+            const frequency = parseInt(document.getElementById('frequency').value);
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'rpc',
+                        function_name: 'calculate_bond_price',
+                        params: {
+                            face_value: faceValue,
+                            coupon_rate: couponRate,
+                            years_to_maturity: yearsToMaturity,
+                            yield_to_maturity: yieldToMaturity,
+                            frequency: frequency
+                        }
+                    })
+                });
+                
+                const data = await response.json();
+                const resultDiv = document.getElementById('bondPriceResult');
+                
+                if (data.data !== undefined) {
+                    const price = data.data;
+                    const premium = price > faceValue;
+                    
+                    resultDiv.innerHTML = `
+                        <h3>Bond Valuation Results</h3>
+                        <p><strong>Bond Price:</strong> $${price.toFixed(2)}</p>
+                        <p><strong>Trading at:</strong> <span class="${premium ? 'positive' : 'negative'}">${premium ? 'Premium' : 'Discount'}</span></p>
+                        <p><strong>Price/Par:</strong> ${(price / faceValue * 100).toFixed(2)}%</p>
+                        <p><strong>Accrued Interest:</strong> $${((couponRate * faceValue) / frequency).toFixed(2)}</p>
+                    `;
+                    resultDiv.style.display = 'block';
+                    
+                    // Also calculate duration for this bond
+                    const periods = yearsToMaturity * frequency;
+                    const cashFlows = [];
+                    const couponPayment = (couponRate * faceValue) / frequency;
+                    
+                    for (let i = 0; i < periods; i++) {
+                        cashFlows.push(couponPayment);
+                    }
+                    cashFlows[cashFlows.length - 1] += faceValue;
+                    
+                    const durationResponse = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'rpc',
+                            function_name: 'calculate_duration',
+                            params: {
+                                cash_flows: cashFlows,
+                                yield_rate: yieldToMaturity,
+                                frequency: frequency
+                            }
+                        })
+                    });
+                    
+                    const durationData = await durationResponse.json();
+                    if (durationData.data) {
+                        resultDiv.innerHTML += `
+                            <hr style="margin: 1rem 0; border-color: var(--border);">
+                            <p><strong>Macaulay Duration:</strong> ${durationData.data.macaulay_duration.toFixed(2)} years</p>
+                            <p><strong>Modified Duration:</strong> ${durationData.data.modified_duration.toFixed(2)} years</p>
+                            <p><strong>DV01:</strong> $${(durationData.data.modified_duration * price * 0.0001).toFixed(2)}</p>
+                        `;
+                    }
+                } else {
+                    resultDiv.innerHTML = '<div class="error-message">Failed to calculate bond price</div>';
+                    resultDiv.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Bond pricing error:', error);
+                document.getElementById('bondPriceResult').innerHTML = '<div class="error-message">Error calculating bond price</div>';
+                document.getElementById('bondPriceResult').style.display = 'block';
+            }
+        }
+        
+        async function calculateForwardRates() {
+            const resultDiv = document.getElementById('forwardRatesResult');
+            resultDiv.innerHTML = '<span class="loading"></span>';
+            
+            try {
+                // Calculate forward rates using the yield curve
+                const spotRates = [
+                    { maturity: 1, rate: yieldCurveData.current['3M'] / 100 },
+                    { maturity: 2, rate: yieldCurveData.current['2Y'] / 100 },
+                    { maturity: 5, rate: yieldCurveData.current['5Y'] / 100 },
+                    { maturity: 10, rate: yieldCurveData.current['10Y'] / 100 }
+                ];
+                
+                let html = '<h3>Implied Forward Rates</h3><table style="width: 100%; margin-top: 1rem;">';
+                html += '<tr><th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid var(--border);">Period</th>';
+                html += '<th style="text-align: right; padding: 0.5rem; border-bottom: 1px solid var(--border);">Forward Rate</th></tr>';
+                
+                // Calculate 1y1y, 2y3y, 5y5y forward rates
+                const forwardPairs = [
+                    { from: 1, to: 2, label: '1y1y' },
+                    { from: 2, to: 5, label: '2y3y' },
+                    { from: 5, to: 10, label: '5y5y' }
+                ];
+                
+                for (const pair of forwardPairs) {
+                    const fromRate = spotRates.find(r => r.maturity === pair.from).rate;
+                    const toRate = spotRates.find(r => r.maturity === pair.to).rate;
+                    
+                    // Forward rate = [(1 + R2)^T2 / (1 + R1)^T1]^(1/(T2-T1)) - 1
+                    const forwardRate = Math.pow(
+                        Math.pow(1 + toRate, pair.to) / Math.pow(1 + fromRate, pair.from),
+                        1 / (pair.to - pair.from)
+                    ) - 1;
+                    
+                    html += `<tr>`;
+                    html += `<td style="padding: 0.5rem; border-bottom: 1px solid var(--border);">${pair.label}</td>`;
+                    html += `<td style="text-align: right; padding: 0.5rem; border-bottom: 1px solid var(--border);">${(forwardRate * 100).toFixed(2)}%</td>`;
+                    html += `</tr>`;
+                }
+                
+                html += '</table>';
+                resultDiv.innerHTML = html;
+                
+            } catch (error) {
+                console.error('Forward rate calculation error:', error);
+                resultDiv.innerHTML = '<div class="error-message">Failed to calculate forward rates</div>';
+            }
+        }
+        
+        // Initialize
+        loadTreasuryData();
+        
+        // Auto-refresh every 60 seconds
+        setInterval(loadTreasuryData, 60000);
+    </script>
 </body>
 </html>

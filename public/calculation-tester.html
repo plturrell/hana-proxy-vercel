@@ -1,992 +1,1134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculation Tester - FinSight Intelligence</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-  <link href="shared-sidebar-styles.css" rel="stylesheet">
-  <link href="palantir-slate-layout.css" rel="stylesheet">
-  <link href="apple-hybrid-safe.css" rel="stylesheet">
-  <link href="universal-consistency-fix.css" rel="stylesheet">
-  <style>
-    /* Blueprint Design System CSS Variables */
-    :root {
-      --bp3-grid-size: 10px;
-      --bp3-black: #111418;
-      --bp3-dark-gray1: #1C2127;
-      --bp3-dark-gray2: #252A31;
-      --bp3-dark-gray3: #2F343C;
-      --bp3-dark-gray4: #383E47;
-      --bp3-dark-gray5: #404854;
-      --bp3-gray1: #5C7080;
-      --bp3-gray2: #738091;
-      --bp3-gray3: #8A9BA8;
-      --bp3-gray4: #A7B6C2;
-      --bp3-gray5: #BFCCD6;
-      --bp3-light-gray1: #CED9E0;
-      --bp3-light-gray2: #D8E1E8;
-      --bp3-light-gray3: #E1E8ED;
-      --bp3-light-gray4: #EBF1F5;
-      --bp3-light-gray5: #F5F8FA;
-      --bp3-white: #FFFFFF;
-      --bp3-blue1: #0E5A8A;
-      --bp3-blue2: #106BA3;
-      --bp3-blue3: #137CBD;
-      --bp3-blue4: #2B95D6;
-      --bp3-blue5: #48AFF0;
-      --bp3-green1: #0A6640;
-      --bp3-green2: #0D8050;
-      --bp3-green3: #0F9960;
-      --bp3-green4: #15B371;
-      --bp3-green5: #3DCC91;
-      --bp3-orange1: #A66321;
-      --bp3-orange2: #BF7326;
-      --bp3-orange3: #D9822B;
-      --bp3-orange4: #F29D49;
-      --bp3-orange5: #FFB366;
-      --bp3-red1: #A82A2A;
-      --bp3-red2: #C23030;
-      --bp3-red3: #DB3737;
-      --bp3-red4: #F55656;
-      --bp3-red5: #FF7373;
-      --bp3-intent-primary: var(--bp3-blue3);
-      --bp3-intent-success: var(--bp3-green3);
-      --bp3-intent-warning: var(--bp3-orange3);
-      --bp3-intent-danger: var(--bp3-red3);
-      --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
-      --bp3-font-size: 14px;
-      --bp3-font-size-large: 16px;
-      --bp3-line-height: 18px;
-      --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
-      --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
-      --bp3-border-radius: 3px;
-      --bp3-transition-duration: 100ms;
-      --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
-      --bp3-text-color: #182026;
-      --bp3-text-color-muted: #5C7080;
-      --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
-      --bp3-heading-color: #182026;
-      --bp3-link-color: var(--bp3-blue2);
-      --bp3-app-background-color: var(--bp3-light-gray5);
-      --bp3-divider-color: rgba(17, 20, 24, 0.15);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculation Tester - FinSight Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .bp3-dark {
-      --bp3-text-color: rgba(255, 255, 255, 0.9);
-      --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
-      --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
-      --bp3-heading-color: rgba(255, 255, 255, 0.9);
-      --bp3-link-color: var(--bp3-blue4);
-      --bp3-app-background-color: var(--bp3-dark-gray2);
-      --bp3-divider-color: rgba(255, 255, 255, 0.15);
-    }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
 
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--bp3-font-family);
-      font-size: var(--bp3-font-size);
-      line-height: var(--bp3-line-height);
-      color: var(--bp3-text-color);
-      background-color: var(--bp3-app-background-color);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-    }
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .bp3-dark {
-      background-color: var(--bp3-dark-gray2);
-      color: var(--bp3-text-color);
-    }
+        .nav-left {
+            display: flex;
+            align-items: center;
+        }
 
-    .bp3-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 20px;
+            transition: all 0.3s ease;
+        }
 
-    .bp3-navbar {
-      flex-shrink: 0;
-    }
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
 
-    .app-content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00D4FF, #5B8DEF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .bp3-sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background-color: var(--bp3-light-gray5);
-      border-right: 1px solid var(--bp3-divider-color);
-      overflow-y: auto;
-    }
+        .main-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr 400px;
+            gap: 30px;
+            height: calc(100vh - 180px);
+        }
 
-    .bp3-dark .bp3-sidebar {
-      background-color: var(--bp3-dark-gray3);
-      border-right-color: rgba(255, 255, 255, 0.15);
-    }
+        .formula-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            overflow-y: auto;
+        }
 
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: calc(var(--bp3-grid-size) * 3);
-    }
+        .calculation-area {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            overflow-y: auto;
+        }
 
-    .bp3-menu-item.bp3-active {
-      background-color: var(--bp3-intent-primary);
-      color: white;
-    }
+        .results-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            overflow-y: auto;
+        }
 
-    .bp3-menu-item.bp3-active .bp3-icon {
-      color: white;
-    }
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
 
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: calc(var(--bp3-grid-size) / 2);
-    }
+        .formula-category {
+            margin-bottom: 25px;
+        }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--bp3-gray3);
-    }
+        .category-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #5B8DEF;
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            background: rgba(91, 141, 239, 0.1);
+            border-radius: 8px;
+        }
 
-    .status-dot.connected {
-      background-color: var(--bp3-intent-success);
-      animation: pulse 2s infinite;
-    }
+        .formula-item {
+            padding: 12px 16px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
+        .formula-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #5B8DEF;
+        }
 
-    .content-header {
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-      padding-bottom: calc(var(--bp3-grid-size) * 2);
-      border-bottom: 1px solid var(--bp3-divider-color);
-    }
+        .formula-item.active {
+            background: rgba(91, 141, 239, 0.2);
+            border-color: #5B8DEF;
+        }
 
-    /* Custom styles for calculation tester */
-    .tester-layout {
-      gap: var(--slate-spacing-lg);
-      height: calc(100% - 120px);
-    }
+        .formula-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
 
-    .formula-panel {
-      flex: 0 0 300px;
-    }
-    
-    .calculation-panel {
-      flex: 1;
-      min-width: 0;
-    }
-    
-    .results-panel {
-      flex: 0 0 350px;
-    }
-    
-    .formula-panel,
-    .calculation-panel,
-    .results-panel {
-      /* Now using slate-card for consistent styling */
-    }
+        .formula-complexity {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
 
-    .bp3-dark .formula-panel,
-    .bp3-dark .calculation-panel,
-    .bp3-dark .results-panel {
-      background-color: var(--bp3-dark-gray3);
-    }
+        .complexity-basic {
+            background: rgba(52, 199, 89, 0.2);
+            color: #34C759;
+        }
 
-    .panel-header {
-      font-size: var(--bp3-font-size-large);
-      font-weight: 600;
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-      padding-bottom: calc(var(--bp3-grid-size));
-      border-bottom: 1px solid var(--bp3-divider-color);
-    }
+        .complexity-intermediate {
+            background: rgba(255, 159, 10, 0.2);
+            color: #FF9F0A;
+        }
 
-    .formula-category {
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-    }
+        .complexity-advanced {
+            background: rgba(255, 69, 58, 0.2);
+            color: #FF453A;
+        }
 
-    .formula-item {
-      padding: calc(var(--bp3-grid-size)) calc(var(--bp3-grid-size) * 1.5);
-      margin-bottom: calc(var(--bp3-grid-size) / 2);
-      cursor: pointer;
-      border-radius: var(--bp3-border-radius);
-      transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-      border: 1px solid transparent;
-    }
+        .parameter-section {
+            margin-bottom: 30px;
+        }
 
-    .formula-item:hover {
-      background-color: var(--bp3-light-gray4);
-      border-color: var(--bp3-intent-primary);
-    }
+        .parameter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
 
-    .bp3-dark .formula-item:hover {
-      background-color: var(--bp3-dark-gray4);
-    }
+        .parameter-type-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffffff;
+        }
 
-    .formula-item.active {
-      background-color: rgba(19, 124, 189, 0.15);
-      border-color: var(--bp3-intent-primary);
-    }
+        .parameter-count {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
 
-    .bp3-dark .formula-item.active {
-      background-color: rgba(45, 149, 214, 0.15);
-    }
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
 
-    .parameter-group {
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-    }
+        .parameter-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+        }
 
-    .result-value {
-      font-size: 24px;
-      font-weight: 600;
-      color: var(--bp3-intent-primary);
-      margin: calc(var(--bp3-grid-size) * 2) 0;
-    }
+        .parameter-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
 
-    .result-breakdown {
-      background-color: var(--bp3-light-gray5);
-      padding: calc(var(--bp3-grid-size) * 1.5);
-      border-radius: var(--bp3-border-radius);
-      font-family: monospace;
-      font-size: 12px;
-    }
+        .parameter-source {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
 
-    .bp3-dark .result-breakdown {
-      background-color: var(--bp3-dark-gray2);
-    }
+        .source-fixed {
+            background: rgba(255, 159, 10, 0.2);
+            color: #FF9F0A;
+        }
 
-    /* Calculation Metrics */
-    .calculation-metrics {
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-    }
+        .source-scenario {
+            background: rgba(91, 141, 239, 0.2);
+            color: #5B8DEF;
+        }
 
-    .calculation-metrics .apple-metric-card {
-      min-height: 120px;
-    }
+        .source-chained {
+            background: rgba(52, 199, 89, 0.2);
+            color: #34C759;
+        }
 
-    .calculation-metrics .apple-metric-value {
-      font-size: 1.8rem;
-      font-weight: 600;
-      color: var(--bp3-intent-primary);
-      margin: calc(var(--bp3-grid-size) * 1.5) 0 calc(var(--bp3-grid-size));
-    }
+        .source-user {
+            background: rgba(255, 69, 58, 0.2);
+            color: #FF453A;
+        }
 
-    .calculation-metrics .apple-metric-change.positive {
-      color: var(--bp3-intent-success);
-    }
+        .parameter-input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: #ffffff;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
 
-    .calculation-metrics .apple-metric-change.negative {
-      color: var(--bp3-intent-danger);
-    }
+        .parameter-input:focus {
+            outline: none;
+            border-color: #5B8DEF;
+            box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.2);
+        }
 
-    .calculation-metrics .apple-metric-change.neutral {
-      color: var(--bp3-text-color-muted);
-    }
-  </style>
-  <link href="blueprint-reconcile.css" rel="stylesheet">
-  <link href="light-mode-fix.css" rel="stylesheet">  <link href="no-icons-override.css" rel="stylesheet"></head>
-<body class="bp3-dark">
-  <div class="bp3-app slate-app-container">
-    <nav class="bp3-navbar bp3-dark">
-      <div class="bp3-navbar-group bp3-align-left">
-        <div class="bp3-navbar-heading">FinSight Intelligence</div>
-        <span class="bp3-navbar-divider"></span>
-        <div class="status-indicator">
-          <span class="status-dot" id="status-dot"></span>
-          <span id="status-text">System Online</span>
-        </div>
-      </div>
-      <div class="bp3-navbar-group bp3-align-right">
-        <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-        <span class="bp3-navbar-divider"></span>
-        <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-          
-          <span>Dark Mode</span>
-        </button>
-        <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-          
-          <span id="user-role-label">Finance User</span>
-        </button>
-      </div>
-    </nav>
+        .parameter-input:disabled {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+        }
 
-    <div class="app-content slate-layout-container">
-      
-  <aside class="bp3-sidebar">
-    <ul class="bp3-menu bp3-large">
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Analytics</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/portfolio-analyser.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-        </a>
-      </li>
-      
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Knowledge</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/news-market-data-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider"></div>
-      <div class="bp3-menu-header">
-        <h6 class="bp3-heading">Tools</h6>
-      </div>
-      <li>
-        <a class="bp3-menu-item" href="/calculation-tester.html" class="bp3-active">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analysis.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider technology-only" ></div>
-      <div class="bp3-menu-header technology-only" >
-        <h6 class="bp3-heading">System</h6>
-      </div>
-      <li >
-        <a class="bp3-menu-item" href="/command-centre.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculation-manager-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/ml-models-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculations-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/news-market-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/deployment.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/system-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-        </a>
-      </li>
-    </ul>
-  </aside>
+        .parameter-description {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 5px;
+        }
 
-      <main class="main-content slate-content-primary">
-        <div class="slate-widget-container">
-          <div class="content-header">
-            <h1 class="bp3-heading">Calculation Tester</h1>
-            <p class="bp3-text-muted">Test and validate financial calculations in real-time</p>
-          </div>
+        .calculate-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
 
-          <!-- Testing Metrics -->
-          <div class="calculation-metrics apple-data-grid" style="margin-bottom: 30px;">
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Total Calculations</div>
-              <div class="apple-metric-value" id="totalCalculations">1,247</div>
-              <div class="apple-metric-change positive" id="totalCalculationsChange">
-                ↗ +156
-              </div>
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .result-timestamp {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .result-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #4ade80;
+            margin-bottom: 8px;
+        }
+
+        .result-interpretation {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            margin-bottom: 8px;
+        }
+
+        .result-metadata {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            font-size: 11px;
+        }
+
+        .metadata-item {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .metadata-label {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .formula-equation {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #5B8DEF;
+            overflow-x: auto;
+        }
+
+        .chain-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            padding: 8px 12px;
+            background: rgba(52, 199, 89, 0.1);
+            border: 1px solid rgba(52, 199, 89, 0.3);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+
+        .chain-arrow {
+            color: #34C759;
+        }
+
+        .scenario-selector {
+            margin-bottom: 20px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .scenario-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-btn.active {
+            background: rgba(91, 141, 239, 0.2);
+            border-color: #5B8DEF;
+        }
+
+        .scenario-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes calculating {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .calculating {
+            animation: calculating 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <div class="nav-left">
+                <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
+                <h1 class="page-title">Financial Formula Calculator</h1>
             </div>
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Success Rate</div>
-              <div class="apple-metric-value" id="successRate">97.3%</div>
-              <div class="apple-metric-change positive" id="successRateChange">
-                ↗ +2.1%
-              </div>
-            </div>
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Average Execution Time</div>
-              <div class="apple-metric-value" id="executionTime">23ms</div>
-              <div class="apple-metric-change positive" id="executionTimeChange">
-                ↘ -5ms
-              </div>
-            </div>
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Failed Tests</div>
-              <div class="apple-metric-value" id="failedTests">34</div>
-              <div class="apple-metric-change negative" id="failedTestsChange">
-                ↗ +8
-              </div>
-            </div>
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Coverage</div>
-              <div class="apple-metric-value" id="coverage">89.5%</div>
-              <div class="apple-metric-change positive" id="coverageChange">
-                ↗ +4.2%
-              </div>
-            </div>
-            <div class="apple-metric-card">
-              <div class="apple-metric-label">Queue Size</div>
-              <div class="apple-metric-value" id="queueSize">12</div>
-              <div class="apple-metric-change neutral" id="queueSizeChange">
-                → 0
-              </div>
-            </div>
-          </div>
-
-          <div class="tester-layout slate-flex-row">
-            <!-- Formula Selection Panel -->
-            <div class="formula-panel slate-card">
-            <h3 class="panel-header">Formula Library</h3>
-            
-            <div class="formula-category">
-              <h5 class="bp3-heading">Time Value of Money</h5>
-              <div class="formula-item" onclick="selectFormula('present_value')">
-                <div>Present Value (PV)</div>
-                <span class="bp3-tag bp3-minimal">Basic</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('future_value')">
-                <div>Future Value (FV)</div>
-                <span class="bp3-tag bp3-minimal">Basic</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('net_present_value')">
-                <div>Net Present Value (NPV)</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-primary">Advanced</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('internal_rate_of_return')">
-                <div>Internal Rate of Return (IRR)</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-primary">Advanced</span>
-              </div>
-            </div>
-
-            <div class="formula-category">
-              <h5 class="bp3-heading">Bond Analytics</h5>
-              <div class="formula-item" onclick="selectFormula('bond_price')">
-                <div>Bond Price</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-warning">Complex</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('bond_yield')">
-                <div>Bond Yield</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-warning">Complex</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('bond_duration')">
-                <div>Bond Duration</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-primary">Advanced</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('bond_convexity')">
-                <div>Bond Convexity</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-warning">Complex</span>
-              </div>
-            </div>
-
-            <div class="formula-category">
-              <h5 class="bp3-heading">Options Pricing</h5>
-              <div class="formula-item" onclick="selectFormula('black_scholes_call')">
-                <div>Black-Scholes Call</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-danger">Expert</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('black_scholes_put')">
-                <div>Black-Scholes Put</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-danger">Expert</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('option_greeks')">
-                <div>Option Greeks</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-danger">Expert</span>
-              </div>
-            </div>
-
-            <div class="formula-category">
-              <h5 class="bp3-heading">Risk Analytics</h5>
-              <div class="formula-item" onclick="selectFormula('value_at_risk')">
-                <div>Value at Risk (VaR)</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-warning">Complex</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('conditional_value_at_risk')">
-                <div>Conditional VaR (CVaR)</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-danger">Expert</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('sharpe_ratio')">
-                <div>Sharpe Ratio</div>
-                <span class="bp3-tag bp3-minimal">Basic</span>
-              </div>
-              <div class="formula-item" onclick="selectFormula('sortino_ratio')">
-                <div>Sortino Ratio</div>
-                <span class="bp3-tag bp3-minimal bp3-intent-primary">Advanced</span>
-              </div>
-            </div>
-          </div>
-
-            <!-- Calculation Input Panel -->
-            <div class="calculation-panel slate-card">
-            <h3 class="panel-header">
-              <span id="selected-formula-name">Select a Formula</span>
-            </h3>
-            
-            <div id="formula-description" class="bp3-callout bp3-intent-primary" >
-              <p></p>
-            </div>
-
-            <div id="parameter-inputs" style="margin-top: 20px;">
-              <!-- Dynamic parameter inputs will be inserted here -->
-            </div>
-
-            <div class="bp3-button-group bp3-fill" style="margin-top: 20px;">
-              <button onclick="calculateResult()">
-                Calculate
-              </button>
-              <button onclick="resetForm()">
-                Reset
-              </button>
-            </div>
-
-            <!-- Advanced Options -->
-            <div class="bp3-collapse" style="margin-top: 20px;">
-              <button class="bp3-button bp3-minimal bp3-small" onclick="toggleAdvanced()">
-                
-                Advanced Options
-              </button>
-              <div class="bp3-collapse-body" id="advanced-options" >
-                <div class="bp3-form-group">
-                  <label class="bp3-label">
-                    Calculation Mode
-                    <select class="bp3-select bp3-fill">
-                      <option>Standard</option>
-                      <option>High Precision</option>
-                      <option>Monte Carlo</option>
-                    </select>
-                  </label>
+            <div class="nav-actions">
+                <div class="mode-selector">
+                    <button class="mode-btn active" data-mode="cfa" onclick="switchMode('cfa')">
+                        📊 CFA Mode
+                    </button>
+                    <button class="mode-btn" data-mode="admin" onclick="switchMode('admin')">
+                        ⚙️ Admin Mode
+                    </button>
                 </div>
-              </div>
             </div>
-          </div>
+        </div>
+
+        <div class="main-layout">
+            <!-- Formula Selection Panel -->
+            <div class="formula-panel">
+                <div class="section-title">📊 Formula Library</div>
+                
+                <div class="formula-category">
+                    <div class="category-title">Risk Management</div>
+                    <div class="formula-item" data-formula="var" data-complexity="intermediate">
+                        <span class="formula-name">Value at Risk (VaR)</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                    <div class="formula-item" data-formula="es" data-complexity="advanced">
+                        <span class="formula-name">Expected Shortfall</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="beta" data-complexity="basic">
+                        <span class="formula-name">Beta Coefficient</span>
+                        <span class="formula-complexity complexity-basic">BASIC</span>
+                    </div>
+                </div>
+
+                <div class="formula-category">
+                    <div class="category-title">Options Pricing</div>
+                    <div class="formula-item" data-formula="call" data-complexity="advanced">
+                        <span class="formula-name">Call Option (Black-Scholes)</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="put" data-complexity="advanced">
+                        <span class="formula-name">Put Option (Black-Scholes)</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="delta" data-complexity="intermediate">
+                        <span class="formula-name">Delta Greek</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                    <div class="formula-item" data-formula="gamma" data-complexity="intermediate">
+                        <span class="formula-name">Gamma Greek</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                    <div class="formula-item" data-formula="theta" data-complexity="intermediate">
+                        <span class="formula-name">Theta Greek</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                </div>
+
+                <div class="formula-category">
+                    <div class="category-title">Performance Metrics</div>
+                    <div class="formula-item" data-formula="sharpe" data-complexity="basic">
+                        <span class="formula-name">Sharpe Ratio</span>
+                        <span class="formula-complexity complexity-basic">BASIC</span>
+                    </div>
+                    <div class="formula-item" data-formula="sortino" data-complexity="intermediate">
+                        <span class="formula-name">Sortino Ratio</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                    <div class="formula-item" data-formula="treynor" data-complexity="basic">
+                        <span class="formula-name">Treynor Ratio</span>
+                        <span class="formula-complexity complexity-basic">BASIC</span>
+                    </div>
+                    <div class="formula-item" data-formula="alpha" data-complexity="intermediate">
+                        <span class="formula-name">Jensen's Alpha</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                </div>
+
+                <div class="formula-category">
+                    <div class="category-title">Fixed Income</div>
+                    <div class="formula-item" data-formula="duration" data-complexity="intermediate">
+                        <span class="formula-name">Modified Duration</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                    <div class="formula-item" data-formula="convexity" data-complexity="advanced">
+                        <span class="formula-name">Convexity</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="ytm" data-complexity="intermediate">
+                        <span class="formula-name">Yield to Maturity</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                </div>
+
+                <div class="formula-category">
+                    <div class="category-title">Basel III Ratios</div>
+                    <div class="formula-item" data-formula="lcr" data-complexity="advanced">
+                        <span class="formula-name">Liquidity Coverage Ratio</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="nsfr" data-complexity="advanced">
+                        <span class="formula-name">Net Stable Funding Ratio</span>
+                        <span class="formula-complexity complexity-advanced">ADV</span>
+                    </div>
+                    <div class="formula-item" data-formula="tier1" data-complexity="intermediate">
+                        <span class="formula-name">Tier 1 Capital Ratio</span>
+                        <span class="formula-complexity complexity-intermediate">INT</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculation Area -->
+            <div class="calculation-area">
+                <div class="section-title" id="formula-title">Select a Formula</div>
+                
+                <!-- Scenario Selector -->
+                <div class="scenario-selector" id="scenario-selector" style="display: none;">
+                    <div class="parameter-type-title">Market Scenario</div>
+                    <div class="scenario-grid">
+                        <button class="scenario-btn active" data-scenario="normal">Normal Market</button>
+                        <button class="scenario-btn" data-scenario="stress">Stress Test</button>
+                        <button class="scenario-btn" data-scenario="crisis">Crisis</button>
+                        <button class="scenario-btn" data-scenario="bull">Bull Market</button>
+                        <button class="scenario-btn" data-scenario="bear">Bear Market</button>
+                        <button class="scenario-btn" data-scenario="volatile">High Volatility</button>
+                    </div>
+                </div>
+
+                <!-- Formula Equation Display -->
+                <div class="formula-equation" id="formula-equation" style="display: none;">
+                    <!-- Dynamic formula equation -->
+                </div>
+
+                <!-- Fixed/Default Parameters -->
+                <div class="parameter-section" id="fixed-params" style="display: none;">
+                    <div class="parameter-header">
+                        <div class="parameter-type-title">🔒 Fixed/Default Parameters</div>
+                        <div class="parameter-count" id="fixed-count">0 parameters</div>
+                    </div>
+                    <div class="parameter-grid" id="fixed-params-grid">
+                        <!-- Dynamic fixed parameters -->
+                    </div>
+                </div>
+
+                <!-- Scenario-Based Parameters -->
+                <div class="parameter-section" id="scenario-params" style="display: none;">
+                    <div class="parameter-header">
+                        <div class="parameter-type-title">🎯 Scenario Parameters</div>
+                        <div class="parameter-count" id="scenario-count">0 parameters</div>
+                    </div>
+                    <div class="parameter-grid" id="scenario-params-grid">
+                        <!-- Dynamic scenario parameters -->
+                    </div>
+                </div>
+
+                <!-- Chained Calculation Parameters -->
+                <div class="parameter-section" id="chained-params" style="display: none;">
+                    <div class="parameter-header">
+                        <div class="parameter-type-title">🔗 Chained Calculations</div>
+                        <div class="parameter-count" id="chained-count">0 parameters</div>
+                    </div>
+                    <div class="chain-indicator" id="chain-indicator">
+                        <span class="chain-arrow">→</span>
+                        <span>Values automatically calculated from previous results</span>
+                    </div>
+                    <div class="parameter-grid" id="chained-params-grid">
+                        <!-- Dynamic chained parameters -->
+                    </div>
+                </div>
+
+                <!-- User Input Parameters -->
+                <div class="parameter-section" id="user-params" style="display: none;">
+                    <div class="parameter-header">
+                        <div class="parameter-type-title">✏️ User Inputs</div>
+                        <div class="parameter-count" id="user-count">0 parameters</div>
+                    </div>
+                    <div class="parameter-grid" id="user-params-grid">
+                        <!-- Dynamic user parameters -->
+                    </div>
+                </div>
+
+                <button class="calculate-btn" id="calculate-btn" onclick="performCalculation()" disabled>
+                    Calculate Result
+                </button>
+            </div>
 
             <!-- Results Panel -->
-            <div class="results-panel slate-card">
-            <h3 class="panel-header">Results</h3>
-            
-            <div id="result-display" >
-              <div class="bp3-callout bp3-intent-success">
-                <h4 class="bp3-heading">Calculated Result</h4>
-                <div class="result-value" id="result-value">-</div>
-              </div>
-
-              <div style="margin-top: 20px;">
-                <h5 class="bp3-heading">Calculation Details</h5>
-                <div class="result-breakdown" id="result-breakdown">
-                  <!-- Calculation breakdown will be displayed here -->
+            <div class="results-panel">
+                <div class="section-title">📈 Calculation Results</div>
+                <div id="results-container">
+                    <div style="text-align: center; color: rgba(255, 255, 255, 0.5); margin-top: 50px;">
+                        Select a formula to see results
+                    </div>
                 </div>
-              </div>
-
-              <div style="margin-top: 20px;">
-                <h5 class="bp3-heading">Performance Metrics</h5>
-                <div class="bp3-text-small bp3-text-muted">
-                  <div>Calculation Time: <span id="calc-time">-</span>ms</div>
-                  <div>Cache Status: <span id="cache-status">-</span></div>
-                  <div>Precision: <span id="precision">Standard</span></div>
-                </div>
-              </div>
-
-              <div class="bp3-button-group bp3-fill" style="margin-top: 20px;">
-                <button onclick="exportResult()">
-                  Export
-                </button>
-                <button onclick="copyResult()">
-                  Copy
-                </button>
-              </div>
             </div>
-
-            <div id="empty-state" class="bp3-non-ideal-state">
-              <div class="bp3-non-ideal-state-visual">
-                
-              </div>
-              <h4 class="bp3-non-ideal-state-title">No Calculation Yet</h4>
-              <div class="bp3-non-ideal-state-description">
-                Select a formula and enter parameters to see results
-              </div>
-            </div>
-          </div>
         </div>
-      </main>
     </div>
-  </div>
 
-  <script>
-    let selectedFormula = null;
-    let calculationCache = new Map();
-    let calculationMetrics = {
-      totalCalculations: 1247,
-      successfulCalculations: 1213,
-      failedCalculations: 34,
-      totalExecutionTime: 28641, // in milliseconds
-      testsCovered: 89.5,
-      queueSize: 12,
-      calculationHistory: []
-    };
+    <script>
+        let currentFormula = null;
+        let currentScenario = 'normal';
+        let calculationHistory = [];
+        let chainedValues = new Map();
+        let userMode = 'cfa'; // Default to CFA mode
 
-    // Update metrics display
-    function updateMetricsDisplay() {
-      const successRate = calculationMetrics.totalCalculations > 0 
-        ? (calculationMetrics.successfulCalculations / calculationMetrics.totalCalculations * 100).toFixed(1)
-        : 0;
-      
-      const avgExecutionTime = calculationMetrics.totalCalculations > 0
-        ? Math.round(calculationMetrics.totalExecutionTime / calculationMetrics.totalCalculations)
-        : 0;
+        // Formula definitions with parameter types
+        const formulaDefinitions = {
+            'var': {
+                name: 'Value at Risk (VaR)',
+                equation: 'VaR = μ + (σ × Z_α) × √t',
+                description: 'Maximum potential loss at a given confidence level',
+                fixedParams: {
+                    confidence_level: { value: 0.95, description: 'Confidence level (95%)', min: 0.8, max: 0.99 },
+                    time_horizon: { value: 1, description: 'Time horizon in days', min: 1, max: 252 }
+                },
+                scenarioParams: {
+                    volatility_adjustment: { normal: 1.0, stress: 1.5, crisis: 2.0, bull: 0.8, bear: 1.3, volatile: 1.8 }
+                },
+                chainedParams: {
+                    portfolio_beta: { source: 'beta', description: 'Portfolio beta from beta calculation' }
+                },
+                userParams: {
+                    portfolio_value: { description: 'Portfolio value ($)', default: 1000000, min: 1000 },
+                    expected_return: { description: 'Expected return (%)', default: 8.0, min: -50, max: 50 },
+                    volatility: { description: 'Portfolio volatility (%)', default: 15.0, min: 1, max: 100 }
+                }
+            },
+            'sharpe': {
+                name: 'Sharpe Ratio',
+                equation: 'Sharpe = (R_p - R_f) / σ_p',
+                description: 'Risk-adjusted return measure',
+                fixedParams: {
+                    days_per_year: { value: 252, description: 'Trading days per year', min: 250, max: 365 }
+                },
+                scenarioParams: {
+                    risk_free_rate: { normal: 3.0, stress: 1.0, crisis: 0.5, bull: 3.5, bear: 2.0, volatile: 2.5 }
+                },
+                chainedParams: {
+                    portfolio_return: { source: 'var', description: 'Portfolio return from VaR calculation' }
+                },
+                userParams: {
+                    portfolio_return: { description: 'Portfolio return (%)', default: 10.0, min: -50, max: 50 },
+                    portfolio_volatility: { description: 'Portfolio volatility (%)', default: 15.0, min: 1, max: 100 }
+                }
+            },
+            'call': {
+                name: 'Call Option (Black-Scholes)',
+                equation: 'C = S₀N(d₁) - Ke^(-rT)N(d₂)',
+                description: 'European call option price using Black-Scholes model',
+                fixedParams: {
+                    option_type: { value: 'call', description: 'Option type (call)', readonly: true }
+                },
+                scenarioParams: {
+                    interest_rate: { normal: 3.0, stress: 1.0, crisis: 0.25, bull: 4.0, bear: 2.0, volatile: 2.5 },
+                    volatility_multiplier: { normal: 1.0, stress: 1.4, crisis: 2.0, bull: 0.9, bear: 1.2, volatile: 1.8 }
+                },
+                chainedParams: {
+                    underlying_volatility: { source: 'var', description: 'Volatility from VaR calculation' }
+                },
+                userParams: {
+                    spot_price: { description: 'Current stock price ($)', default: 100, min: 0.01 },
+                    strike_price: { description: 'Strike price ($)', default: 105, min: 0.01 },
+                    time_to_expiry: { description: 'Time to expiry (years)', default: 0.25, min: 0.001, max: 5 },
+                    volatility: { description: 'Implied volatility (%)', default: 20, min: 1, max: 200 }
+                }
+            },
+            'duration': {
+                name: 'Modified Duration',
+                equation: 'Modified Duration = Macaulay Duration / (1 + YTM/n)',
+                description: 'Price sensitivity of bond to yield changes',
+                fixedParams: {
+                    compounding_frequency: { value: 2, description: 'Compounding frequency (semi-annual)', min: 1, max: 12 }
+                },
+                scenarioParams: {
+                    yield_environment: { normal: 0.0, stress: 2.0, crisis: -1.0, bull: 0.5, bear: 1.5, volatile: 1.0 }
+                },
+                chainedParams: {
+                    market_yield: { source: 'ytm', description: 'Yield from YTM calculation' }
+                },
+                userParams: {
+                    face_value: { description: 'Face value ($)', default: 1000, min: 100 },
+                    coupon_rate: { description: 'Coupon rate (%)', default: 5.0, min: 0, max: 20 },
+                    yield_to_maturity: { description: 'Yield to maturity (%)', default: 4.5, min: 0, max: 30 },
+                    years_to_maturity: { description: 'Years to maturity', default: 5, min: 0.1, max: 30 }
+                }
+            },
+            'beta': {
+                name: 'Beta Coefficient',
+                equation: 'β = Cov(R_asset, R_market) / Var(R_market)',
+                description: 'Systematic risk measure relative to market',
+                fixedParams: {
+                    calculation_period: { value: 252, description: 'Calculation period (days)', min: 30, max: 1260 }
+                },
+                scenarioParams: {
+                    market_correlation: { normal: 1.0, stress: 1.2, crisis: 1.5, bull: 0.9, bear: 1.1, volatile: 1.3 }
+                },
+                chainedParams: {},
+                userParams: {
+                    asset_return: { description: 'Asset return (%)', default: 12.0, min: -50, max: 100 },
+                    market_return: { description: 'Market return (%)', default: 10.0, min: -50, max: 100 },
+                    asset_volatility: { description: 'Asset volatility (%)', default: 18.0, min: 1, max: 100 },
+                    market_volatility: { description: 'Market volatility (%)', default: 15.0, min: 1, max: 100 }
+                }
+            },
+            'lcr': {
+                name: 'Liquidity Coverage Ratio',
+                equation: 'LCR = HQLA / Net Cash Outflows (30 days)',
+                description: 'Basel III liquidity requirement (min 100%)',
+                fixedParams: {
+                    minimum_requirement: { value: 100, description: 'Minimum LCR requirement (%)', readonly: true },
+                    stress_period: { value: 30, description: 'Stress period (days)', readonly: true }
+                },
+                scenarioParams: {
+                    stress_multiplier: { normal: 1.0, stress: 1.3, crisis: 1.5, bull: 0.9, bear: 1.2, volatile: 1.4 }
+                },
+                chainedParams: {},
+                userParams: {
+                    hqla: { description: 'High Quality Liquid Assets ($M)', default: 500, min: 0 },
+                    cash_outflows: { description: 'Net cash outflows 30d ($M)', default: 400, min: 0 },
+                    deposits: { description: 'Customer deposits ($M)', default: 2000, min: 0 },
+                    credit_facilities: { description: 'Committed credit facilities ($M)', default: 300, min: 0 }
+                }
+            }
+        };
 
-      // Update metric values
-      document.getElementById('totalCalculations').textContent = calculationMetrics.totalCalculations.toLocaleString();
-      document.getElementById('successRate').textContent = successRate + '%';
-      document.getElementById('executionTime').textContent = avgExecutionTime + 'ms';
-      document.getElementById('failedTests').textContent = calculationMetrics.failedCalculations.toLocaleString();
-      document.getElementById('coverage').textContent = calculationMetrics.testsCovered.toFixed(1) + '%';
-      document.getElementById('queueSize').textContent = calculationMetrics.queueSize.toLocaleString();
-
-      // Update trend indicators (simulate changes)
-      const trends = {
-        totalCalculations: Math.random() > 0.5 ? 'positive' : 'neutral',
-        successRate: Math.random() > 0.3 ? 'positive' : 'negative',
-        executionTime: Math.random() > 0.6 ? 'positive' : 'negative',
-        failedTests: Math.random() > 0.7 ? 'negative' : 'positive',
-        coverage: Math.random() > 0.4 ? 'positive' : 'neutral',
-        queueSize: calculationMetrics.queueSize > 20 ? 'negative' : 'neutral'
-      };
-
-      // Apply trend classes
-      Object.keys(trends).forEach(key => {
-        const changeElement = document.getElementById(key + 'Change');
-        if (changeElement) {
-          changeElement.className = 'apple-metric-change ' + trends[key];
-        }
-      });
-    }
-
-    // Record calculation execution
-    function recordCalculation(success, executionTime) {
-      calculationMetrics.totalCalculations++;
-      calculationMetrics.totalExecutionTime += executionTime;
-      
-      if (success) {
-        calculationMetrics.successfulCalculations++;
-      } else {
-        calculationMetrics.failedCalculations++;
-      }
-
-      // Update queue size (simulate processing)
-      calculationMetrics.queueSize = Math.max(0, calculationMetrics.queueSize + (Math.random() > 0.7 ? 1 : -1));
-
-      // Record in history
-      calculationMetrics.calculationHistory.push({
-        timestamp: new Date(),
-        success: success,
-        executionTime: executionTime,
-        formula: selectedFormula
-      });
-
-      // Keep only last 100 calculations
-      if (calculationMetrics.calculationHistory.length > 100) {
-        calculationMetrics.calculationHistory.shift();
-      }
-
-      // Update display
-      updateMetricsDisplay();
-    }
-
-    // Formula definitions with parameters
-    const formulas = {
-      present_value: {
-        name: 'Present Value',
-        description: 'Calculates the current value of a future cash flow',
-        parameters: [
-          { name: 'future_value', label: 'Future Value', type: 'number', default: 1000 },
-          { name: 'discount_rate', label: 'Discount Rate (%)', type: 'number', default: 5 },
-          { name: 'periods', label: 'Number of Periods', type: 'number', default: 1 }
-        ]
-      },
-      future_value: {
-        name: 'Future Value',
-        description: 'Calculates the future value of a current investment',
-        parameters: [
-          { name: 'present_value', label: 'Present Value', type: 'number', default: 1000 },
-          { name: 'interest_rate', label: 'Interest Rate (%)', type: 'number', default: 5 },
-          { name: 'periods', label: 'Number of Periods', type: 'number', default: 1 }
-        ]
-      },
-      bond_price: {
-        name: 'Bond Price',
-        description: 'Calculates the fair price of a bond',
-        parameters: [
-          { name: 'face_value', label: 'Face Value', type: 'number', default: 1000 },
-          { name: 'coupon_rate', label: 'Coupon Rate (%)', type: 'number', default: 5 },
-          { name: 'yield_rate', label: 'Yield Rate (%)', type: 'number', default: 4 },
-          { name: 'periods', label: 'Periods to Maturity', type: 'number', default: 10 }
-        ]
-      },
-      black_scholes_call: {
-        name: 'Black-Scholes Call Option',
-        description: 'Calculates the theoretical price of a European call option',
-        parameters: [
-          { name: 'spot_price', label: 'Spot Price', type: 'number', default: 100 },
-          { name: 'strike_price', label: 'Strike Price', type: 'number', default: 105 },
-          { name: 'risk_free_rate', label: 'Risk-Free Rate (%)', type: 'number', default: 2 },
-          { name: 'volatility', label: 'Volatility (%)', type: 'number', default: 20 },
-          { name: 'time_to_expiry', label: 'Time to Expiry (Years)', type: 'number', default: 0.25 }
-        ]
-      },
-      sharpe_ratio: {
-        name: 'Sharpe Ratio',
-        description: 'Measures risk-adjusted returns',
-        parameters: [
-          { name: 'portfolio_return', label: 'Portfolio Return (%)', type: 'number', default: 12 },
-          { name: 'risk_free_rate', label: 'Risk-Free Rate (%)', type: 'number', default: 2 },
-          { name: 'portfolio_std_dev', label: 'Portfolio Std Dev (%)', type: 'number', default: 15 }
-        ]
-      }
-    };
-
-    function selectFormula(formulaKey) {
-      selectedFormula = formulaKey;
-      
-      // Update UI
-      document.querySelectorAll('.formula-item').forEach(item => {
-        item.classList.remove('active');
-      });
-      event.target.closest('.formula-item').classList.add('active');
-
-      // Update formula details
-      const formula = formulas[formulaKey];
-      document.getElementById('selected-formula-name').textContent = formula.name;
-      document.getElementById('formula-description').style.display = 'block';
-      document.getElementById('formula-description').querySelector('p').textContent = formula.description;
-
-      // Generate parameter inputs
-      const parameterContainer = document.getElementById('parameter-inputs');
-      parameterContainer.innerHTML = '';
-
-      formula.parameters.forEach(param => {
-        const formGroup = document.createElement('div');
-        formGroup.className = 'bp3-form-group parameter-group';
-        formGroup.innerHTML = `
-          <label class="bp3-label" for="${param.name}">
-            ${param.label}
-            <span class="bp3-text-muted">(required)</span>
-          </label>
-          <div class="bp3-input-group">
-            <input 
-              type="${param.type}" 
-              class="bp3-input" 
-              id="${param.name}" 
-              value="${param.default}"
-              placeholder="Enter ${param.label.toLowerCase()}"
-            />
-          </div>
-        `;
-        parameterContainer.appendChild(formGroup);
-      });
-
-      // Hide empty state, show result area
-      document.getElementById('empty-state').style.display = 'none';
-    }
-
-    async function calculateResult() {
-      if (!selectedFormula) {
-        alert('Please select a formula first');
-        return;
-      }
-
-      const startTime = performance.now();
-      const formula = formulas[selectedFormula];
-      const params = {};
-
-      // Collect parameter values
-      formula.parameters.forEach(param => {
-        const value = parseFloat(document.getElementById(param.name).value);
-        if (isNaN(value)) {
-          alert(`Please enter a valid number for ${param.label}`);
-          return;
-        }
-        params[param.name] = value;
-      });
-
-      try {
-        // Call the calculation API
-        const response = await fetch('/api/calculation-engine', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            formula: selectedFormula,
-            parameters: params
-          })
+        // Initialize the calculator
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get user mode from localStorage or URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const modeFromUrl = urlParams.get('mode');
+            userMode = localStorage.getItem('userMode') || modeFromUrl || 'cfa';
+            
+            setupFormulaListeners();
+            setupScenarioListeners();
+            loadCalculationHistory();
+            updateUIForUserMode();
         });
 
-        const result = await response.json();
-        const endTime = performance.now();
-
-        if (result.success) {
-          // Display results
-          document.getElementById('result-display').style.display = 'block';
-          document.getElementById('result-value').textContent = 
-            typeof result.value === 'number' ? result.value.toFixed(4) : result.value;
-          
-          // Show calculation breakdown
-          document.getElementById('result-breakdown').textContent = 
-            JSON.stringify(result.breakdown || params, null, 2);
-          
-          // Update metrics
-          document.getElementById('calc-time').textContent = (endTime - startTime).toFixed(2);
-          document.getElementById('cache-status').textContent = result.cached ? 'Hit' : 'Miss';
-          
-          // Cache the result
-          const cacheKey = JSON.stringify({ formula: selectedFormula, params });
-          calculationCache.set(cacheKey, result);
-
-          // Record successful calculation
-          recordCalculation(true, endTime - startTime);
-        } else {
-          alert('Calculation failed: ' + result.error);
-          // Record failed calculation
-          recordCalculation(false, endTime - startTime);
+        function setupFormulaListeners() {
+            document.querySelectorAll('.formula-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    document.querySelectorAll('.formula-item').forEach(i => i.classList.remove('active'));
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Load formula
+                    const formulaId = this.dataset.formula;
+                    loadFormula(formulaId);
+                });
+            });
         }
-      } catch (error) {
-        alert('Error performing calculation: ' + error.message);
-        // Record failed calculation
-        recordCalculation(false, performance.now() - startTime);
-      }
-    }
 
-    function resetForm() {
-      if (!selectedFormula) return;
-      
-      const formula = formulas[selectedFormula];
-      formula.parameters.forEach(param => {
-        document.getElementById(param.name).value = param.default;
-      });
-    }
+        function setupScenarioListeners() {
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active scenario
+                    document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    currentScenario = this.dataset.scenario;
+                    
+                    // Reload parameters with new scenario
+                    if (currentFormula) {
+                        loadFormulaParameters(currentFormula);
+                    }
+                });
+            });
+        }
 
-    function toggleAdvanced() {
-      const advancedDiv = document.getElementById('advanced-options');
-      const icon = event.target.querySelector('.bp3-icon');
-      
-      if (advancedDiv.style.display === 'none') {
-        advancedDiv.style.display = 'block';
-        icon.classList.remove('bp3-icon-chevron-right');
-        icon.classList.add('bp3-icon-chevron-down');
-      } else {
-        advancedDiv.style.display = 'none';
-        icon.classList.remove('bp3-icon-chevron-down');
-        icon.classList.add('bp3-icon-chevron-right');
-      }
-    }
+        function loadFormula(formulaId) {
+            currentFormula = formulaId;
+            const formula = formulaDefinitions[formulaId];
+            
+            if (!formula) {
+                console.error('Formula not found:', formulaId);
+                return;
+            }
 
-    function exportResult() {
-      if (!selectedFormula) return;
-      
-      const result = {
-        formula: formulas[selectedFormula].name,
-        parameters: {},
-        result: document.getElementById('result-value').textContent,
-        timestamp: new Date().toISOString()
-      };
+            // Update title and equation
+            document.getElementById('formula-title').textContent = formula.name;
+            document.getElementById('formula-equation').innerHTML = `
+                <strong>Formula:</strong> ${formula.equation}<br>
+                <em>${formula.description}</em>
+            `;
+            document.getElementById('formula-equation').style.display = 'block';
+            document.getElementById('scenario-selector').style.display = 'block';
 
-      formulas[selectedFormula].parameters.forEach(param => {
-        result.parameters[param.label] = document.getElementById(param.name).value;
-      });
+            // Load parameters
+            loadFormulaParameters(formulaId);
+            
+            // Enable calculate button
+            document.getElementById('calculate-btn').disabled = false;
+        }
 
-      const blob = new Blob([JSON.stringify(result, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `calculation_${selectedFormula}_${Date.now()}.json`;
-      a.click();
-    }
+        function loadFormulaParameters(formulaId) {
+            const formula = formulaDefinitions[formulaId];
+            
+            // Load fixed parameters
+            loadParameterSection('fixed', formula.fixedParams, 'Fixed/Default');
+            
+            // Load scenario parameters
+            loadParameterSection('scenario', formula.scenarioParams, 'Scenario-Based');
+            
+            // Load chained parameters
+            loadParameterSection('chained', formula.chainedParams, 'Chained Calculations');
+            
+            // Load user parameters
+            loadParameterSection('user', formula.userParams, 'User Inputs');
+        }
 
-    function copyResult() {
-      const resultText = document.getElementById('result-value').textContent;
-      navigator.clipboard.writeText(resultText).then(() => {
-        alert('Result copied to clipboard');
-      });
-    }
+        function loadParameterSection(type, params, title) {
+            const section = document.getElementById(`${type}-params`);
+            const grid = document.getElementById(`${type}-params-grid`);
+            const count = document.getElementById(`${type}-count`);
+            
+            const paramKeys = Object.keys(params || {});
+            
+            if (paramKeys.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
 
-    function toggleTheme() {
-      const body = document.body;
-      const button = document.getElementById('theme-toggle');
-      
-      if (body.classList.contains('bp3-dark')) {
-        body.classList.remove('bp3-dark');
-        button.className = 'bp3-button bp3-minimal bp3-icon-flash';
-      } else {
-        body.classList.add('bp3-dark');
-        button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-      }
-    }
+            section.style.display = 'block';
+            count.textContent = `${paramKeys.length} parameter${paramKeys.length !== 1 ? 's' : ''}`;
+            grid.innerHTML = '';
 
-    // Initialize metrics display and auto-refresh
-    function initializeMetrics() {
-      updateMetricsDisplay();
-      
-      // Auto-refresh metrics every 5 seconds
-      setInterval(() => {
-        // Simulate small random changes to coverage and queue size
-        calculationMetrics.testsCovered += (Math.random() - 0.5) * 0.2;
-        calculationMetrics.testsCovered = Math.max(80, Math.min(100, calculationMetrics.testsCovered));
-        
-        calculationMetrics.queueSize += Math.random() > 0.6 ? 1 : -1;
-        calculationMetrics.queueSize = Math.max(0, Math.min(50, calculationMetrics.queueSize));
-        
-        updateMetricsDisplay();
-      }, 5000);
-    }
+            paramKeys.forEach(key => {
+                const param = params[key];
+                const paramDiv = document.createElement('div');
+                paramDiv.className = 'parameter-item';
+                
+                let value = '';
+                let disabled = false;
+                let sourceClass = `source-${type}`;
+                let sourceText = type.toUpperCase();
 
-    // Initialize when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      initializeMetrics();
-    });
-  </script>
-  <script src="shared-header.js"></script>
+                // Get parameter value based on type
+                if (type === 'fixed') {
+                    value = param.value;
+                    disabled = param.readonly || false;
+                } else if (type === 'scenario') {
+                    value = param[currentScenario] || param.normal || 0;
+                    disabled = true; // Scenario params are auto-calculated
+                } else if (type === 'chained') {
+                    value = chainedValues.get(key) || `From ${param.source}`;
+                    disabled = true; // Chained params come from other calculations
+                } else if (type === 'user') {
+                    value = param.default || '';
+                    disabled = false;
+                }
+
+                paramDiv.innerHTML = `
+                    <div class="parameter-label">
+                        ${key.replace(/_/g, ' ').toUpperCase()}
+                        <span class="parameter-source ${sourceClass}">${sourceText}</span>
+                    </div>
+                    <input type="number" 
+                           class="parameter-input" 
+                           value="${value}" 
+                           ${disabled ? 'disabled' : ''}
+                           ${param.min !== undefined ? `min="${param.min}"` : ''}
+                           ${param.max !== undefined ? `max="${param.max}"` : ''}
+                           ${param.step !== undefined ? `step="${param.step}"` : 'step="0.01"'}
+                           data-param="${key}"
+                           data-type="${type}">
+                    <div class="parameter-description">${param.description || 'Parameter description'}</div>
+                `;
+
+                grid.appendChild(paramDiv);
+            });
+        }
+
+        async function performCalculation() {
+            const btn = document.getElementById('calculate-btn');
+            btn.disabled = true;
+            btn.classList.add('calculating');
+            btn.textContent = 'Calculating...';
+
+            try {
+                // Collect all parameter values
+                const parameters = collectParameterValues();
+                
+                // Make API call to calculation engine
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        action: 'test-formula',
+                        userMode: userMode,
+                        data: {
+                            formula: currentFormula,
+                            scenario: currentScenario,
+                            parameters: parameters
+                        }
+                    })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayCalculationResult(result);
+                    
+                    // Store result for potential chaining
+                    if (result.result && typeof result.result.value === 'number') {
+                        chainedValues.set(`${currentFormula}_result`, result.result.value);
+                    }
+                    
+                    // Add to history
+                    calculationHistory.unshift({
+                        formula: currentFormula,
+                        scenario: currentScenario,
+                        result: result.result,
+                        timestamp: new Date().toISOString(),
+                        parameters: parameters
+                    });
+                    
+                    // Keep only last 10 calculations
+                    if (calculationHistory.length > 10) {
+                        calculationHistory = calculationHistory.slice(0, 10);
+                    }
+                } else {
+                    displayCalculationError(result.error || 'Calculation failed');
+                }
+
+            } catch (error) {
+                console.error('Calculation error:', error);
+                displayCalculationError('Network error occurred');
+            } finally {
+                btn.disabled = false;
+                btn.classList.remove('calculating');
+                btn.textContent = 'Calculate Result';
+            }
+        }
+
+        function collectParameterValues() {
+            const parameters = {};
+            
+            // Collect all parameter inputs
+            document.querySelectorAll('.parameter-input').forEach(input => {
+                const paramName = input.dataset.param;
+                const paramType = input.dataset.type;
+                const value = parseFloat(input.value) || input.value;
+                
+                parameters[paramName] = {
+                    value: value,
+                    type: paramType,
+                    source: paramType === 'chained' ? 'previous_calculation' : 'user_input'
+                };
+            });
+
+            return parameters;
+        }
+
+        function displayCalculationResult(apiResult) {
+            const container = document.getElementById('results-container');
+            const formula = formulaDefinitions[currentFormula];
+            const result = apiResult.result;
+
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result-item';
+            
+            // Format the result value
+            let formattedValue = '';
+            let interpretation = '';
+            
+            if (typeof result.value === 'number') {
+                if (currentFormula === 'var') {
+                    formattedValue = `$${result.value.toLocaleString()}`;
+                    interpretation = `At 95% confidence, maximum loss is ${formattedValue}`;
+                } else if (currentFormula === 'sharpe') {
+                    formattedValue = result.value.toFixed(3);
+                    interpretation = result.value > 1 ? 'Good risk-adjusted return' : 'Poor risk-adjusted return';
+                } else if (currentFormula.includes('call') || currentFormula.includes('put')) {
+                    formattedValue = `$${result.value.toFixed(2)}`;
+                    interpretation = `Option premium: ${formattedValue}`;
+                } else if (currentFormula === 'lcr') {
+                    formattedValue = `${result.value.toFixed(1)}%`;
+                    interpretation = result.value >= 100 ? 'Meets Basel III requirement' : 'Below required minimum';
+                } else {
+                    formattedValue = result.value.toFixed(4);
+                    interpretation = `Calculated ${formula.name}: ${formattedValue}`;
+                }
+            } else {
+                formattedValue = result.value.toString();
+                interpretation = 'Calculation completed';
+            }
+
+            resultDiv.innerHTML = `
+                <div class="result-header">
+                    <div class="result-label">${formula.name}</div>
+                    <div class="result-timestamp">${new Date().toLocaleTimeString()}</div>
+                </div>
+                <div class="result-value">${formattedValue}</div>
+                <div class="result-interpretation">${interpretation}</div>
+                <div class="result-metadata">
+                    <div class="metadata-item">
+                        <span class="metadata-label">Scenario:</span> ${currentScenario}
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Execution:</span> ${result.executionTime || 0}ms
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Complexity:</span> ${document.querySelector('.formula-item.active')?.dataset.complexity || 'N/A'}
+                    </div>
+                    <div class="metadata-item">
+                        <span class="metadata-label">Confidence:</span> ${result.confidence || 'High'}
+                    </div>
+                </div>
+            `;
+
+            // Insert at the top
+            container.insertBefore(resultDiv, container.firstChild);
+            
+            // Remove old results if more than 5
+            const results = container.querySelectorAll('.result-item');
+            if (results.length > 5) {
+                for (let i = 5; i < results.length; i++) {
+                    results[i].remove();
+                }
+            }
+        }
+
+        function displayCalculationError(error) {
+            const container = document.getElementById('results-container');
+            
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'result-item';
+            errorDiv.style.borderColor = '#ff453a';
+            
+            errorDiv.innerHTML = `
+                <div class="result-header">
+                    <div class="result-label">Calculation Error</div>
+                    <div class="result-timestamp">${new Date().toLocaleTimeString()}</div>
+                </div>
+                <div class="result-value" style="color: #ff453a;">Error</div>
+                <div class="result-interpretation">${error}</div>
+            `;
+
+            container.insertBefore(errorDiv, container.firstChild);
+        }
+
+        function loadCalculationHistory() {
+            // Could load from localStorage or backend
+            const stored = localStorage.getItem('calculationHistory');
+            if (stored) {
+                try {
+                    calculationHistory = JSON.parse(stored);
+                } catch (e) {
+                    console.warn('Failed to load calculation history');
+                }
+            }
+        }
+
+        // Save calculation history periodically
+        setInterval(() => {
+            localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+        }, 30000);
+
+        function updateUIForUserMode() {
+            const pageTitle = document.querySelector('.page-title');
+            
+            if (userMode === 'admin') {
+                pageTitle.textContent = 'Formula Calculator - System Administrator';
+                // Show admin-specific features
+                document.body.classList.add('admin-mode');
+            } else {
+                pageTitle.textContent = 'Financial Formula Calculator - CFA Professional';
+                // Show CFA-specific features
+                document.body.classList.add('cfa-mode');
+            }
+            
+            // Update available formulas based on mode
+            filterFormulasByMode();
+        }
+
+        function filterFormulasByMode() {
+            const formulaItems = document.querySelectorAll('.formula-item');
+            
+            formulaItems.forEach(item => {
+                const formula = item.dataset.formula;
+                
+                // All formulas available to admin, subset for CFA
+                if (userMode === 'cfa') {
+                    // Hide system/admin specific formulas in CFA mode
+                    const cfaFormulas = ['var', 'es', 'beta', 'call', 'put', 'delta', 'gamma', 'theta', 
+                                       'sharpe', 'sortino', 'treynor', 'alpha', 'duration', 'convexity', 
+                                       'ytm', 'lcr', 'nsfr', 'tier1'];
+                    
+                    if (!cfaFormulas.includes(formula)) {
+                        item.style.display = 'none';
+                    }
+                } else {
+                    // Show all formulas in admin mode
+                    item.style.display = 'flex';
+                }
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,1221 +1,892 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Treasury Context-Aware Insights Configuration - FinSight Intelligence</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
-  <link href="shared-sidebar-styles.css" rel="stylesheet">
-  <link href="palantir-slate-layout.css" rel="stylesheet">
-  <link href="apple-hybrid-safe.css" rel="stylesheet">
-  <link href="universal-consistency-fix.css" rel="stylesheet">
-  <style>
-    /* Blueprint Design System CSS Variables */
-    :root {
-      --bp3-grid-size: 10px;
-      --bp3-black: #111418;
-      --bp3-dark-gray1: #1C2127;
-      --bp3-dark-gray2: #252A31;
-      --bp3-dark-gray3: #2F343C;
-      --bp3-dark-gray4: #383E47;
-      --bp3-dark-gray5: #404854;
-      --bp3-gray1: #5C7080;
-      --bp3-gray2: #738091;
-      --bp3-gray3: #8A9BA8;
-      --bp3-gray4: #A7B6C2;
-      --bp3-gray5: #BFCCD6;
-      --bp3-light-gray1: #CED9E0;
-      --bp3-light-gray2: #D8E1E8;
-      --bp3-light-gray3: #E1E8ED;
-      --bp3-light-gray4: #EBF1F5;
-      --bp3-light-gray5: #F5F8FA;
-      --bp3-white: #FFFFFF;
-      --bp3-blue1: #0E5A8A;
-      --bp3-blue2: #106BA3;
-      --bp3-blue3: #137CBD;
-      --bp3-blue4: #2B95D6;
-      --bp3-blue5: #48AFF0;
-      --bp3-green1: #0A6640;
-      --bp3-green2: #0D8050;
-      --bp3-green3: #0F9960;
-      --bp3-green4: #15B371;
-      --bp3-green5: #3DCC91;
-      --bp3-orange1: #A66321;
-      --bp3-orange2: #BF7326;
-      --bp3-orange3: #D9822B;
-      --bp3-orange4: #F29D49;
-      --bp3-orange5: #FFB366;
-      --bp3-red1: #A82A2A;
-      --bp3-red2: #C23030;
-      --bp3-red3: #DB3737;
-      --bp3-red4: #F55656;
-      --bp3-red5: #FF7373;
-      --bp3-intent-primary: var(--bp3-blue3);
-      --bp3-intent-success: var(--bp3-green3);
-      --bp3-intent-warning: var(--bp3-orange3);
-      --bp3-intent-danger: var(--bp3-red3);
-      --bp3-font-family: -apple-system, "BlinkMacSystemFont", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", "Icons16", sans-serif;
-      --bp3-font-size: 14px;
-      --bp3-font-size-large: 16px;
-      --bp3-line-height: 18px;
-      --bp3-elevation-shadow-0: 0 0 0 1px rgba(17, 20, 24, 0.15);
-      --bp3-elevation-shadow-1: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-2: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 1px 1px rgba(17, 20, 24, 0.2), 0 2px 6px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-3: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 2px 4px rgba(17, 20, 24, 0.2), 0 8px 24px rgba(17, 20, 24, 0.2);
-      --bp3-elevation-shadow-4: 0 0 0 1px rgba(17, 20, 24, 0.1), 0 4px 8px rgba(17, 20, 24, 0.2), 0 18px 46px 6px rgba(17, 20, 24, 0.2);
-      --bp3-border-radius: 3px;
-      --bp3-transition-duration: 100ms;
-      --bp3-transition-ease: cubic-bezier(0.4, 1, 0.75, 0.9);
-      --bp3-text-color: #182026;
-      --bp3-text-color-muted: #5C7080;
-      --bp3-text-color-disabled: rgba(92, 112, 128, 0.6);
-      --bp3-heading-color: #182026;
-      --bp3-link-color: var(--bp3-blue2);
-      --bp3-app-background-color: var(--bp3-light-gray5);
-      --bp3-divider-color: rgba(17, 20, 24, 0.15);
-    }
-
-    .bp3-dark {
-      --bp3-text-color: rgba(255, 255, 255, 0.9);
-      --bp3-text-color-muted: rgba(255, 255, 255, 0.6);
-      --bp3-text-color-disabled: rgba(255, 255, 255, 0.3);
-      --bp3-heading-color: rgba(255, 255, 255, 0.9);
-      --bp3-link-color: var(--bp3-blue4);
-      --bp3-app-background-color: var(--bp3-dark-gray2);
-      --bp3-divider-color: rgba(255, 255, 255, 0.15);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--bp3-font-family);
-      font-size: var(--bp3-font-size);
-      line-height: var(--bp3-line-height);
-      color: var(--bp3-text-color);
-      background-color: var(--bp3-app-background-color);
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      transition: all var(--bp3-transition-duration) var(--bp3-transition-ease);
-    }
-
-    .bp3-dark {
-      background-color: var(--bp3-dark-gray2);
-      color: var(--bp3-text-color);
-    }
-
-    .bp3-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .bp3-navbar {
-      flex-shrink: 0;
-    }
-
-    .app-content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    .bp3-sidebar {
-      width: 280px;
-      flex-shrink: 0;
-      background-color: var(--bp3-light-gray5);
-      border-right: 1px solid var(--bp3-divider-color);
-      overflow-y: auto;
-    }
-
-    .bp3-dark .bp3-sidebar {
-      background-color: var(--bp3-dark-gray3);
-      border-right-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      padding: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .bp3-menu-item.bp3-active {
-      background-color: var(--bp3-intent-primary);
-      color: white;
-    }
-
-    .bp3-menu-item.bp3-active .bp3-icon {
-      color: white;
-    }
-
-    .status-indicator {
-      display: flex;
-      align-items: center;
-      gap: calc(var(--bp3-grid-size) / 2);
-    }
-
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background-color: var(--bp3-gray3);
-    }
-
-    .status-dot.connected {
-      background-color: var(--bp3-intent-success);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-
-    .content-header {
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-      padding-bottom: calc(var(--bp3-grid-size) * 2);
-      border-bottom: 1px solid var(--bp3-divider-color);
-    }
-
-    /* Page-specific styles */
-    .bp3-card {
-      background-color: white;
-      border-radius: var(--bp3-border-radius);
-      box-shadow: var(--bp3-elevation-shadow-1);
-      padding: calc(var(--bp3-grid-size) * 2);
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .bp3-dark .bp3-card {
-      background-color: var(--bp3-dark-gray3);
-    }
-
-    .status-bar {
-      background-color: rgba(15, 153, 96, 0.1);
-      border: 1px solid var(--bp3-intent-success);
-      border-radius: var(--bp3-border-radius);
-      padding: calc(var(--bp3-grid-size) * 1.5);
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-      display: flex;
-      align-items: center;
-      gap: calc(var(--bp3-grid-size));
-    }
-
-    .status-icon {
-      width: 10px;
-      height: 10px;
-      background-color: var(--bp3-intent-success);
-      border-radius: 50%;
-    }
-
-    .main-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: calc(var(--bp3-grid-size) * 2);
-      margin-bottom: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .config-section {
-      background-color: white;
-      border: 1px solid var(--bp3-divider-color);
-      border-radius: var(--bp3-border-radius);
-      padding: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .bp3-dark .config-section {
-      background-color: var(--bp3-dark-gray3);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .section-title {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: calc(var(--bp3-grid-size) * 2);
-      color: var(--bp3-heading-color);
-      display: flex;
-      align-items: center;
-      gap: calc(var(--bp3-grid-size));
-    }
-
-    .section-icon {
-      width: 24px;
-      height: 24px;
-      background-color: var(--bp3-intent-primary);
-      border-radius: var(--bp3-border-radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: white;
-    }
-
-    .portfolio-metrics {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: calc(var(--bp3-grid-size));
-      margin-top: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .metric-card {
-      background-color: var(--bp3-light-gray5);
-      padding: calc(var(--bp3-grid-size) * 1.5);
-      border-radius: var(--bp3-border-radius);
-      text-align: center;
-    }
-
-    .bp3-dark .metric-card {
-      background-color: var(--bp3-dark-gray4);
-    }
-
-    .metric-value {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--bp3-intent-success);
-      margin-bottom: calc(var(--bp3-grid-size) / 2);
-    }
-
-    .metric-label {
-      font-size: 11px;
-      color: var(--bp3-text-color-muted);
-    }
-
-    .context-detection {
-      margin-top: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .context-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: calc(var(--bp3-grid-size));
-      background-color: var(--bp3-light-gray5);
-      border-radius: var(--bp3-border-radius);
-      margin-bottom: calc(var(--bp3-grid-size));
-    }
-
-    .bp3-dark .context-item {
-      background-color: var(--bp3-dark-gray4);
-    }
-
-    .confidence-bar {
-      width: 60px;
-      height: 6px;
-      background-color: var(--bp3-gray3);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .confidence-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--bp3-intent-danger), var(--bp3-intent-warning), var(--bp3-intent-success));
-      border-radius: 3px;
-    }
-
-    .ai-engine-section {
-      grid-column: 1 / -1;
-      background-color: rgba(19, 124, 189, 0.1);
-      border: 1px solid var(--bp3-intent-primary);
-    }
-
-    .engine-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: calc(var(--bp3-grid-size) * 2);
-      margin-top: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .engine-card {
-      background-color: var(--bp3-light-gray5);
-      border: 1px solid var(--bp3-divider-color);
-      border-radius: var(--bp3-border-radius);
-      padding: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .bp3-dark .engine-card {
-      background-color: var(--bp3-dark-gray4);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .engine-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: calc(var(--bp3-grid-size) * 1.5);
-    }
-
-    .engine-name {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--bp3-heading-color);
-    }
-
-    .engine-status {
-      padding: 4px 8px;
-      border-radius: var(--bp3-border-radius);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .status-active {
-      background-color: rgba(15, 153, 96, 0.2);
-      color: var(--bp3-intent-success);
-    }
-
-    .status-standby {
-      background-color: rgba(217, 130, 43, 0.2);
-      color: var(--bp3-intent-warning);
-    }
-
-    .live-insights {
-      background-color: var(--bp3-light-gray5);
-      border-radius: var(--bp3-border-radius);
-      padding: calc(var(--bp3-grid-size) * 2);
-      margin-top: calc(var(--bp3-grid-size) * 2);
-    }
-
-    .bp3-dark .live-insights {
-      background-color: var(--bp3-dark-gray4);
-    }
-
-    .insight-item {
-      padding: calc(var(--bp3-grid-size) * 1.5);
-      background-color: white;
-      border: 1px solid var(--bp3-divider-color);
-      border-radius: var(--bp3-border-radius);
-      margin-bottom: calc(var(--bp3-grid-size));
-    }
-
-    .bp3-dark .insight-item {
-      background-color: var(--bp3-dark-gray3);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    .insight-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: calc(var(--bp3-grid-size));
-    }
-
-    .insight-type {
-      font-size: 12px;
-      color: var(--bp3-intent-primary);
-      font-weight: 600;
-      text-transform: uppercase;
-    }
-
-    .insight-timestamp {
-      font-size: 11px;
-      color: var(--bp3-text-color-muted);
-    }
-
-    .insight-content {
-      font-size: 14px;
-      line-height: 1.4;
-      color: var(--bp3-text-color);
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: calc(var(--bp3-grid-size) * 2);
-      justify-content: center;
-      margin-top: calc(var(--bp3-grid-size) * 3);
-    }
-
-    .custom-slider {
-      width: 100%;
-      height: 4px;
-      background-color: var(--bp3-gray3);
-      border-radius: 2px;
-      outline: none;
-      -webkit-appearance: none;
-      margin: calc(var(--bp3-grid-size)) 0;
-    }
-
-    .custom-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 16px;
-      height: 16px;
-      background-color: var(--bp3-intent-primary);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .custom-slider::-moz-range-thumb {
-      width: 16px;
-      height: 16px;
-      background-color: var(--bp3-intent-primary);
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-    }
-
-    .slider-value {
-      color: var(--bp3-intent-primary);
-      font-weight: 600;
-      font-size: 14px;
-      text-align: center;
-    }
-
-    .tag-list {
-      display: flex;
-      gap: calc(var(--bp3-grid-size) / 2);
-      margin-top: calc(var(--bp3-grid-size));
-      flex-wrap: wrap;
-    }
-
-    .custom-tag {
-      padding: 4px 8px;
-      background-color: rgba(19, 124, 189, 0.2);
-      color: var(--bp3-intent-primary);
-      border-radius: var(--bp3-border-radius);
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .api-limits {
-      font-size: 12px;
-      color: var(--bp3-text-color-muted);
-      margin-top: calc(var(--bp3-grid-size));
-    }
-
-    .api-limit-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-    }
-
-    .custom-toggle {
-      position: relative;
-      display: inline-block;
-      width: 40px;
-      height: 20px;
-    }
-
-    .custom-toggle input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: var(--bp3-gray3);
-      transition: 0.3s;
-      border-radius: 10px;
-    }
-
-    .toggle-slider:before {
-      position: absolute;
-      content: "";
-      height: 14px;
-      width: 14px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.3s;
-      border-radius: 50%;
-    }
-
-    input:checked + .toggle-slider {
-      background-color: var(--bp3-intent-success);
-    }
-
-    input:checked + .toggle-slider:before {
-      transform: translateX(20px);
-    }
-  </style>
-  <link href="blueprint-reconcile.css" rel="stylesheet">
-  <link href="light-mode-fix.css" rel="stylesheet">  <link href="no-icons-override.css" rel="stylesheet"></head>
-<body class="bp3-dark">
-  <div class="bp3-app slate-app-container">
-    <nav class="bp3-navbar bp3-dark">
-      <div class="bp3-navbar-group bp3-align-left">
-        <div class="bp3-navbar-heading">FinSight Intelligence</div>
-        <span class="bp3-navbar-divider"></span>
-        <div class="status-indicator">
-          <span class="status-dot" id="status-dot"></span>
-          <span id="status-text">System Online</span>
-        </div>
-      </div>
-      <div class="bp3-navbar-group bp3-align-right">
-        <span class="bp3-text-muted" id="function-count">0/32 functions</span>
-        <span class="bp3-navbar-divider"></span>
-        <button class="bp3-button" onclick="toggleTheme()" id="theme-toggle" style="padding: 6px 12px;">
-          
-          <span>Dark Mode</span>
-        </button>
-        <button class="bp3-button" onclick="showUserMenu(event)" style="padding: 6px 12px;">
-          
-          <span id="user-role-label">Finance User</span>
-        </button>
-      </div>
-    </nav>
-
-    <div class="app-content slate-layout-container">
-      
-  <aside class="bp3-sidebar">
-    <ul class="bp3-menu bp3-large">
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Analytics</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/portfolio-analyser.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Portfolio Analyser</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Insights</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analyser-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Scenario Analysis</span>
-        </a>
-      </li>
-      
-      <li class="bp3-menu-header">
-        <h6 class="bp3-heading">Knowledge</h6>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/news-market-data-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">News & Market Data</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/treasury-insights-config.html" class="bp3-active">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Treasury Config</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider"></div>
-      <div class="bp3-menu-header">
-        <h6 class="bp3-heading">Tools</h6>
-      </div>
-      <li>
-        <a class="bp3-menu-item" href="/calculation-tester.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Tester</span>
-        </a>
-      </li>
-      <li>
-        <a class="bp3-menu-item" href="/scenario-analysis.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">MCTS Analysis</span>
-        </a>
-      </li>
-      
-      <div class="bp3-menu-divider technology-only" ></div>
-      <div class="bp3-menu-header technology-only" >
-        <h6 class="bp3-heading">System</h6>
-      </div>
-      <li >
-        <a class="bp3-menu-item" href="/command-centre.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Command Centre</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculation-manager-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculation Manager</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/ml-models-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">ML Models</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/calculations-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Calculations Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/news-market-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Market Config</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/deployment.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">Deployment</span>
-        </a>
-      </li>
-      <li >
-        <a class="bp3-menu-item" href="/system-config.html">
-          <span class="bp3-text-overflow-ellipsis bp3-fill">System Config</span>
-        </a>
-      </li>
-    </ul>
-  </aside>
-
-      <main class="main-content slate-content-primary">
-        <div class="content-header">
-          <h1 class="bp3-heading">Treasury Context-Aware Insights Configuration</h1>
-          <p class="bp3-text-muted">Configure treasury intelligence engines and smart formula selectors</p>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treasury Context-Aware Insights Configuration - FinSight Intelligence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+            background: #0a0a0a;
+            color: #ffffff;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .status-bar {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            background: #4ade80;
+            border-radius: 50%;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .config-section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #cccccc;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .slider-container {
+            margin: 10px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .slider-value {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(156, 163, 175, 0.3);
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background: #9ca3af;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: rgba(74, 222, 128, 0.3);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(20px);
+            background: #4ade80;
+        }
+
+        .ai-engine-section {
+            grid-column: 1 / -1;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .engine-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .engine-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .engine-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .engine-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .engine-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .status-standby {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fbbf24;
+        }
+
+        .portfolio-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #4ade80;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .context-detection {
+            margin-top: 20px;
+        }
+
+        .context-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .confidence-bar {
+            width: 60px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #fbbf24, #4ade80);
+            border-radius: 3px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .live-insights {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .insight-item {
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .insight-type {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .insight-timestamp {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .insight-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <div class="nav-bar">
+            <button class="back-btn" onclick="window.location.href='/'">← Back</button>
+            <h1 class="page-title">Treasury Context-Aware Insights Configuration</h1>
         </div>
 
         <!-- Status Bar -->
         <div class="status-bar">
-          <div class="status-icon"></div>
-          <span>Treasury Intelligence Engine Active - Smart Formula Selector Online</span>
-        </div>
-
-        <!-- Treasury Configuration Metrics -->
-        <div class="treasury-config-metrics apple-data-grid" style="margin-bottom: 30px;">
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Active Engines</div>
-            <div class="apple-metric-value">3</div>
-            <div class="apple-metric-change positive">↗ +1</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Formula Accuracy</div>
-            <div class="apple-metric-value">94.7%</div>
-            <div class="apple-metric-change positive">↗ +2.3%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Context Detection</div>
-            <div class="apple-metric-value">85%</div>
-            <div class="apple-metric-change positive">↗ +5%</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Response Time</div>
-            <div class="apple-metric-value">142ms</div>
-            <div class="apple-metric-change positive">↓ -28ms</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Live Insights</div>
-            <div class="apple-metric-value">247</div>
-            <div class="apple-metric-change positive">↗ +34</div>
-          </div>
-          <div class="apple-metric-card">
-            <div class="apple-metric-label">Config Status</div>
-            <div class="apple-metric-value">Optimized</div>
-            <div class="apple-metric-change positive">✓ Ready</div>
-          </div>
+            <div class="status-indicator"></div>
+            <span>Treasury Intelligence Engine Active - Smart Formula Selector Online</span>
         </div>
 
         <!-- Main Configuration Grid -->
-        <div class="slate-tabs-container">
-          <div class="slate-tabs-header">
-            <div class="slate-tab active" onclick="switchTab('portfolio')">Portfolio Settings</div>
-            <div class="slate-tab" onclick="switchTab('engines')">AI Engines</div>
-            <div class="slate-tab" onclick="switchTab('insights')">Live Insights</div>
-          </div>
-          <div class="slate-tabs-content">
-            <div id="portfolio-tab" class="slate-tab-panel active">
-              <div class="main-grid slate-grid slate-grid-3">
-          <!-- Portfolio Parameters -->
-          <div class="config-section slate-card">
-            <h2 class="section-title">
-              <div class="section-icon">💼</div>
-              Portfolio Parameters
-            </h2>
+        <div class="main-grid">
+            <!-- Portfolio Parameters -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <div class="section-icon">💼</div>
+                    Portfolio Parameters
+                </h2>
 
-            <div class="bp3-form-group">
-              <label class="bp3-label">Portfolio Value (USD)</label>
-              <input type="number" class="bp3-input" id="portfolioValue" value="100000000" placeholder="e.g., 100000000">
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Equity Allocation</label>
-              <input type="range" min="0" max="100" value="60" class="custom-slider" id="equityAllocation"
-                  oninput="updateSliderValue('equityAllocation', this.value, '%')">
-              <div class="slider-value" id="equityAllocationValue">60%</div>
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Bond Allocation</label>
-              <input type="range" min="0" max="100" value="40" class="custom-slider" id="bondAllocation"
-                  oninput="updateSliderValue('bondAllocation', this.value, '%')">
-              <div class="slider-value" id="bondAllocationValue">40%</div>
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Target Annual Return</label>
-              <input type="range" min="0" max="20" step="0.1" value="8" class="custom-slider" id="annualReturn"
-                  oninput="updateSliderValue('annualReturn', this.value, '%')">
-              <div class="slider-value" id="annualReturnValue">8.0%</div>
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Volatility Threshold</label>
-              <input type="range" min="0" max="50" step="0.1" value="20" class="custom-slider" id="volatility"
-                  oninput="updateSliderValue('volatility', this.value, '%')">
-              <div class="slider-value" id="volatilityValue">20.0%</div>
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Risk-Free Rate</label>
-              <input type="range" min="0" max="10" step="0.1" value="4.5" class="custom-slider" id="riskFreeRate"
-                  oninput="updateSliderValue('riskFreeRate', this.value, '%')">
-              <div class="slider-value" id="riskFreeRateValue">4.5%</div>
-            </div>
-          </div>
-
-          <!-- Market Data Configuration -->
-          <div class="config-section slate-card">
-            <h2 class="section-title">
-              <div class="section-icon">📊</div>
-              Market Data & Cache
-            </h2>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Cache Expiry (minutes)</label>
-              <input type="number" class="bp3-input" id="cacheExpiry" value="5" min="1" max="60">
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">Primary Symbols</label>
-              <div class="tag-list">
-                <span class="custom-tag">SPY</span>
-                <span class="custom-tag">VIX</span>
-                <span class="custom-tag">TLT</span>
-                <span class="custom-tag">DXY</span>
-              </div>
-            </div>
-
-            <div class="bp3-form-group">
-              <label class="bp3-label">API Rate Limits</label>
-              <div class="api-limits">
-                <div class="api-limit-row">
-                  <span>Perplexity:</span>
-                  <span>1,000/day</span>
+                <div class="form-group">
+                    <label class="form-label">Portfolio Value (USD)</label>
+                    <input type="number" class="form-input" id="portfolioValue" value="100000000" 
+                           placeholder="e.g., 100000000">
                 </div>
-                <div class="api-limit-row">
-                  <span>Finnhub:</span>
-                  <span>60,000/day</span>
+
+                <div class="form-group">
+                    <label class="form-label">Equity Allocation</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="60" class="slider" id="equityAllocation"
+                               oninput="updateSliderValue('equityAllocation', this.value, '%')">
+                        <div class="slider-value" id="equityAllocationValue">60%</div>
+                    </div>
                 </div>
-                <div class="api-limit-row">
-                  <span>FMP:</span>
-                  <span>250/day</span>
+
+                <div class="form-group">
+                    <label class="form-label">Bond Allocation</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="100" value="40" class="slider" id="bondAllocation"
+                               oninput="updateSliderValue('bondAllocation', this.value, '%')">
+                        <div class="slider-value" id="bondAllocationValue">40%</div>
+                    </div>
                 </div>
-              </div>
+
+                <div class="form-group">
+                    <label class="form-label">Target Annual Return</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="20" step="0.1" value="8" class="slider" id="annualReturn"
+                               oninput="updateSliderValue('annualReturn', this.value, '%')">
+                        <div class="slider-value" id="annualReturnValue">8.0%</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Volatility Threshold</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="50" step="0.1" value="20" class="slider" id="volatility"
+                               oninput="updateSliderValue('volatility', this.value, '%')">
+                        <div class="slider-value" id="volatilityValue">20.0%</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Risk-Free Rate</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="10" step="0.1" value="4.5" class="slider" id="riskFreeRate"
+                               oninput="updateSliderValue('riskFreeRate', this.value, '%')">
+                        <div class="slider-value" id="riskFreeRateValue">4.5%</div>
+                    </div>
+                </div>
             </div>
 
-            <div class="bp3-form-group">
-              <label class="bp3-label">Real-time Updates</label>
-              <label class="custom-toggle">
-                <input type="checkbox" checked id="realtimeUpdates">
-                <span class="toggle-slider"></span>
-              </label>
+            <!-- Market Data Configuration -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <div class="section-icon">📊</div>
+                    Market Data & Cache
+                </h2>
+
+                <div class="form-group">
+                    <label class="form-label">Cache Expiry (minutes)</label>
+                    <input type="number" class="form-input" id="cacheExpiry" value="5" min="1" max="60">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Primary Symbols</label>
+                    <div style="display: flex; gap: 5px; margin-top: 8px;">
+                        <span style="padding: 4px 8px; background: rgba(102, 126, 234, 0.2); border-radius: 12px; font-size: 12px;">SPY</span>
+                        <span style="padding: 4px 8px; background: rgba(102, 126, 234, 0.2); border-radius: 12px; font-size: 12px;">VIX</span>
+                        <span style="padding: 4px 8px; background: rgba(102, 126, 234, 0.2); border-radius: 12px; font-size: 12px;">TLT</span>
+                        <span style="padding: 4px 8px; background: rgba(102, 126, 234, 0.2); border-radius: 12px; font-size: 12px;">DXY</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">API Rate Limits</label>
+                    <div style="font-size: 12px; color: #999; margin-top: 8px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Perplexity:</span>
+                            <span>1,000/day</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                            <span>Finnhub:</span>
+                            <span>60,000/day</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>FMP:</span>
+                            <span>250/day</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Real-time Updates</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked id="realtimeUpdates">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <!-- Live Market Metrics -->
+                <div class="portfolio-metrics">
+                    <div class="metric-card">
+                        <div class="metric-value" id="currentSPY">$485.32</div>
+                        <div class="metric-label">SPY Price</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="currentVIX">18.5</div>
+                        <div class="metric-label">VIX Level</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value" id="currentTLT">$89.23</div>
+                        <div class="metric-label">TLT Price</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Live Market Metrics -->
-            <div class="portfolio-metrics">
-              <div class="metric-card">
-                <div class="metric-value" id="currentSPY">$485.32</div>
-                <div class="metric-label">SPY Price</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value" id="currentVIX">18.5</div>
-                <div class="metric-label">VIX Level</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value" id="currentTLT">$89.23</div>
-                <div class="metric-label">TLT Price</div>
-              </div>
-            </div>
-          </div>
+            <!-- Context Detection -->
+            <div class="config-section">
+                <h2 class="section-title">
+                    <div class="section-icon">🎯</div>
+                    Context Detection
+                </h2>
 
-          <!-- Context Detection -->
-          <div class="config-section slate-card">
-            <h2 class="section-title">
-              <div class="section-icon">🎯</div>
-              Context Detection
-            </h2>
+                <div class="form-group">
+                    <label class="form-label">Minimum Correlation</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="1" step="0.1" value="0.3" class="slider" id="minCorrelation"
+                               oninput="updateSliderValue('minCorrelation', this.value, '')">
+                        <div class="slider-value" id="minCorrelationValue">0.3</div>
+                    </div>
+                </div>
 
-            <div class="bp3-form-group">
-              <label class="bp3-label">Minimum Correlation</label>
-              <input type="range" min="0" max="1" step="0.1" value="0.3" class="custom-slider" id="minCorrelation"
-                  oninput="updateSliderValue('minCorrelation', this.value, '')">
-              <div class="slider-value" id="minCorrelationValue">0.3</div>
+                <div class="form-group">
+                    <label class="form-label">Strong Correlation</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="1" step="0.1" value="0.7" class="slider" id="strongCorrelation"
+                               oninput="updateSliderValue('strongCorrelation', this.value, '')">
+                        <div class="slider-value" id="strongCorrelationValue">0.7</div>
+                    </div>
+                </div>
+
+                <div class="context-detection">
+                    <h4 style="margin-bottom: 15px; color: #ccc;">Current Context Detection</h4>
+                    
+                    <div class="context-item">
+                        <span>Fixed Income Analysis</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 85%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="context-item">
+                        <span>Risk Assessment</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 72%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="context-item">
+                        <span>Performance Evaluation</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 63%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="context-item">
+                        <span>Hedging Strategy</span>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" style="width: 41%;"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="bp3-form-group">
-              <label class="bp3-label">Strong Correlation</label>
-              <input type="range" min="0" max="1" step="0.1" value="0.7" class="custom-slider" id="strongCorrelation"
-                  oninput="updateSliderValue('strongCorrelation', this.value, '')">
-              <div class="slider-value" id="strongCorrelationValue">0.7</div>
-            </div>
+            <!-- AI Intelligence Engines -->
+            <div class="config-section ai-engine-section">
+                <h2 class="section-title">
+                    <div class="section-icon">🧠</div>
+                    AI Intelligence Engines
+                </h2>
 
-            <div class="context-detection">
-              <h4 style="margin-bottom: calc(var(--bp3-grid-size) * 1.5); color: var(--bp3-text-color-muted);">Current Context Detection</h4>
-              
-              <div class="context-item">
-                <span>Fixed Income Analysis</span>
-                <div class="confidence-bar">
-                  <div class="confidence-fill" style="width: 85%;"></div>
-                </div>
-              </div>
-              
-              <div class="context-item">
-                <span>Risk Assessment</span>
-                <div class="confidence-bar">
-                  <div class="confidence-fill" style="width: 72%;"></div>
-                </div>
-              </div>
-              
-              <div class="context-item">
-                <span>Performance Evaluation</span>
-                <div class="confidence-bar">
-                  <div class="confidence-fill" style="width: 63%;"></div>
-                </div>
-              </div>
-              
-              <div class="context-item">
-                <span>Hedging Strategy</span>
-                <div class="confidence-bar">
-                  <div class="confidence-fill" style="width: 41%;"></div>
-                </div>
-              </div>
-            </div>
-          </div>
+                <div class="engine-grid">
+                    <div class="engine-card">
+                        <div class="engine-header">
+                            <span class="engine-name">Smart Formula Selector</span>
+                            <span class="engine-status status-active">ACTIVE</span>
+                        </div>
+                        <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
+                            Intelligently selects optimal financial formulas based on context
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label">Selection Confidence</label>
+                            <div class="slider-container">
+                                <input type="range" min="0" max="1" step="0.1" value="0.8" class="slider" id="selectorConfidence">
+                                <div class="slider-value">0.8</div>
+                            </div>
+                        </div>
+                    </div>
 
-          <!-- AI Intelligence Engines -->
-          <div class="config-section ai-engine-section slate-card">
-            <h2 class="section-title">
-              <div class="section-icon">🧠</div>
-              AI Intelligence Engines
-            </h2>
+                    <div class="engine-card">
+                        <div class="engine-header">
+                            <span class="engine-name">Context Analyzer</span>
+                            <span class="engine-status status-active">ACTIVE</span>
+                        </div>
+                        <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
+                            Analyzes market context and treasury scenarios
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label">Analysis Depth</label>
+                            <div class="slider-container">
+                                <input type="range" min="1" max="10" value="7" class="slider" id="analysisDepth">
+                                <div class="slider-value">7</div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div class="engine-grid">
-              <div class="engine-card">
-                <div class="engine-header">
-                  <span class="engine-name">Smart Formula Selector</span>
-                  <span class="engine-status status-active">ACTIVE</span>
-                </div>
-                <p style="font-size: 12px; color: var(--bp3-text-color-muted); margin-bottom: calc(var(--bp3-grid-size));">
-                  Intelligently selects optimal financial formulas based on context
-                </p>
-                <div class="bp3-form-group">
-                  <label class="bp3-label">Selection Confidence</label>
-                  <input type="range" min="0" max="1" step="0.1" value="0.8" class="custom-slider" id="selectorConfidence">
-                  <div class="slider-value">0.8</div>
-                </div>
-              </div>
+                    <div class="engine-card">
+                        <div class="engine-header">
+                            <span class="engine-name">Treasury Intelligence</span>
+                            <span class="engine-status status-active">ACTIVE</span>
+                        </div>
+                        <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
+                            Core treasury calculation and insight engine
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label">Insight Generation Rate</label>
+                            <select class="form-input" id="insightRate">
+                                <option value="realtime">Real-time</option>
+                                <option value="5min">Every 5 minutes</option>
+                                <option value="15min">Every 15 minutes</option>
+                                <option value="1hour">Hourly</option>
+                            </select>
+                        </div>
+                    </div>
 
-              <div class="engine-card">
-                <div class="engine-header">
-                  <span class="engine-name">Context Analyzer</span>
-                  <span class="engine-status status-active">ACTIVE</span>
+                    <div class="engine-card">
+                        <div class="engine-header">
+                            <span class="engine-name">Perplexity Integration</span>
+                            <span class="engine-status status-standby">STANDBY</span>
+                        </div>
+                        <p style="font-size: 12px; color: #999; margin-bottom: 10px;">
+                            AI-powered financial research and analysis
+                        </p>
+                        <div class="form-group">
+                            <label class="form-label">Query Complexity</label>
+                            <select class="form-input" id="queryComplexity">
+                                <option value="simple">Simple</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <p style="font-size: 12px; color: var(--bp3-text-color-muted); margin-bottom: calc(var(--bp3-grid-size));">
-                  Analyzes market context and treasury scenarios
-                </p>
-                <div class="bp3-form-group">
-                  <label class="bp3-label">Analysis Depth</label>
-                  <input type="range" min="1" max="10" value="7" class="custom-slider" id="analysisDepth">
-                  <div class="slider-value">7</div>
-                </div>
-              </div>
-
-              <div class="engine-card">
-                <div class="engine-header">
-                  <span class="engine-name">Treasury Intelligence</span>
-                  <span class="engine-status status-active">ACTIVE</span>
-                </div>
-                <p style="font-size: 12px; color: var(--bp3-text-color-muted); margin-bottom: calc(var(--bp3-grid-size));">
-                  Core treasury calculation and insight engine
-                </p>
-                <div class="bp3-form-group">
-                  <label class="bp3-label">Insight Generation Rate</label>
-                  <div class="bp3-select">
-                    <select id="insightRate">
-                      <option value="realtime">Real-time</option>
-                      <option value="5min">Every 5 minutes</option>
-                      <option value="15min">Every 15 minutes</option>
-                      <option value="1hour">Hourly</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div class="engine-card">
-                <div class="engine-header">
-                  <span class="engine-name">Perplexity Integration</span>
-                  <span class="engine-status status-standby">STANDBY</span>
-                </div>
-                <p style="font-size: 12px; color: var(--bp3-text-color-muted); margin-bottom: calc(var(--bp3-grid-size));">
-                  AI-powered financial research and analysis
-                </p>
-                <div class="bp3-form-group">
-                  <label class="bp3-label">Query Complexity</label>
-                  <div class="bp3-select">
-                    <select id="queryComplexity">
-                      <option value="simple">Simple</option>
-                      <option value="intermediate">Intermediate</option>
-                      <option value="advanced">Advanced</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
             </div>
-                </div>
-              </div>
-            </div>
-            <div id="engines-tab" class="slate-tab-panel">
-              <div class="slate-widget-container">
-          <h2 class="section-title">
-            <div class="section-icon">💡</div>
-            Live Insights Preview
-          </h2>
-          
-          <div class="live-insights">
-            <div class="insight-item">
-              <div class="insight-header">
-                <span class="insight-type">RISK ANALYSIS</span>
-                <span class="insight-timestamp">2 minutes ago</span>
-              </div>
-              <div class="insight-content">
-                VIX at 18.5 suggests moderate market stress. Consider reducing equity exposure by 5% and increasing cash position for potential opportunities.
-              </div>
-            </div>
-            
-            <div class="insight-item">
-              <div class="insight-header">
-                <span class="insight-type">YIELD CURVE</span>
-                <span class="insight-timestamp">5 minutes ago</span>
-              </div>
-              <div class="insight-content">
-                2Y/10Y spread at 45bps indicates steepening trend. Duration risk in bond portfolio manageable at current levels.
-              </div>
-            </div>
-            
-            <div class="insight-item">
-              <div class="insight-header">
-                <span class="insight-type">PORTFOLIO OPTIMIZATION</span>
-                <span class="insight-timestamp">8 minutes ago</span>
-              </div>
-              <div class="insight-content">
-                Current Sharpe ratio at 1.82 above target. Rebalancing recommendation: increase EM equity allocation by 3%.
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-<!-- Action Buttons -->
-<div class="action-buttons">
-          <button onclick="testInsightEngine()">Test Insight Engine</button>
-          <button onclick="saveConfiguration()">Save Configuration</button>
-          <button onclick="deployToProduction()">Deploy to Production</button>
+        <!-- Live Insights Preview -->
+        <div class="config-section">
+            <h2 class="section-title">
+                <div class="section-icon">💡</div>
+                Live Insights Preview
+            </h2>
+            
+            <div class="live-insights">
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <span class="insight-type">RISK ANALYSIS</span>
+                        <span class="insight-timestamp">2 minutes ago</span>
+                    </div>
+                    <div class="insight-content">
+                        VIX at 18.5 suggests moderate market stress. Consider reducing equity exposure by 5% and increasing cash position for potential opportunities.
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <span class="insight-type">YIELD CURVE</span>
+                        <span class="insight-timestamp">5 minutes ago</span>
+                    </div>
+                    <div class="insight-content">
+                        2Y/10Y spread at 45bps indicates steepening trend. Duration risk in bond portfolio manageable at current levels.
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-header">
+                        <span class="insight-type">PORTFOLIO OPTIMIZATION</span>
+                        <span class="insight-timestamp">8 minutes ago</span>
+                    </div>
+                    <div class="insight-content">
+                        Current Sharpe ratio at 1.82 above target. Rebalancing recommendation: increase EM equity allocation by 3%.
+                    </div>
+                </div>
+            </div>
         </div>
-      </main>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-secondary" onclick="testInsightEngine()">🧪 Test Insight Engine</button>
+            <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Configuration</button>
+            <button class="btn btn-secondary" onclick="deployToProduction()">🚀 Deploy to Production</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Tab switching functionality
-    function switchTab(tabName) {
-      // Hide all tabs
-      document.querySelectorAll('.slate-tab').forEach(tab => {
-        tab.classList.remove('active');
-      });
-      document.querySelectorAll('.slate-tab-panel').forEach(panel => {
-        panel.classList.remove('active');
-      });
-      
-      // Show selected tab
-      event.target.classList.add('active');
-      document.getElementById(tabName + '-tab').classList.add('active');
-    }
-
-    // Configuration state
-    let config = {
-      portfolio: {
-        value: 100000000,
-        equityAllocation: 0.6,
-        bondAllocation: 0.4,
-        annualReturn: 0.08,
-        volatility: 0.20,
-        riskFreeRate: 0.045
-      },
-      market: {
-        cacheExpiry: 5,
-        symbols: ['SPY', 'VIX', 'TLT', 'DXY'],
-        realtimeUpdates: true,
-        apiLimits: {
-          perplexity: 1000,
-          finnhub: 60000,
-          fmp: 250
-        }
-      },
-      context: {
-        minCorrelation: 0.3,
-        strongCorrelation: 0.7
-      },
-      engines: {
-        selectorConfidence: 0.8,
-        analysisDepth: 7,
-        insightRate: 'realtime',
-        queryComplexity: 'intermediate'
-      }
-    };
-
-    function updateSliderValue(sliderId, value, suffix) {
-      document.getElementById(sliderId + 'Value').textContent = value + suffix;
-      
-      // Update config
-      if (sliderId === 'equityAllocation') {
-        config.portfolio.equityAllocation = value / 100;
-      } else if (sliderId === 'bondAllocation') {
-        config.portfolio.bondAllocation = value / 100;
-      } else if (sliderId === 'annualReturn') {
-        config.portfolio.annualReturn = value / 100;
-      } else if (sliderId === 'volatility') {
-        config.portfolio.volatility = value / 100;
-      } else if (sliderId === 'riskFreeRate') {
-        config.portfolio.riskFreeRate = value / 100;
-      } else if (sliderId === 'minCorrelation') {
-        config.context.minCorrelation = parseFloat(value);
-      } else if (sliderId === 'strongCorrelation') {
-        config.context.strongCorrelation = parseFloat(value);
-      }
-    }
-
-    async function testInsightEngine() {
-      const testBtn = event.target;
-      testBtn.disabled = true;
-      testBtn.textContent = 'Testing...';
-
-      try {
-        const response = await fetch('/api/configure', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'test-treasury-insights',
-            data: config
-          })
-        });
-
-        if (response.ok) {
-          const result = await response.json();
-          alert('✅ Insight engine test successful!\n\nSample insight: ' + result.sampleInsight);
-        } else {
-          throw new Error('Test failed');
-        }
-      } catch (error) {
-        alert('❌ Insight engine test failed: ' + error.message);
-      } finally {
-        testBtn.disabled = false;
-        testBtn.textContent = 'Test Insight Engine';
-      }
-    }
-
-    async function saveConfiguration() {
-      const saveBtn = event.target;
-      saveBtn.disabled = true;
-      saveBtn.textContent = 'Saving...';
-
-      try {
-        const response = await fetch('/api/configure', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'save-treasury-config',
-            data: config
-          })
-        });
-
-        if (response.ok) {
-          alert('✅ Treasury configuration saved successfully!');
-        } else {
-          throw new Error('Save failed');
-        }
-      } catch (error) {
-        alert('❌ Failed to save configuration: ' + error.message);
-      } finally {
-        saveBtn.disabled = false;
-        saveBtn.textContent = 'Save Configuration';
-      }
-    }
-
-    async function deployToProduction() {
-      const deployBtn = event.target;
-      deployBtn.disabled = true;
-      deployBtn.textContent = 'Deploying...';
-
-      try {
-        const response = await fetch('/api/configure', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'deploy-treasury-production',
-            data: {
-              config: config,
-              endpoints: ['/api/treasury', '/api/news-intelligence'],
-              services: ['smart-formula-selector', 'context-analyzer']
+    <script>
+        // Configuration state
+        let config = {
+            portfolio: {
+                value: 100000000,
+                equityAllocation: 0.6,
+                bondAllocation: 0.4,
+                annualReturn: 0.08,
+                volatility: 0.20,
+                riskFreeRate: 0.045
+            },
+            market: {
+                cacheExpiry: 5,
+                symbols: ['SPY', 'VIX', 'TLT', 'DXY'],
+                realtimeUpdates: true,
+                apiLimits: {
+                    perplexity: 1000,
+                    finnhub: 60000,
+                    fmp: 250
+                }
+            },
+            context: {
+                minCorrelation: 0.3,
+                strongCorrelation: 0.7
+            },
+            engines: {
+                selectorConfidence: 0.8,
+                analysisDepth: 7,
+                insightRate: 'realtime',
+                queryComplexity: 'intermediate'
             }
-          })
-        });
+        };
 
-        if (response.ok) {
-          alert('✅ Configuration deployed to production successfully!');
-        } else {
-          throw new Error('Deployment failed');
+        function updateSliderValue(sliderId, value, suffix) {
+            document.getElementById(sliderId + 'Value').textContent = value + suffix;
+            
+            // Update config
+            if (sliderId === 'equityAllocation') {
+                config.portfolio.equityAllocation = value / 100;
+            } else if (sliderId === 'bondAllocation') {
+                config.portfolio.bondAllocation = value / 100;
+            } else if (sliderId === 'annualReturn') {
+                config.portfolio.annualReturn = value / 100;
+            } else if (sliderId === 'volatility') {
+                config.portfolio.volatility = value / 100;
+            } else if (sliderId === 'riskFreeRate') {
+                config.portfolio.riskFreeRate = value / 100;
+            } else if (sliderId === 'minCorrelation') {
+                config.context.minCorrelation = parseFloat(value);
+            } else if (sliderId === 'strongCorrelation') {
+                config.context.strongCorrelation = parseFloat(value);
+            }
         }
-      } catch (error) {
-        alert('❌ Failed to deploy to production: ' + error.message);
-      } finally {
-        deployBtn.disabled = false;
-        deployBtn.textContent = 'Deploy to Production';
-      }
-    }
 
-    // Auto-update market data
-    function updateMarketData() {
-      // Simulate real market data updates
-      const spyBase = 485.32;
-      const vixBase = 18.5;
-      const tltBase = 89.23;
-      
-      document.getElementById('currentSPY').textContent = 
-        '$' + (spyBase + (Math.random() - 0.5) * 2).toFixed(2);
-      document.getElementById('currentVIX').textContent = 
-        (vixBase + (Math.random() - 0.5) * 1).toFixed(1);
-      document.getElementById('currentTLT').textContent = 
-        '$' + (tltBase + (Math.random() - 0.5) * 0.5).toFixed(2);
-    }
+        async function testInsightEngine() {
+            const testBtn = event.target;
+            testBtn.disabled = true;
+            testBtn.textContent = '🧪 Testing...';
 
-    function toggleTheme() {
-      const body = document.body;
-      const button = document.getElementById('theme-toggle');
-      
-      if (body.classList.contains('bp3-dark')) {
-        body.classList.remove('bp3-dark');
-        button.className = 'bp3-button bp3-minimal bp3-icon-flash';
-      } else {
-        body.classList.add('bp3-dark');
-        button.className = 'bp3-button bp3-minimal bp3-icon-moon';
-      }
-    }
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'test-treasury-insights',
+                        data: config
+                    })
+                });
 
-    // Auto-save configuration every 30 seconds
-    setInterval(() => {
-      console.log('Auto-saving treasury configuration...');
-    }, 30000);
+                if (response.ok) {
+                    const result = await response.json();
+                    alert('✅ Insight engine test successful!\n\nSample insight: ' + result.sampleInsight);
+                } else {
+                    throw new Error('Test failed');
+                }
+            } catch (error) {
+                alert('❌ Insight engine test failed: ' + error.message);
+            } finally {
+                testBtn.disabled = false;
+                testBtn.textContent = '🧪 Test Insight Engine';
+            }
+        }
 
-    // Update market data every 5 seconds
-    setInterval(updateMarketData, 5000);
+        async function saveConfiguration() {
+            const saveBtn = event.target;
+            saveBtn.disabled = true;
+            saveBtn.textContent = '💾 Saving...';
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      updateMarketData();
-    });
-  </script>
-  <script src="shared-header.js"></script>
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'save-treasury-config',
+                        data: config
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Treasury configuration saved successfully!');
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                alert('❌ Failed to save configuration: ' + error.message);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = '💾 Save Configuration';
+            }
+        }
+
+        async function deployToProduction() {
+            const deployBtn = event.target;
+            deployBtn.disabled = true;
+            deployBtn.textContent = '🚀 Deploying...';
+
+            try {
+                const response = await fetch('/api/configure', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'deploy-treasury-production',
+                        data: {
+                            config: config,
+                            endpoints: ['/api/treasury', '/api/news-intelligence'],
+                            services: ['smart-formula-selector', 'context-analyzer']
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Configuration deployed to production successfully!');
+                } else {
+                    throw new Error('Deployment failed');
+                }
+            } catch (error) {
+                alert('❌ Failed to deploy to production: ' + error.message);
+            } finally {
+                deployBtn.disabled = false;
+                deployBtn.textContent = '🚀 Deploy to Production';
+            }
+        }
+
+        // Auto-update market data
+        function updateMarketData() {
+            // Simulate real market data updates
+            const spyBase = 485.32;
+            const vixBase = 18.5;
+            const tltBase = 89.23;
+            
+            document.getElementById('currentSPY').textContent = 
+                '$' + (spyBase + (Math.random() - 0.5) * 2).toFixed(2);
+            document.getElementById('currentVIX').textContent = 
+                (vixBase + (Math.random() - 0.5) * 1).toFixed(1);
+            document.getElementById('currentTLT').textContent = 
+                '$' + (tltBase + (Math.random() - 0.5) * 0.5).toFixed(2);
+        }
+
+        // Auto-save configuration every 30 seconds
+        setInterval(() => {
+            console.log('Auto-saving treasury configuration...');
+        }, 30000);
+
+        // Update market data every 5 seconds
+        setInterval(updateMarketData, 5000);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateMarketData();
+        });
+    </script>
 </body>
 </html>

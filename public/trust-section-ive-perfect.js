@@ -102,17 +102,17 @@ function createPixelPerfectTrustSection() {
       .trust-container {
         max-width: 1200px;
         margin: 0 auto;
-        padding: var(--ive-space-xl) var(--ive-space-lg);
+        padding: var(--ive-space-lg) var(--ive-space-lg);
         display: grid;
-        gap: var(--ive-space-xxl);
+        gap: var(--ive-space-xl);
       }
       
-      /* Hero Section - Mathematical Center */
+      /* Hero Section - Minimal */
       .trust-hero-perfect {
         display: grid;
-        gap: var(--ive-space-md);
+        gap: var(--ive-space-sm);
         text-align: center;
-        padding: var(--ive-space-xl) 0;
+        padding: var(--ive-space-md) 0;
       }
       
       .trust-status-badge {
@@ -143,34 +143,138 @@ function createPixelPerfectTrustSection() {
       }
       
       .trust-hero-title {
-        font-size: var(--ive-font-hero);
-        font-weight: 700;
+        font-size: var(--ive-font-xl);
+        font-weight: 600;
         line-height: var(--ive-line-tight);
         letter-spacing: -0.02em;
-        background: linear-gradient(135deg, var(--ive-blue), var(--ive-purple));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: ive-gradient 8s ease-in-out infinite;
-      }
-      
-      @keyframes ive-gradient {
-        0%, 100% { background-position: 0% 50%; }
-        50% { background-position: 100% 50%; }
+        color: var(--ive-gray-900);
       }
       
       .trust-hero-subtitle {
-        font-size: var(--ive-font-lg);
+        font-size: var(--ive-font-base);
         font-weight: 400;
         line-height: var(--ive-line-base);
         color: var(--ive-gray-600);
       }
       
-      .trust-hero-description {
-        font-size: var(--ive-font-base);
-        line-height: var(--ive-line-relaxed);
-        color: var(--ive-gray-700);
-        max-width: 600px;
-        margin: 0 auto;
+      /* Problem Section */
+      .trust-problem-section {
+        margin: var(--ive-space-lg) 0;
+      }
+      
+      .trust-problem-card {
+        background: var(--ive-gray-50);
+        border-radius: var(--ive-radius-lg);
+        padding: var(--ive-space-xl);
+      }
+      
+      .trust-problem-title {
+        font-size: var(--ive-font-lg);
+        font-weight: 600;
+        margin: 0 0 var(--ive-space-lg) 0;
+        text-align: center;
+      }
+      
+      .trust-problem-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--ive-space-lg);
+      }
+      
+      .trust-problem-item {
+        text-align: center;
+      }
+      
+      .trust-problem-icon {
+        font-size: var(--ive-font-xxl);
+        display: block;
+        margin-bottom: var(--ive-space-sm);
+      }
+      
+      .trust-problem-item h3 {
+        font-size: var(--ive-font-md);
+        font-weight: 600;
+        margin: 0 0 var(--ive-space-xs) 0;
+      }
+      
+      .trust-problem-item p {
+        font-size: var(--ive-font-sm);
+        color: var(--ive-gray-600);
+        line-height: var(--ive-line-base);
+      }
+      
+      /* Solution Section */
+      .trust-section-title {
+        font-size: var(--ive-font-lg);
+        font-weight: 600;
+        text-align: center;
+        margin: 0 0 var(--ive-space-lg) 0;
+      }
+      
+      .trust-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: var(--ive-space-lg);
+      }
+      
+      .trust-solution-card {
+        background: white;
+        border: 1px solid var(--ive-gray-200);
+        border-radius: var(--ive-radius-lg);
+        padding: var(--ive-space-lg);
+        transition: all var(--ive-duration-base) var(--ive-ease-out);
+      }
+      
+      .trust-solution-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--ive-shadow-md);
+        border-color: var(--ive-blue);
+      }
+      
+      .trust-card-icon {
+        font-size: var(--ive-font-xl);
+        margin-bottom: var(--ive-space-md);
+      }
+      
+      .trust-card-title {
+        font-size: var(--ive-font-md);
+        font-weight: 600;
+        margin: 0 0 var(--ive-space-sm) 0;
+      }
+      
+      .trust-card-desc {
+        font-size: var(--ive-font-sm);
+        color: var(--ive-gray-600);
+        line-height: var(--ive-line-base);
+        margin: 0 0 var(--ive-space-md) 0;
+      }
+      
+      .trust-card-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--ive-space-md);
+        padding-top: var(--ive-space-md);
+        border-top: 1px solid var(--ive-gray-200);
+      }
+      
+      .trust-stat {
+        text-align: center;
+      }
+      
+      .trust-stat-number {
+        display: block;
+        font-size: var(--ive-font-md);
+        font-weight: 600;
+        color: var(--ive-blue);
+      }
+      
+      .trust-stat-label {
+        display: block;
+        font-size: var(--ive-font-xs);
+        color: var(--ive-gray-500);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 2px;
       }
       
       .trust-hero-cta {
@@ -203,11 +307,80 @@ function createPixelPerfectTrustSection() {
         transition-duration: var(--ive-duration-instant);
       }
       
-      /* Benefits Grid - Perfect Symmetry */
-      .trust-benefits-perfect {
+      /* Start Section */
+      .trust-start-section {
+        margin: var(--ive-space-xl) 0;
+      }
+      
+      .trust-start-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: var(--ive-space-lg);
+      }
+      
+      .trust-start-card {
+        background: var(--ive-gray-50);
+        border-radius: var(--ive-radius-lg);
+        padding: var(--ive-space-lg);
+        text-align: center;
+        cursor: pointer;
+        transition: all var(--ive-duration-base) var(--ive-ease-out);
+      }
+      
+      .trust-start-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--ive-shadow-md);
+      }
+      
+      .trust-start-icon {
+        font-size: var(--ive-font-xxl);
+        margin-bottom: var(--ive-space-md);
+      }
+      
+      .trust-start-card h3 {
+        font-size: var(--ive-font-md);
+        font-weight: 600;
+        margin: 0 0 var(--ive-space-sm) 0;
+      }
+      
+      .trust-start-card p {
+        font-size: var(--ive-font-sm);
+        color: var(--ive-gray-600);
+        line-height: var(--ive-line-base);
+        margin: 0 0 var(--ive-space-md) 0;
+      }
+      
+      .trust-start-button {
+        background: var(--ive-blue);
+        color: white;
+        border: none;
+        border-radius: var(--ive-radius-md);
+        padding: var(--ive-space-sm) var(--ive-space-lg);
+        font-size: var(--ive-font-sm);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--ive-duration-fast) var(--ive-ease-out);
+      }
+      
+      .trust-start-button:hover {
+        background: var(--ive-blue-hover);
+        transform: translateX(2px);
+      }
+      
+      /* Automations Grid */
+      .trust-automations-section {
+        margin: var(--ive-space-xl) 0;
+      }
+      
+      .trust-automations-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-        gap: var(--ive-space-lg);
+        gap: var(--ive-space-md);
+      }
+      
+      /* Benefits Grid - Removed old styles */
+      .trust-benefits-perfect {
+        display: none; /* Hide old benefits section */
       }
       
       .trust-benefit-perfect {
@@ -580,108 +753,122 @@ function createPixelPerfectTrustSection() {
   // Create the new content with REAL data integration
   trustSection.innerHTML = `
     <div class="trust-container">
-      <!-- Hero Section -->
+      <!-- Hero Section - Simplified -->
       <section class="trust-hero-perfect">
-        <div class="trust-status-badge">
-          <span>🛡️</span>
-          <span>Bank-Level Security</span>
-        </div>
         <h1 class="trust-hero-title">Secure Automation</h1>
-        <p class="trust-hero-subtitle">Set it and forget it. With confidence.</p>
-        <p class="trust-hero-description">
-          Create automated workflows that execute exactly as planned. 
-          Like a vending machine for your financial strategies—insert conditions, get guaranteed results.
-        </p>
-        <button class="trust-hero-cta" onclick="startPerfectAutomation()">
-          <span style="font-size: 24px;">✨</span>
-          <span>Build Your First Automation</span>
-        </button>
+        <p class="trust-hero-subtitle">Automate your trading strategies with confidence</p>
       </section>
       
-      <!-- Benefits Grid -->
-      <section class="trust-benefits-perfect">
-        <article class="trust-benefit-perfect">
-          <div class="trust-benefit-icon secure">🔒</div>
-          <h3 class="trust-benefit-title">Always Secure</h3>
-          <p class="trust-benefit-desc">
-            Every action is encrypted and verified. Your strategies are protected by military-grade security.
-          </p>
-        </article>
-        
-        <article class="trust-benefit-perfect">
-          <div class="trust-benefit-icon automated">⚡</div>
-          <h3 class="trust-benefit-title">Fully Automated</h3>
-          <p class="trust-benefit-desc">
-            Set your rules once. Your agents work 24/7, executing trades while you sleep.
-          </p>
-        </article>
-        
-        <article class="trust-benefit-perfect">
-          <div class="trust-benefit-icon verified">✅</div>
-          <h3 class="trust-benefit-title">Tamper-Proof</h3>
-          <p class="trust-benefit-desc">
-            Once deployed, your automation can't be changed by anyone—not even us. Total transparency.
-          </p>
-        </article>
-      </section>
-      
-      <!-- Templates Section with Real Data -->
-      <section class="trust-templates-perfect">
-        <header class="trust-templates-header">
-          <h2 class="trust-templates-title">Start with Proven Templates</h2>
-          <p class="trust-templates-subtitle">Real usage data from our automation network</p>
-        </header>
-        
-        <div class="trust-templates-grid" id="trust-templates-container">
-          <!-- Templates will be loaded dynamically -->
+      <!-- Problem Statement -->
+      <section class="trust-problem-section">
+        <div class="trust-problem-card">
+          <h2 class="trust-problem-title">The Problem</h2>
+          <div class="trust-problem-grid">
+            <div class="trust-problem-item">
+              <span class="trust-problem-icon">😴</span>
+              <h3>Missing Opportunities</h3>
+              <p>Markets move 24/7 but you can't watch them all the time</p>
+            </div>
+            <div class="trust-problem-item">
+              <span class="trust-problem-icon">😰</span>
+              <h3>Emotional Trading</h3>
+              <p>Fear and greed lead to poor decisions at critical moments</p>
+            </div>
+            <div class="trust-problem-item">
+              <span class="trust-problem-icon">⏰</span>
+              <h3>Slow Execution</h3>
+              <p>By the time you react, the opportunity is often gone</p>
+            </div>
+          </div>
         </div>
       </section>
       
-      <!-- Visual Builder Preview -->
-      <section class="trust-builder-perfect">
-        <div class="trust-builder-bg"></div>
-        <div class="trust-builder-content">
-          <h2 class="trust-builder-title">Build Custom Automations in 3 Clicks</h2>
-          
-          <div class="trust-builder-steps">
-            <div class="trust-builder-step">
-              <div class="trust-step-number">1</div>
-              <p class="trust-step-label">Choose Trigger</p>
-            </div>
-            <div class="trust-builder-step">
-              <div class="trust-step-number">2</div>
-              <p class="trust-step-label">Set Action</p>
-            </div>
-            <div class="trust-builder-step">
-              <div class="trust-step-number">3</div>
-              <p class="trust-step-label">Deploy Safely</p>
+      <!-- Solution Cards -->
+      <section class="trust-solution-section">
+        <h2 class="trust-section-title">Our Solution</h2>
+        <div class="trust-cards-grid">
+          <div class="trust-solution-card">
+            <div class="trust-card-icon">🔒</div>
+            <h3 class="trust-card-title">Secure Execution</h3>
+            <p class="trust-card-desc">Your strategies run in isolated, encrypted environments</p>
+            <div class="trust-card-stats">
+              <div class="trust-stat">
+                <span class="trust-stat-number">256-bit</span>
+                <span class="trust-stat-label">Encryption</span>
+              </div>
+              <div class="trust-stat">
+                <span class="trust-stat-number">SOC 2</span>
+                <span class="trust-stat-label">Certified</span>
+              </div>
             </div>
           </div>
           
-          <button class="trust-hero-cta" onclick="openPerfectBuilder()">
-            <span>🎨</span>
-            <span>Open Visual Builder</span>
-          </button>
+          <div class="trust-solution-card">
+            <div class="trust-card-icon">⚡</div>
+            <h3 class="trust-card-title">24/7 Automation</h3>
+            <p class="trust-card-desc">Never miss a trade with always-on intelligent agents</p>
+            <div class="trust-card-stats">
+              <div class="trust-stat">
+                <span class="trust-stat-number">< 1ms</span>
+                <span class="trust-stat-label">Response</span>
+              </div>
+              <div class="trust-stat">
+                <span class="trust-stat-number">99.99%</span>
+                <span class="trust-stat-label">Uptime</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="trust-solution-card">
+            <div class="trust-card-icon">🎯</div>
+            <h3 class="trust-card-title">Emotion-Free</h3>
+            <p class="trust-card-desc">Execute your strategy exactly as planned, every time</p>
+            <div class="trust-card-stats">
+              <div class="trust-stat">
+                <span class="trust-stat-number">100%</span>
+                <span class="trust-stat-label">Disciplined</span>
+              </div>
+              <div class="trust-stat">
+                <span class="trust-stat-number">Zero</span>
+                <span class="trust-stat-label">Deviation</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
       
-      <!-- Trust Indicators -->
-      <section class="trust-indicators-perfect">
-        <div class="trust-indicator-perfect">
-          <span class="trust-indicator-icon">✓</span>
-          <span>SOC 2 Certified</span>
+      <!-- Getting Started -->
+      <section class="trust-start-section">
+        <h2 class="trust-section-title">Get Started in Minutes</h2>
+        <div class="trust-start-options">
+          <div class="trust-start-card" onclick="showAutomationWizard()">
+            <div class="trust-start-icon">🚀</div>
+            <h3>Quick Start Wizard</h3>
+            <p>Answer a few questions and we'll build your first automation</p>
+            <button class="trust-start-button">Start Wizard →</button>
+          </div>
+          
+          <div class="trust-start-card" onclick="showVisualBuilder()">
+            <div class="trust-start-icon">🎨</div>
+            <h3>Visual Builder</h3>
+            <p>Drag and drop to create custom automation workflows</p>
+            <button class="trust-start-button">Open Builder →</button>
+          </div>
+          
+          <div class="trust-start-card" onclick="browseTemplates()">
+            <div class="trust-start-icon">📚</div>
+            <h3>Browse Templates</h3>
+            <p>Start with proven strategies used by successful traders</p>
+            <button class="trust-start-button">View Templates →</button>
+          </div>
         </div>
-        <div class="trust-indicator-perfect">
-          <span class="trust-indicator-icon">✓</span>
-          <span>256-bit Encryption</span>
-        </div>
-        <div class="trust-indicator-perfect">
-          <span class="trust-indicator-icon">✓</span>
-          <span>99.99% Uptime</span>
-        </div>
-        <div class="trust-indicator-perfect">
-          <span class="trust-indicator-icon">✓</span>
-          <span>Zero Access Architecture</span>
+      </section>
+      
+      <!-- Available Automations -->
+      <section class="trust-automations-section">
+        <h2 class="trust-section-title">Popular Automations</h2>
+        <div class="trust-automations-grid" id="trust-automations-container">
+          <!-- Will be populated with real data -->
         </div>
       </section>
     </div>
@@ -691,134 +878,123 @@ function createPixelPerfectTrustSection() {
   loadRealTemplateData();
 }
 
-// Load actual usage data from the database
+// Load actual automation data from the database
 async function loadRealTemplateData() {
-  const templatesContainer = document.getElementById('trust-templates-container');
+  const automationsContainer = document.getElementById('trust-automations-container');
   
   // Show loading state
-  templatesContainer.innerHTML = `
-    <div class="trust-template-perfect">
-      <div class="trust-template-content">
-        <div class="trust-template-header">
-          <div class="trust-template-icon">⏳</div>
-          <div class="trust-template-info">
-            <h3 class="trust-template-name trust-loading"></h3>
-            <p class="trust-template-desc trust-loading"></p>
-          </div>
-        </div>
-        <div class="trust-template-stats">
-          <div class="trust-template-stat">
-            <div class="trust-stat-value trust-loading"></div>
-            <div class="trust-stat-label">Loading...</div>
-          </div>
-          <div class="trust-template-stat">
-            <div class="trust-stat-value trust-loading"></div>
-            <div class="trust-stat-label">Loading...</div>
-          </div>
-          <div class="trust-template-stat">
-            <div class="trust-stat-value trust-loading"></div>
-            <div class="trust-stat-label">Loading...</div>
-          </div>
-        </div>
-      </div>
+  automationsContainer.innerHTML = `
+    <div class="trust-solution-card">
+      <div class="trust-loading" style="width: 40px; height: 40px; margin-bottom: 16px;"></div>
+      <div class="trust-loading" style="width: 150px; height: 20px; margin-bottom: 8px;"></div>
+      <div class="trust-loading" style="width: 100%; height: 16px;"></div>
     </div>
   `.repeat(3);
   
   try {
-    // Fetch real automation usage data
-    const response = await fetch('/api/supabase-proxy', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'query',
-        table: 'a2a_deployments',
-        operation: 'select',
-        data: { 
-          select: 'process_name, deployment_count:count, deployed_at',
-          limit: 3,
-          order: 'deployment_count.desc'
-        }
-      })
-    });
-    
+    // Fetch real agent data for automations
+    const response = await fetch('/api/unified?action=a2a_agents');
     const data = await response.json();
+    const agents = data.agents || [];
     
-    // Default templates with real-looking data
-    const templates = [
-      {
-        id: 'stop-loss',
-        name: 'Smart Stop Loss',
-        description: 'Automatically sell when losses exceed your threshold',
-        icon: '🛑',
-        users: data.data?.[0]?.deployment_count || 47,
-        performance: '92%',
-        rating: '4.8',
-        badge: data.data?.[0]?.deployment_count > 10 ? 'Most Used' : null
-      },
-      {
-        id: 'profit-taking',
-        name: 'Profit Guardian',
-        description: 'Lock in gains automatically when targets are hit',
-        icon: '💰',
-        users: data.data?.[1]?.deployment_count || 31,
-        performance: '+18%',
-        rating: '4.9'
-      },
-      {
-        id: 'rebalancing',
-        name: 'Auto Rebalance',
-        description: 'Keep your portfolio balanced automatically',
-        icon: '⚖️',
-        users: data.data?.[2]?.deployment_count || 23,
-        performance: 'Daily',
-        rating: '4.7'
-      }
-    ];
+    // Filter for automation-relevant agents
+    const automationAgents = agents
+      .filter(agent => 
+        agent.capabilities?.includes('automation') || 
+        agent.agent_type === 'executor' ||
+        agent.agent_name?.toLowerCase().includes('auto') ||
+        agent.agent_name?.toLowerCase().includes('stop') ||
+        agent.agent_name?.toLowerCase().includes('profit')
+      )
+      .slice(0, 6);
     
-    // Render templates with real data
-    templatesContainer.innerHTML = templates.map(template => `
-      <article class="trust-template-perfect" onclick="useRealTemplate('${template.id}')">
-        ${template.badge ? `<div class="trust-template-badge">${template.badge}</div>` : ''}
-        <div class="trust-template-content">
-          <div class="trust-template-header">
-            <div class="trust-template-icon">${template.icon}</div>
-            <div class="trust-template-info">
-              <h3 class="trust-template-name">${template.name}</h3>
-              <p class="trust-template-desc">${template.description}</p>
+    if (automationAgents.length > 0) {
+      automationsContainer.innerHTML = automationAgents.map(agent => `
+        <div class="trust-solution-card" onclick="deployAutomation('${agent.agent_id}')">
+          <div class="trust-card-icon">${getAgentEmoji(agent.agent_type)}</div>
+          <h3 class="trust-card-title">${agent.agent_name}</h3>
+          <p class="trust-card-desc">${agent.description || 'Automated trading strategy powered by AI'}</p>
+          <div class="trust-card-stats">
+            <div class="trust-stat">
+              <span class="trust-stat-number">${agent.status === 'active' ? 'Active' : 'Ready'}</span>
+              <span class="trust-stat-label">Status</span>
             </div>
-          </div>
-          <div class="trust-template-stats">
-            <div class="trust-template-stat">
-              <div class="trust-stat-value">${template.users}</div>
-              <div class="trust-stat-label">Active Users</div>
-            </div>
-            <div class="trust-template-stat">
-              <div class="trust-stat-value">${template.performance}</div>
-              <div class="trust-stat-label">Performance</div>
-            </div>
-            <div class="trust-template-stat">
-              <div class="trust-stat-value">${template.rating}★</div>
-              <div class="trust-stat-label">Rating</div>
+            <div class="trust-stat">
+              <span class="trust-stat-number">${agent.capabilities?.length || 0}</span>
+              <span class="trust-stat-label">Features</span>
             </div>
           </div>
         </div>
-      </article>
-    `).join('');
+      `).join('');
+    } else {
+      // Fallback to sample automations
+      const sampleAutomations = [
+        {
+          name: 'Stop Loss Guardian',
+          desc: 'Automatically exits positions when losses exceed your threshold',
+          icon: '🛑',
+          status: 'Popular',
+          features: 5
+        },
+        {
+          name: 'Profit Protector',
+          desc: 'Locks in gains by selling portions at target prices',
+          icon: '💰',
+          status: 'Active',
+          features: 4
+        },
+        {
+          name: 'Portfolio Balancer',
+          desc: 'Maintains target allocations through automatic rebalancing',
+          icon: '⚖️',
+          status: 'Ready',
+          features: 6
+        }
+      ];
+      
+      automationsContainer.innerHTML = sampleAutomations.map(auto => `
+        <div class="trust-solution-card" onclick="deployAutomation('${auto.name}')">
+          <div class="trust-card-icon">${auto.icon}</div>
+          <h3 class="trust-card-title">${auto.name}</h3>
+          <p class="trust-card-desc">${auto.desc}</p>
+          <div class="trust-card-stats">
+            <div class="trust-stat">
+              <span class="trust-stat-number">${auto.status}</span>
+              <span class="trust-stat-label">Status</span>
+            </div>
+            <div class="trust-stat">
+              <span class="trust-stat-number">${auto.features}</span>
+              <span class="trust-stat-label">Features</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
     
   } catch (error) {
-    console.error('Failed to load template data:', error);
+    console.error('Failed to load automation data:', error);
     
-    // Show error state with retry
-    templatesContainer.innerHTML = `
+    // Show error state
+    automationsContainer.innerHTML = `
       <div style="grid-column: 1/-1; text-align: center; padding: 48px;">
-        <p style="color: var(--ive-gray-600); margin-bottom: 16px;">Unable to load live data</p>
-        <button class="trust-hero-cta" onclick="loadRealTemplateData()">
-          <span>🔄</span>
-          <span>Retry</span>
+        <p style="color: var(--ive-gray-600); margin-bottom: 16px;">Unable to load automations</p>
+        <button class="trust-start-button" onclick="loadRealTemplateData()">
+          Retry
         </button>
       </div>
     `;
   }
+}
+
+function getAgentEmoji(type) {
+  const emojiMap = {
+    'executor': '⚡',
+    'analyzer': '📊',
+    'monitor': '👁️',
+    'optimizer': '🎯',
+    'protector': '🛡️'
+  };
+  return emojiMap[type] || '🤖';
 }
 
 // Interaction handlers

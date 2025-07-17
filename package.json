@@ -1,19 +1,30 @@
 {
   "name": "hana-proxy-vercel",
   "version": "1.0.0",
-  "description": "HANA Cloud proxy for iOS ALPN compatibility",
+  "description": "A2A Supabase-Based Blockchain Integration",
   "scripts": {
     "dev": "vercel dev",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "agents:start": "node scripts/start-agents.js",
+    "test": "node scripts/test-blockchain-integration.js"
   },
   "dependencies": {
     "@sap/hana-client": "^2.19.21",
-    "hdb": "^0.19.8",
-    "ws": "^8.16.0",
     "@supabase/supabase-js": "^2.39.0",
-    "node-fetch": "^3.3.2"
+    "@types/node": "^20.10.0",
+    "@types/node-cron": "^3.0.11",
+    "dotenv": "^17.2.0",
+    "hdb": "^0.19.8",
+    "node-cron": "^3.0.3",
+    "openai": "^4.20.1",
+    "typescript": "^5.3.3",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
+    "ts-node": "^10.9.1",
     "vercel": "^32.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

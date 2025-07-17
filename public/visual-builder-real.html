@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A2A Visual Builder - Connected to Real Network</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+  <style>
+    /* Jobs/Ive Design System */
+    :root {
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      --jobs-teal: #5AC8FA;
+      
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: 17px;
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      overflow: hidden;
+    }
+    
+    /* Navigation */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .nav-title {
+      font-size: 17px;
+      font-weight: 600;
+      flex: 1;
+    }
+    
+    .nav-actions {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+    }
+    
+    .btn {
+      padding: 6px 16px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .btn-primary {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+    }
+    
+    .btn-primary:hover {
+      background: #0051D5;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: var(--jobs-light-gray);
+      color: var(--jobs-black);
+    }
+    
+    .btn-secondary:hover {
+      background: #E5E5EA;
+    }
+    
+    /* Main Layout */
+    .builder-container {
+      display: flex;
+      height: 100vh;
+      padding-top: 48px;
+    }
+    
+    /* Component Palette */
+    .component-palette {
+      width: 300px;
+      background: var(--jobs-light-gray);
+      border-right: 1px solid rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      padding: var(--jobs-spacing-lg);
+    }
+    
+    .palette-section {
+      margin-bottom: var(--jobs-spacing-xl);
+    }
+    
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .draggable-item {
+      background: var(--jobs-white);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      padding: var(--jobs-spacing-md);
+      margin-bottom: var(--jobs-spacing-sm);
+      cursor: move;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+    }
+    
+    .draggable-item:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .draggable-item.real-item {
+      border-left: 3px solid var(--jobs-green);
+    }
+    
+    .item-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+    
+    .agent-icon { background: rgba(0, 122, 255, 0.1); }
+    .trust-icon { background: rgba(52, 199, 89, 0.1); }
+    .condition-icon { background: rgba(255, 149, 0, 0.1); }
+    .action-icon { background: rgba(175, 82, 222, 0.1); }
+    
+    /* Canvas */
+    .canvas-area {
+      flex: 1;
+      position: relative;
+      background: #FAFAFA;
+      overflow: hidden;
+    }
+    
+    #visual-canvas {
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Properties Panel */
+    .properties-panel {
+      width: 320px;
+      background: var(--jobs-white);
+      border-left: 1px solid rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      padding: var(--jobs-spacing-lg);
+      display: none;
+    }
+    
+    .properties-panel.active {
+      display: block;
+    }
+    
+    .property-group {
+      margin-bottom: var(--jobs-spacing-lg);
+    }
+    
+    .property-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-xs);
+    }
+    
+    .property-input {
+      width: 100%;
+      padding: var(--jobs-spacing-sm);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      border-radius: 6px;
+      font-size: 17px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .property-input:focus {
+      outline: none;
+      border-color: var(--jobs-blue);
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Status Bar */
+    .status-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: var(--jobs-light-gray);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 0 var(--jobs-spacing-lg);
+      font-size: 13px;
+      color: var(--jobs-gray);
+      gap: var(--jobs-spacing-lg);
+    }
+    
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-xs);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-gray);
+    }
+    
+    .connection-status.connected .status-dot {
+      background: var(--jobs-green);
+    }
+    
+    .connection-status.error .status-dot {
+      background: var(--jobs-red);
+    }
+    
+    /* Node Styles */
+    .process-node {
+      cursor: move;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .node-rect {
+      fill: var(--jobs-white);
+      stroke: rgba(0, 0, 0, 0.1);
+      stroke-width: 1;
+      rx: 8;
+    }
+    
+    .node-selected .node-rect {
+      stroke: var(--jobs-blue);
+      stroke-width: 2;
+      filter: drop-shadow(0 4px 12px rgba(0, 122, 255, 0.3));
+    }
+    
+    .real-node .node-rect {
+      stroke: var(--jobs-green);
+      stroke-width: 2;
+    }
+    
+    /* Connection Lines */
+    .connection-line {
+      stroke: var(--jobs-gray);
+      stroke-width: 2;
+      fill: none;
+      transition: stroke var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .connection-line:hover {
+      stroke: var(--jobs-blue);
+      stroke-width: 3;
+    }
+    
+    .trust-connection {
+      stroke: var(--jobs-green);
+      stroke-dasharray: 5, 5;
+    }
+    
+    /* Node execution animation */
+    .process-node.executing .node-rect {
+      stroke: var(--jobs-orange);
+      stroke-width: 3;
+      animation: pulse 1s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { stroke-opacity: 1; }
+      50% { stroke-opacity: 0.5; }
+      100% { stroke-opacity: 1; }
+    }
+    
+    /* Real node indicator */
+    .real-indicator {
+      animation: breathe 2s infinite;
+    }
+    
+    @keyframes breathe {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    /* Node labels */
+    .node-label {
+      font-size: 12px;
+      font-weight: 500;
+      fill: var(--jobs-black);
+      pointer-events: none;
+    }
+    
+    /* Property input focus states */
+    .property-input:focus {
+      border-color: var(--jobs-blue);
+      box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.2);
+    }
+    
+    /* Drag feedback */
+    .draggable-item.dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+    
+    /* Canvas drop zone */
+    .canvas-area.drag-over {
+      background: rgba(0, 122, 255, 0.05);
+      border: 2px dashed var(--jobs-blue);
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <div class="nav-bar">
+    <div class="nav-title">A2A Visual Builder - Real Network</div>
+    <div class="nav-actions">
+      <button class="btn btn-secondary" onclick="refreshNetwork()">
+        Refresh Network
+      </button>
+      <button class="btn btn-secondary" onclick="clearCanvas()">
+        Clear
+      </button>
+      <button class="btn btn-primary" onclick="deployToReal()">
+        Deploy to Blockchain
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Builder -->
+  <div class="builder-container">
+    <!-- Component Palette -->
+    <div class="component-palette">
+      <div class="palette-section">
+        <div class="section-title">Agent Templates</div>
+        <div class="draggable-item" draggable="true" data-type="agent" data-subtype="initiator">
+          <div class="item-icon agent-icon">🔵</div>
+          <div>
+            <div>Initiator Agent</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Starts processes</div>
+          </div>
+        </div>
+        <div class="draggable-item" draggable="true" data-type="agent" data-subtype="processor">
+          <div class="item-icon agent-icon">🔵</div>
+          <div>
+            <div>Processor Agent</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Executes tasks</div>
+          </div>
+        </div>
+        <div class="draggable-item" draggable="true" data-type="agent" data-subtype="validator">
+          <div class="item-icon agent-icon">🔵</div>
+          <div>
+            <div>Validator Agent</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Validates results</div>
+          </div>
+        </div>
+        
+        <!-- Real Agents will be added here dynamically -->
+        <div id="real-agents-section"></div>
+      </div>
+
+      <div class="palette-section">
+        <div class="section-title">Trust Contracts</div>
+        <div class="draggable-item" draggable="true" data-type="contract" data-subtype="escrow">
+          <div class="item-icon trust-icon">🟢</div>
+          <div>
+            <div>Escrow Trust</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Secure transactions</div>
+          </div>
+        </div>
+        <div class="draggable-item" draggable="true" data-type="contract" data-subtype="reputation">
+          <div class="item-icon trust-icon">🟢</div>
+          <div>
+            <div>Reputation Oracle</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Track trust scores</div>
+          </div>
+        </div>
+        <div class="draggable-item" draggable="true" data-type="contract" data-subtype="multisig">
+          <div class="item-icon trust-icon">🟢</div>
+          <div>
+            <div>Multi-Signature</div>
+            <div style="font-size: 12px; color: var(--jobs-gray);">Group consensus</div>
+          </div>
+        </div>
+        
+        <!-- Real Contracts will be added here dynamically -->
+        <div id="real-contracts-section"></div>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="canvas-area" ondrop="handleDrop(event)" ondragover="handleDragOver(event)">
+      <svg id="visual-canvas"></svg>
+    </div>
+
+    <!-- Properties Panel -->
+    <div class="properties-panel" id="properties-panel">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;">
+        <h2 style="margin: 0; font-size: 28px; font-weight: 600;">Properties</h2>
+        <button class="btn btn-secondary" onclick="closeProperties()">×</button>
+      </div>
+      <div id="properties-content">
+        <!-- Dynamic content -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div class="status-bar">
+    <div class="status-indicator connection-status" id="connection-status">
+      <div class="status-dot"></div>
+      <span>Connecting...</span>
+    </div>
+    <div class="status-indicator">
+      <span id="node-count">0 nodes</span>
+    </div>
+    <div class="status-indicator">
+      <span id="connection-count">0 connections</span>
+    </div>
+    <div class="status-indicator">
+      <span id="real-agent-count">0 real agents</span>
+    </div>
+    <div class="status-indicator">
+      <span id="blockchain-status">⛓️ Blockchain: Connecting...</span>
+    </div>
+  </div>
+
+  <!-- Load ethers.js for blockchain interaction -->
+  <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+  
+  <!-- Load the REAL A2A Visual Bridge -->
+  <script src="a2a-real-bridge.js"></script>
+  
+  <script>
+    class RealA2ABuilder {
+      constructor() {
+        this.nodes = [];
+        this.connections = [];
+        this.realAgents = [];
+        this.realContracts = [];
+        this.selectedNode = null;
+        this.networkStatus = 'connecting';
+        this.bridge = null;
+        this.currentProcess = null;
+        this.draggedElement = null;
+        
+        this.initializeCanvas();
+        this.initializeBridge();
+        this.setupEventListeners();
+      }
+      
+      /**
+       * Initialize REAL A2A Bridge integration with blockchain
+       */
+      async initializeBridge() {
+        try {
+          this.updateStatus('connecting', 'Initializing REAL A2A Bridge with blockchain...');
+          
+          // Initialize REAL bridge with blockchain connectivity
+          this.bridge = await window.initializeRealA2ABridge();
+          
+          // Listen for REAL bridge events
+          window.addEventListener('a2a-bridge-initialized', (event) => {
+            console.log('✅ REAL A2A Bridge initialized:', event.detail);
+            this.updateStatus('connected', `Connected to ${event.detail.networkName} (${event.detail.walletAddress.slice(0,8)}...)`);
+            this.updateBlockchainStatus(`⛓️ ${event.detail.networkName} | ${event.detail.balance} ETH`);
+            this.connectToNetwork();
+          });
+          
+          window.addEventListener('a2a-bridge-error', (event) => {
+            console.error('❌ REAL A2A Bridge error:', event.detail);
+            this.updateStatus('error', `Blockchain Error: ${event.detail.error}`);
+            this.updateBlockchainStatus(`❌ Blockchain: Error`);
+          });
+          
+          window.addEventListener('a2a-visual-update', (event) => {
+            this.handleVisualUpdate(event.detail);
+          });
+          
+          window.addEventListener('a2a-process-deployed', (event) => {
+            this.handleProcessDeployed(event.detail);
+          });
+          
+          window.addEventListener('a2a-execution-started', (event) => {
+            console.log('▶️ REAL execution started:', event.detail);
+            this.updateStatus('executing', `Executing with agent ${event.detail.initiatorAgent}`);
+          });
+          
+          window.addEventListener('a2a-execution-completed', (event) => {
+            console.log('✅ REAL execution completed:', event.detail);
+            this.updateStatus('connected', 'Execution completed successfully');
+            alert(`✅ Process execution completed!\n\nTask ID: ${event.detail.taskId}\nResult: ${JSON.stringify(event.detail.result, null, 2)}`);
+          });
+          
+        } catch (error) {
+          console.error('Failed to initialize REAL bridge:', error);
+          this.updateStatus('error', `Failed to initialize REAL A2A Bridge: ${error.message}`);
+          
+          if (error.message.includes('MetaMask')) {
+            alert('❌ MetaMask required for blockchain features!\n\nPlease install MetaMask to use real A2A deployments.');
+          }
+        }
+      }
+      
+      /**
+       * Wait for bridge initialization
+       */
+      async waitForBridgeInit() {
+        return new Promise((resolve) => {
+          const checkInit = () => {
+            if (this.bridge && this.bridge.isInitialized) {
+              resolve();
+            } else {
+              setTimeout(checkInit, 500);
+            }
+          };
+          checkInit();
+        });
+      }
+      
+      /**
+       * Setup additional event listeners
+       */
+      setupEventListeners() {
+        // Drag and drop event listeners
+        document.addEventListener('dragstart', this.handleDragStart.bind(this));
+        document.addEventListener('dragend', this.handleDragEnd.bind(this));
+        
+        // Canvas click handler
+        this.svg.on('click', (event) => {
+          if (event.target === this.svg.node()) {
+            this.clearSelection();
+          }
+        });
+      }
+      
+      initializeCanvas() {
+        this.svg = d3.select('#visual-canvas');
+        this.container = this.svg.append('g').attr('class', 'container');
+        
+        // Add zoom behavior
+        const zoom = d3.zoom()
+          .scaleExtent([0.5, 2])
+          .on('zoom', (event) => {
+            this.container.attr('transform', event.transform);
+          });
+        
+        this.svg.call(zoom);
+        
+        // Arrow marker
+        this.svg.append('defs').append('marker')
+          .attr('id', 'arrowhead')
+          .attr('viewBox', '-0 -5 10 10')
+          .attr('refX', 25)
+          .attr('refY', 0)
+          .attr('orient', 'auto')
+          .attr('markerWidth', 8)
+          .attr('markerHeight', 8)
+          .append('svg:path')
+          .attr('d', 'M 0,-5 L 10,0 L 0,5')
+          .attr('fill', '#8E8E93');
+      }
+      
+      async connectToNetwork() {
+        try {
+          this.updateStatus('connecting', 'Connecting to A2A Network...');
+          
+          if (!this.bridge || !this.bridge.isInitialized) {
+            throw new Error('A2A Bridge not initialized');
+          }
+          
+          // Load real agents using bridge
+          await this.loadRealAgents();
+          
+          // Load real contracts using bridge
+          await this.loadRealContracts();
+          
+          // Get network status
+          const networkStatus = await this.bridge.getNetworkStatus();
+          console.log('📊 Network Status:', networkStatus);
+          
+          this.updateStatus('connected', `Connected to A2A Network (${networkStatus.activeAgents} agents)`);
+          this.updateCounts();
+          
+        } catch (error) {
+          console.error('Connection failed:', error);
+          this.updateStatus('error', 'Connection Failed: ' + error.message);
+        }
+      }
+      
+      async loadRealAgents() {
+        try {
+          // Use bridge to load real agents
+          this.realAgents = await this.bridge.loadRealAgents();
+          console.log(`📡 Loaded ${this.realAgents.length} real agents via bridge`);
+          
+          this.renderRealAgents();
+        } catch (error) {
+          console.error('Failed to load real agents:', error);
+          // Fallback to direct API call
+          try {
+            const response = await fetch('/api/a2a-protocol-production', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ action: 'list_agents' })
+            });
+            
+            if (response.ok) {
+              const result = await response.json();
+              this.realAgents = result.agents || [];
+              this.renderRealAgents();
+            }
+          } catch (fallbackError) {
+            console.error('Fallback agent loading also failed:', fallbackError);
+          }
+        }
+      }
+      
+      async loadRealContracts() {
+        try {
+          // Use bridge to load real contracts
+          this.realContracts = await this.bridge.loadRealContracts();
+          console.log(`📜 Loaded ${this.realContracts.length} real contracts via bridge`);
+          
+          this.renderRealContracts();
+        } catch (error) {
+          console.error('Failed to load real contracts:', error);
+          // Fallback to direct API call
+          try {
+            const response = await fetch('/api/supabase-proxy', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                action: 'query',
+                table: 'a2a_deployments',
+                operation: 'select',
+                data: { select: '*', limit: 10 }
+              })
+            });
+            
+            if (response.ok) {
+              const result = await response.json();
+              this.realContracts = result.data || [];
+              this.renderRealContracts();
+            }
+          } catch (fallbackError) {
+            console.error('Fallback contract loading also failed:', fallbackError);
+          }
+        }
+      }
+      
+      renderRealAgents() {
+        const section = document.getElementById('real-agents-section');
+        section.innerHTML = '';
+        
+        if (this.realAgents.length > 0) {
+          section.innerHTML = '<div class="section-title" style="margin-top: 16px;">Real Network Agents</div>';
+          
+          this.realAgents.forEach(agent => {
+            const div = document.createElement('div');
+            div.className = 'draggable-item real-item';
+            div.draggable = true;
+            div.dataset.type = 'agent';
+            div.dataset.subtype = agent.type || 'processor';
+            div.dataset.realAgent = agent.id;
+            
+            div.innerHTML = `
+              <div class="item-icon agent-icon">🤖</div>
+              <div>
+                <div>${agent.name || agent.id}</div>
+                <div style="font-size: 11px; color: var(--jobs-gray);">
+                  ${agent.status || 'Active'} • Rep: ${agent.reputation || 100}
+                </div>
+              </div>
+            `;
+            
+            section.appendChild(div);
+          });
+        }
+      }
+      
+      renderRealContracts() {
+        const section = document.getElementById('real-contracts-section');
+        section.innerHTML = '';
+        
+        if (this.realContracts.length > 0) {
+          section.innerHTML = '<div class="section-title" style="margin-top: 16px;">Deployed Contracts</div>';
+          
+          this.realContracts.slice(0, 5).forEach(contract => {
+            const div = document.createElement('div');
+            div.className = 'draggable-item real-item';
+            div.draggable = true;
+            div.dataset.type = 'contract';
+            div.dataset.subtype = 'escrow';
+            div.dataset.realContract = contract.process_id;
+            
+            div.innerHTML = `
+              <div class="item-icon trust-icon">🟢</div>
+              <div>
+                <div>${contract.process_name || 'Deployed Contract'}</div>
+                <div style="font-size: 11px; color: var(--jobs-gray);">
+                  ${new Date(contract.deployed_at).toLocaleDateString()}
+                </div>
+              </div>
+            `;
+            
+            section.appendChild(div);
+          });
+        }
+      }
+      
+      updateStatus(status, message) {
+        this.networkStatus = status;
+        const statusEl = document.getElementById('connection-status');
+        statusEl.className = `status-indicator connection-status ${status}`;
+        statusEl.querySelector('span').textContent = message;
+      }
+      
+      updateCounts() {
+        document.getElementById('node-count').textContent = `${this.nodes.length} nodes`;
+        document.getElementById('connection-count').textContent = `${this.connections.length} connections`;
+        document.getElementById('real-agent-count').textContent = `${this.realAgents.length} real agents`;
+      }
+      
+      /**
+       * Update blockchain status display
+       */
+      updateBlockchainStatus(status) {
+        const statusEl = document.getElementById('blockchain-status');
+        if (statusEl) {
+          statusEl.textContent = status;
+        }
+      }
+      
+      /**
+       * Handle drag start events
+       */
+      handleDragStart(event) {
+        const draggable = event.target.closest('.draggable-item');
+        if (!draggable) return;
+        
+        this.draggedElement = {
+          type: draggable.dataset.type,
+          subtype: draggable.dataset.subtype,
+          realAgent: draggable.dataset.realAgent,
+          realContract: draggable.dataset.realContract,
+          name: draggable.querySelector('div > div').textContent
+        };
+        
+        console.log('🖱️ Drag started:', this.draggedElement);
+      }
+      
+      /**
+       * Handle drag end events
+       */
+      handleDragEnd(event) {
+        this.draggedElement = null;
+      }
+      
+      /**
+       * Handle drop on canvas
+       */
+      handleCanvasDrop(event) {
+        event.preventDefault();
+        
+        if (!this.draggedElement) return;
+        
+        // Get drop position relative to SVG
+        const rect = this.svg.node().getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        
+        // Create new node
+        const node = {
+          id: `${this.draggedElement.type}_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+          type: this.draggedElement.type,
+          subtype: this.draggedElement.subtype,
+          name: this.draggedElement.name,
+          position: { x, y },
+          config: {},
+          realData: {}
+        };
+        
+        // Add real agent/contract data if available
+        if (this.draggedElement.realAgent) {
+          node.realData.realAgentId = this.draggedElement.realAgent;
+          node.realData.isReal = true;
+        }
+        
+        if (this.draggedElement.realContract) {
+          node.realData.realContractAddress = this.draggedElement.realContract;
+          node.realData.isReal = true;
+        }
+        
+        this.nodes.push(node);
+        this.renderNodes();
+        this.updateCounts();
+        
+        console.log('📍 Node created:', node);
+      }
+      
+      /**
+       * Render nodes on canvas
+       */
+      renderNodes() {
+        const nodeSelection = this.container.selectAll('.process-node')
+          .data(this.nodes, d => d.id);
+        
+        // Remove old nodes
+        nodeSelection.exit().remove();
+        
+        // Add new nodes
+        const nodeEnter = nodeSelection.enter()
+          .append('g')
+          .attr('class', d => `process-node ${d.realData?.isReal ? 'real-node' : ''}`)
+          .attr('transform', d => `translate(${d.position.x}, ${d.position.y})`)
+          .call(d3.drag()
+            .on('start', this.dragNodeStarted.bind(this))
+            .on('drag', this.dragNodeDragged.bind(this))
+            .on('end', this.dragNodeEnded.bind(this))
+          )
+          .on('click', this.selectNode.bind(this));
+        
+        // Add node rectangle
+        nodeEnter.append('rect')
+          .attr('class', 'node-rect')
+          .attr('width', 120)
+          .attr('height', 60)
+          .attr('x', -60)
+          .attr('y', -30);
+        
+        // Add node label
+        nodeEnter.append('text')
+          .attr('class', 'node-label')
+          .attr('text-anchor', 'middle')
+          .attr('dy', '0.35em')
+          .text(d => d.name || d.subtype);
+        
+        // Add real indicator
+        nodeEnter.filter(d => d.realData?.isReal)
+          .append('circle')
+          .attr('class', 'real-indicator')
+          .attr('cx', 50)
+          .attr('cy', -20)
+          .attr('r', 6)
+          .attr('fill', 'var(--jobs-green)');
+        
+        // Update existing nodes
+        nodeSelection.merge(nodeEnter)
+          .attr('transform', d => `translate(${d.position.x}, ${d.position.y})`);
+      }
+      
+      /**
+       * Handle node selection
+       */
+      selectNode(event, d) {
+        event.stopPropagation();
+        
+        // Clear previous selection
+        this.container.selectAll('.process-node').classed('node-selected', false);
+        
+        // Select current node
+        d3.select(event.currentTarget).classed('node-selected', true);
+        this.selectedNode = d;
+        
+        // Show properties panel
+        this.showProperties(d);
+        
+        console.log('🎯 Node selected:', d);
+      }
+      
+      /**
+       * Clear node selection
+       */
+      clearSelection() {
+        this.container.selectAll('.process-node').classed('node-selected', false);
+        this.selectedNode = null;
+        this.hideProperties();
+      }
+      
+      /**
+       * Show properties panel
+       */
+      showProperties(node) {
+        const panel = document.getElementById('properties-panel');
+        const content = document.getElementById('properties-content');
+        
+        content.innerHTML = `
+          <div class="property-group">
+            <div class="property-label">Node Type</div>
+            <div>${node.type} - ${node.subtype}</div>
+          </div>
+          
+          <div class="property-group">
+            <div class="property-label">Name</div>
+            <input type="text" class="property-input" value="${node.name || ''}" 
+                   onchange="builder.updateNodeProperty('${node.id}', 'name', this.value)">
+          </div>
+          
+          <div class="property-group">
+            <div class="property-label">Description</div>
+            <textarea class="property-input" rows="3" 
+                      onchange="builder.updateNodeProperty('${node.id}', 'description', this.value)">${node.config?.description || ''}</textarea>
+          </div>
+          
+          ${node.realData?.isReal ? `
+            <div class="property-group">
+              <div class="property-label">Real Network Data</div>
+              <div style="background: var(--jobs-light-gray); padding: 8px; border-radius: 4px; font-size: 12px;">
+                ${node.realData.realAgentId ? `Agent ID: ${node.realData.realAgentId}` : ''}
+                ${node.realData.realContractAddress ? `Contract: ${node.realData.realContractAddress}` : ''}
+              </div>
+            </div>
+          ` : ''}
+          
+          <div class="property-group">
+            <button class="btn btn-secondary" onclick="builder.deleteNode('${node.id}')">
+              Delete Node
+            </button>
+          </div>
+        `;
+        
+        panel.classList.add('active');
+      }
+      
+      /**
+       * Hide properties panel
+       */
+      hideProperties() {
+        document.getElementById('properties-panel').classList.remove('active');
+      }
+      
+      /**
+       * Update node property
+       */
+      updateNodeProperty(nodeId, property, value) {
+        const node = this.nodes.find(n => n.id === nodeId);
+        if (!node) return;
+        
+        if (property === 'name') {
+          node.name = value;
+        } else {
+          if (!node.config) node.config = {};
+          node.config[property] = value;
+        }
+        
+        this.renderNodes();
+        console.log(`📝 Updated ${property} for node ${nodeId}:`, value);
+      }
+      
+      /**
+       * Delete node
+       */
+      deleteNode(nodeId) {
+        this.nodes = this.nodes.filter(n => n.id !== nodeId);
+        this.connections = this.connections.filter(c => c.from !== nodeId && c.to !== nodeId);
+        this.renderNodes();
+        this.renderConnections();
+        this.hideProperties();
+        this.updateCounts();
+        console.log(`🗑️ Deleted node: ${nodeId}`);
+      }
+      
+      /**
+       * Handle visual updates from A2A execution
+       */
+      handleVisualUpdate(update) {
+        console.log('🎬 Visual update:', update);
+        
+        if (update.type === 'task_progress') {
+          // Animate current agent
+          if (update.currentAgent) {
+            this.highlightNode(update.currentAgent, update.progress);
+          }
+          
+          // Update status
+          this.updateStatus('executing', `${update.status} (${update.progress}%)`);
+        }
+      }
+      
+      /**
+       * Highlight node during execution
+       */
+      highlightNode(nodeId, progress) {
+        this.container.selectAll('.process-node')
+          .classed('executing', false);
+        
+        const node = this.container.selectAll('.process-node')
+          .filter(d => d.id === nodeId || d.realData?.realAgentId === nodeId);
+        
+        node.classed('executing', true);
+        
+        // Add progress animation
+        setTimeout(() => {
+          node.classed('executing', false);
+        }, 2000);
+      }
+      
+      /**
+       * Handle process deployed event
+       */
+      handleProcessDeployed(event) {
+        console.log('🚀 Process deployed:', event);
+        alert(`✅ Process deployed successfully!\nProcess ID: ${event.processId}`);
+      }
+      
+      /**
+       * Node drag handlers
+       */
+      dragNodeStarted(event, d) {
+        d.fx = d.position.x;
+        d.fy = d.position.y;
+      }
+      
+      dragNodeDragged(event, d) {
+        d.fx = event.x;
+        d.fy = event.y;
+        d.position.x = event.x;
+        d.position.y = event.y;
+        d3.select(event.sourceEvent.target.parentNode)
+          .attr('transform', `translate(${event.x}, ${event.y})`);
+      }
+      
+      dragNodeEnded(event, d) {
+        d.fx = null;
+        d.fy = null;
+      }
+      
+      /**
+       * Render connections between nodes
+       */
+      renderConnections() {
+        const connectionSelection = this.container.selectAll('.connection-line')
+          .data(this.connections, d => `${d.from}-${d.to}`);
+        
+        connectionSelection.exit().remove();
+        
+        connectionSelection.enter()
+          .append('line')
+          .attr('class', 'connection-line')
+          .attr('marker-end', 'url(#arrowhead)');
+        
+        connectionSelection
+          .attr('x1', d => {
+            const node = this.nodes.find(n => n.id === d.from);
+            return node ? node.position.x : 0;
+          })
+          .attr('y1', d => {
+            const node = this.nodes.find(n => n.id === d.from);
+            return node ? node.position.y : 0;
+          })
+          .attr('x2', d => {
+            const node = this.nodes.find(n => n.id === d.to);
+            return node ? node.position.x : 0;
+          })
+          .attr('y2', d => {
+            const node = this.nodes.find(n => n.id === d.to);
+            return node ? node.position.y : 0;
+          });
+      }
+    }
+    
+    // Global functions
+    let builder;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      builder = new RealA2ABuilder();
+    });
+    
+    function handleDrop(event) {
+      event.preventDefault();
+      if (builder) {
+        builder.handleCanvasDrop(event);
+      }
+    }
+    
+    function handleDragOver(event) {
+      event.preventDefault();
+    }
+    
+    async function refreshNetwork() {
+      if (builder) {
+        await builder.connectToNetwork();
+      }
+    }
+    
+    function clearCanvas() {
+      if (confirm('Clear all nodes and connections?')) {
+        builder.nodes = [];
+        builder.connections = [];
+        builder.clearSelection();
+        builder.renderNodes();
+        builder.renderConnections();
+        builder.updateCounts();
+      }
+    }
+    
+    async function deployToReal() {
+      if (!builder || !builder.bridge || !builder.bridge.initialized) {
+        alert('REAL A2A Bridge not initialized. Please ensure MetaMask is connected and try again.');
+        return;
+      }
+      
+      if (builder.nodes.length === 0) {
+        alert('Please add nodes before deploying to blockchain');
+        return;
+      }
+      
+      const button = event.target;
+      const originalText = button.textContent;
+      button.disabled = true;
+      
+      try {
+        // Get process name
+        const processName = prompt('Enter process name for blockchain deployment:') || 'Visual A2A Process';
+        
+        // Create REAL process using bridge
+        button.textContent = 'Creating Process...';
+        const process = builder.bridge.createVisualProcess(
+          builder.nodes,
+          builder.connections,
+          processName
+        );
+        
+        console.log('📋 Created process for blockchain deployment:', process);
+        
+        // Validate with REAL blockchain checks
+        button.textContent = 'Validating with Blockchain...';
+        const validation = await builder.bridge.validateProcess(process);
+        
+        console.log('🔍 Blockchain validation result:', validation);
+        
+        if (!validation.valid) {
+          throw new Error(`Blockchain validation failed:\n${validation.errors.join('\n')}`);
+        }
+        
+        // Show validation warnings and cost estimate
+        let warningMessage = '';
+        if (validation.warnings.length > 0) {
+          warningMessage += `Warnings:\n${validation.warnings.join('\n')}\n\n`;
+        }
+        
+        warningMessage += `Estimated Gas: ${validation.gasEstimate}\n`;
+        warningMessage += `Estimated Cost: ${validation.estimatedCost} ETH\n\n`;
+        warningMessage += 'This will deploy REAL smart contracts to the blockchain.\n';
+        warningMessage += 'Proceed with deployment?';
+        
+        const proceed = confirm(warningMessage);
+        if (!proceed) {
+          throw new Error('Deployment cancelled by user');
+        }
+        
+        // Deploy to REAL blockchain
+        button.textContent = 'Deploying to Blockchain...';
+        console.log('🚀 Starting REAL blockchain deployment...');
+        
+        const processId = await builder.bridge.deployProcess(process);
+        
+        console.log('✅ REAL deployment completed:', processId);
+        
+        // Get updated network status
+        const networkStatus = await builder.bridge.getNetworkStatus();
+        
+        // Success notification
+        const successMessage = `✅ Process deployed to REAL blockchain!\n\n` +
+          `Process ID: ${processId}\n` +
+          `Network: ${networkStatus.networkName}\n` +
+          `Block Number: ${networkStatus.blockNumber}\n` +
+          `Deployed Contracts: ${networkStatus.deployedContracts}\n` +
+          `Gas Used: ${validation.gasEstimate}\n` +
+          `Wallet: ${networkStatus.walletAddress}`;
+        
+        alert(successMessage);
+        
+        // Optionally execute the process with REAL agents
+        const executeNow = confirm('Would you like to execute the process with REAL A2A agents now?');
+        if (executeNow) {
+          const input = prompt('Enter input data for execution (JSON format):');
+          if (input) {
+            try {
+              const inputData = JSON.parse(input);
+              button.textContent = 'Executing with Real Agents...';
+              
+              console.log('▶️ Starting REAL execution with A2A agents...');
+              const executionResult = await builder.bridge.executeProcess(processId, inputData);
+              
+              console.log('✅ REAL execution result:', executionResult);
+              
+              const execMessage = `✅ Execution started with REAL A2A agents!\n\n` +
+                `Task ID: ${executionResult.taskId}\n` +
+                `Status: ${executionResult.status}\n` +
+                `Initiator Agent: ${executionResult.initiator}\n\n` +
+                `Monitor execution progress in the status bar.`;
+              
+              alert(execMessage);
+              
+            } catch (execError) {
+              console.error('REAL execution failed:', execError);
+              alert(`❌ REAL execution failed: ${execError.message}`);
+            }
+          }
+        }
+        
+      } catch (error) {
+        console.error('REAL deployment error:', error);
+        
+        let errorMessage = `❌ REAL blockchain deployment failed!\n\n${error.message}`;
+        
+        if (error.message.includes('insufficient funds')) {
+          errorMessage += '\n\n💰 Please ensure you have enough ETH for gas fees.';
+        } else if (error.message.includes('user rejected')) {
+          errorMessage += '\n\n🔐 Transaction was rejected in MetaMask.';
+        } else if (error.message.includes('network')) {
+          errorMessage += '\n\n🌐 Please check your network connection and try again.';
+        }
+        
+        alert(errorMessage);
+        
+      } finally {
+        button.textContent = originalText;
+        button.disabled = false;
+      }
+    }
+    
+    function closeProperties() {
+      document.getElementById('properties-panel').classList.remove('active');
+    }
+  </script>
+</body>
+</html>
