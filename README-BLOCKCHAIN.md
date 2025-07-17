@@ -1,6 +1,6 @@
-# A2A Private Blockchain Integration
+# A2A Supabase-Based Blockchain Integration
 
-Complete integration of A2A agents with private blockchain using Supabase coordination.
+Complete integration of A2A agents with Supabase-coordinated blockchain system (no external blockchain required).
 
 ## 🏗️ Architecture Overview
 
@@ -14,37 +14,39 @@ Complete integration of A2A agents with private blockchain using Supabase coordi
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│                    A2A Blockchain Bridge                            │
+│                    A2A Supabase Bridge                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
-│  │Connect to RPC│  │ Load ABIs    │  │Deploy Smart  │             │
-│  │(localhost)   │  │from Supabase │  │  Contracts   │             │
+│  │Generate IDs  │  │ Store Smart  │  │Track Agent   │             │
+│  │Deterministic │  │ Contracts    │  │ Activities   │             │
 │  └──────────────┘  └──────────────┘  └──────────────┘             │
 └─────────────────────────────┬───────────────────────────────────────┘
                               │
-                    ┌─────────┴─────────┬─────────────────┐
-                    ▼                   ▼                 ▼
-┌─────────────────────────┐  ┌───────────────┐  ┌──────────────────┐
-│   Private Blockchain    │  │   Supabase    │  │   A2A Agents     │
-│                         │  │               │  │                  │
-│  ┌─────────────────┐   │  │ ┌───────────┐ │  │ ┌──────────────┐ │
-│  │ Hardhat Node    │   │  │ │ABIs Table │ │  │ │Orchestrator  │ │
-│  │ localhost:8545  │   │  │ └───────────┘ │  │ └──────────────┘ │
-│  └─────────────────┘   │  │               │  │                  │
-│                         │  │ ┌───────────┐ │  │ ┌──────────────┐ │
-│  ┌─────────────────┐   │  │ │Contracts  │ │  │ │Data Agent    │ │
-│  │ Your Contracts: │   │  │ │  Table    │ │  │ └──────────────┘ │
-│  │ - TrustEscrow   │   │  │ └───────────┘ │  │                  │
-│  │ - Reputation    │   │  │               │  │ ┌──────────────┐ │
-│  │ - Orchestrator  │   │  │ ┌───────────┐ │  │ │Validator     │ │
-│  │ - Custom A2A    │   │  │ │Events     │ │  │ └──────────────┘ │
-│  └─────────────────┘   │  │ │  Table    │ │  │                  │
-│                         │  │ └───────────┘ │  │ All agents have  │
-│  ┌─────────────────┐   │  │               │  │ blockchain       │
-│  │ Test Accounts:  │   │  │ ┌───────────┐ │  │ capabilities!    │
-│  │ - 10,000 ETH ea │   │  │ │Wallets    │ │  └──────────────────┘
-│  │ - No real money │   │  │ │  Table    │ │
-│  └─────────────────┘   │  │ └───────────┘ │
-└─────────────────────────┘  └───────────────┘
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                         Supabase Database                           │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │ABIs Table    │  │Contracts     │  │Events Table  │             │
+│  │Contract Defs │  │ Deployments  │  │Activity Log  │             │
+│  └──────────────┘  └──────────────┘  └──────────────┘             │
+│                                                                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │A2A Agents    │  │Blockchain    │  │Real-time     │             │
+│  │with IDs      │  │ Activities   │  │Subscriptions │             │
+│  └──────────────┘  └──────────────┘  └──────────────┘             │
+└─────────────────────────┬───────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│                       A2A Agents                                   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐             │
+│  │Orchestrator  │  │Data Agent    │  │Validator     │             │
+│  │+ blockchain  │  │+ blockchain  │  │+ blockchain  │             │
+│  └──────────────┘  └──────────────┘  └──────────────┘             │
+│                                                                     │
+│  All agents have deterministic blockchain IDs (no ETH wallets)     │
+│  Process A2A messages, vote, and execute "smart contracts"         │
+│  via Supabase database coordination                                 │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 🚀 Quick Start
@@ -62,15 +64,10 @@ npm install
 ### 2. Environment Setup
 Copy `.env.example` to `.env` and configure:
 ```bash
-# Supabase Configuration
+# Supabase Configuration (REQUIRED)
 SUPABASE_URL=your-supabase-url
 SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_KEY=your-service-key
-
-# Private Blockchain Configuration
-PRIVATE_RPC_URL=http://localhost:8545
-BLOCKCHAIN_NETWORK_ID=31337
-DEPLOYER_PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
 # API Keys (stored in Supabase Vault)
 GROK_API_KEY=your-grok-api-key
@@ -90,14 +87,11 @@ node scripts/setup-database.js
 
 ### 4. Start the System
 ```bash
-# Start everything in one command
-node scripts/start-blockchain-integration.js
+# Start A2A agents with Supabase blockchain
+npm run agents:start
 
-# Or start components individually:
-npm run blockchain:start    # Start private blockchain
-npm run blockchain:compile  # Compile contracts
-npm run blockchain:deploy   # Deploy contracts
-npm run agents:start        # Start A2A agents
+# Test the integration
+npm run test
 ```
 
 ### 5. Verify Installation
@@ -108,30 +102,30 @@ node scripts/test-blockchain-integration.js
 
 ## 🔧 Core Components
 
-### 1. Private Blockchain (Hardhat)
-- **Location**: `localhost:8545`
-- **Network ID**: `31337`
-- **Accounts**: 20 pre-funded accounts with 10,000 ETH each
-- **Gas**: Free (no real money involved)
-- **Transactions**: Instant confirmation
+### 1. Supabase Database Coordination
+- **Network**: `supabase` (virtual blockchain)
+- **Storage**: Complete blockchain state in database tables
+- **Transactions**: Deterministic ID generation
+- **No ETH**: No cryptocurrency or wallets needed
 
-### 2. Smart Contracts
-- **A2AOrchestrator**: Manages processes and tasks
-- **TrustEscrow**: Handles escrow payments
-- **ReputationOracle**: Tracks agent reputation
-- **Location**: `contracts/` directory
+### 2. Smart Contract Definitions
+- **A2AOrchestrator**: Manages processes and tasks (stored as data)
+- **TrustEscrow**: Handles escrow coordination (stored as proposals)
+- **ReputationOracle**: Tracks agent reputation (calculated from activities)
+- **Location**: `contracts/` directory (definitions only)
 
 ### 3. A2A Agents
-- **Autonomous agents** with blockchain capabilities
-- **Wallet management** for each agent
-- **Event-driven responses** to blockchain events
-- **Smart contract interactions**
+- **Autonomous agents** with blockchain-like capabilities
+- **Deterministic IDs** instead of wallet addresses
+- **Event-driven responses** to Supabase events
+- **Database-based "smart contract" interactions**
 
 ### 4. Supabase Integration
-- **Database coordination** for all components
+- **Complete blockchain simulation** within database
 - **Real-time subscriptions** for events
 - **Secure credential storage** (Vault)
 - **Audit logging** for all activities
+- **No external blockchain dependencies**
 
 ## 📊 Database Schema
 
@@ -142,17 +136,17 @@ node scripts/test-blockchain-integration.js
 - `a2a_votes` - Agent voting records
 
 ### Blockchain Tables
-- `contract_abis` - Smart contract interfaces
-- `deployed_contracts` - Contract registry
+- `contract_abis` - Smart contract definitions
+- `deployed_contracts` - Contract registry (Supabase-based)
 - `blockchain_events` - Event monitoring
 - `agent_blockchain_activities` - Agent blockchain actions
-- `agent_wallets` - Agent wallet management
+- `blockchain_config` - System configuration
 
 ## 🔐 Security Features
 
 ### 1. Secure Secret Management
 - **Supabase Vault** for API keys and sensitive data
-- **Encrypted private keys** for agent wallets
+- **Deterministic agent IDs** (no private keys needed)
 - **No hardcoded credentials** in code
 
 ### 2. Input Validation
