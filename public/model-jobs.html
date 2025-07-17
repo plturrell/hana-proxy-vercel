@@ -6345,16 +6345,16 @@ async function loadStandardTemplates() {
           
           <div class="trust-template-metrics">
             <div class="trust-template-metric">
-              <span class="trust-template-metric-value" id="gas-${template.id}">200k</span>
-              <span class="trust-template-metric-label">Gas Cost</span>
+              <span class="trust-template-metric-value" id="implementations-${template.id}">89</span>
+              <span class="trust-template-metric-label">Implementations</span>
             </div>
             <div class="trust-template-metric">
-              <span class="trust-template-metric-value" id="deployments-${template.id}">89</span>
-              <span class="trust-template-metric-label">Deployments</span>
+              <span class="trust-template-metric-value">Enterprise</span>
+              <span class="trust-template-metric-label">Security Level</span>
             </div>
             <div class="trust-template-metric">
-              <span class="trust-template-metric-value">High</span>
-              <span class="trust-template-metric-label">Trust Level</span>
+              <span class="trust-template-metric-value">24/7</span>
+              <span class="trust-template-metric-label">Availability</span>
             </div>
           </div>
           
@@ -6386,12 +6386,12 @@ async function loadTemplateMetrics(templateId) {
     const response = await fetch(`/api/unified?action=template_metrics&template_id=${templateId}`);
     const data = await response.json();
     
-    // Update the template card with real data
-    const gasElement = document.getElementById(`gas-${templateId}`);
-    const deploymentsElement = document.getElementById(`deployments-${templateId}`);
+    // Update the template card with business-relevant data
+    const implementationsElement = document.getElementById(`implementations-${templateId}`);
     
-    if (gasElement) gasElement.textContent = data.gasEstimate || 'Unknown';
-    if (deploymentsElement) deploymentsElement.textContent = data.deployments || '0';
+    if (implementationsElement) {
+      implementationsElement.textContent = data.deployments || '0';
+    }
     
   } catch (error) {
     console.error('Error loading metrics for', templateId, error);

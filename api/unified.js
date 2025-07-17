@@ -916,18 +916,18 @@ function generateSmartContractExplanation(sourceCode, contractName) {
     explanation += `### Multiple Approval System\nThis contract requires several people to agree before any transaction happens. It's like needing multiple signatures on a check - no single person can act alone.\n\n**Security benefits:**\n- Shared responsibility across multiple people\n- Protection against single points of failure\n- Democratic approach to financial decisions\n\n`;
   }
   
-  explanation += `### Key Features\nThis contract includes several important capabilities:\n\n`;
+  explanation += `### Key Benefits\nThis system provides several important advantages:\n\n`;
   
   if (hasEvents) {
-    explanation += `- **Complete Record Keeping**: Every transaction and decision is permanently recorded\n`;
+    explanation += `- **Complete Audit Trail**: Every transaction and decision is permanently recorded for compliance and transparency\n`;
   }
   
   if (hasModifiers) {
-    explanation += `- **Permission Controls**: Only people you authorize can make changes\n`;
+    explanation += `- **Access Control**: Only people you specifically authorize can make changes or move funds\n`;
   }
   
-  explanation += `- **Cost Effective**: Designed to keep transaction fees reasonable\n`;
-  explanation += `- **Proven Security**: Uses time-tested methods trusted by major organizations\n\n`;
+  explanation += `- **Enhanced Security**: Uses proven methods trusted by major financial institutions\n`;
+  explanation += `- **Fraud Prevention**: Multiple approvals required means no single person can make unauthorized transactions\n\n`;
   
   explanation += `### Common Use Cases\n`;
   
@@ -939,17 +939,17 @@ function generateSmartContractExplanation(sourceCode, contractName) {
     explanation += `This contract works well for:\n- **Business Partnerships**: Where partners share control of funds\n- **Family Trusts**: Where multiple family members must agree on distributions\n- **High-Security Operations**: Where multiple approvals add safety\n\n`;
   }
   
-  explanation += `### Before You Start\n`;
-  explanation += `- **Practice First**: Try it out with small amounts to learn how it works\n`;
-  explanation += `- **Understand Costs**: Each transaction has a small fee (typically $10-50)\n`;
-  explanation += `- **Train Your Team**: Make sure everyone knows how to use their digital wallet\n`;
-  explanation += `- **Have Backups**: Keep secure backup access in case someone loses their wallet\n\n`;
+  explanation += `### Implementation Considerations\n`;
+  explanation += `- **Start with Training**: Ensure all authorized users understand the approval process\n`;
+  explanation += `- **Test the Process**: Begin with small transactions to verify everything works smoothly\n`;
+  explanation += `- **Plan for Contingencies**: Establish backup procedures if team members are unavailable\n`;
+  explanation += `- **Document Procedures**: Create clear guidelines for your team on when and how to approve transactions\n\n`;
   
-  explanation += `### Setting It Up\n`;
-  explanation += `1. **Verify Legitimacy**: Confirm the contract is authentic (we can help with this)\n`;
-  explanation += `2. **Start Small**: Begin with small amounts while everyone learns\n`;
-  explanation += `3. **Set Up Alerts**: Get email or text notifications when transactions happen\n`;
-  explanation += `4. **Plan for Growth**: Consider how your needs might change over time\n\n`;
+  explanation += `### Getting Started\n`;
+  explanation += `1. **Security Verification**: We'll help confirm the system is legitimate and secure\n`;
+  explanation += `2. **Pilot Program**: Start with small transactions while your team learns the process\n`;
+  explanation += `3. **Notification Setup**: Configure alerts so everyone knows when transactions occur\n`;
+  explanation += `4. **Ongoing Support**: We provide guidance as your business needs evolve\n\n`;
   
   return explanation;
 }
@@ -988,21 +988,25 @@ The specific agents you choose depend on your use case. Are you planning to use 
 Think of it like a bank vault that needs multiple keys to open, but everything is transparent and recorded.`;
   }
   
-  // Cost-related questions
-  if (lowerQuestion.includes('gas') || lowerQuestion.includes('cost') || lowerQuestion.includes('expensive') || lowerQuestion.includes('fee')) {
-    return `The costs are quite reasonable compared to traditional business banking:
+  // Cost and investment questions
+  if (lowerQuestion.includes('cost') || lowerQuestion.includes('expensive') || lowerQuestion.includes('fee') || lowerQuestion.includes('price') || lowerQuestion.includes('investment')) {
+    return `This is a cost-effective solution compared to traditional business treasury management:
 
-**Initial Setup** - About $50-150 one time (like opening a business bank account)
+**Implementation** - One-time setup similar to establishing a new business banking relationship
 
-**Each Transaction** - Around $10-30 per approval or payment (much less than wire transfer fees)
+**Ongoing Operations** - Transaction costs are typically lower than traditional wire transfers and international payments
 
-**Checking Balances** - Free (just like checking your bank balance online)
+**No Monthly Fees** - Unlike business bank accounts, there are no monthly maintenance charges
 
-**Real Example**: If your business makes 10 payments per month, you'd pay roughly $100-300 in transaction fees. Compare this to traditional business banking where wire transfers can cost $25-50 each.
+**Value Comparison**: Traditional corporate treasury solutions often require expensive custody services, multiple bank relationships, and complex approval workflows. This system consolidates everything into one secure, transparent platform.
 
-**Money-saving tip**: You can use alternative networks like Polygon where fees are under $1 per transaction.
+**ROI Benefits**:
+- Reduced fraud risk (potentially saving thousands in prevented unauthorized transactions)
+- Streamlined approval processes (saving management time)
+- Complete transparency and audit trails (reducing compliance costs)
+- 24/7 operation (no banking hour restrictions)
 
-For most businesses managing substantial funds, these costs are minimal compared to the security benefits and are often less than traditional banking fees.`;
+Most businesses find the security benefits and operational efficiency gains far outweigh the modest transaction costs involved.`;
   }
   
   // How it works questions
@@ -1020,19 +1024,21 @@ For most businesses managing substantial funds, these costs are minimal compared
 It's like having a business checking account where multiple executives need to sign off on large expenses, but it's all automated and transparent.`;
   }
   
-  // Setup/deployment questions
-  if (lowerQuestion.includes('deploy') || lowerQuestion.includes('setup') || lowerQuestion.includes('configure') || lowerQuestion.includes('start')) {
-    return `Getting started is straightforward:
+  // Setup and implementation questions
+  if (lowerQuestion.includes('deploy') || lowerQuestion.includes('setup') || lowerQuestion.includes('configure') || lowerQuestion.includes('start') || lowerQuestion.includes('implement')) {
+    return `Implementation is straightforward and business-focused:
 
-**Initial Setup** - You'll specify who the authorized signers are and how many approvals you need for transactions.
+**Initial Configuration** - Define who your authorized approvers are and set the number of signatures required for different transaction types.
 
-**Network Choice** - You can deploy on Ethereum mainnet for maximum security, or Polygon for lower fees.
+**Security Level Selection** - Choose the security level that best fits your business needs and compliance requirements.
 
-**Testing** - Start with small amounts to make sure everyone understands the process.
+**Pilot Testing** - Start with small transactions to ensure everyone understands the approval workflow.
 
-**Team Training** - Make sure all signers know how to approve transactions using their wallets.
+**Team Onboarding** - We provide training so all authorized users understand how to review and approve transactions.
 
-Most people are up and running within a day. The hardest part is usually just coordinating with your team members to set up their wallets.`;
+**Integration Planning** - Connect with your existing financial processes and reporting systems.
+
+Most businesses are fully operational within a few days. The main time investment is ensuring your team understands the new approval process and feels comfortable with the system.`;
   }
   
   // Default response for general questions
