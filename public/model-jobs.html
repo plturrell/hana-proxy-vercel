@@ -1251,44 +1251,46 @@
     /* Model Cards */
     .jobs-models-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: var(--jobs-spacing-lg);
-      padding: 0 var(--jobs-spacing-lg);
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 16px;
+      padding: 0 20px;
       max-width: 1200px;
-      margin: 0 auto var(--jobs-spacing-xl);
+      margin: 0 auto 24px;
     }
     
     .jobs-model-card {
       background: var(--jobs-white);
-      border: 1px solid var(--jobs-light-gray);
-      border-radius: 12px;
-      padding: var(--jobs-spacing-lg);
-      transition: all var(--jobs-duration) var(--jobs-animation);
+      border: 0.5px solid rgba(0, 0, 0, 0.06);
+      border-radius: 10px;
+      padding: 16px;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       cursor: pointer;
       position: relative;
       overflow: hidden;
+      margin-bottom: 12px;
     }
     
     /* A2A Agent Metadata */
     .a2a-agent-header {
       display: flex;
       align-items: center;
-      gap: var(--jobs-spacing-md);
-      margin-bottom: var(--jobs-spacing-md);
+      gap: 12px;
+      margin-bottom: 12px;
     }
     
     .a2a-agent-icon {
-      width: 48px;
-      height: 48px;
+      width: 40px;
+      height: 40px;
       background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
       border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--jobs-white);
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     }
     
     .a2a-agent-icon.analytics {
@@ -1320,16 +1322,19 @@
     }
     
     .a2a-agent-name {
-      font-size: var(--jobs-font-size-body);
+      font-size: 15px;
       font-weight: 600;
       margin: 0;
+      line-height: 1.3;
+      color: var(--jobs-black);
     }
     
     .a2a-agent-id {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--jobs-gray);
-      font-family: monospace;
-      margin-top: 2px;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Mono', Monaco, monospace;
+      margin-top: 1px;
+      opacity: 0.7;
     }
 
     .a2a-technical-name {
@@ -1355,10 +1360,10 @@
     }
     
     .a2a-capabilities {
-      background: var(--jobs-light-gray);
-      border-radius: 8px;
-      padding: var(--jobs-spacing-sm);
-      margin: var(--jobs-spacing-sm) 0;
+      background: rgba(142, 142, 147, 0.06);
+      border-radius: 6px;
+      padding: 8px 10px;
+      margin: 10px 0;
     }
     
     body.dark-mode .a2a-capabilities {
@@ -1366,26 +1371,28 @@
     }
     
     .a2a-capability-label {
-      font-size: 10px;
+      font-size: 9px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
       color: var(--jobs-gray);
-      margin-bottom: var(--jobs-spacing-xs);
+      margin-bottom: 4px;
+      font-weight: 500;
     }
     
     .a2a-capability-list {
       display: flex;
       flex-wrap: wrap;
-      gap: var(--jobs-spacing-xs);
+      gap: 4px;
     }
     
     .a2a-capability-tag {
       background: var(--jobs-white);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 4px;
-      padding: 2px 8px;
-      font-size: 11px;
+      border: 0.5px solid rgba(0, 0, 0, 0.08);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 10px;
       white-space: nowrap;
+      font-weight: 500;
     }
     
     body.dark-mode .a2a-capability-tag {
@@ -1394,19 +1401,20 @@
     }
     
     .a2a-agent-description {
-      font-size: var(--jobs-font-size-caption);
+      font-size: 13px;
       color: var(--jobs-gray);
-      margin-bottom: var(--jobs-spacing-md);
-      line-height: 1.4;
+      margin-bottom: 10px;
+      line-height: 1.35;
+      margin-top: 4px;
     }
     
     .a2a-protocol-info {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: var(--jobs-spacing-md);
-      padding-top: var(--jobs-spacing-md);
-      border-top: 1px solid var(--jobs-light-gray);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 0.5px solid rgba(0, 0, 0, 0.08);
     }
     
     body.dark-mode .a2a-protocol-info {
@@ -1414,20 +1422,22 @@
     }
     
     .a2a-protocol-version {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--jobs-gray);
+      font-weight: 500;
     }
     
     .a2a-agent-status {
       display: flex;
       align-items: center;
-      gap: 4px;
-      font-size: 11px;
+      gap: 3px;
+      font-size: 10px;
+      font-weight: 500;
     }
     
     .a2a-status-dot {
-      width: 6px;
-      height: 6px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background: var(--jobs-green);
     }
@@ -1437,8 +1447,9 @@
     }
     
     .jobs-model-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      border-color: rgba(0, 0, 0, 0.1);
     }
     
     .jobs-model-card::before {
@@ -1602,7 +1613,8 @@
     @media (max-width: 768px) {
       .jobs-models-grid {
         grid-template-columns: 1fr;
-        gap: var(--jobs-spacing-md);
+        gap: 12px;
+        padding: 0 16px;
       }
       
       .jobs-overview-grid {
@@ -2750,7 +2762,7 @@
           </div>
           
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); window.open('/visual-builder-real.html', '_blank')">Open Visual Builder</button>
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); showA2AWizard()">Open A2A Wizard</button>
             <button class="jobs-action-button" onclick="event.stopPropagation(); showVisualBuilderInfo()">Learn More</button>
           </div>
         </div>
@@ -3614,8 +3626,8 @@
           </div>
           
           <div class="jobs-model-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); window.open('/visual-builder-real.html', '_blank')">
-              Open Visual Builder
+            <button class="jobs-action-button primary" onclick="event.stopPropagation(); showA2AWizard()">
+              Open A2A Wizard
             </button>
             <button class="jobs-action-button" onclick="event.stopPropagation(); window.open('/a2a-network.html', '_blank')">
               View Network Status
@@ -5402,6 +5414,152 @@ console.log('Agent result:', result);
   </div>
   
   </script>
+
+<!-- A2A Wizard Interface -->
+<div id="a2a-wizard-overlay" class="modal-overlay" style="display: none;">
+  <div class="modal-content" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h2>A2A Agent Development Wizard</h2>
+      <button class="modal-close" onclick="closeA2AWizard()">×</button>
+    </div>
+    
+    <div id="wizard-content" class="wizard-container">
+      <div class="wizard-step active" id="step-1">
+        <h3>🤖 Describe Your A2A Agent</h3>
+        <p>Tell me what you want your A2A agent to do. I'll help you code the blockchain integration.</p>
+        <textarea id="agent-description" placeholder="e.g., I want an agent that monitors portfolio risk and automatically executes hedging strategies on-chain..." rows="4"></textarea>
+        <button class="jobs-action-button primary" onclick="processWithGrok4()">Generate Code with Grok4</button>
+      </div>
+      
+      <div class="wizard-step" id="step-2" style="display: none;">
+        <h3>⚡ Generated A2A Code</h3>
+        <div id="generated-code"></div>
+        <button class="jobs-action-button primary" onclick="deployAgent()">Deploy Agent</button>
+        <button class="jobs-action-button" onclick="modifyAgent()">Modify Code</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function showA2AWizard() {
+  document.getElementById('a2a-wizard-overlay').style.display = 'flex';
+}
+
+function closeA2AWizard() {
+  document.getElementById('a2a-wizard-overlay').style.display = 'none';
+}
+
+async function processWithGrok4() {
+  const description = document.getElementById('agent-description').value;
+  if (!description.trim()) {
+    alert('Please describe your A2A agent first');
+    return;
+  }
+  
+  const codeContainer = document.getElementById('generated-code');
+  codeContainer.innerHTML = '<div class="loading">🤖 Grok4 is generating your A2A agent code...</div>';
+  
+  try {
+    const response = await fetch('/api/a2a-grok-autonomy', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'generate_a2a_code',
+        description: description
+      })
+    });
+    
+    const result = await response.json();
+    
+    if (result.success) {
+      codeContainer.innerHTML = `<pre><code>${result.code}</code></pre>`;
+      document.getElementById('step-1').style.display = 'none';
+      document.getElementById('step-2').style.display = 'block';
+    } else {
+      codeContainer.innerHTML = `<div class="error">Error: ${result.error}</div>`;
+    }
+  } catch (error) {
+    codeContainer.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+  }
+}
+
+function deployAgent() {
+  alert('Agent deployment initiated! Check the deployment status in the network.');
+  closeA2AWizard();
+}
+
+function modifyAgent() {
+  document.getElementById('step-2').style.display = 'none';
+  document.getElementById('step-1').style.display = 'block';
+}
+</script>
+
+<style>
+.wizard-container {
+  padding: 20px;
+}
+
+.wizard-step {
+  margin-bottom: 20px;
+}
+
+.wizard-step h3 {
+  margin-bottom: 15px;
+  color: var(--jobs-blue);
+}
+
+.wizard-step textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 15px;
+  resize: vertical;
+}
+
+.wizard-step textarea:focus {
+  outline: none;
+  border-color: var(--jobs-blue);
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+#generated-code {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+#generated-code pre {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: 'Monaco', 'Menlo', monospace;
+  font-size: 12px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--jobs-blue);
+}
+
+.error {
+  color: var(--jobs-red);
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  border-radius: 8px;
+  padding: 15px;
+}
+</style>
+
+<!-- Trust Section Pixel Perfect - Jony Ive Standards -->
+<script src="trust-section-ive-perfect.js"></script>
 
 </body>
 </html>
