@@ -379,7 +379,7 @@ async function handleExecuteBlockchainProcess(req, res) {
     }
     
     // 3. Create execution task
-    const taskId = `blockchain_task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const taskId = `blockchain_task_${Date.now()}_${generateDeterministicId(processId, 'task')}`;
     
     const taskRecord = {
       task_id: taskId,
@@ -472,8 +472,8 @@ async function simulateBlockchainExecution(taskId) {
           result: {
             success: true,
             blockchain_verified: true,
-            gas_used: Math.floor(Math.random() * 500000) + 100000,
-            tx_hash: `0x${Math.random().toString(16).substr(2, 64)}`
+            gas_used: calculateDeterministicGas(taskId),
+            tx_hash: generateDeterministicTxHash(taskId, 'execution')
           }
         })
       })
@@ -670,4 +670,14 @@ function generateDeterministicId(processId, walletAddress) {
   const crypto = require('crypto');
   const hash = crypto.createHash('sha256').update(`${processId}-${walletAddress}`).digest('hex');
   return hash.substring(0, 9);
+}
+
+/**
+ * Calculate deterministic gas usage
+ */
+function calculateDeterministicGas(taskId) {
+  const crypto = require('crypto');
+  const hash = crypto.createHash('sha256').update(taskId).digest('hex');
+  const gasBase = parseInt(hash.substring(0, 6), 16) % 400000; // 0-400k range
+  return gasBase + 100000; // 100k-500k range
 }

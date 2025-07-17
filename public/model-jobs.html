@@ -6446,18 +6446,22 @@ async function loadGrokExplanation(templateId, sourceCode, container) {
     const data = await response.json();
     
     if (data.explanation) {
-      // Convert markdown to HTML for display
-      const htmlExplanation = data.explanation
+      // Clean up and convert markdown to natural HTML
+      let cleanExplanation = data.explanation
+        .replace(/🤖/g, '')
         .replace(/### (.*?)(\n|$)/g, '<h4>$1</h4>')
         .replace(/## (.*?)(\n|$)/g, '<h3>$1</h3>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
         .replace(/- (.*?)(\n|$)/g, '<li>$1</li>')
         .replace(/(\n|^)([^<\n]*?)(\n|$)/g, '<p>$2</p>')
-        .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>');
+        .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
+        .replace(/<p>\s*<\/p>/g, '') // Remove empty paragraphs
+        .replace(/<p>(\d+\.\s)/g, '<p><strong>$1</strong>') // Make numbered lists bold
+        .trim();
       
       container.innerHTML = `
         <div class="ai-explanation-content">
-          ${htmlExplanation}
+          ${cleanExplanation}
         </div>
       `;
     } else {
@@ -6539,11 +6543,28 @@ async function sendQAMessage() {
     // Remove loading message
     document.getElementById('loading-message').remove();
     
+    // Clean up the AI response - remove excessive markdown and make it natural
+    let cleanAnswer = data.answer || 'I apologize, but I couldn\'t process your question. Please try rephrasing it.';
+    
+    // Remove excessive emojis and technical formatting
+    cleanAnswer = cleanAnswer
+      .replace(/🤖 \*\*Grok AI Response\*\*/g, '')
+      .replace(/\*\*(.*?)\*\*/g, '$1') // Remove bold markdown
+      .replace(/• /g, '• ') // Keep bullet points clean
+      .replace(/\n\n\*\*Quick Facts:\*\*/g, '\n\nKey info:')
+      .replace(/\n\n\*\*Need More Details\?\*\*/g, '\n\nNeed help with something specific?')
+      .replace(/🚀/g, '')
+      .replace(/⛽/g, '')
+      .replace(/🛡️/g, '')
+      .replace(/🔍/g, '')
+      .replace(/✅/g, '✓')
+      .trim();
+    
     // Add AI response
     chat.innerHTML += `
       <div class="qa-message assistant">
         <div class="qa-avatar">🤖</div>
-        <div class="qa-bubble">${data.answer || 'I apologize, but I couldn\'t process your question. Please try rephrasing it.'}</div>
+        <div class="qa-bubble">${cleanAnswer}</div>
       </div>
     `;
     

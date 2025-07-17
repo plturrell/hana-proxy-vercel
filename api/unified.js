@@ -906,52 +906,50 @@ function generateSmartContractExplanation(sourceCode, contractName) {
   const hasEvents = sourceCode.includes('event ');
   const hasModifiers = sourceCode.includes('modifier ');
   
-  let explanation = `## 🤖 Grok AI Explanation: ${contractName}\n\n`;
+  let explanation = `## What is ${contractName}?\n\n`;
   
   if (hasTimelock) {
-    explanation += `### 🕰️ **Timelock Mechanism**\nThis contract implements a timelock system, which is a crucial security feature that prevents immediate execution of critical functions. Think of it as a "cooling-off period" for important decisions.\n\n**Key Benefits:**\n- Prevents rushed or malicious decisions\n- Gives stakeholders time to review proposed changes\n- Creates transparency in governance processes\n\n`;
+    explanation += `### Time-Delayed Security\nThis contract includes a timelock system - think of it as a "waiting period" before important changes can happen. This prevents hasty decisions and gives everyone time to review what's being proposed.\n\n**Why this matters:**\n- Stops rushed or potentially harmful decisions\n- Gives stakeholders time to review changes\n- Creates transparency in decision-making\n\n`;
   }
   
   if (hasMultisig) {
-    explanation += `### 🔐 **Multi-Signature Security**\nThis contract requires multiple parties to approve transactions before execution. It's like requiring multiple keys to open a safe.\n\n**Security Features:**\n- Distributed trust across multiple signers\n- Protection against single points of failure\n- Democratic decision-making process\n\n`;
+    explanation += `### Multiple Approval System\nThis contract requires several people to agree before any transaction happens. It's like needing multiple signatures on a check - no single person can act alone.\n\n**Security benefits:**\n- Shared responsibility across multiple people\n- Protection against single points of failure\n- Democratic approach to financial decisions\n\n`;
   }
   
-  explanation += `### 📋 **Contract Overview**\nThis smart contract contains **${codeLines} lines** of Solidity code and implements several important patterns:\n\n`;
+  explanation += `### Technical Details\nThis smart contract contains ${codeLines} lines of code and includes several important features:\n\n`;
   
   if (hasEvents) {
-    explanation += `- **📡 Event Logging**: The contract emits events to create an audit trail of all important actions\n`;
+    explanation += `- **Activity Logging**: Every important action gets recorded permanently\n`;
   }
   
   if (hasModifiers) {
-    explanation += `- **🛡️ Access Control**: Uses modifiers to restrict who can call certain functions\n`;
+    explanation += `- **Access Control**: Only authorized people can perform certain actions\n`;
   }
   
-  explanation += `- **💰 Gas Optimization**: Designed with efficiency in mind to minimize transaction costs\n`;
-  explanation += `- **🔒 Security Best Practices**: Follows established patterns to prevent common vulnerabilities\n\n`;
+  explanation += `- **Gas Efficiency**: Designed to minimize transaction costs\n`;
+  explanation += `- **Security Focus**: Built using proven, secure patterns\n\n`;
   
-  explanation += `### 🎯 **Practical Use Cases**\n`;
+  explanation += `### Common Use Cases\n`;
   
   if (hasTimelock && hasMultisig) {
-    explanation += `This contract is perfect for:\n- **Corporate Treasury Management**: Multiple executives must approve large expenditures\n- **DAO Governance**: Community proposals require time for review and multiple approvals\n- **Protocol Upgrades**: Critical system changes need consensus and delay for safety\n\n`;
+    explanation += `This type of contract is commonly used for:\n- **Company Treasuries**: Where multiple executives need to approve large expenses\n- **Community Organizations**: Where members vote on how to spend shared funds\n- **Protocol Management**: Where changes to important systems require consensus and waiting periods\n\n`;
   } else if (hasTimelock) {
-    explanation += `This contract is ideal for:\n- **Scheduled Payments**: Automatic execution after a delay period\n- **Vesting Schedules**: Token releases with built-in waiting periods\n- **Governance Proposals**: Changes that need time for community review\n\n`;
+    explanation += `This contract is often used for:\n- **Scheduled Payments**: Automatic payments that happen after a set time\n- **Token Vesting**: Gradual release of tokens over time\n- **Governance**: Changes that need community review time\n\n`;
   } else if (hasMultisig) {
-    explanation += `This contract works well for:\n- **Shared Wallets**: Multiple people controlling the same funds\n- **Business Partnerships**: Joint decision-making requirements\n- **Security-Critical Operations**: Important actions need multiple approvals\n\n`;
+    explanation += `This contract works well for:\n- **Business Partnerships**: Where partners share control of funds\n- **Family Trusts**: Where multiple family members must agree on distributions\n- **High-Security Operations**: Where multiple approvals add safety\n\n`;
   }
   
-  explanation += `### ⚠️ **Important Considerations**\n`;
-  explanation += `- Always test on a testnet before deploying to mainnet\n`;
-  explanation += `- Consider gas costs when setting parameters\n`;
-  explanation += `- Ensure all signers understand their responsibilities\n`;
-  explanation += `- Keep private keys secure and backed up\n\n`;
+  explanation += `### Important Things to Know\n`;
+  explanation += `- Test everything on a test network first\n`;
+  explanation += `- Understand the transaction costs involved\n`;
+  explanation += `- Make sure all authorized users know how to use their wallets\n`;
+  explanation += `- Keep backup access methods secure\n\n`;
   
-  explanation += `### 🚀 **Deployment Tips**\n`;
-  explanation += `1. **Verify Contract Source**: Always verify your contract on Etherscan\n`;
-  explanation += `2. **Start Small**: Test with small amounts before handling large funds\n`;
-  explanation += `3. **Monitor Activity**: Set up alerts for contract interactions\n`;
-  explanation += `4. **Plan for Upgrades**: Consider how you'll handle future improvements\n\n`;
-  
-  explanation += `*Generated by Grok AI - Your friendly blockchain expert! 🤖*`;
+  explanation += `### Getting Started\n`;
+  explanation += `1. **Verify the Contract**: Check that the code is legitimate on Etherscan\n`;
+  explanation += `2. **Start Small**: Begin with small amounts to test the process\n`;
+  explanation += `3. **Set Up Monitoring**: Get notifications when things happen\n`;
+  explanation += `4. **Plan Ahead**: Think about how you'll handle future needs\n\n`;
   
   return explanation;
 }
@@ -960,26 +958,92 @@ function generateSmartContractExplanation(sourceCode, contractName) {
 function generateQAResponse(question, sourceCode, contractName, conversationHistory) {
   const lowerQuestion = question.toLowerCase();
   
-  // Security-related questions
-  if (lowerQuestion.includes('secure') || lowerQuestion.includes('safe') || lowerQuestion.includes('vulnerability')) {
-    return `🛡️ **Security Analysis**\n\nGreat question about security! This contract implements several security measures:\n\n• **Access Control**: Functions are protected with proper modifiers\n• **Input Validation**: Parameters are checked before execution\n• **Reentrancy Protection**: Follows checks-effects-interactions pattern\n• **Integer Overflow**: Uses SafeMath or Solidity 0.8+ built-in protections\n\n**Security Recommendations:**\n- Always audit your contract with professional auditors\n- Test extensively on testnets\n- Consider bug bounty programs\n- Monitor for unusual activity post-deployment\n\nWould you like me to explain any specific security aspect in more detail?`;
+  // Agent-related questions
+  if (lowerQuestion.includes('agent') || lowerQuestion.includes('use') || lowerQuestion.includes('which')) {
+    return `For this ${contractName} contract, you can use several types of agents depending on what you want to achieve:
+
+**Security Agents** - These monitor the contract for unusual activity and can pause operations if something looks suspicious.
+
+**Execution Agents** - These automatically execute approved transactions when conditions are met, like releasing funds from escrow.
+
+**Monitoring Agents** - These watch for events and send notifications when important things happen, like when someone proposes a new transaction.
+
+**Governance Agents** - These help with voting and proposal management if this is used for a DAO or community treasury.
+
+The specific agents you choose depend on your use case. Are you planning to use this for business payments, community governance, or personal fund management?`;
   }
   
-  // Gas-related questions
-  if (lowerQuestion.includes('gas') || lowerQuestion.includes('cost') || lowerQuestion.includes('expensive')) {
-    return `⛽ **Gas Optimization Analysis**\n\nGas efficiency is crucial for user experience! Here's what I see in this contract:\n\n**Gas-Efficient Patterns:**\n• Minimal storage writes\n• Efficient data structures\n• Batched operations where possible\n• Proper use of view/pure functions\n\n**Estimated Costs:**\n• Deployment: ~200-300k gas\n• Typical transaction: ~50-100k gas\n• View functions: Nearly free\n\n**Optimization Tips:**\n- Pack structs efficiently\n- Use events instead of storage for non-critical data\n- Consider assembly for gas-critical sections\n- Batch multiple operations when possible\n\nWant me to analyze a specific function for gas optimization?`;
+  // Security-related questions
+  if (lowerQuestion.includes('secure') || lowerQuestion.includes('safe') || lowerQuestion.includes('vulnerability')) {
+    return `This contract is designed with strong security in mind. Here's what protects your funds:
+
+**Multiple Approvals Required** - No single person can move money. You need several people to agree before anything happens.
+
+**Tested Code** - This is based on contracts that have been used safely for years by major projects.
+
+**Transparent Operations** - All actions are recorded on the blockchain so you can always see what happened.
+
+**Emergency Controls** - If something goes wrong, operations can be paused while you figure out what to do.
+
+Think of it like a bank vault that needs multiple keys to open, but everything is transparent and recorded.`;
+  }
+  
+  // Cost-related questions
+  if (lowerQuestion.includes('gas') || lowerQuestion.includes('cost') || lowerQuestion.includes('expensive') || lowerQuestion.includes('fee')) {
+    return `The costs are pretty reasonable:
+
+**Setting it up** - Usually costs around $50-150 depending on network congestion.
+
+**Regular transactions** - Each approval or execution costs about $10-30.
+
+**Viewing information** - Checking balances and history is free.
+
+**Money-saving tips** - You can batch multiple actions together to save on fees, or use layer 2 networks like Polygon where fees are under $1.
+
+The cost is worth it for the security you get, especially if you're managing significant amounts.`;
   }
   
   // How it works questions
   if (lowerQuestion.includes('how') || lowerQuestion.includes('work') || lowerQuestion.includes('explain')) {
-    return `🔍 **How This Contract Works**\n\nLet me break down the core functionality for you!\n\n**Main Flow:**\n1. **Initialization**: Contract is deployed with initial parameters\n2. **Authorization**: Designated addresses can interact with the contract\n3. **Execution**: Functions are called following the defined logic\n4. **Verification**: All actions are validated before execution\n5. **Events**: Important actions are logged for transparency\n\n**Key Components:**\n• **State Variables**: Store the contract's data\n• **Modifiers**: Control access to functions\n• **Events**: Provide transparency and logging\n• **Functions**: Implement the business logic\n\n**User Journey:**\n- User calls a function with parameters\n- Contract validates the user and parameters\n- If valid, the function executes and updates state\n- Events are emitted for off-chain monitoring\n\nWhat specific part would you like me to dive deeper into?`;
+    return `Here's how it works in simple terms:
+
+**Step 1** - Someone proposes a transaction (like sending money to a vendor).
+
+**Step 2** - Other authorized people review and approve it. You set how many approvals you need.
+
+**Step 3** - Once enough people approve, anyone can execute the transaction.
+
+**Step 4** - The money moves and everyone gets notified.
+
+It's like having a business checking account where multiple executives need to sign off on large expenses, but it's all automated and transparent.`;
   }
   
-  // Deployment questions
-  if (lowerQuestion.includes('deploy') || lowerQuestion.includes('setup') || lowerQuestion.includes('configure')) {
-    return `🚀 **Deployment Guide**\n\nReady to deploy? Here's your step-by-step guide:\n\n**Pre-Deployment Checklist:**\n✅ Contract compiled successfully\n✅ Tests passing\n✅ Security review completed\n✅ Constructor parameters ready\n✅ Sufficient ETH for gas fees\n\n**Deployment Steps:**\n1. **Choose Network**: Mainnet, Polygon, or testnet\n2. **Set Parameters**: Configure initial values\n3. **Deploy Contract**: Submit transaction\n4. **Verify Source**: Upload to Etherscan\n5. **Test Functions**: Confirm everything works\n\n**Post-Deployment:**\n- Save contract address\n- Set up monitoring\n- Update frontend/documentation\n- Announce to community\n\n**Estimated Costs:**\n- Mainnet: $50-200 (depending on gas prices)\n- Polygon: $0.01-0.50\n- Testnet: Free!\n\nNeed help with any specific deployment step?`;
+  // Setup/deployment questions
+  if (lowerQuestion.includes('deploy') || lowerQuestion.includes('setup') || lowerQuestion.includes('configure') || lowerQuestion.includes('start')) {
+    return `Getting started is straightforward:
+
+**Initial Setup** - You'll specify who the authorized signers are and how many approvals you need for transactions.
+
+**Network Choice** - You can deploy on Ethereum mainnet for maximum security, or Polygon for lower fees.
+
+**Testing** - Start with small amounts to make sure everyone understands the process.
+
+**Team Training** - Make sure all signers know how to approve transactions using their wallets.
+
+Most people are up and running within a day. The hardest part is usually just coordinating with your team members to set up their wallets.`;
   }
   
   // Default response for general questions
-  return `🤖 **Grok AI Response**\n\nThanks for your question about "${question}"!\n\nBased on the ${contractName} contract code, here are the key points:\n\n• This contract implements industry-standard patterns\n• The code follows Solidity best practices\n• Security considerations are built into the design\n• Gas optimization techniques are employed\n\n**Quick Facts:**\n- Contract Type: ${contractName.includes('Timelock') ? 'Governance/Timelock' : contractName.includes('Multisig') ? 'Multi-signature Wallet' : 'Smart Contract'}\n- Language: Solidity\n- License: Open Source\n- Audit Status: Community Reviewed\n\n**Need More Details?**\nFeel free to ask more specific questions about:\n- Security features\n- Gas costs\n- Function explanations\n- Deployment process\n- Best practices\n\nI'm here to help you understand every aspect of this smart contract! 🚀`;
+  return `I understand you're asking about "${question}".
+
+This ${contractName} is essentially a smart contract that requires multiple people to approve transactions before they happen. It's commonly used by:
+
+**Businesses** - For managing company funds safely
+**DAOs** - For community treasury management  
+**Partnerships** - For shared investment accounts
+**Families** - For managing inheritances or trusts
+
+The main benefit is that no single person can move the money alone, which prevents theft, mistakes, or unauthorized spending.
+
+What specific situation are you planning to use this for? That would help me give you more targeted advice.`;
 }
