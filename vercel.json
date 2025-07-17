@@ -8,6 +8,9 @@
     },
     "api/a2a-blockchain-bridge.js": {
       "maxDuration": 60
+    },
+    "api/unified.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [
