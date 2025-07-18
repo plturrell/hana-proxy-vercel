@@ -5793,7 +5793,7 @@ function trustSectionStandard() {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 16px;
+      margin-bottom: 24px;
     }
     
     .trust-template-info h3 {
@@ -5803,10 +5803,11 @@ function trustSectionStandard() {
     }
     
     .trust-template-info p {
-      font-size: 14px;
-      color: #8E8E93;
+      font-size: 15px;
+      color: #636366;
       margin: 0;
-      line-height: 1.4;
+      line-height: 1.5;
+      padding-bottom: 8px;
     }
     
     .trust-template-status {
@@ -5825,32 +5826,6 @@ function trustSectionStandard() {
     .trust-template-status.loading {
       background: rgba(255, 149, 0, 0.1);
       color: #FF9500;
-    }
-    
-    .trust-template-metrics {
-      display: flex;
-      gap: 24px;
-      margin-bottom: 20px;
-    }
-    
-    .trust-template-metric {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-    
-    .trust-template-metric-value {
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-    
-    .trust-template-metric-label {
-      font-size: 12px;
-      color: #8E8E93;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
     
     .trust-template-actions {
@@ -6327,9 +6302,6 @@ async function loadStandardTemplates() {
       grid.innerHTML = '';
       
       for (const template of templates) {
-        // Load metrics for each template
-        await loadTemplateMetrics(template.id);
-        
         const card = document.createElement('div');
         card.className = 'trust-template-standard-card';
         card.innerHTML = `
@@ -6343,20 +6315,6 @@ async function loadStandardTemplates() {
             </div>
           </div>
           
-          <div class="trust-template-metrics">
-            <div class="trust-template-metric">
-              <span class="trust-template-metric-value" id="implementations-${template.id}">89</span>
-              <span class="trust-template-metric-label">Implementations</span>
-            </div>
-            <div class="trust-template-metric">
-              <span class="trust-template-metric-value">Enterprise</span>
-              <span class="trust-template-metric-label">Security Level</span>
-            </div>
-            <div class="trust-template-metric">
-              <span class="trust-template-metric-value">24/7</span>
-              <span class="trust-template-metric-label">Availability</span>
-            </div>
-          </div>
           
           <div class="trust-template-actions">
             <button class="trust-template-action" onclick="viewStandardCode('${template.id}')">
@@ -6380,23 +6338,6 @@ async function loadStandardTemplates() {
   }
 }
 
-// Load template metrics
-async function loadTemplateMetrics(templateId) {
-  try {
-    const response = await fetch(`/api/unified?action=template_metrics&template_id=${templateId}`);
-    const data = await response.json();
-    
-    // Update the template card with business-relevant data
-    const implementationsElement = document.getElementById(`implementations-${templateId}`);
-    
-    if (implementationsElement) {
-      implementationsElement.textContent = data.deployments || '0';
-    }
-    
-  } catch (error) {
-    console.error('Error loading metrics for', templateId, error);
-  }
-}
 
 // View code with Grok integration
 async function viewStandardCode(templateId) {

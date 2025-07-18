@@ -536,42 +536,30 @@ function getDefaultTemplates() {
   return [
     {
       id: 'gnosis-safe',
-      name: 'Gnosis Safe Multisig',
-      description: 'The most trusted multisig wallet on Ethereum',
-      icon: '🔐',
-      address: '0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552',
+      name: 'Multi-Signature Treasury',
+      description: 'Require multiple approvals before any funds can be moved. Perfect for business partnerships, family offices, and organizations that need shared control over finances.',
       verified: true,
-      network: 'ethereum',
       status: 'active'
     },
     {
       id: 'compound-timelock',
-      name: 'Compound Timelock',
-      description: 'Governance timelock used by Compound protocol',
-      icon: '⏰',
-      address: '0x6d903f6003cca6255D85CcA4D3B5E5146dC33925',
+      name: 'Time-Delayed Operations',
+      description: 'Add a mandatory waiting period before major changes take effect. Ideal for governance decisions, scheduled payments, and situations requiring transparency.',
       verified: true,
-      network: 'ethereum',
       status: 'active'
     },
     {
       id: 'uniswap-factory',
-      name: 'Uniswap V3 Factory',
-      description: 'Factory contract for creating Uniswap V3 pools',
-      icon: '🦄',
-      address: '0x1F98431c8aD98523631AE4a59f267346ea31F984',
+      name: 'Automated Trading System',
+      description: 'Create automated market-making and trading capabilities. Suitable for treasury management, liquidity provision, and automated financial operations.',
       verified: true,
-      network: 'ethereum',
       status: 'active'
     },
     {
       id: 'aave-lending',
-      name: 'Aave Lending Pool',
-      description: 'Core lending pool contract from Aave protocol',
-      icon: '🏦',
-      address: '0x7d2768dE32b0b80b7a3454c06BdAc94A69DDc7A9',
+      name: 'Lending & Borrowing Platform',
+      description: 'Enable secure lending and borrowing operations. Great for creating internal credit facilities, managing cash flow, and earning yield on idle funds.',
       verified: true,
-      network: 'ethereum',
       status: 'active'
     }
   ];
@@ -580,7 +568,7 @@ function getDefaultTemplates() {
 async function getVerifiedContractCode(templateId) {
   const codeExamples = {
     'gnosis-safe': {
-      name: 'Gnosis Safe Multisig',
+      name: 'Multi-Signature Treasury',
       sourceCode: `// SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.7.0 <0.9.0;
 
@@ -661,7 +649,7 @@ contract GnosisSafe is
       license: 'LGPL-3.0-only'
     },
     'compound-timelock': {
-      name: 'Compound Timelock',
+      name: 'Time-Delayed Operations',
       sourceCode: `// SPDX-License-Identifier: BSD-3-Clause
 pragma solidity ^0.8.0;
 

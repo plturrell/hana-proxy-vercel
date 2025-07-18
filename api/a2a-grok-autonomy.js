@@ -137,11 +137,15 @@ class A2AAutonomyClient {
    */
   async createAgentBlockchainWallet(agentId) {
     try {
-      // Generate wallet (in production, use proper key generation)
+      // Generate deterministic blockchain wallet from agent ID
+      const crypto = require('crypto');
+      const addressHash = crypto.createHash('sha256').update(`address:${agentId}`).digest('hex');
+      const keyHash = crypto.createHash('sha256').update(`key:${agentId}:${Date.now()}`).digest('hex');
+      
       const wallet = {
-        address: `0x${Math.random().toString(16).substr(2, 40)}`,
-        privateKey: `0x${Math.random().toString(16).substr(2, 64)}`,
-        network: 'private',
+        address: `0x${addressHash.substring(0, 40)}`,
+        privateKey: `0x${keyHash}`,
+        network: 'supabase-private',
         funded: true,
         balance: '100 ETH',
         created_at: new Date().toISOString()
@@ -273,38 +277,76 @@ class A2AAutonomyClient {
 
   // Simulation methods for blockchain actions
   async simulateContractDeployment(agentId, params) {
+    const crypto = require('crypto');
+    const deploymentId = `${agentId}:${params.contractName || 'contract'}:${Date.now()}`;
+    const addressHash = crypto.createHash('sha256').update(`contract:${deploymentId}`).digest('hex');
+    const txHash = crypto.createHash('sha256').update(`tx:${deploymentId}`).digest('hex');
+    
     return {
       success: true,
-      contract_address: `0x${Math.random().toString(16).substr(2, 40)}`,
-      tx_hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      contract_address: `0x${addressHash.substring(0, 40)}`,
+      tx_hash: `0x${txHash}`,
       gas_used: '2100000'
     };
   }
 
   async simulateContractExecution(agentId, params) {
+    const crypto = require('crypto');
+    const executionId = `${agentId}:${params.functionName || 'execute'}:${Date.now()}`;
+    const txHash = crypto.createHash('sha256').update(`tx:${executionId}`).digest('hex');
+    
     return {
       success: true,
-      tx_hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      tx_hash: `0x${txHash}`,
       gas_used: '21000',
       result: params.expectedResult || 'success'
     };
   }
 
   async simulateEscrowCreation(agentId, params) {
+    const crypto = require('crypto');
+    const escrowId = params.taskId || `escrow_${Date.now()}`;
+    const txHash = crypto.createHash('sha256').update(`escrow:${agentId}:${escrowId}`).digest('hex');
+    
     return {
       success: true,
-      escrow_id: params.taskId || `escrow_${Date.now()}`,
-      tx_hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+      escrow_id: escrowId,
+      tx_hash: `0x${txHash}`,
       amount: params.amount || '1 ETH'
     };
   }
 
   async simulateReputationCheck(agentId, params) {
+    // Calculate real reputation based on agent blockchain activities
+    const { data: activities } = await this.supabase
+      .from('agent_blockchain_activities')
+      .select('*')
+      .eq('agent_id', agentId)
+      .eq('status', 'confirmed');
+    
+    const { data: agent } = await this.supabase
+      .from('a2a_agents')
+      .select('success_rate, total_requests, created_at')
+      .eq('agent_id', agentId)
+      .single();
+    
+    // Calculate reputation score from real data
+    const activityScore = (activities?.length || 0) * 10;
+    const successScore = (agent?.success_rate || 100) * 5;
+    const experienceScore = Math.min(200, (agent?.total_requests || 0) * 2);
+    
+    const totalScore = Math.min(1000, Math.max(0, activityScore + successScore + experienceScore));
+    
     return {
-      qualified: true,
-      score: Math.floor(Math.random() * 250) + 750, // 750-1000
+      qualified: totalScore >= 500,
+      score: Math.round(totalScore),
       address: params.address,
-      last_updated: new Date().toISOString()
+      last_updated: new Date().toISOString(),
+      breakdown: {
+        activity: activityScore,
+        success: successScore,
+        experience: experienceScore
+      }
     };
   }
 
