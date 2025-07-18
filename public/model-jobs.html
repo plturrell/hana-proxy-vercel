@@ -4087,6 +4087,25 @@
       const connectBtn = document.getElementById('modal-connect-btn');
       connectBtn.onclick = () => connectAgentFromModal(agent.agent_id);
       
+      // Add view process button if not exists
+      let processBtn = document.getElementById('modal-process-btn');
+      if (!processBtn) {
+        const modalActions = document.querySelector('.agent-modal-actions');
+        if (modalActions) {
+          processBtn = document.createElement('button');
+          processBtn.id = 'modal-process-btn';
+          processBtn.className = 'agent-modal-action secondary';
+          processBtn.textContent = 'View Process';
+          modalActions.insertBefore(processBtn, connectBtn);
+        }
+      }
+      if (processBtn) {
+        processBtn.onclick = () => {
+          closeAgentModal();
+          showAgentDetailScreen(agent.agent_id);
+        };
+      }
+      
       // Show modal
       const overlay = document.getElementById('agent-modal-overlay');
       overlay.classList.add('show');
@@ -4255,6 +4274,9 @@
         // Show the detail screen
         const detailScreen = document.getElementById('agent-detail-screen');
         detailScreen.classList.add('show');
+        
+        // Load agent's internal BPMN process
+        setTimeout(() => loadAgentBPMN(agent), 500);
         
       } catch (error) {
         alert(`Failed to load agent details: ${error.message}`);
@@ -5361,6 +5383,26 @@ if (result.success) {
           </div>
         </div>
       </div>
+      
+      <!-- Agent BPMN Process -->
+      <div class="agent-detail-section">
+        <h2 class="agent-detail-section-title">Internal Process Model</h2>
+        <div class="agent-detail-card">
+          <h3 class="agent-detail-card-title">BPMN Process Diagram</h3>
+          <div class="agent-detail-card-content">
+            <div class="agent-bpmn-container" style="height: 400px; position: relative; background: #f8f9fa; border-radius: 8px; overflow: hidden;">
+              <canvas id="agent-bpmn-canvas" style="width: 100%; height: 100%;"></canvas>
+              <div class="agent-bpmn-loading" id="agent-bpmn-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 12px;">
+                <div class="loading-spinner"></div>
+                <span>Loading agent process...</span>
+              </div>
+            </div>
+            <div id="agent-data-flow" style="margin-top: 20px;">
+              <!-- Data flow details will be inserted here -->
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- Integration -->
       <div class="agent-detail-section">
@@ -6033,6 +6075,327 @@ function switchProcess(processType) {
 // Show Visual Builder Info
 function showVisualBuilderInfo() {
   alert('The A2A Visual Trust Builder allows you to:\n\n• Design financial processes visually\n• Connect real A2A agents\n• Generate smart contracts automatically\n• Deploy to blockchain with one click\n\nClick "Process Designer" to start building!');
+}
+
+// Load Agent BPMN - shows the internal process of a single agent
+async function loadAgentBPMN(agent) {
+  const canvas = document.getElementById('agent-bpmn-canvas');
+  const loading = document.getElementById('agent-bpmn-loading');
+  
+  if (!canvas) return;
+  
+  const ctx = canvas.getContext('2d');
+  
+  // Set canvas size
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+  canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  
+  // Show loading
+  loading.style.display = 'flex';
+  
+  try {
+    // Fetch CSN schema for data mapping
+    const csnResponse = await fetch('/api/csn-generator?action=generate');
+    const csnData = await csnResponse.json();
+    const csnSchema = csnData.csn;
+    
+    // Hide loading
+    loading.style.display = 'none';
+    
+    // Draw the agent's internal process
+    drawAgentProcess(agent, ctx, canvas, csnSchema);
+    
+  } catch (error) {
+    console.error('Error loading agent BPMN:', error);
+    loading.innerHTML = '<span style="color: #FF3B30;">Failed to load process</span>';
+  }
+}
+
+// Draw Agent Process
+function drawAgentProcess(agent, ctx, canvas, csnSchema) {
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Define agent processes based on agent type
+  const agentProcesses = getAgentProcessDefinition(agent);
+  
+  // Draw the process
+  const process = agentProcesses[agent.agent_type] || agentProcesses.default;
+  
+  // Draw title
+  ctx.font = '16px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillStyle = '#1D1D1F';
+  ctx.fillText(agent.agent_name + ' Process', 20, 30);
+  
+  // Draw start event
+  ctx.beginPath();
+  ctx.arc(50, 100, 20, 0, 2 * Math.PI);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+  ctx.strokeStyle = '#34C759';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  
+  // Draw process steps
+  let x = 120;
+  const y = 80;
+  const stepWidth = 140;
+  const stepHeight = 40;
+  
+  process.steps.forEach((step, index) => {
+    // Draw task box
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(x, y, stepWidth, stepHeight);
+    ctx.strokeStyle = '#007AFF';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(x, y, stepWidth, stepHeight);
+    
+    // Draw task text
+    ctx.fillStyle = '#1D1D1F';
+    ctx.font = '13px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(step.title, x + stepWidth/2, y + 25);
+    
+    // Draw connection from previous
+    if (index > 0 || x === 120) {
+      ctx.beginPath();
+      ctx.moveTo(x - 20, y + stepHeight/2);
+      ctx.lineTo(x, y + stepHeight/2);
+      ctx.strokeStyle = '#8E8E93';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Arrow
+      ctx.beginPath();
+      ctx.moveTo(x, y + stepHeight/2);
+      ctx.lineTo(x - 5, y + stepHeight/2 - 5);
+      ctx.lineTo(x - 5, y + stepHeight/2 + 5);
+      ctx.closePath();
+      ctx.fillStyle = '#8E8E93';
+      ctx.fill();
+    }
+    
+    // Draw data annotations
+    ctx.font = '11px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'center';
+    
+    // Input data
+    if (step.inputs && step.inputs.length > 0) {
+      ctx.fillStyle = '#34C759';
+      ctx.fillText('↓ ' + step.inputs.join(', '), x + stepWidth/2, y - 5);
+    }
+    
+    // Output data
+    if (step.outputs && step.outputs.length > 0) {
+      ctx.fillStyle = '#FF9500';
+      ctx.fillText('↑ ' + step.outputs.join(', '), x + stepWidth/2, y + stepHeight + 15);
+    }
+    
+    // Parameters
+    if (step.parameters && step.parameters.length > 0) {
+      ctx.fillStyle = '#AF52DE';
+      ctx.fillText('⚙ ' + step.parameters.join(', '), x + stepWidth/2, y + stepHeight + 30);
+    }
+    
+    x += stepWidth + 40;
+  });
+  
+  // Draw end event
+  ctx.beginPath();
+  ctx.arc(x + 20, y + stepHeight/2, 20, 0, 2 * Math.PI);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+  ctx.strokeStyle = '#FF3B30';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+  
+  // Draw connection to end
+  ctx.beginPath();
+  ctx.moveTo(x - 20, y + stepHeight/2);
+  ctx.lineTo(x, y + stepHeight/2);
+  ctx.strokeStyle = '#8E8E93';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  
+  // Update data flow panel
+  updateAgentDataFlow(agent, process, csnSchema);
+}
+
+// Get agent process definition based on type
+function getAgentProcessDefinition(agent) {
+  return {
+    analytics: {
+      steps: [
+        {
+          title: 'Receive Request',
+          inputs: ['a2a_messages'],
+          outputs: ['agent_activity'],
+          parameters: ['request_type', 'urgency']
+        },
+        {
+          title: 'Load Data',
+          inputs: ['market_data', 'portfolios'],
+          outputs: ['agent_memory'],
+          parameters: ['time_range', 'symbols']
+        },
+        {
+          title: 'Calculate Metrics',
+          inputs: ['agent_memory'],
+          outputs: ['risk_metrics'],
+          parameters: ['confidence_level', 'method']
+        },
+        {
+          title: 'Send Response',
+          inputs: ['risk_metrics'],
+          outputs: ['a2a_messages', 'agent_activity'],
+          parameters: ['format', 'recipient']
+        }
+      ]
+    },
+    financial: {
+      steps: [
+        {
+          title: 'Monitor Markets',
+          inputs: ['market_data', 'news_articles'],
+          outputs: ['agent_activity'],
+          parameters: ['frequency', 'thresholds']
+        },
+        {
+          title: 'Analyze Portfolio',
+          inputs: ['portfolios', 'risk_metrics'],
+          outputs: ['agent_memory'],
+          parameters: ['risk_tolerance', 'objectives']
+        },
+        {
+          title: 'Generate Signal',
+          inputs: ['agent_memory', 'market_data'],
+          outputs: ['trading_signals'],
+          parameters: ['strategy', 'confidence_threshold']
+        },
+        {
+          title: 'Validate Trade',
+          inputs: ['trading_signals', 'compliance_checks'],
+          outputs: ['a2a_messages', 'blockchain_events'],
+          parameters: ['limits', 'regulations']
+        }
+      ]
+    },
+    ml: {
+      steps: [
+        {
+          title: 'Collect Training Data',
+          inputs: ['market_data', 'agent_activity'],
+          outputs: ['agent_memory'],
+          parameters: ['sample_size', 'features']
+        },
+        {
+          title: 'Train Model',
+          inputs: ['agent_memory'],
+          outputs: ['agent_memory'],
+          parameters: ['algorithm', 'hyperparameters']
+        },
+        {
+          title: 'Make Prediction',
+          inputs: ['market_data', 'agent_memory'],
+          outputs: ['trading_signals'],
+          parameters: ['confidence_threshold']
+        },
+        {
+          title: 'Update Model',
+          inputs: ['trading_signals', 'market_data'],
+          outputs: ['agent_memory', 'agent_activity'],
+          parameters: ['learning_rate', 'batch_size']
+        }
+      ]
+    },
+    default: {
+      steps: [
+        {
+          title: 'Receive Input',
+          inputs: ['a2a_messages'],
+          outputs: ['agent_activity'],
+          parameters: ['validation_rules']
+        },
+        {
+          title: 'Process Data',
+          inputs: ['market_data'],
+          outputs: ['agent_memory'],
+          parameters: ['processing_rules']
+        },
+        {
+          title: 'Execute Logic',
+          inputs: ['agent_memory'],
+          outputs: ['agent_memory'],
+          parameters: ['business_rules']
+        },
+        {
+          title: 'Return Result',
+          inputs: ['agent_memory'],
+          outputs: ['a2a_messages'],
+          parameters: ['format']
+        }
+      ]
+    }
+  };
+}
+
+// Update agent data flow panel
+function updateAgentDataFlow(agent, process, csnSchema) {
+  const dataFlowDiv = document.getElementById('agent-data-flow');
+  if (!dataFlowDiv) return;
+  
+  // Collect all data tables used
+  const dataTables = new Set();
+  process.steps.forEach(step => {
+    if (step.inputs) step.inputs.forEach(table => dataTables.add(table.split('.')[0]));
+    if (step.outputs) step.outputs.forEach(table => dataTables.add(table.split('.')[0]));
+  });
+  
+  let html = '<h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px;">📊 Data Resources (ORD)</h4>';
+  html += '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">';
+  
+  dataTables.forEach(tableName => {
+    const entityName = `finsight.db.${toPascalCase(tableName)}`;
+    const entity = csnSchema?.definitions?.[entityName];
+    
+    html += `
+      <div style="background: #F8F9FA; border: 1px solid #E5E5EA; border-radius: 8px; padding: 12px;">
+        <h5 style="font-weight: 600; margin: 0 0 4px; color: #007AFF; font-size: 14px;">
+          ${entity?.['@ord.title'] || toTitleCase(tableName)}
+        </h5>
+        <p style="font-size: 12px; color: #636366; margin: 0;">
+          ${entity?.['@ord.description'] || 'Data resource used by this agent'}
+        </p>
+      </div>
+    `;
+  });
+  
+  html += '</div>';
+  
+  // Add parameters section
+  html += '<h4 style="font-size: 16px; font-weight: 600; margin: 24px 0 12px;">⚙️ Configuration Parameters</h4>';
+  html += '<div style="background: #F8F9FA; border: 1px solid #E5E5EA; border-radius: 8px; padding: 16px;">';
+  
+  const allParams = new Set();
+  process.steps.forEach(step => {
+    if (step.parameters) step.parameters.forEach(param => allParams.add(param));
+  });
+  
+  html += '<div style="display: flex; flex-wrap: wrap; gap: 8px;">';
+  allParams.forEach(param => {
+    html += `<span style="background: #AF52DE; color: white; padding: 4px 12px; border-radius: 16px; font-size: 13px;">${param}</span>`;
+  });
+  html += '</div></div>';
+  
+  dataFlowDiv.innerHTML = html;
+}
+
+// Helper function for title case
+function toTitleCase(str) {
+  return str.split('_').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join(' ');
 }
 </script>
 
