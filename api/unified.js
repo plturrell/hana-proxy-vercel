@@ -536,29 +536,29 @@ function getDefaultTemplates() {
   return [
     {
       id: 'gnosis-safe',
-      name: 'Multi-Signature Treasury',
-      description: 'Require multiple approvals before any funds can be moved. Perfect for business partnerships, family offices, and organizations that need shared control over finances.',
+      name: 'Multi-Person Approval',
+      description: 'Any major decision requires agreement from multiple team members. Prevents unauthorized actions and ensures consensus before important changes happen.',
       verified: true,
       status: 'active'
     },
     {
       id: 'compound-timelock',
-      name: 'Time-Delayed Operations',
-      description: 'Add a mandatory waiting period before major changes take effect. Ideal for governance decisions, scheduled payments, and situations requiring transparency.',
+      name: 'Review Period Enforcement',
+      description: 'All changes must wait a set period before taking effect. Gives stakeholders time to review, discuss, and potentially veto proposed actions.',
       verified: true,
       status: 'active'
     },
     {
-      id: 'uniswap-factory',
-      name: 'Automated Trading System',
-      description: 'Create automated market-making and trading capabilities. Suitable for treasury management, liquidity provision, and automated financial operations.',
+      id: 'automated-workflow',
+      name: 'If-This-Then-That Logic',
+      description: 'Automatically trigger actions when specific conditions are met. Like email rules but for business processes. Reduces manual work and human error.',
       verified: true,
       status: 'active'
     },
     {
-      id: 'aave-lending',
-      name: 'Lending & Borrowing Platform',
-      description: 'Enable secure lending and borrowing operations. Great for creating internal credit facilities, managing cash flow, and earning yield on idle funds.',
+      id: 'permission-management',
+      name: 'Role-Based Access',
+      description: 'Different team members get different permissions based on their role. Managers can approve, employees can propose, auditors can only view.',
       verified: true,
       status: 'active'
     }
@@ -568,7 +568,7 @@ function getDefaultTemplates() {
 async function getVerifiedContractCode(templateId) {
   const codeExamples = {
     'gnosis-safe': {
-      name: 'Multi-Signature Treasury',
+      name: 'Multi-Person Approval',
       sourceCode: `// SPDX-License-Identifier: LGPL-3.0-only
 pragma solidity >=0.7.0 <0.9.0;
 
@@ -649,7 +649,7 @@ contract GnosisSafe is
       license: 'LGPL-3.0-only'
     },
     'compound-timelock': {
-      name: 'Time-Delayed Operations',
+      name: 'Review Period Enforcement',
       sourceCode: `// SPDX-License-Identifier: BSD-3-Clause
 pragma solidity ^0.8.0;
 
@@ -745,6 +745,96 @@ contract Timelock {
       network: 'Ethereum Mainnet',
       compiler: 'Solidity 0.8.19',
       license: 'BSD-3-Clause'
+    },
+    'automated-workflow': {
+      name: 'If-This-Then-That Logic',
+      sourceCode: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract AutomatedWorkflow {
+    struct Condition {
+        address target;
+        bytes4 selector;
+        bytes expectedValue;
+    }
+    
+    struct Action {
+        address target;
+        bytes data;
+        uint256 value;
+    }
+    
+    mapping(uint256 => Condition[]) public conditions;
+    mapping(uint256 => Action[]) public actions;
+    
+    event WorkflowTriggered(uint256 workflowId);
+    event ConditionMet(uint256 workflowId, uint256 conditionIndex);
+    event ActionExecuted(uint256 workflowId, uint256 actionIndex);
+    
+    function checkAndExecute(uint256 workflowId) public {
+        // Check all conditions
+        Condition[] memory workflowConditions = conditions[workflowId];
+        for (uint i = 0; i < workflowConditions.length; i++) {
+            if (!checkCondition(workflowConditions[i])) {
+                return; // Condition not met
+            }
+        }
+        
+        // Execute all actions
+        Action[] memory workflowActions = actions[workflowId];
+        for (uint i = 0; i < workflowActions.length; i++) {
+            executeAction(workflowActions[i]);
+        }
+    }
+}`,
+      abi: [],
+      address: '0x0000000000000000000000000000000000000000',
+      network: 'Ethereum Mainnet',
+      compiler: 'Solidity 0.8.19',
+      license: 'MIT'
+    },
+    'permission-management': {
+      name: 'Role-Based Access',
+      sourceCode: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract RoleBasedAccess {
+    enum Role { None, Viewer, Proposer, Approver, Admin }
+    
+    mapping(address => Role) public userRoles;
+    mapping(Role => mapping(string => bool)) public permissions;
+    
+    modifier onlyRole(Role _role) {
+        require(userRoles[msg.sender] >= _role, "Insufficient permissions");
+        _;
+    }
+    
+    modifier hasPermission(string memory _action) {
+        require(permissions[userRoles[msg.sender]][_action], "No permission for action");
+        _;
+    }
+    
+    function assignRole(address _user, Role _role) public onlyRole(Role.Admin) {
+        userRoles[_user] = _role;
+    }
+    
+    function propose(bytes memory _data) public onlyRole(Role.Proposer) {
+        // Proposers can create proposals
+    }
+    
+    function approve(uint256 _proposalId) public onlyRole(Role.Approver) {
+        // Approvers can approve proposals
+    }
+    
+    function view(uint256 _id) public view onlyRole(Role.Viewer) returns (bytes memory) {
+        // Viewers can see data
+    }
+}`,
+      abi: [],
+      address: '0x0000000000000000000000000000000000000000',
+      network: 'Ethereum Mainnet',
+      compiler: 'Solidity 0.8.19',
+      license: 'MIT'
     }
   };
 

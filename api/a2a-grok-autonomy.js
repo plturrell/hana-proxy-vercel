@@ -17,14 +17,45 @@ class A2AAutonomyClient {
     );
     
     this.edgeFunctionUrl = `${process.env.SUPABASE_URL}/functions/v1/a2a-autonomy-engine`;
-    console.log('🧠 A2A Autonomy Client initialized with Grok4 API via Supabase Edge Functions');
+    this.blockchainProcessor = null;
+    this.escrowManager = null;
+    console.log('🧠 A2A Autonomy Client initialized with blockchain integration via Supabase Edge Functions');
   }
 
   /**
-   * Process a specific message through autonomous agents
+   * Get blockchain message processor instance
+   */
+  async getBlockchainMessageProcessor() {
+    if (!this.blockchainProcessor) {
+      const { getBlockchainMessageProcessor } = await import('./a2a-blockchain-message-processor.js');
+      this.blockchainProcessor = getBlockchainMessageProcessor();
+    }
+    return this.blockchainProcessor;
+  }
+
+  /**
+   * Get blockchain escrow manager instance
+   */
+  async getBlockchainEscrowManager() {
+    if (!this.escrowManager) {
+      const { getBlockchainEscrowManager } = await import('./a2a-blockchain-escrow.js');
+      this.escrowManager = getBlockchainEscrowManager();
+    }
+    return this.escrowManager;
+  }
+
+  /**
+   * Process a specific message through blockchain-verified autonomous agents
    */
   async processMessage(messageId) {
     try {
+      console.log(`🔗 Processing message ${messageId} with blockchain verification...`);
+      
+      // Use the blockchain message processor for real verification
+      const blockchainProcessor = await this.getBlockchainMessageProcessor();
+      const result = await blockchainProcessor.processMessage(messageId);
+      
+      // Also trigger the Edge Function for additional processing
       const { data, error } = await this.supabase.functions.invoke('a2a-autonomy-engine', {
         body: {
           action: 'process_message',
@@ -32,8 +63,15 @@ class A2AAutonomyClient {
         }
       });
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.warn('Edge function error (continuing with blockchain result):', error);
+      }
+      
+      return {
+        blockchain_result: result,
+        edge_function_result: data,
+        blockchain_verified: result.success
+      };
     } catch (error) {
       console.error('Error processing message:', error);
       throw error;
@@ -41,10 +79,17 @@ class A2AAutonomyClient {
   }
 
   /**
-   * Process a proposal through autonomous agents for voting
+   * Process a proposal through blockchain consensus and stake-weighted voting
    */
   async processProposal(proposalId) {
     try {
+      console.log(`🗳️ Processing proposal ${proposalId} with blockchain consensus...`);
+      
+      // Use the blockchain message processor for real consensus
+      const blockchainProcessor = await this.getBlockchainMessageProcessor();
+      const result = await blockchainProcessor.processProposal(proposalId);
+      
+      // Also trigger the Edge Function for additional processing
       const { data, error } = await this.supabase.functions.invoke('a2a-autonomy-engine', {
         body: {
           action: 'process_proposal',
@@ -52,8 +97,16 @@ class A2AAutonomyClient {
         }
       });
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.warn('Edge function error (continuing with blockchain result):', error);
+      }
+      
+      return {
+        blockchain_result: result,
+        edge_function_result: data,
+        blockchain_verified: result.success,
+        consensus_enabled: true
+      };
     } catch (error) {
       console.error('Error processing proposal:', error);
       throw error;
@@ -208,7 +261,9 @@ class A2AAutonomyClient {
         .single();
       
       if (agentError || !agent?.blockchain_config) {
-        throw new Error('Agent blockchain config not found');
+        // Create blockchain config if missing
+        const blockchainConfig = await this.createAgentBlockchainWallet(agentId);
+        agent = { blockchain_config: blockchainConfig, name: `Agent-${agentId}` };
       }
       
       let result;
