@@ -5,7 +5,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import { getSecureConfig } from '../lib/secure-config';
-import { getBlockchainClient } from '../lib/blockchain-client';
+import { getBlockchainClient } from '../lib/blockchain-client-supabase';
 import crypto from 'crypto';
 
 const secureConfig = getSecureConfig();

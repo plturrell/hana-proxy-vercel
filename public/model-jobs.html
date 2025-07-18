@@ -5584,6 +5584,9 @@ function trustSectionStandard() {
         <button class="trust-standard-tab" onclick="switchStandardTab('contracts')">
           <span>My Contracts</span>
         </button>
+        <button class="trust-standard-tab" onclick="window.open('/bpmn-professional.html', '_blank')">
+          <span>Process Designer</span>
+        </button>
       </div>
       
       <!-- Template Library Panel -->
@@ -5660,7 +5663,7 @@ function trustSectionStandard() {
                 <div class="qa-message assistant">
                   <div class="qa-avatar">🤖</div>
                   <div class="qa-bubble">
-                    Hi! I'm here to help you understand this smart contract. Ask me anything about how it works, security considerations, gas costs, or deployment!
+                    I'll help you build this process using your existing agents. Tell me about your team structure and workflow needs.
                   </div>
                 </div>
               </div>
@@ -6089,7 +6092,15 @@ function trustSectionStandard() {
     }
     
     .ai-explanation-content {
-      line-height: 1.6;
+      line-height: 1.4;
+    }
+    
+    .ai-explanation-content p {
+      margin: 0 0 12px 0;
+    }
+    
+    .ai-explanation-content p:last-child {
+      margin-bottom: 0;
     }
     
     .ai-explanation-content h3 {
@@ -6387,18 +6398,16 @@ async function loadGrokExplanation(templateId, sourceCode, container) {
     const data = await response.json();
     
     if (data.explanation) {
-      // Clean up and convert markdown to natural HTML
+      // Clean up and convert to simple HTML with minimal formatting
       let cleanExplanation = data.explanation
         .replace(/🤖/g, '')
-        .replace(/### (.*?)(\n|$)/g, '<h4>$1</h4>')
-        .replace(/## (.*?)(\n|$)/g, '<h3>$1</h3>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/- (.*?)(\n|$)/g, '<li>$1</li>')
-        .replace(/(\n|^)([^<\n]*?)(\n|$)/g, '<p>$2</p>')
-        .replace(/(<li>.*?<\/li>)/gs, '<ul>$1</ul>')
-        .replace(/<p>\s*<\/p>/g, '') // Remove empty paragraphs
-        .replace(/<p>(\d+\.\s)/g, '<p><strong>$1</strong>') // Make numbered lists bold
+        .replace(/• /g, '• ')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
         .trim();
+      
+      cleanExplanation = '<p>' + cleanExplanation + '</p>';
       
       container.innerHTML = `
         <div class="ai-explanation-content">

@@ -608,7 +608,7 @@ async function recordBlockchainActivity(agentId: string, activityType: string, d
       agent_id: agentId,
       activity_type: activityType,
       status: 'confirmed',
-      transaction_hash: `0x${Date.now().toString(16)}${Math.random().toString(16).substr(2, 8)}`,
+      transaction_hash: await generateDeterministicHash(`${agentId}:${activityType}:${Date.now()}`),
       details: details
     });
 }
@@ -654,6 +654,16 @@ async function cleanupExpiredData() {
     .delete()
     .lt('created_at', thirtyDaysAgo)
     .neq('activity_type', 'escrow_created'); // Keep escrow records
+}
+
+// Helper function to generate deterministic hash using Web Crypto API
+async function generateDeterministicHash(input: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return `0x${hashHex}`;
 }
 
 console.log('🧠 A2A Autonomy Engine with Blockchain Integration ready!');

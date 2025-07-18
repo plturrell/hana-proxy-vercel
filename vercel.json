@@ -12,6 +12,15 @@
     },
     "api/unified.js": {
       "maxDuration": 30
+    },
+    "api/a2a-grok-autonomy.js": {
+      "maxDuration": 60
+    },
+    "api/autonomy-engine.js": {
+      "maxDuration": 30
+    },
+    "api/blockchain-agent-integration.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [

@@ -4,6 +4,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 class A2AAutonomyClient {
   constructor() {
@@ -19,6 +20,12 @@ class A2AAutonomyClient {
     this.edgeFunctionUrl = `${process.env.SUPABASE_URL}/functions/v1/a2a-autonomy-engine`;
     this.blockchainProcessor = null;
     this.escrowManager = null;
+    this.apiKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+    
+    if (!this.apiKey) {
+      console.warn('⚠️ GROK_API_KEY not found - Grok AI features will be disabled');
+    }
+    
     console.log('🧠 A2A Autonomy Client initialized with blockchain integration via Supabase Edge Functions');
   }
 
@@ -191,7 +198,6 @@ class A2AAutonomyClient {
   async createAgentBlockchainWallet(agentId) {
     try {
       // Generate deterministic blockchain wallet from agent ID
-      const crypto = require('crypto');
       const addressHash = crypto.createHash('sha256').update(`address:${agentId}`).digest('hex');
       const keyHash = crypto.createHash('sha256').update(`key:${agentId}:${Date.now()}`).digest('hex');
       
@@ -332,7 +338,6 @@ class A2AAutonomyClient {
 
   // Simulation methods for blockchain actions
   async simulateContractDeployment(agentId, params) {
-    const crypto = require('crypto');
     const deploymentId = `${agentId}:${params.contractName || 'contract'}:${Date.now()}`;
     const addressHash = crypto.createHash('sha256').update(`contract:${deploymentId}`).digest('hex');
     const txHash = crypto.createHash('sha256').update(`tx:${deploymentId}`).digest('hex');
@@ -346,7 +351,6 @@ class A2AAutonomyClient {
   }
 
   async simulateContractExecution(agentId, params) {
-    const crypto = require('crypto');
     const executionId = `${agentId}:${params.functionName || 'execute'}:${Date.now()}`;
     const txHash = crypto.createHash('sha256').update(`tx:${executionId}`).digest('hex');
     
@@ -359,7 +363,6 @@ class A2AAutonomyClient {
   }
 
   async simulateEscrowCreation(agentId, params) {
-    const crypto = require('crypto');
     const escrowId = params.taskId || `escrow_${Date.now()}`;
     const txHash = crypto.createHash('sha256').update(`escrow:${agentId}:${escrowId}`).digest('hex');
     

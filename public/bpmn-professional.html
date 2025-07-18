@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A2A Process Designer - Professional BPMN</title>
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@11.5.0/dist/assets/diagram-js.css">
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@11.5.0/dist/assets/bpmn-font/css/bpmn.css">
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js-properties-panel@1.22.0/dist/assets/properties-panel.css">
+    <style>
+        /* Professional BPMN Designer Styles - SAP Signavio Inspired */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: '72', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f3f4f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Top Navigation Bar */
+        .navbar {
+            background: #354a5f;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            margin-right: 32px;
+        }
+        
+        .navbar-menu {
+            display: flex;
+            gap: 24px;
+            flex: 1;
+        }
+        
+        .navbar-item {
+            color: #c5cdd3;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .navbar-item:hover {
+            color: white;
+        }
+        
+        .navbar-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-navbar {
+            background: #0a6ed1;
+            color: white;
+            border: none;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-navbar:hover {
+            background: #0854a0;
+        }
+        
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 48px);
+        }
+        
+        /* Left Sidebar - Process Templates */
+        .sidebar-left {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #32363a;
+            margin-bottom: 8px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #c5cdd3;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .template-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        
+        .template-item {
+            background: #f7f7f7;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .template-item:hover {
+            background: #e8f2ff;
+            border-color: #0a6ed1;
+        }
+        
+        .template-item.active {
+            background: #e8f2ff;
+            border-color: #0a6ed1;
+            box-shadow: 0 2px 4px rgba(10, 110, 209, 0.2);
+        }
+        
+        .template-icon {
+            width: 24px;
+            height: 24px;
+            background: #0a6ed1;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        
+        .template-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #32363a;
+        }
+        
+        .template-desc {
+            font-size: 12px;
+            color: #6a6d70;
+            margin-top: 4px;
+        }
+        
+        /* Center - Canvas Area */
+        .canvas-container {
+            flex: 1;
+            background: #fafafa;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .canvas-toolbar {
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .toolbar-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .toolbar-separator {
+            width: 1px;
+            height: 24px;
+            background: #e5e5e5;
+            margin: 0 8px;
+        }
+        
+        .toolbar-btn {
+            background: white;
+            border: 1px solid #c5cdd3;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .toolbar-btn:hover {
+            background: #f3f4f5;
+            border-color: #8c9ba5;
+        }
+        
+        .toolbar-btn.active {
+            background: #e8f2ff;
+            border-color: #0a6ed1;
+            color: #0a6ed1;
+        }
+        
+        #canvas {
+            flex: 1;
+            position: relative;
+        }
+        
+        /* Right Sidebar - Properties Panel */
+        .sidebar-right {
+            width: 320px;
+            background: white;
+            border-left: 1px solid #e5e5e5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .properties-tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .properties-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 500;
+            color: #6a6d70;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .properties-tab:hover {
+            color: #32363a;
+        }
+        
+        .properties-tab.active {
+            color: #0a6ed1;
+            border-bottom-color: #0a6ed1;
+        }
+        
+        .properties-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .property-group {
+            margin-bottom: 24px;
+        }
+        
+        .property-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6a6d70;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        .property-field {
+            margin-bottom: 16px;
+        }
+        
+        .property-field label {
+            display: block;
+            font-size: 13px;
+            color: #32363a;
+            margin-bottom: 4px;
+        }
+        
+        .property-field input,
+        .property-field select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #c5cdd3;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        /* Agent Assignment Section */
+        .agent-assignment {
+            background: #f7f7f7;
+            border-radius: 4px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+        
+        .agent-tag {
+            display: inline-block;
+            background: #e8f2ff;
+            color: #0a6ed1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+        
+        /* Floating Action Buttons */
+        .fab-container {
+            position: absolute;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #0a6ed1;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .fab.secondary {
+            width: 48px;
+            height: 48px;
+            background: white;
+            color: #0a6ed1;
+            border: 1px solid #e5e5e5;
+        }
+        
+        /* Status Bar */
+        .status-bar {
+            background: #32363a;
+            color: #c5cdd3;
+            padding: 4px 16px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #51c515;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-brand">A2A Process Designer</div>
+        <div class="navbar-menu">
+            <a href="#" class="navbar-item">File</a>
+            <a href="#" class="navbar-item">Edit</a>
+            <a href="#" class="navbar-item">View</a>
+            <a href="#" class="navbar-item">Process</a>
+            <a href="#" class="navbar-item">Simulate</a>
+            <a href="#" class="navbar-item">Help</a>
+        </div>
+        <div class="navbar-actions">
+            <button class="btn-navbar" onclick="deployProcess()">Deploy to A2A</button>
+            <button class="btn-navbar" onclick="saveProcess()">Save</button>
+        </div>
+    </nav>
+    
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar - Templates -->
+        <aside class="sidebar-left">
+            <div class="sidebar-header">
+                <h3 class="sidebar-title">Smart Contract Templates</h3>
+                <input type="text" class="search-box" placeholder="Search templates...">
+            </div>
+            <div class="template-list">
+                <div class="template-item active" onclick="loadTemplate('multi-approval')">
+                    <span class="template-icon">MA</span>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        <div class="template-name">Multi-Person Approval</div>
+                        <div class="template-desc">Require multiple signatures for execution</div>
+                    </div>
+                </div>
+                
+                <div class="template-item" onclick="loadTemplate('review-period')">
+                    <span class="template-icon">RP</span>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        <div class="template-name">Review Period</div>
+                        <div class="template-desc">Enforce waiting period before changes</div>
+                    </div>
+                </div>
+                
+                <div class="template-item" onclick="loadTemplate('automated-workflow')">
+                    <span class="template-icon">AW</span>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        <div class="template-name">If-This-Then-That</div>
+                        <div class="template-desc">Conditional automation rules</div>
+                    </div>
+                </div>
+                
+                <div class="template-item" onclick="loadTemplate('role-based')">
+                    <span class="template-icon">RB</span>
+                    <div style="display: inline-block; vertical-align: middle;">
+                        <div class="template-name">Role-Based Access</div>
+                        <div class="template-desc">Authority-based permissions</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        
+        <!-- Center - Canvas -->
+        <div class="canvas-container">
+            <div class="canvas-toolbar">
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" onclick="zoomIn()">
+                        <span>🔍+</span> Zoom In
+                    </button>
+                    <button class="toolbar-btn" onclick="zoomOut()">
+                        <span>🔍-</span> Zoom Out
+                    </button>
+                    <button class="toolbar-btn" onclick="fitDiagram()">
+                        <span>⊡</span> Fit
+                    </button>
+                </div>
+                
+                <div class="toolbar-separator"></div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn" onclick="exportBPMN()">
+                        <span>📥</span> Export BPMN
+                    </button>
+                    <button class="toolbar-btn" onclick="exportImage()">
+                        <span>🖼️</span> Export Image
+                    </button>
+                </div>
+                
+                <div class="toolbar-separator"></div>
+                
+                <div class="toolbar-group">
+                    <button class="toolbar-btn active" onclick="setMode('view')">
+                        <span>👁️</span> View Mode
+                    </button>
+                    <button class="toolbar-btn" onclick="setMode('simulate')">
+                        <span>▶️</span> Simulate
+                    </button>
+                </div>
+            </div>
+            
+            <div id="canvas"></div>
+            
+            <!-- Floating Action Buttons -->
+            <div class="fab-container">
+                <button class="fab secondary" onclick="showHelp()" title="Help">?</button>
+                <button class="fab" onclick="validateProcess()" title="Validate Process">✓</button>
+            </div>
+        </div>
+        
+        <!-- Right Sidebar - Properties -->
+        <aside class="sidebar-right">
+            <div class="properties-tabs">
+                <div class="properties-tab active" onclick="showTab('general')">General</div>
+                <div class="properties-tab" onclick="showTab('agents')">A2A Agents</div>
+                <div class="properties-tab" onclick="showTab('data')">Data</div>
+            </div>
+            
+            <div class="properties-content" id="properties-content">
+                <div class="property-group">
+                    <div class="property-label">Process Information</div>
+                    <div class="property-field">
+                        <label>Process Name</label>
+                        <input type="text" id="process-name" value="Multi-Person Approval Process">
+                    </div>
+                    <div class="property-field">
+                        <label>Description</label>
+                        <input type="text" id="process-desc" value="Requires approval from 2 out of 3 executives">
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <div class="property-label">Selected Element</div>
+                    <div class="property-field">
+                        <label>Element Type</label>
+                        <input type="text" id="element-type" value="User Task" readonly>
+                    </div>
+                    <div class="property-field">
+                        <label>Element Name</label>
+                        <input type="text" id="element-name" value="CFO Review">
+                    </div>
+                </div>
+                
+                <div class="property-group">
+                    <div class="property-label">Agent Assignment</div>
+                    <div class="agent-assignment">
+                        <div class="agent-tag">Financial Advisor</div>
+                        <div class="agent-tag">Compliance Officer</div>
+                        <div class="agent-tag">Risk Analyst</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item">
+            <span class="status-indicator"></span>
+            <span>Connected to A2A Network</span>
+        </div>
+        <div class="status-item">
+            <span>Process ID: multi-approval-v1</span>
+        </div>
+        <div class="status-item">
+            <span>Last saved: 2 minutes ago</span>
+        </div>
+    </div>
+    
+    <!-- BPMN.js Scripts -->
+    <script src="https://unpkg.com/bpmn-js@11.5.0/dist/bpmn-viewer.production.min.js"></script>
+    <script>
+        let viewer;
+        
+        // Professional BPMN XML for Multi-Approval Process
+        const multiApprovalBPMN = `<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:a2a="http://a2a.finsight/schema/1.0" id="sample-diagram" targetNamespace="http://bpmn.io/schema/bpmn" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <bpmn2:collaboration id="Collaboration_1">
+    <bpmn2:participant id="Participant_1" name="Multi-Person Approval Process" processRef="Process_1" />
+  </bpmn2:collaboration>
+  <bpmn2:process id="Process_1" isExecutable="true">
+    <bpmn2:laneSet id="LaneSet_1">
+      <bpmn2:lane id="Lane_1" name="Finance Team">
+        <bpmn2:flowNodeRef>StartEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_Submit</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_2" name="Executives">
+        <bpmn2:flowNodeRef>Task_CFO</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_Controller</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Task_CEO</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_Split</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>Gateway_Join</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+      <bpmn2:lane id="Lane_3" name="A2A System">
+        <bpmn2:flowNodeRef>Task_Execute</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_1</bpmn2:flowNodeRef>
+        <bpmn2:flowNodeRef>EndEvent_2</bpmn2:flowNodeRef>
+      </bpmn2:lane>
+    </bpmn2:laneSet>
+    
+    <bpmn2:startEvent id="StartEvent_1" name="Payment Request Received">
+      <bpmn2:outgoing>Flow_1</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    
+    <bpmn2:userTask id="Task_Submit" name="Submit Payment for Approval" a2a:agent="Financial Advisor">
+      <bpmn2:incoming>Flow_1</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_2</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <bpmn2:parallelGateway id="Gateway_Split" name="Send to All Approvers">
+      <bpmn2:incoming>Flow_2</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_3</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_4</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_5</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+    
+    <bpmn2:userTask id="Task_CFO" name="CFO Review" a2a:agent="Risk Analyst">
+      <bpmn2:incoming>Flow_3</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_6</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <bpmn2:userTask id="Task_Controller" name="Controller Review" a2a:agent="Compliance Officer">
+      <bpmn2:incoming>Flow_4</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_7</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <bpmn2:userTask id="Task_CEO" name="CEO Review" a2a:agent="Financial Advisor">
+      <bpmn2:incoming>Flow_5</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_8</bpmn2:outgoing>
+    </bpmn2:userTask>
+    
+    <bpmn2:complexGateway id="Gateway_Join" name="2 of 3 Approvals Required">
+      <bpmn2:incoming>Flow_6</bpmn2:incoming>
+      <bpmn2:incoming>Flow_7</bpmn2:incoming>
+      <bpmn2:incoming>Flow_8</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_9</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_10</bpmn2:outgoing>
+    </bpmn2:complexGateway>
+    
+    <bpmn2:serviceTask id="Task_Execute" name="Execute Payment" a2a:contract="MultiSigWallet">
+      <bpmn2:incoming>Flow_9</bpmn2:incoming>
+      <bpmn2:outgoing>Flow_11</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    
+    <bpmn2:endEvent id="EndEvent_1" name="Payment Completed">
+      <bpmn2:incoming>Flow_11</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <bpmn2:endEvent id="EndEvent_2" name="Payment Rejected">
+      <bpmn2:incoming>Flow_10</bpmn2:incoming>
+    </bpmn2:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_Submit" />
+    <bpmn2:sequenceFlow id="Flow_2" sourceRef="Task_Submit" targetRef="Gateway_Split" />
+    <bpmn2:sequenceFlow id="Flow_3" sourceRef="Gateway_Split" targetRef="Task_CFO" />
+    <bpmn2:sequenceFlow id="Flow_4" sourceRef="Gateway_Split" targetRef="Task_Controller" />
+    <bpmn2:sequenceFlow id="Flow_5" sourceRef="Gateway_Split" targetRef="Task_CEO" />
+    <bpmn2:sequenceFlow id="Flow_6" sourceRef="Task_CFO" targetRef="Gateway_Join" />
+    <bpmn2:sequenceFlow id="Flow_7" sourceRef="Task_Controller" targetRef="Gateway_Join" />
+    <bpmn2:sequenceFlow id="Flow_8" sourceRef="Task_CEO" targetRef="Gateway_Join" />
+    <bpmn2:sequenceFlow id="Flow_9" name="Approved" sourceRef="Gateway_Join" targetRef="Task_Execute" />
+    <bpmn2:sequenceFlow id="Flow_10" name="Rejected" sourceRef="Gateway_Join" targetRef="EndEvent_2" />
+    <bpmn2:sequenceFlow id="Flow_11" sourceRef="Task_Execute" targetRef="EndEvent_1" />
+  </bpmn2:process>
+  
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1">
+      <bpmndi:BPMNShape id="Participant_1_di" bpmnElement="Participant_1" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1040" height="480" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1_di" bpmnElement="Lane_1" isHorizontal="true">
+        <dc:Bounds x="190" y="80" width="1010" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_2_di" bpmnElement="Lane_2" isHorizontal="true">
+        <dc:Bounds x="190" y="240" width="1010" height="200" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_3_di" bpmnElement="Lane_3" isHorizontal="true">
+        <dc:Bounds x="190" y="440" width="1010" height="120" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="242" y="142" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="225" y="185" width="70" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_Submit_di" bpmnElement="Task_Submit">
+        <dc:Bounds x="330" y="120" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_Split_di" bpmnElement="Gateway_Split">
+        <dc:Bounds x="485" y="315" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="470" y="372" width="80" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_CFO_di" bpmnElement="Task_CFO">
+        <dc:Bounds x="610" y="260" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_Controller_di" bpmnElement="Task_Controller">
+        <dc:Bounds x="610" y="350" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_CEO_di" bpmnElement="Task_CEO">
+        <dc:Bounds x="610" y="440" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Gateway_Join_di" bpmnElement="Gateway_Join">
+        <dc:Bounds x="785" y="365" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="422" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="Task_Execute_di" bpmnElement="Task_Execute">
+        <dc:Bounds x="910" y="460" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_1_di" bpmnElement="EndEvent_1">
+        <dc:Bounds x="1082" y="482" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1072" y="525" width="56" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <bpmndi:BPMNShape id="EndEvent_2_di" bpmnElement="EndEvent_2">
+        <dc:Bounds x="792" y="262" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="768" y="305" width="85" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Flow_1_di" bpmnElement="Flow_1">
+        <di:waypoint x="278" y="160" />
+        <di:waypoint x="330" y="160" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_2_di" bpmnElement="Flow_2">
+        <di:waypoint x="430" y="160" />
+        <di:waypoint x="510" y="160" />
+        <di:waypoint x="510" y="315" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_3_di" bpmnElement="Flow_3">
+        <di:waypoint x="535" y="340" />
+        <di:waypoint x="610" y="300" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_4_di" bpmnElement="Flow_4">
+        <di:waypoint x="535" y="340" />
+        <di:waypoint x="610" y="390" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_5_di" bpmnElement="Flow_5">
+        <di:waypoint x="535" y="340" />
+        <di:waypoint x="560" y="340" />
+        <di:waypoint x="560" y="480" />
+        <di:waypoint x="610" y="480" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_6_di" bpmnElement="Flow_6">
+        <di:waypoint x="710" y="300" />
+        <di:waypoint x="810" y="365" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_7_di" bpmnElement="Flow_7">
+        <di:waypoint x="710" y="390" />
+        <di:waypoint x="785" y="390" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_8_di" bpmnElement="Flow_8">
+        <di:waypoint x="710" y="480" />
+        <di:waypoint x="810" y="415" />
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_9_di" bpmnElement="Flow_9">
+        <di:waypoint x="835" y="390" />
+        <di:waypoint x="872" y="390" />
+        <di:waypoint x="872" y="500" />
+        <di:waypoint x="910" y="500" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="847" y="442" width="48" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_10_di" bpmnElement="Flow_10">
+        <di:waypoint x="810" y="365" />
+        <di:waypoint x="810" y="298" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="815" y="329" width="44" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      
+      <bpmndi:BPMNEdge id="Flow_11_di" bpmnElement="Flow_11">
+        <di:waypoint x="1010" y="500" />
+        <di:waypoint x="1082" y="500" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>`;
+        
+        // Initialize the viewer
+        function initViewer() {
+            viewer = new BpmnJS({
+                container: '#canvas',
+                keyboard: {
+                    bindTo: document
+                }
+            });
+            
+            // Load the diagram
+            viewer.importXML(multiApprovalBPMN).then(() => {
+                viewer.get('canvas').zoom('fit-viewport');
+                
+                // Add colors to different element types
+                const elementRegistry = viewer.get('elementRegistry');
+                const modeling = viewer.get('modeling');
+                
+                // Color the lanes
+                const lanes = elementRegistry.filter(element => element.type === 'bpmn:Lane');
+                lanes.forEach(lane => {
+                    if (lane.businessObject.name === 'Finance Team') {
+                        modeling.setColor(lane, { fill: '#E8F5E9' });
+                    } else if (lane.businessObject.name === 'Executives') {
+                        modeling.setColor(lane, { fill: '#E3F2FD' });
+                    } else if (lane.businessObject.name === 'A2A System') {
+                        modeling.setColor(lane, { fill: '#FFF3E0' });
+                    }
+                });
+                
+                // Color service tasks
+                elementRegistry.filter(e => e.type === 'bpmn:ServiceTask').forEach(task => {
+                    modeling.setColor(task, { fill: '#FFECB3', stroke: '#F57C00' });
+                });
+                
+                // Color user tasks
+                elementRegistry.filter(e => e.type === 'bpmn:UserTask').forEach(task => {
+                    modeling.setColor(task, { fill: '#BBDEFB', stroke: '#1976D2' });
+                });
+            });
+        }
+        
+        // Zoom controls
+        function zoomIn() {
+            viewer.get('zoomScroll').stepZoom(0.2);
+        }
+        
+        function zoomOut() {
+            viewer.get('zoomScroll').stepZoom(-0.2);
+        }
+        
+        function fitDiagram() {
+            viewer.get('canvas').zoom('fit-viewport');
+        }
+        
+        // Export functions
+        function exportBPMN() {
+            viewer.saveXML({ format: true }).then(result => {
+                const blob = new Blob([result.xml], { type: 'application/xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'a2a-process.bpmn';
+                a.click();
+            });
+        }
+        
+        function exportImage() {
+            viewer.saveSVG().then(result => {
+                const blob = new Blob([result.svg], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'a2a-process.svg';
+                a.click();
+            });
+        }
+        
+        // Template loading
+        function loadTemplate(templateId) {
+            // Update active state
+            document.querySelectorAll('.template-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.template-item').classList.add('active');
+            
+            // In a real app, load different BPMN XML for each template
+            alert(`Loading template: ${templateId}`);
+        }
+        
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.properties-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content based on tab
+            const content = document.getElementById('properties-content');
+            if (tabName === 'agents') {
+                content.innerHTML = `
+                    <div class="property-group">
+                        <div class="property-label">Available A2A Agents</div>
+                        <div class="agent-assignment">
+                            <div class="agent-tag">Risk Analyst</div>
+                            <div class="agent-tag">Financial Advisor</div>
+                            <div class="agent-tag">Compliance Officer</div>
+                            <div class="agent-tag">Portfolio Optimizer</div>
+                            <div class="agent-tag">Market Analyst</div>
+                            <div class="agent-tag">Scenario Analyzer</div>
+                            <div class="agent-tag">News Sentiment Tracker</div>
+                            <div class="agent-tag">Trading Strategy</div>
+                        </div>
+                    </div>
+                    <div class="property-group">
+                        <div class="property-label">Drag agents to assign them to tasks</div>
+                    </div>
+                `;
+            }
+        }
+        
+        // Action functions
+        function deployProcess() {
+            alert('Deploying process to A2A network...\n\nThis will:\n1. Generate smart contracts\n2. Assign agents to tasks\n3. Configure approval thresholds\n4. Deploy to blockchain');
+        }
+        
+        function saveProcess() {
+            alert('Process saved successfully!');
+        }
+        
+        function validateProcess() {
+            alert('Process validation:\n✓ All tasks have agents assigned\n✓ Approval logic is valid\n✓ No disconnected elements\n✓ Ready for deployment');
+        }
+        
+        function setMode(mode) {
+            document.querySelectorAll('.toolbar-btn').forEach(btn => {
+                if (btn.textContent.includes('Mode') || btn.textContent.includes('Simulate')) {
+                    btn.classList.remove('active');
+                }
+            });
+            event.target.classList.add('active');
+            
+            if (mode === 'simulate') {
+                alert('Simulation mode:\nClick on elements to see how the process flows');
+            }
+        }
+        
+        function showHelp() {
+            alert('A2A Process Designer Help:\n\n• Drag templates from left sidebar\n• Click elements to edit properties\n• Assign agents in right panel\n• Deploy to create smart contracts\n• Export as BPMN for documentation');
+        }
+        
+        // Initialize on load
+        window.addEventListener('load', initViewer);
+    </script>
+</body>
+</html>
