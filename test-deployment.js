@@ -8,7 +8,7 @@
 const https = require('https');
 
 // Configuration
-const BASE_URL = 'https://hana-proxy-vercel-42n5xfxkv-plturrells-projects.vercel.app';
+const BASE_URL = 'https://hana-proxy-vercel-2tv03ldes-plturrells-projects.vercel.app';
 const endpoints = {
   healthCheck: '/api/a2a-grok-autonomy',
   blockchainStatus: '/api/a2a-blockchain-bridge',

@@ -1,0 +1,217 @@
+{
+  "@context": {
+    "csn": "https://cap.cloud.sap/csn/1.0",
+    "ord": "https://sap.github.io/object-resource-discovery/1.0"
+  },
+  "definitions": {
+    "finsight.db.MarketData": {
+      "@ord.title": "Market Data",
+      "@ord.description": "Real-time and historical market data for financial instruments",
+      "kind": "entity",
+      "elements": {
+        "symbol": { "type": "String", "key": true, "@ord.title": "Symbol" },
+        "timestamp": { "type": "Timestamp", "key": true, "@ord.title": "Timestamp" },
+        "price": { "type": "Decimal", "@ord.title": "Current Price" },
+        "volume": { "type": "Integer", "@ord.title": "Trading Volume" },
+        "bid": { "type": "Decimal", "@ord.title": "Bid Price" },
+        "ask": { "type": "Decimal", "@ord.title": "Ask Price" },
+        "change": { "type": "Decimal", "@ord.title": "Price Change" },
+        "changePercent": { "type": "Decimal", "@ord.title": "Change %" },
+        "marketCap": { "type": "Decimal", "@ord.title": "Market Cap" },
+        "source": { "type": "String", "@ord.title": "Data Source" }
+      }
+    },
+    "finsight.db.NewsArticles": {
+      "@ord.title": "News Articles",
+      "@ord.description": "Financial news articles with sentiment analysis",
+      "kind": "entity",
+      "elements": {
+        "articleId": { "type": "UUID", "key": true, "@ord.title": "Article ID" },
+        "publishedAt": { "type": "Timestamp", "@ord.title": "Published Date" },
+        "headline": { "type": "String", "@ord.title": "Headline" },
+        "content": { "type": "LargeString", "@ord.title": "Content" },
+        "source": { "type": "String", "@ord.title": "News Source" },
+        "symbols": { "type": "array of String", "@ord.title": "Related Symbols" },
+        "sentiment": {
+          "type": "Composition",
+          "@ord.title": "Sentiment Analysis",
+          "elements": {
+            "score": { "type": "Decimal", "@ord.title": "Sentiment Score" },
+            "label": { "type": "String", "@ord.title": "Sentiment Label" },
+            "confidence": { "type": "Decimal", "@ord.title": "Confidence" }
+          }
+        },
+        "categories": { "type": "array of String", "@ord.title": "Categories" },
+        "processedBy": { "type": "String", "@ord.title": "Processing Agent" }
+      }
+    },
+    "finsight.db.Portfolio": {
+      "@ord.title": "Portfolio",
+      "@ord.description": "Investment portfolio holdings and allocations",
+      "kind": "entity",
+      "elements": {
+        "portfolioId": { "type": "UUID", "key": true, "@ord.title": "Portfolio ID" },
+        "name": { "type": "String", "@ord.title": "Portfolio Name" },
+        "ownerId": { "type": "String", "@ord.title": "Owner ID" },
+        "currency": { "type": "String", "@ord.title": "Base Currency" },
+        "totalValue": { "type": "Decimal", "@ord.title": "Total Value" },
+        "cashBalance": { "type": "Decimal", "@ord.title": "Cash Balance" },
+        "holdings": {
+          "type": "Composition of finsight.db.PortfolioHolding",
+          "@ord.title": "Holdings"
+        },
+        "riskProfile": { "type": "String", "@ord.title": "Risk Profile" },
+        "lastRebalanced": { "type": "Timestamp", "@ord.title": "Last Rebalanced" },
+        "managedBy": { "type": "array of String", "@ord.title": "Managing Agents" }
+      }
+    },
+    "finsight.db.PortfolioHolding": {
+      "@ord.title": "Portfolio Holding",
+      "@ord.description": "Individual position within a portfolio",
+      "kind": "entity",
+      "elements": {
+        "holdingId": { "type": "UUID", "key": true, "@ord.title": "Holding ID" },
+        "portfolioId": { "type": "UUID", "@ord.title": "Portfolio ID" },
+        "symbol": { "type": "String", "@ord.title": "Symbol" },
+        "quantity": { "type": "Decimal", "@ord.title": "Quantity" },
+        "averageCost": { "type": "Decimal", "@ord.title": "Average Cost" },
+        "currentPrice": { "type": "Decimal", "@ord.title": "Current Price" },
+        "marketValue": { "type": "Decimal", "@ord.title": "Market Value" },
+        "unrealizedPnL": { "type": "Decimal", "@ord.title": "Unrealized P&L" },
+        "allocation": { "type": "Decimal", "@ord.title": "Portfolio %" },
+        "sector": { "type": "String", "@ord.title": "Sector" },
+        "assetClass": { "type": "String", "@ord.title": "Asset Class" }
+      }
+    },
+    "finsight.db.RiskMetrics": {
+      "@ord.title": "Risk Metrics",
+      "@ord.description": "Portfolio and position risk measurements",
+      "kind": "entity",
+      "elements": {
+        "metricId": { "type": "UUID", "key": true, "@ord.title": "Metric ID" },
+        "portfolioId": { "type": "UUID", "@ord.title": "Portfolio ID" },
+        "calculatedAt": { "type": "Timestamp", "@ord.title": "Calculation Time" },
+        "valueAtRisk": { "type": "Decimal", "@ord.title": "Value at Risk" },
+        "sharpeRatio": { "type": "Decimal", "@ord.title": "Sharpe Ratio" },
+        "beta": { "type": "Decimal", "@ord.title": "Beta" },
+        "standardDeviation": { "type": "Decimal", "@ord.title": "Std Deviation" },
+        "maxDrawdown": { "type": "Decimal", "@ord.title": "Max Drawdown" },
+        "correlations": { "type": "LargeString", "@ord.title": "Correlation Matrix" },
+        "stressTestResults": { "type": "LargeString", "@ord.title": "Stress Tests" },
+        "calculatedBy": { "type": "String", "@ord.title": "Calculating Agent" }
+      }
+    },
+    "finsight.db.TradingSignals": {
+      "@ord.title": "Trading Signals",
+      "@ord.description": "AI-generated trading signals and recommendations",
+      "kind": "entity",
+      "elements": {
+        "signalId": { "type": "UUID", "key": true, "@ord.title": "Signal ID" },
+        "generatedAt": { "type": "Timestamp", "@ord.title": "Generated Time" },
+        "symbol": { "type": "String", "@ord.title": "Symbol" },
+        "action": { "type": "String", "@ord.title": "Action" },
+        "quantity": { "type": "Decimal", "@ord.title": "Quantity" },
+        "targetPrice": { "type": "Decimal", "@ord.title": "Target Price" },
+        "stopLoss": { "type": "Decimal", "@ord.title": "Stop Loss" },
+        "confidence": { "type": "Decimal", "@ord.title": "Confidence" },
+        "reasoning": { "type": "LargeString", "@ord.title": "Reasoning" },
+        "basedOn": { "type": "array of String", "@ord.title": "Based On" },
+        "generatedBy": { "type": "String", "@ord.title": "Generating Agent" },
+        "status": { "type": "String", "@ord.title": "Signal Status" }
+      }
+    },
+    "finsight.db.ComplianceChecks": {
+      "@ord.title": "Compliance Checks",
+      "@ord.description": "Regulatory compliance validation records",
+      "kind": "entity",
+      "elements": {
+        "checkId": { "type": "UUID", "key": true, "@ord.title": "Check ID" },
+        "performedAt": { "type": "Timestamp", "@ord.title": "Check Time" },
+        "entityType": { "type": "String", "@ord.title": "Entity Type" },
+        "entityId": { "type": "String", "@ord.title": "Entity ID" },
+        "regulations": { "type": "array of String", "@ord.title": "Regulations" },
+        "status": { "type": "String", "@ord.title": "Status" },
+        "violations": { "type": "array of String", "@ord.title": "Violations" },
+        "remediation": { "type": "LargeString", "@ord.title": "Remediation" },
+        "performedBy": { "type": "String", "@ord.title": "Checking Agent" },
+        "approvedBy": { "type": "String", "@ord.title": "Approved By" }
+      }
+    },
+    "finsight.db.A2AAgents": {
+      "@ord.title": "A2A Agents",
+      "@ord.description": "Autonomous agents in the A2A network",
+      "kind": "entity",
+      "elements": {
+        "agentId": { "type": "String", "key": true, "@ord.title": "Agent ID" },
+        "agentName": { "type": "String", "@ord.title": "Agent Name" },
+        "agentType": { "type": "String", "@ord.title": "Agent Type" },
+        "status": { "type": "String", "@ord.title": "Status" },
+        "capabilities": { "type": "LargeString", "@ord.title": "Capabilities" },
+        "connectionConfig": { "type": "LargeString", "@ord.title": "Configuration" },
+        "metrics": { "type": "LargeString", "@ord.title": "Performance Metrics" },
+        "blockchain": {
+          "type": "Composition",
+          "@ord.title": "Blockchain Integration",
+          "elements": {
+            "enabled": { "type": "Boolean", "@ord.title": "Enabled" },
+            "walletAddress": { "type": "String", "@ord.title": "Wallet Address" },
+            "chainId": { "type": "String", "@ord.title": "Chain ID" },
+            "trustScore": { "type": "Decimal", "@ord.title": "Trust Score" }
+          }
+        }
+      }
+    },
+    "finsight.db.ProcessDefinitions": {
+      "@ord.title": "Process Definitions",
+      "@ord.description": "BPMN process definitions for financial workflows",
+      "kind": "entity",
+      "elements": {
+        "processId": { "type": "String", "key": true, "@ord.title": "Process ID" },
+        "name": { "type": "String", "@ord.title": "Process Name" },
+        "description": { "type": "String", "@ord.title": "Description" },
+        "bpmnDefinition": { "type": "LargeString", "@ord.title": "BPMN XML" },
+        "dataInputs": { "type": "array of String", "@ord.title": "Input Tables" },
+        "dataOutputs": { "type": "array of String", "@ord.title": "Output Tables" },
+        "agents": { "type": "array of String", "@ord.title": "Required Agents" },
+        "smartContracts": { "type": "array of String", "@ord.title": "Smart Contracts" },
+        "version": { "type": "String", "@ord.title": "Version" },
+        "status": { "type": "String", "@ord.title": "Status" }
+      }
+    },
+    "finsight.db.ProcessInstances": {
+      "@ord.title": "Process Instances",
+      "@ord.description": "Running instances of financial processes",
+      "kind": "entity",
+      "elements": {
+        "instanceId": { "type": "UUID", "key": true, "@ord.title": "Instance ID" },
+        "processId": { "type": "String", "@ord.title": "Process ID" },
+        "startedAt": { "type": "Timestamp", "@ord.title": "Started At" },
+        "completedAt": { "type": "Timestamp", "@ord.title": "Completed At" },
+        "status": { "type": "String", "@ord.title": "Status" },
+        "currentStep": { "type": "String", "@ord.title": "Current Step" },
+        "variables": { "type": "LargeString", "@ord.title": "Process Variables" },
+        "dataReads": { "type": "array of String", "@ord.title": "Data Read" },
+        "dataWrites": { "type": "array of String", "@ord.title": "Data Written" },
+        "executingAgents": { "type": "array of String", "@ord.title": "Active Agents" }
+      }
+    }
+  },
+  "services": {
+    "finsight.srv.DataDiscovery": {
+      "@ord.title": "Data Discovery Service",
+      "@ord.description": "ORD service for discovering available data resources",
+      "kind": "service",
+      "entities": [
+        "MarketData",
+        "NewsArticles",
+        "Portfolio",
+        "RiskMetrics",
+        "TradingSignals",
+        "ComplianceChecks",
+        "A2AAgents",
+        "ProcessDefinitions",
+        "ProcessInstances"
+      ]
+    }
+  }
+}

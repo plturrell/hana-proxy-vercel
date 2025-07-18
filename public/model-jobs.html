@@ -5492,6 +5492,548 @@ function modifyAgent() {
   document.getElementById('step-2').style.display = 'none';
   document.getElementById('step-1').style.display = 'block';
 }
+
+// Process Designer Functions
+function showProcessDesigner() {
+  // Create modal if it doesn't exist
+  if (!document.getElementById('processDesignerModal')) {
+    createProcessDesignerModal();
+  }
+  
+  document.getElementById('processDesignerModal').style.display = 'flex';
+  loadBPMNDiagram();
+}
+
+function closeProcessDesigner() {
+  document.getElementById('processDesignerModal').style.display = 'none';
+}
+
+function createProcessDesignerModal() {
+  const modal = document.createElement('div');
+  modal.id = 'processDesignerModal';
+  modal.className = 'a2a-wizard-overlay';
+  modal.style.display = 'none';
+  modal.innerHTML = `
+    <div class="a2a-wizard" style="max-width: 1200px; width: 90%; height: 90%;">
+      <div class="a2a-wizard-header">
+        <h2 class="a2a-wizard-title">Process Designer - Financial Workflows</h2>
+        <button class="a2a-wizard-close" onclick="closeProcessDesigner()">×</button>
+      </div>
+      
+      <div class="a2a-wizard-body" style="height: calc(100% - 60px); overflow: hidden;">
+        <!-- Process Selector -->
+        <div class="process-selector" style="display: flex; gap: 12px; margin-bottom: 20px; padding: 0 20px;">
+          <button class="process-tab active" onclick="switchProcess('sentiment')">Market Sentiment Analysis</button>
+          <button class="process-tab" onclick="switchProcess('portfolio')">Portfolio Rebalancing</button>
+          <button class="process-tab" onclick="switchProcess('risk')">Risk Management</button>
+          <button class="process-tab" onclick="switchProcess('compliance')">Compliance Check</button>
+        </div>
+        
+        <!-- BPMN Container -->
+        <div class="bpmn-container" style="height: 400px; position: relative; background: #f8f9fa; border-radius: 12px; margin: 0 20px; overflow: hidden;">
+          <canvas id="bpmn-canvas" style="width: 100%; height: 100%;"></canvas>
+          <div class="bpmn-loading" id="bpmn-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 12px;">
+            <div class="loading-spinner"></div>
+            <span>Loading financial process...</span>
+          </div>
+        </div>
+        
+        <!-- Process Info -->
+        <div class="process-info" style="padding: 20px; overflow-y: auto; max-height: calc(100% - 500px);">
+          <h3 id="process-title" style="font-size: 24px; font-weight: 600; margin-bottom: 12px;">Market Sentiment Analysis Process</h3>
+          <p id="process-description" style="color: #636366; margin-bottom: 20px;">Automated process for analyzing market sentiment using real-time news and social media data to inform trading decisions.</p>
+          
+          <!-- Active Agents -->
+          <div style="margin-bottom: 24px;">
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">Active A2A Agents</h4>
+            <div id="process-agents" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+          </div>
+          
+          <!-- Process Steps -->
+          <div>
+            <h4 style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">Process Steps</h4>
+            <div id="process-steps" style="display: grid; gap: 12px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+}
+
+// Load BPMN Diagram
+async function loadBPMNDiagram() {
+  const loading = document.getElementById('bpmn-loading');
+  const canvas = document.getElementById('bpmn-canvas');
+  
+  // Show loading
+  loading.style.display = 'flex';
+  
+  try {
+    // Fetch real agents from database
+    const response = await fetch('/api/unified?action=a2a_agents');
+    const data = await response.json();
+    const agents = data.agents || [];
+    
+    // Hide loading
+    loading.style.display = 'none';
+    
+    // Store agents globally for process switching
+    window.currentAgents = agents;
+    
+    // Draw the process diagram
+    drawFinancialProcess('sentiment', agents);
+    
+  } catch (error) {
+    console.error('Error loading agents:', error);
+    loading.innerHTML = '<span style="color: #FF3B30;">Failed to load process</span>';
+  }
+}
+
+// Draw Financial Process
+async function drawFinancialProcess(processType, agents) {
+  const canvas = document.getElementById('bpmn-canvas');
+  const ctx = canvas.getContext('2d');
+  
+  // Set canvas size
+  canvas.width = canvas.offsetWidth * window.devicePixelRatio;
+  canvas.height = canvas.offsetHeight * window.devicePixelRatio;
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Fetch CSN schema for data flow
+  let csnSchema = null;
+  try {
+    const csnResponse = await fetch('/api/csn-generator?action=generate');
+    const csnData = await csnResponse.json();
+    csnSchema = csnData.csn;
+  } catch (error) {
+    console.error('Failed to fetch CSN schema:', error);
+  }
+  
+  // Define process flows with data integration
+  const processes = {
+    sentiment: {
+      title: 'Market Sentiment Analysis Process',
+      description: 'Automated process for analyzing market sentiment using real-time news and social media data to inform trading decisions.',
+      lanes: [
+        { name: 'News & Sentiment', y: 50, agents: ['News Sentiment Tracker', 'News Content Processing Agent'] },
+        { name: 'Risk Assessment', y: 150, agents: ['Risk Calculator', 'Portfolio Risk Agent'] },
+        { name: 'Trading', y: 250, agents: ['Trading Strategy', 'Portfolio Optimizer'] },
+        { name: 'Compliance', y: 350, agents: ['Compliance Officer', 'Audit Trail Agent'] }
+      ],
+      steps: [
+        { 
+          title: 'Collect News Data', 
+          lane: 0, 
+          x: 100, 
+          next: [1],
+          dataRead: ['market_data', 'news_articles'],
+          dataWrite: ['agent_activity']
+        },
+        { 
+          title: 'Analyze Sentiment', 
+          lane: 0, 
+          x: 250, 
+          next: [2],
+          dataRead: ['news_articles'],
+          dataWrite: ['news_articles.sentiment', 'agent_activity']
+        },
+        { 
+          title: 'Calculate Risk Impact', 
+          lane: 1, 
+          x: 400, 
+          next: [3],
+          dataRead: ['portfolios', 'market_data', 'news_articles.sentiment'],
+          dataWrite: ['risk_metrics', 'agent_activity']
+        },
+        { 
+          title: 'Generate Trading Signal', 
+          lane: 2, 
+          x: 550, 
+          next: [4],
+          dataRead: ['risk_metrics', 'portfolios', 'market_data'],
+          dataWrite: ['trading_signals', 'agent_activity']
+        },
+        { 
+          title: 'Compliance Check', 
+          lane: 3, 
+          x: 700, 
+          next: [5],
+          dataRead: ['trading_signals', 'portfolios', 'deployed_contracts'],
+          dataWrite: ['compliance_checks', 'blockchain_events']
+        },
+        { 
+          title: 'Execute Trade', 
+          lane: 2, 
+          x: 850, 
+          next: [],
+          dataRead: ['trading_signals', 'compliance_checks'],
+          dataWrite: ['portfolios', 'blockchain_events', 'a2a_messages']
+        }
+      ]
+    },
+    portfolio: {
+      title: 'Portfolio Rebalancing Process',
+      description: 'Automated portfolio rebalancing based on risk metrics and market conditions.',
+      lanes: [
+        { name: 'Analysis', y: 50, agents: ['Portfolio Optimizer', 'Risk Calculator'] },
+        { name: 'Decision', y: 150, agents: ['Trading Strategy', 'Scenario Analyzer'] },
+        { name: 'Execution', y: 250, agents: ['Trading Agent', 'Market Maker'] },
+        { name: 'Reporting', y: 350, agents: ['Audit Trail Agent', 'Performance Monitor'] }
+      ],
+      steps: [
+        { 
+          title: 'Analyze Portfolio', 
+          lane: 0, 
+          x: 100, 
+          next: [1],
+          dataRead: ['portfolios', 'market_data'],
+          dataWrite: ['risk_metrics']
+        },
+        { 
+          title: 'Generate Scenarios', 
+          lane: 1, 
+          x: 250, 
+          next: [2],
+          dataRead: ['risk_metrics', 'market_data'],
+          dataWrite: ['trading_signals']
+        },
+        { 
+          title: 'Execute Rebalancing', 
+          lane: 2, 
+          x: 400, 
+          next: [3],
+          dataRead: ['trading_signals'],
+          dataWrite: ['portfolios', 'blockchain_events']
+        },
+        { 
+          title: 'Update Reports', 
+          lane: 3, 
+          x: 550, 
+          next: [],
+          dataRead: ['portfolios', 'blockchain_events'],
+          dataWrite: ['agent_activity', 'a2a_messages']
+        }
+      ]
+    },
+    risk: {
+      title: 'Risk Management Process',
+      description: 'Real-time risk monitoring and automated hedging strategies.',
+      lanes: [
+        { name: 'Monitoring', y: 50, agents: ['Risk Calculator', 'Anomaly Detection Agent'] },
+        { name: 'Analysis', y: 150, agents: ['Scenario Analyzer', 'Stress Test Agent'] },
+        { name: 'Hedging', y: 250, agents: ['FX Analyzer', 'Options Pricing Agent'] },
+        { name: 'Execution', y: 350, agents: ['Trading Agent', 'Compliance Officer'] }
+      ],
+      steps: [
+        { 
+          title: 'Monitor Risk Metrics', 
+          lane: 0, 
+          x: 100, 
+          next: [1],
+          dataRead: ['portfolios', 'market_data', 'risk_metrics'],
+          dataWrite: ['agent_activity']
+        },
+        { 
+          title: 'Detect Anomalies', 
+          lane: 0, 
+          x: 250, 
+          next: [2],
+          dataRead: ['risk_metrics', 'blockchain_events'],
+          dataWrite: ['a2a_messages', 'agent_activity']
+        },
+        { 
+          title: 'Run Stress Tests', 
+          lane: 1, 
+          x: 400, 
+          next: [3],
+          dataRead: ['portfolios', 'market_data'],
+          dataWrite: ['risk_metrics']
+        },
+        { 
+          title: 'Design Hedge', 
+          lane: 2, 
+          x: 550, 
+          next: [4],
+          dataRead: ['risk_metrics', 'market_data'],
+          dataWrite: ['trading_signals']
+        },
+        { 
+          title: 'Execute Hedge', 
+          lane: 3, 
+          x: 700, 
+          next: [],
+          dataRead: ['trading_signals', 'deployed_contracts'],
+          dataWrite: ['portfolios', 'blockchain_events']
+        }
+      ]
+    },
+    compliance: {
+      title: 'Compliance Check Process',
+      description: 'Automated regulatory compliance validation and reporting.',
+      lanes: [
+        { name: 'Data Collection', y: 50, agents: ['Data Collector', 'Market Data Agent'] },
+        { name: 'Validation', y: 150, agents: ['Compliance Officer', 'Basel III Agent'] },
+        { name: 'Reporting', y: 250, agents: ['Audit Trail Agent', 'Report Generator'] },
+        { name: 'Blockchain', y: 350, agents: ['Smart Contract Agent', 'Blockchain Logger'] }
+      ],
+      steps: [
+        { 
+          title: 'Collect Data', 
+          lane: 0, 
+          x: 100, 
+          next: [1],
+          dataRead: ['portfolios', 'trading_signals', 'blockchain_events'],
+          dataWrite: ['agent_activity']
+        },
+        { 
+          title: 'Validate Rules', 
+          lane: 1, 
+          x: 250, 
+          next: [2],
+          dataRead: ['portfolios', 'deployed_contracts'],
+          dataWrite: ['compliance_checks']
+        },
+        { 
+          title: 'Generate Report', 
+          lane: 2, 
+          x: 400, 
+          next: [3],
+          dataRead: ['compliance_checks', 'agent_activity'],
+          dataWrite: ['a2a_messages']
+        },
+        { 
+          title: 'Record on Chain', 
+          lane: 3, 
+          x: 550, 
+          next: [],
+          dataRead: ['compliance_checks'],
+          dataWrite: ['blockchain_events', 'deployed_contracts']
+        }
+      ]
+    }
+  };
+  
+  const process = processes[processType] || processes.sentiment;
+  
+  // Update process info
+  document.getElementById('process-title').textContent = process.title;
+  document.getElementById('process-description').textContent = process.description;
+  
+  // Draw swimlanes
+  ctx.strokeStyle = '#E5E5EA';
+  ctx.lineWidth = 1;
+  ctx.font = '14px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillStyle = '#1D1D1F';
+  
+  process.lanes.forEach(lane => {
+    // Lane header
+    ctx.fillStyle = '#F2F2F7';
+    ctx.fillRect(0, lane.y - 20, 80, 80);
+    
+    // Lane label
+    ctx.fillStyle = '#1D1D1F';
+    ctx.save();
+    ctx.translate(40, lane.y + 30);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = 'center';
+    ctx.fillText(lane.name, 0, 0);
+    ctx.restore();
+    
+    // Lane line
+    ctx.beginPath();
+    ctx.moveTo(80, lane.y + 60);
+    ctx.lineTo(canvas.width, lane.y + 60);
+    ctx.stroke();
+  });
+  
+  // Draw process steps
+  ctx.fillStyle = '#FFFFFF';
+  ctx.strokeStyle = '#007AFF';
+  ctx.lineWidth = 2;
+  
+  process.steps.forEach((step, index) => {
+    const lane = process.lanes[step.lane];
+    const y = lane.y + 10;
+    
+    // Draw box
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(step.x - 60, y, 120, 40);
+    ctx.strokeRect(step.x - 60, y, 120, 40);
+    
+    // Draw text
+    ctx.fillStyle = '#1D1D1F';
+    ctx.font = '13px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(step.title, step.x, y + 25);
+    
+    // Draw connections
+    step.next.forEach(nextIndex => {
+      const nextStep = process.steps[nextIndex];
+      const nextLane = process.lanes[nextStep.lane];
+      const nextY = nextLane.y + 30;
+      
+      ctx.beginPath();
+      ctx.moveTo(step.x + 60, y + 20);
+      ctx.lineTo(nextStep.x - 60, nextY);
+      ctx.stroke();
+      
+      // Arrow
+      ctx.beginPath();
+      ctx.moveTo(nextStep.x - 60, nextY);
+      ctx.lineTo(nextStep.x - 65, nextY - 5);
+      ctx.lineTo(nextStep.x - 65, nextY + 5);
+      ctx.closePath();
+      ctx.fillStyle = '#007AFF';
+      ctx.fill();
+    });
+  });
+  
+  // Update agents list
+  const agentsContainer = document.getElementById('process-agents');
+  agentsContainer.innerHTML = '';
+  
+  const usedAgents = new Set();
+  process.lanes.forEach(lane => {
+    lane.agents.forEach(agentName => usedAgents.add(agentName));
+  });
+  
+  // Find matching real agents
+  usedAgents.forEach(agentName => {
+    const realAgent = agents.find(a => 
+      a.agent_name === agentName || 
+      a.agent_name.includes(agentName.split(' ')[0])
+    );
+    
+    if (realAgent) {
+      const tag = document.createElement('div');
+      tag.className = 'a2a-capability-tag';
+      tag.style.cursor = 'pointer';
+      tag.textContent = getAppleFriendlyName(realAgent.agent_name, realAgent.agent_id);
+      tag.onclick = () => showAgentDetailScreen(realAgent.agent_id);
+      agentsContainer.appendChild(tag);
+    }
+  });
+  
+  // Update process steps with data flow
+  const stepsContainer = document.getElementById('process-steps');
+  stepsContainer.innerHTML = process.steps.map((step, index) => {
+    const dataReadFormatted = step.dataRead ? step.dataRead.map(table => 
+      `<span class="data-tag read">${table}</span>`
+    ).join(' ') : '';
+    
+    const dataWriteFormatted = step.dataWrite ? step.dataWrite.map(table => 
+      `<span class="data-tag write">${table}</span>`
+    ).join(' ') : '';
+    
+    return `
+      <div style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px;">
+        <div style="width: 32px; height: 32px; background: #007AFF; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; flex-shrink: 0;">
+          ${index + 1}
+        </div>
+        <div style="flex: 1;">
+          <h5 style="font-weight: 600; margin: 0 0 4px;">${step.title}</h5>
+          <p style="color: #636366; margin: 0 0 8px; font-size: 14px;">
+            Performed by ${process.lanes[step.lane].agents.join(' & ')}
+          </p>
+          ${dataReadFormatted || dataWriteFormatted ? `
+            <div style="margin-top: 8px;">
+              ${dataReadFormatted ? `<div style="margin-bottom: 4px;">📖 Reads: ${dataReadFormatted}</div>` : ''}
+              ${dataWriteFormatted ? `<div>✍️ Writes: ${dataWriteFormatted}</div>` : ''}
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  // Add data flow visualization
+  if (csnSchema) {
+    addDataFlowPanel(process, csnSchema);
+  }
+}
+
+// Add data flow panel
+function addDataFlowPanel(process, csnSchema) {
+  // Create data flow section if it doesn't exist
+  let dataFlowSection = document.getElementById('data-flow-section');
+  if (!dataFlowSection) {
+    dataFlowSection = document.createElement('div');
+    dataFlowSection.id = 'data-flow-section';
+    dataFlowSection.style.cssText = 'margin-top: 24px; padding-top: 24px; border-top: 1px solid #E5E5EA;';
+    document.querySelector('.process-info').appendChild(dataFlowSection);
+  }
+  
+  // Collect all data tables used in the process
+  const dataTables = new Set();
+  process.steps.forEach(step => {
+    if (step.dataRead) step.dataRead.forEach(table => dataTables.add(table.split('.')[0]));
+    if (step.dataWrite) step.dataWrite.forEach(table => dataTables.add(table.split('.')[0]));
+  });
+  
+  // Generate CSN visualization
+  let csnHtml = '<h4 style="font-size: 18px; font-weight: 600; margin-bottom: 12px;">📊 Data Resources (ORD)</h4>';
+  csnHtml += '<div style="display: grid; gap: 12px;">';
+  
+  dataTables.forEach(tableName => {
+    const entityName = `finsight.db.${toPascalCase(tableName)}`;
+    const entity = csnSchema?.definitions?.[entityName];
+    
+    if (entity) {
+      csnHtml += `
+        <div style="background: #F8F9FA; border: 1px solid #E5E5EA; border-radius: 8px; padding: 12px;">
+          <h5 style="font-weight: 600; margin: 0 0 8px; color: #007AFF;">
+            ${entity['@ord.title'] || tableName}
+          </h5>
+          <p style="font-size: 13px; color: #636366; margin: 0 0 8px;">
+            ${entity['@ord.description'] || 'Data resource'}
+          </p>
+          <div style="font-size: 12px; color: #8E8E93;">
+            Fields: ${Object.keys(entity.elements || {}).slice(0, 5).join(', ')}${Object.keys(entity.elements || {}).length > 5 ? '...' : ''}
+          </div>
+        </div>
+      `;
+    } else {
+      csnHtml += `
+        <div style="background: #F8F9FA; border: 1px solid #E5E5EA; border-radius: 8px; padding: 12px;">
+          <h5 style="font-weight: 600; margin: 0 0 4px;">${tableName}</h5>
+          <p style="font-size: 12px; color: #8E8E93; margin: 0;">Data table</p>
+        </div>
+      `;
+    }
+  });
+  
+  csnHtml += '</div>';
+  dataFlowSection.innerHTML = csnHtml;
+}
+
+// Helper function for Pascal Case
+function toPascalCase(str) {
+  return str.split('_').map(word => 
+    word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+  ).join('');
+}
+
+// Switch Process
+function switchProcess(processType) {
+  // Update tabs
+  document.querySelectorAll('.process-tab').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // Redraw process with new type
+  drawFinancialProcess(processType, window.currentAgents || []);
+}
+
+// Show Visual Builder Info
+function showVisualBuilderInfo() {
+  alert('The A2A Visual Trust Builder allows you to:\n\n• Design financial processes visually\n• Connect real A2A agents\n• Generate smart contracts automatically\n• Deploy to blockchain with one click\n\nClick "Process Designer" to start building!');
+}
 </script>
 
 <style>
@@ -5540,6 +6082,61 @@ function modifyAgent() {
   white-space: pre-wrap;
   font-family: 'Monaco', 'Menlo', monospace;
   font-size: 12px;
+}
+
+/* Process Designer Styles */
+.process-tab {
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #E5E5EA;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.process-tab:hover {
+  background: #F2F2F7;
+}
+
+.process-tab.active {
+  background: #007AFF;
+  color: white;
+  border-color: #007AFF;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #E5E5EA;
+  border-top-color: #007AFF;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Data tags for process designer */
+.data-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-right: 4px;
+}
+
+.data-tag.read {
+  background: rgba(52, 199, 89, 0.1);
+  color: #34C759;
+}
+
+.data-tag.write {
+  background: rgba(255, 149, 0, 0.1);
+  color: #FF9500;
 }
 
 .loading {
