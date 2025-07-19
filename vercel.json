@@ -24,6 +24,21 @@
     },
     "api/compliance-unified.js": {
       "maxDuration": 60
+    },
+    "api/llm-automation-real.js": {
+      "maxDuration": 60
+    },
+    "api/real-deployment.js": {
+      "maxDuration": 300
+    },
+    "api/real-market-data-feed.js": {
+      "maxDuration": 60
+    },
+    "api/process-execution-engine.js": {
+      "maxDuration": 300
+    },
+    "api/websocket-server.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
@@ -58,6 +73,26 @@
     {
       "source": "/api/configure",
       "destination": "/api/supabase-proxy"
+    },
+    {
+      "source": "/api/llm-automation",
+      "destination": "/api/llm-automation-real"
+    },
+    {
+      "source": "/api/zero-deploy",
+      "destination": "/api/real-deployment"
+    },
+    {
+      "source": "/api/market-data",
+      "destination": "/api/real-market-data-feed"
+    },
+    {
+      "source": "/api/execute-process",
+      "destination": "/api/process-execution-engine"
+    },
+    {
+      "source": "/api/socketio",
+      "destination": "/api/websocket-server"
     },
     {
       "source": "/",

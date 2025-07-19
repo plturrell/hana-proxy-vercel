@@ -407,7 +407,7 @@ async function registerAgentViaAPI(agent, enhanced) {
   
   try {
     // First, try to register
-    const registerResponse = await fetch(`${BASE_URL}/api/compliance-unified`, {
+    const registerResponse = await fetch(`${BASE_URL}/api/a2a-agent-registry`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -444,7 +444,7 @@ async function registerAgentViaAPI(agent, enhanced) {
       console.log(`  ✅ Registration successful`);
       
       // Then onboard to blockchain
-      const onboardResponse = await fetch(`${BASE_URL}/api/compliance-unified`, {
+      const onboardResponse = await fetch(`${BASE_URL}/api/a2a-agent-registry`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

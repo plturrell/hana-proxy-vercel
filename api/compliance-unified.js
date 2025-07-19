@@ -146,7 +146,7 @@ async function handleORDDocument(req, res) {
   const { data: agents } = await supabase
     .from('a2a_agents')
     .select('*')
-    .eq('type', 'analytics')
+    .eq('agent_type', 'analytics')
     .eq('status', 'active');
 
   const ordDocument = {
@@ -198,10 +198,10 @@ async function handleORDDocument(req, res) {
     ],
     "capabilities": agents?.map(agent => ({
       "ordId": `urn:${VENDOR}:${PRODUCT}:capability:${agent.agent_id}:v1`,
-      "title": agent.name,
-      "shortDescription": agent.description || `${agent.name} capability`,
+      "title": agent.agent_name || agent.name,
+      "shortDescription": agent.description || `${agent.agent_name} capability`,
       "description": formatMarkdown(agent),
-      "version": "1.0.0",
+      "version": agent.agent_version || "1.0.0",
       "releaseStatus": "active",
       "visibility": "public",
       "partOfPackage": determinePackage(agent.agent_id),
@@ -212,14 +212,14 @@ async function handleORDDocument(req, res) {
         "description": "Extensible via blockchain voting"
       },
       "labels": {
-        "voting-power": [agent.voting_power.toString()],
-        "personality": [agent.personality]
+        "voting-power": [(agent.connection_config?.voting_power || 100).toString()],
+        "agent-type": [agent.agent_type || 'analytics']
       }
     })) || [],
     "apiResources": agents?.map(agent => ({
       "ordId": `urn:${VENDOR}:${PRODUCT}:apiResource:${agent.agent_id}-api:v1`,
-      "title": `${agent.name} API`,
-      "shortDescription": `REST API for ${agent.name}`,
+      "title": `${agent.agent_name || agent.name} API`,
+      "shortDescription": `REST API for ${agent.agent_name || agent.name}`,
       "description": `Provides A2A-compliant access to ${agent.name}`,
       "version": "1.0.0",
       "releaseStatus": "active",
@@ -341,16 +341,16 @@ async function handleAgentCard(req, res) {
   const { data: agents } = await supabase
     .from('a2a_agents')
     .select('*')
-    .eq('type', 'analytics')
+    .eq('agent_type', 'analytics')
     .eq('status', 'active');
 
   const agentCards = agents?.map(agent => ({
-    "name": agent.name,
+    "name": agent.agent_name || agent.name,
     "description": agent.description,
     "id": agent.agent_id,
-    "version": "1.0.0",
-    "protocolVersion": "a2a/v1",
-    "capabilities": agent.capabilities,
+    "version": agent.agent_version || "1.0.0",
+    "protocolVersion": agent.protocol_version || "a2a/v1",
+    "capabilities": agent.capabilities || [],
     "inputSchema": {
       "type": "json-schema",
       "url": `/api/agent/${agent.agent_id}/openapi.json`
@@ -388,8 +388,8 @@ async function handleAgentCard(req, res) {
     "metadata": {
       "blockchain": {
         "enabled": true,
-        "walletAddress": agent.blockchain_config?.wallet_address,
-        "votingPower": agent.voting_power
+        "walletAddress": agent.connection_config?.wallet_address,
+        "votingPower": agent.connection_config?.voting_power || 100
       },
       "ord": {
         "capabilityId": `urn:${VENDOR}:${PRODUCT}:capability:${agent.agent_id}:v1`
@@ -641,7 +641,7 @@ async function handleOpenAPISpec(agentId, req, res) {
   const openApiDoc = {
     "openapi": "3.0.0",
     "info": {
-      "title": `${agent.name} API`,
+      "title": `${agent.agent_name || agent.name} API`,
       "description": agent.description,
       "version": "1.0.0",
       "x-a2a-compliant": true,
@@ -922,15 +922,15 @@ async function handleOnboardAgent(req, res) {
 // ========================================
 
 function formatMarkdown(agent) {
-  let md = `# ${agent.name}\n\n`;
+  let md = `# ${agent.agent_name || agent.name}\n\n`;
   md += `${agent.description || 'Analytics capability'}\n\n`;
   md += `## Capabilities\n`;
   agent.capabilities?.forEach(cap => {
     md += `- ${cap}\n`;
   });
   md += `\n## Metadata\n`;
-  md += `- Voting Power: ${agent.voting_power}\n`;
-  md += `- Personality: ${agent.personality}\n`;
+  md += `- Voting Power: ${agent.connection_config?.voting_power || 100}\n`;
+  md += `- Agent Type: ${agent.agent_type || 'analytics'}\n`;
   md += `- Status: ${agent.status}\n`;
   return md;
 }
