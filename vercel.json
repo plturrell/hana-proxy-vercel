@@ -7,7 +7,7 @@
     "api/visual-builder-real.js": {
       "maxDuration": 30
     },
-    "api/a2a-blockchain-bridge.js": {
+    "api/a2a-blockchain.js": {
       "maxDuration": 60
     },
     "api/unified.js": {
@@ -19,14 +19,30 @@
     "api/autonomy-engine.js": {
       "maxDuration": 30
     },
-    "api/blockchain-agent-integration.js": {
-      "maxDuration": 30
-    },
     "api/csn-generator.js": {
       "maxDuration": 30
+    },
+    "api/full-compliance-adapter.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [
+    {
+      "source": "/.well-known/open-resource-discovery/v1/configuration",
+      "destination": "/api/full-compliance-adapter"
+    },
+    {
+      "source": "/open-resource-discovery/v1/documents/:path*",
+      "destination": "/api/full-compliance-adapter"
+    },
+    {
+      "source": "/.well-known/agent.json",
+      "destination": "/api/full-compliance-adapter"
+    },
+    {
+      "source": "/api/agent/:agentId/:action",
+      "destination": "/api/full-compliance-adapter"
+    },
     {
       "source": "/api/database",
       "destination": "/api/supabase-proxy"
