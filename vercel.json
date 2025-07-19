@@ -22,26 +22,30 @@
     "api/csn-generator.js": {
       "maxDuration": 30
     },
-    "api/full-compliance-adapter.js": {
+    "api/compliance-unified.js": {
       "maxDuration": 60
     }
   },
   "rewrites": [
     {
       "source": "/.well-known/open-resource-discovery/v1/configuration",
-      "destination": "/api/full-compliance-adapter"
+      "destination": "/api/compliance-unified"
     },
     {
       "source": "/open-resource-discovery/v1/documents/:path*",
-      "destination": "/api/full-compliance-adapter"
+      "destination": "/api/compliance-unified"
     },
     {
       "source": "/.well-known/agent.json",
-      "destination": "/api/full-compliance-adapter"
+      "destination": "/api/compliance-unified"
     },
     {
       "source": "/api/agent/:agentId/:action",
-      "destination": "/api/full-compliance-adapter"
+      "destination": "/api/compliance-unified"
+    },
+    {
+      "source": "/api/a2a-agent-registry",
+      "destination": "/api/compliance-unified"
     },
     {
       "source": "/api/database",
