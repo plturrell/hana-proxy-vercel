@@ -2,11 +2,14 @@
   "name": "hana-proxy-vercel",
   "version": "1.0.0",
   "description": "A2A Supabase-Based Blockchain Integration",
+  "type": "module",
   "scripts": {
     "dev": "vercel dev",
     "deploy": "vercel --prod",
     "agents:start": "node scripts/start-agents.js",
-    "test": "node scripts/test-blockchain-integration.js"
+    "test": "node scripts/test-blockchain-integration.js",
+    "register-agents": "node ai-assisted-agent-registration.js",
+    "test-compliance": "node test-compliance-live.js"
   },
   "dependencies": {
     "@sap/hana-client": "^2.19.21",

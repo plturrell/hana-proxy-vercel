@@ -7,10 +7,14 @@
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY
-);
+// Initialize Supabase client with proper error handling
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_SERVICE_KEY;
+
+// Only create client if we have valid credentials
+const supabase = (supabaseUrl && supabaseKey) 
+  ? createClient(supabaseUrl, supabaseKey)
+  : null;
 
 // Constants
 const ORD_VERSION = "1.12";
@@ -131,6 +135,14 @@ async function handleORDConfiguration(req, res) {
 }
 
 async function handleORDDocument(req, res) {
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      error: 'Database not configured',
+      message: 'Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables. Please configure these in your Vercel project settings.'
+    });
+  }
+
   const { data: agents } = await supabase
     .from('a2a_agents')
     .select('*')
@@ -318,6 +330,14 @@ async function handleORDDocument(req, res) {
 // ========================================
 
 async function handleAgentCard(req, res) {
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      error: 'Database not configured',
+      message: 'Supabase credentials are missing'
+    });
+  }
+
   const { data: agents } = await supabase
     .from('a2a_agents')
     .select('*')
@@ -396,6 +416,15 @@ async function handleA2AMessage(agentId, req, res) {
     });
   }
 
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.json({
+      jsonrpc: '2.0',
+      error: { code: -32603, message: 'Database not configured' },
+      id
+    });
+  }
+
   try {
     // Get agent
     const { data: agent } = await supabase
@@ -416,16 +445,18 @@ async function handleA2AMessage(agentId, req, res) {
     const taskId = `task_${Date.now()}_${crypto.randomBytes(4).toString('hex')}`;
     
     // Store in database
-    await supabase
-      .from('prdord_analytics')
-      .insert({
-        order_id: taskId,
-        agent_id: agentId,
-        function_name: method,
-        input_parameters: params,
-        status: 'processing',
-        requester_id: req.headers['x-agent-id'] || 'api'
-      });
+    if (supabase) {
+      await supabase
+        .from('prdord_analytics')
+        .insert({
+          order_id: taskId,
+          agent_id: agentId,
+          function_name: method,
+          input_parameters: params,
+          status: 'processing',
+          requester_id: req.headers['x-agent-id'] || 'api'
+        });
+    }
 
     // Store in memory
     activeTasks.set(taskId, {
@@ -441,14 +472,16 @@ async function handleA2AMessage(agentId, req, res) {
       const result = await processAnalyticsRequest(agent, method, params);
       
       // Update database
-      await supabase
-        .from('prdord_analytics')
-        .update({
-          status: 'completed',
-          result: result,
-          completed_at: new Date()
-        })
-        .eq('order_id', taskId);
+      if (supabase) {
+        await supabase
+          .from('prdord_analytics')
+          .update({
+            status: 'completed',
+            result: result,
+            completed_at: new Date()
+          })
+          .eq('order_id', taskId);
+      }
 
       // Update memory
       const task = activeTasks.get(taskId);
@@ -535,15 +568,17 @@ async function handleA2ATask(agentId, req, res) {
       activeTasks.set(newTaskId, task);
       
       // Store in database
-      await supabase
-        .from('prdord_analytics')
-        .insert({
-          order_id: newTaskId,
-          agent_id: agentId,
-          function_name: message.method || 'calculate',
-          input_parameters: message.params || {},
-          status: 'submitted'
-        });
+      if (supabase) {
+        await supabase
+          .from('prdord_analytics')
+          .insert({
+            order_id: newTaskId,
+            agent_id: agentId,
+            function_name: message.method || 'calculate',
+            input_parameters: message.params || {},
+            status: 'submitted'
+          });
+      }
 
       return res.json(task);
 
@@ -551,6 +586,15 @@ async function handleA2ATask(agentId, req, res) {
       // Get task status
       if (!taskId) {
         return res.status(400).json({ error: 'taskId required' });
+      }
+
+      if (!supabase) {
+        // Check in-memory store
+        const memTask = activeTasks.get(taskId);
+        if (memTask) {
+          return res.json(memTask);
+        }
+        return res.status(404).json({ error: 'Task not found' });
       }
 
       const { data: dbTask } = await supabase
@@ -578,6 +622,12 @@ async function handleA2ATask(agentId, req, res) {
 }
 
 async function handleOpenAPISpec(agentId, req, res) {
+  // Check if Supabase is configured
+  if (!supabase) {
+    // Return a generic OpenAPI spec for the agent
+    return res.json(generateGenericOpenAPISpec(agentId));
+  }
+
   const { data: agent } = await supabase
     .from('a2a_agents')
     .select('*')
@@ -704,6 +754,15 @@ async function handleOpenAPISpec(agentId, req, res) {
 // ========================================
 
 async function handleListAgents(req, res) {
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database not configured',
+      message: 'Supabase credentials are missing'
+    });
+  }
+
   try {
     const { data: agents, error } = await supabase
       .from('a2a_agents')
@@ -727,6 +786,15 @@ async function handleListAgents(req, res) {
 
 async function handleDiscoverAgent(req, res) {
   const { agent_id, capabilities } = req.query;
+  
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database not configured',
+      message: 'Supabase credentials are missing'
+    });
+  }
   
   try {
     let query = supabase.from('a2a_agents').select('*');
@@ -758,6 +826,15 @@ async function handleDiscoverAgent(req, res) {
 
 async function handleRegisterAgent(req, res) {
   const { agent_id, name, type, description, capabilities, goals, personality, voting_power } = req.body;
+  
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database not configured',
+      message: 'Supabase credentials are missing'
+    });
+  }
   
   try {
     const wallet_address = `0x${crypto.randomBytes(20).toString('hex')}`;
@@ -800,6 +877,15 @@ async function handleRegisterAgent(req, res) {
 
 async function handleOnboardAgent(req, res) {
   const { agent_id } = req.body;
+  
+  // Check if Supabase is configured
+  if (!supabase) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database not configured',
+      message: 'Supabase credentials are missing'
+    });
+  }
   
   try {
     const transaction_hash = `0x${crypto.randomBytes(32).toString('hex')}`;
@@ -890,4 +976,54 @@ function broadcastTaskUpdate(agentId, taskId, status, result) {
       })}\n\n`);
     }
   }
+}
+
+function generateGenericOpenAPISpec(agentId) {
+  return {
+    "openapi": "3.0.0",
+    "info": {
+      "title": `${agentId} API`,
+      "description": "Analytics agent API",
+      "version": "1.0.0",
+      "x-a2a-compliant": true,
+      "x-ord-capability": `urn:${VENDOR}:${PRODUCT}:capability:${agentId}:v1`
+    },
+    "servers": [
+      {
+        "url": `${BASE_URL}/api/agent/${agentId}`,
+        "description": "Production server"
+      }
+    ],
+    "paths": {
+      "/message": {
+        "post": {
+          "summary": "Send JSON-RPC message",
+          "operationId": "sendMessage",
+          "tags": ["A2A"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["jsonrpc", "method", "params", "id"],
+                  "properties": {
+                    "jsonrpc": { "type": "string", "enum": ["2.0"] },
+                    "method": { "type": "string" },
+                    "params": { "type": "object" },
+                    "id": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "JSON-RPC response"
+            }
+          }
+        }
+      }
+    }
+  };
 }
