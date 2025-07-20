@@ -84,7 +84,7 @@ Please provide enhanced metadata for this agent that ensures full compliance. Re
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'grok-beta',
+        model: 'grok-4-0709',
         messages: [
           {
             role: 'system',

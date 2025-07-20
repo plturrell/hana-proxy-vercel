@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resource Catalog - FinSight Intelligence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
+  <style>
+    /* Jobs/Ive Minimalist Design System */
+    :root {
+      /* Simplified Color Palette */
+      --jobs-black: #000000;
+      --jobs-white: #FFFFFF;
+      --jobs-gray: #8E8E93;
+      --jobs-light-gray: #F2F2F7;
+      --jobs-blue: #007AFF;
+      --jobs-green: #34C759;
+      --jobs-red: #FF3B30;
+      --jobs-orange: #FF9500;
+      --jobs-purple: #AF52DE;
+      
+      /* Typography */
+      --jobs-font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+      --jobs-font-size-hero: 48px;
+      --jobs-font-size-title: 34px;
+      --jobs-font-size-headline: 28px;
+      --jobs-font-size-body: 17px;
+      --jobs-font-size-caption: 13px;
+      
+      /* Spacing */
+      --jobs-spacing-xs: 4px;
+      --jobs-spacing-sm: 8px;
+      --jobs-spacing-md: 16px;
+      --jobs-spacing-lg: 24px;
+      --jobs-spacing-xl: 32px;
+      --jobs-spacing-xxl: 48px;
+      
+      /* Animation */
+      --jobs-animation: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      --jobs-duration: 300ms;
+    }
+    
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    body {
+      margin: 0;
+      font-family: var(--jobs-font);
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-black);
+      background: var(--jobs-white);
+      line-height: 1.47;
+      overflow-x: hidden;
+    }
+    
+    /* Dark mode */
+    body.dark-mode {
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+    }
+    
+    body.dark-mode .catalog-card {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .catalog-section-header {
+      background: #1C1C1E;
+      border-color: #38383A;
+    }
+    
+    body.dark-mode .catalog-nav {
+      background: rgba(0, 0, 0, 0.8);
+    }
+    
+    body.dark-mode .catalog-filter {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: var(--jobs-white);
+    }
+    
+    /* Navigation */
+    .catalog-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--jobs-spacing-lg);
+    }
+    
+    .catalog-nav-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+    
+    .catalog-nav-button {
+      background: none;
+      border: none;
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .catalog-nav-button:hover {
+      background: rgba(0, 122, 255, 0.1);
+    }
+    
+    /* Main Container */
+    .catalog-container {
+      padding-top: 48px;
+      min-height: 100vh;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-left: var(--jobs-spacing-lg);
+      padding-right: var(--jobs-spacing-lg);
+    }
+    
+    /* Hero Section */
+    .catalog-hero {
+      text-align: center;
+      padding: var(--jobs-spacing-xxl) 0;
+    }
+    
+    .catalog-hero-title {
+      font-size: var(--jobs-font-size-title);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.1;
+    }
+    
+    .catalog-hero-subtitle {
+      font-size: var(--jobs-font-size-body);
+      color: var(--jobs-gray);
+      margin-top: var(--jobs-spacing-sm);
+    }
+    
+    /* Filters */
+    .catalog-filters {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      margin-bottom: var(--jobs-spacing-xl);
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    
+    .catalog-filter {
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 20px;
+      background: var(--jobs-white);
+      font-size: var(--jobs-font-size-caption);
+      cursor: pointer;
+      transition: all var(--jobs-duration) var(--jobs-animation);
+    }
+    
+    .catalog-filter:hover,
+    .catalog-filter.active {
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      border-color: var(--jobs-blue);
+    }
+    
+    /* Section Headers */
+    .catalog-section {
+      margin-bottom: var(--jobs-spacing-xxl);
+    }
+    
+    .catalog-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--jobs-spacing-lg);
+      background: var(--jobs-light-gray);
+      border-radius: 12px;
+      margin-bottom: var(--jobs-spacing-lg);
+    }
+    
+    .catalog-section-title {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .catalog-section-count {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      background: var(--jobs-white);
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 12px;
+    }
+    
+    body.dark-mode .catalog-section-count {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+    
+    /* Cards Grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--jobs-spacing-lg);
+    }
+    
+    /* Resource Cards */
+    .catalog-card {
+      background: var(--jobs-white);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-lg);
+      transition: all var(--jobs-duration) var(--jobs-animation);
+      cursor: pointer;
+    }
+    
+    .catalog-card:hover {
+      border-color: var(--jobs-blue);
+      box-shadow: 0 4px 20px rgba(0, 122, 255, 0.1);
+    }
+    
+    .catalog-card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .catalog-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-right: var(--jobs-spacing-md);
+    }
+    
+    .catalog-card-icon.data-product {
+      background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
+    }
+    
+    .catalog-card-icon.function {
+      background: linear-gradient(135deg, var(--jobs-green), var(--jobs-blue));
+    }
+    
+    .catalog-card-icon.agent {
+      background: linear-gradient(135deg, var(--jobs-orange), var(--jobs-red));
+    }
+    
+    .catalog-card-title {
+      font-size: var(--jobs-font-size-body);
+      font-weight: 600;
+      margin: 0;
+      flex: 1;
+    }
+    
+    .catalog-card-status {
+      font-size: var(--jobs-font-size-caption);
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-weight: 500;
+    }
+    
+    .catalog-card-status.active {
+      background: rgba(52, 199, 89, 0.1);
+      color: var(--jobs-green);
+    }
+    
+    .catalog-card-status.planned {
+      background: rgba(255, 149, 0, 0.1);
+      color: var(--jobs-orange);
+    }
+    
+    .catalog-card-description {
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+      margin-bottom: var(--jobs-spacing-md);
+      line-height: 1.4;
+    }
+    
+    .catalog-card-meta {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      flex-wrap: wrap;
+    }
+    
+    .catalog-card-tag {
+      font-size: var(--jobs-font-size-caption);
+      background: var(--jobs-light-gray);
+      color: var(--jobs-gray);
+      padding: var(--jobs-spacing-xs) var(--jobs-spacing-sm);
+      border-radius: 6px;
+    }
+    
+    body.dark-mode .catalog-card-tag {
+      background: #2C2C2E;
+      color: var(--jobs-white);
+    }
+    
+    /* Loading state */
+    .catalog-loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--jobs-light-gray);
+      border-radius: 50%;
+      border-top-color: var(--jobs-blue);
+      animation: catalog-spin 0.8s linear infinite;
+    }
+    
+    @keyframes catalog-spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .catalog-empty {
+      text-align: center;
+      padding: var(--jobs-spacing-xxl);
+      color: var(--jobs-gray);
+    }
+    
+    /* ORD Compliance Badge */
+    .ord-compliance {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--jobs-spacing-xs);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-blue);
+      margin-top: var(--jobs-spacing-sm);
+    }
+    
+    .ord-compliance::before {
+      content: "✓";
+      font-weight: bold;
+    }
+    
+  </style>
+</head>
+<body class="dark-mode">
+  <!-- Navigation -->
+  <nav class="catalog-nav">
+    <div style="display: flex; align-items: center; gap: var(--jobs-spacing-md);">
+      <button class="catalog-nav-button" onclick="history.back()">← Back</button>
+      <div class="catalog-nav-title">Resource Catalog</div>
+    </div>
+    <div style="display: flex; gap: var(--jobs-spacing-md);">
+      <button class="catalog-nav-button" onclick="refreshCatalog()">⟳ Refresh</button>
+      <button class="catalog-nav-button" onclick="toggleDarkMode()">◐</button>
+    </div>
+  </nav>
+  
+  <!-- Main Container -->
+  <div class="catalog-container">
+    <!-- Hero Section -->
+    <div class="catalog-hero">
+      <h1 class="catalog-hero-title">Resource Catalog</h1>
+      <p class="catalog-hero-subtitle">Discover data products, functions, and agents across the platform</p>
+    </div>
+    
+    <!-- Filters -->
+    <div class="catalog-filters">
+      <button class="catalog-filter active" onclick="filterResources('all')">All Resources</button>
+      <button class="catalog-filter" onclick="filterResources('data-products')">Data Products</button>
+      <button class="catalog-filter" onclick="filterResources('functions')">Functions</button>
+      <button class="catalog-filter" onclick="filterResources('agents')">Agents</button>
+      <button class="catalog-filter" onclick="filterResources('active')">Active Only</button>
+    </div>
+    
+    <!-- Data Products Section -->
+    <div class="catalog-section" id="data-products-section">
+      <div class="catalog-section-header">
+        <h2 class="catalog-section-title">Data Products</h2>
+        <span class="catalog-section-count" id="data-products-count">Loading...</span>
+      </div>
+      <div class="catalog-grid" id="data-products-grid">
+        <div class="catalog-loading" style="margin: auto;"></div>
+      </div>
+    </div>
+    
+    <!-- Functions Section -->
+    <div class="catalog-section" id="functions-section">
+      <div class="catalog-section-header">
+        <h2 class="catalog-section-title">Functions</h2>
+        <span class="catalog-section-count" id="functions-count">Loading...</span>
+      </div>
+      <div class="catalog-grid" id="functions-grid">
+        <div class="catalog-loading" style="margin: auto;"></div>
+      </div>
+    </div>
+    
+    <!-- Agents Section -->
+    <div class="catalog-section" id="agents-section">
+      <div class="catalog-section-header">
+        <h2 class="catalog-section-title">Analytics Agents</h2>
+        <span class="catalog-section-count" id="agents-count">Loading...</span>
+      </div>
+      <div class="catalog-grid" id="agents-grid">
+        <div class="catalog-loading" style="margin: auto;"></div>
+      </div>
+    </div>
+    
+    <!-- Reference Data Section -->
+    <div class="catalog-section" id="reference-data-section">
+      <div class="catalog-section-header" style="background: linear-gradient(135deg, rgba(175, 82, 222, 0.05), rgba(255, 149, 0, 0.05)); border: 1px solid rgba(175, 82, 222, 0.1);">
+        <h2 class="catalog-section-title" style="display: flex; align-items: center; gap: 8px;">
+          <span>📋</span>
+          Reference Data & Enums
+        </h2>
+        <span class="catalog-section-count" id="reference-data-count">Loading...</span>
+      </div>
+      <div id="reference-data-content">
+        <div class="catalog-loading" style="margin: auto;"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Global data storage
+    let catalogData = {
+      dataProducts: [],
+      functions: [],
+      agents: [],
+      referenceData: {}
+    };
+    
+    let currentFilter = 'all';
+    
+    // Initialize catalog with AI intelligence
+    document.addEventListener('DOMContentLoaded', async () => {
+      showIntelligentLoadingState();
+      await loadCatalogData();
+      await initializeAIIntelligence();
+      renderCatalog();
+    });
+    
+    // Load data from ORD endpoints
+    async function loadCatalogData() {
+      try {
+        // Load data products
+        const dataProductsResponse = await fetch('/open-resource-discovery/v1/documents/data-products');
+        const dataProductsDoc = await dataProductsResponse.json();
+        catalogData.dataProducts = dataProductsDoc.dataProducts || [];
+        
+        // Load functions  
+        const functionsResponse = await fetch('/open-resource-discovery/v1/documents/function-registry');
+        const functionsDoc = await functionsResponse.json();
+        catalogData.functions = (functionsDoc.apiResources || []).map(apiResource => ({
+          ...apiResource,
+          title: apiResource.title || apiResource.name || 'Unnamed Function'
+        }));
+        
+        // Load agents
+        const agentsResponse = await fetch('/open-resource-discovery/v1/documents/analytics-platform');
+        const agentsDoc = await agentsResponse.json();
+        catalogData.agents = (agentsDoc.capabilities || []).map(capability => ({
+          ...capability,
+          title: capability.title || capability.name || capability.agent_name || 'Unnamed Agent'
+        }));
+        
+        // Load reference data with AI intelligence
+        const referenceResponse = await fetch('/api/reference-data-intelligence?action=get-reference-data');
+        if (referenceResponse.ok) {
+          const referenceData = await referenceResponse.json();
+          catalogData.referenceData = referenceData;
+        }
+        
+        console.log('Catalog data loaded:', catalogData);
+      } catch (error) {
+        console.error('Error loading catalog data:', error);
+        // Fallback to mock data for development
+        loadMockData();
+      }
+    }
+    
+    // Mock data for development
+    function loadMockData() {
+      catalogData = {
+        dataProducts: [
+          {
+            title: "FMP Market Data",
+            shortDescription: "Financial Modeling Prep real-time market data",
+            releaseStatus: "active",
+            category: "financial",
+            responsible: "fmp.com",
+            dataSource: { vendor: "Financial Modeling Prep", refreshFrequency: "real-time" }
+          },
+          {
+            title: "Unified Market Data",
+            shortDescription: "Aggregated data from multiple sources",
+            releaseStatus: "active",
+            category: "financial",
+            responsible: "finsight.ai",
+            dataSource: { vendor: "FinSight Analytics", refreshFrequency: "real-time" }
+          }
+        ],
+        functions: [
+          {
+            title: "Pearson Correlation Function",
+            shortDescription: "Calculates Pearson correlation coefficient between two variables",
+            releaseStatus: "active",
+            tags: ["function", "statistical", "computational"]
+          },
+          {
+            title: "Sharpe Ratio Function", 
+            shortDescription: "Calculates risk-adjusted returns using Sharpe ratio",
+            releaseStatus: "active",
+            tags: ["function", "performance", "computational"]
+          }
+        ],
+        agents: [
+          {
+            title: "Risk Analysis Agent",
+            shortDescription: "Comprehensive risk assessment and monitoring",
+            releaseStatus: "active",
+            labels: { "agent-type": ["analytics"] }
+          },
+          {
+            title: "Portfolio Optimizer",
+            shortDescription: "Advanced portfolio optimization algorithms",
+            releaseStatus: "active",
+            labels: { "agent-type": ["analytics"] }
+          }
+        ]
+      };
+    }
+    
+    // Render catalog sections
+    function renderCatalog() {
+      renderDataProducts();
+      renderFunctions();
+      renderAgents();
+      renderReferenceData();
+      updateCounts();
+    }
+    
+    // Render data products
+    function renderDataProducts() {
+      const grid = document.getElementById('data-products-grid');
+      const filteredProducts = filterData(catalogData.dataProducts, 'data-products');
+      
+      if (filteredProducts.length === 0) {
+        grid.innerHTML = '<div class="catalog-empty">No data products found</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredProducts.map(product => `
+        <div class="catalog-card" onclick="openResource('data-product', '${product.title}')">
+          <div class="catalog-card-header">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="catalog-card-icon data-product">📊</div>
+              <div>
+                <h3 class="catalog-card-title">${product.title}</h3>
+                <div class="ord-compliance" style="display: flex; gap: 8px; align-items: center;">
+                  ${product.metadata?.compliance?.ordStatus === 'compliant' ? 
+                    '<span style="color: var(--jobs-green);">✓</span>' : 
+                    '<span style="color: var(--jobs-orange);">⚠</span>'} ORD v1.12
+                  ${product.dataQualityLevel ? 
+                    `<span style="color: var(--jobs-gray);">•</span> ${getQualityBadge(product.dataQualityLevel)}` : ''}
+                </div>
+              </div>
+            </div>
+            <span class="catalog-card-status ${product.releaseStatus || 'active'}">${product.releaseStatus || 'active'}</span>
+          </div>
+          <p class="catalog-card-description">${product.shortDescription || product.description}</p>
+          <div class="catalog-card-meta">
+            <span class="catalog-card-tag">${product.type || product.category || 'data'}</span>
+            <span class="catalog-card-tag">${product.visibility || 'public'}</span>
+            <span class="catalog-card-tag">${product.securityClassification || 'public'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Render functions
+    function renderFunctions() {
+      const grid = document.getElementById('functions-grid');
+      const filteredFunctions = filterData(catalogData.functions, 'functions');
+      
+      if (filteredFunctions.length === 0) {
+        grid.innerHTML = '<div class="catalog-empty">No functions found</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredFunctions.map(func => `
+        <div class="catalog-card" onclick="openResource('function', '${func.title}')">
+          <div class="catalog-card-header">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="catalog-card-icon function">⚡</div>
+              <div>
+                <h3 class="catalog-card-title">${func.title}</h3>
+                <div class="ord-compliance">ORD v1.12 Compliant</div>
+              </div>
+            </div>
+            <span class="catalog-card-status ${func.releaseStatus || 'active'}">${func.releaseStatus || 'active'}</span>
+          </div>
+          <p class="catalog-card-description">${func.shortDescription || func.description}</p>
+          <div class="catalog-card-meta">
+            ${(func.tags || []).slice(0, 3).map(tag => `<span class="catalog-card-tag">${tag}</span>`).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Render agents
+    function renderAgents() {
+      const grid = document.getElementById('agents-grid');
+      const filteredAgents = filterData(catalogData.agents, 'agents');
+      
+      if (filteredAgents.length === 0) {
+        grid.innerHTML = '<div class="catalog-empty">No agents found</div>';
+        return;
+      }
+      
+      grid.innerHTML = filteredAgents.map(agent => `
+        <div class="catalog-card" onclick="openResource('agent', '${agent.title}')">
+          <div class="catalog-card-header">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="catalog-card-icon agent">🤖</div>
+              <div>
+                <h3 class="catalog-card-title">${agent.title}</h3>
+                <div class="ord-compliance" style="display: flex; gap: 8px; align-items: center;">
+                  ${agent.metadata?.compliance?.a2aStatus === 'compliant' ? 
+                    '<span style="color: var(--jobs-green);">✓</span>' : 
+                    '<span style="color: var(--jobs-orange);">⚠</span>'} A2A ${agent.metadata?.a2a?.protocolVersion || 'v1.0'}
+                  <span style="color: var(--jobs-gray);">•</span>
+                  ${agent.metadata?.compliance?.ordStatus === 'compliant' ? 
+                    '<span style="color: var(--jobs-green);">✓</span>' : 
+                    '<span style="color: var(--jobs-orange);">⚠</span>'} ORD v1.12
+                </div>
+              </div>
+            </div>
+            <span class="catalog-card-status ${agent.releaseStatus || agent.metadata?.ord?.releaseStatus || 'active'}">${agent.releaseStatus || agent.metadata?.ord?.releaseStatus || 'active'}</span>
+          </div>
+          <p class="catalog-card-description">${agent.shortDescription || agent.description}</p>
+          <div class="catalog-card-meta">
+            <span class="catalog-card-tag">${agent.metadata?.a2a?.role || agent.labels?.["a2a-role"]?.[0] || 'autonomous'}</span>
+            <span class="catalog-card-tag">${agent.metadata?.a2a?.verificationLevel || agent.labels?.["verification-level"]?.[0] || 'basic'}</span>
+            <span class="catalog-card-tag">${agent.metadata?.ord?.visibility || agent.labels?.["visibility"]?.[0] || 'public'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Filter data based on current filter
+    function filterData(data, section) {
+      if (currentFilter === 'all') return data;
+      if (currentFilter === 'active') return data.filter(item => item.releaseStatus === 'active');
+      if (currentFilter === section) return data;
+      return [];
+    }
+    
+    // Update section counts
+    function updateCounts() {
+      const dataProductsCount = filterData(catalogData.dataProducts, 'data-products').length;
+      const functionsCount = filterData(catalogData.functions, 'functions').length;
+      const agentsCount = filterData(catalogData.agents, 'agents').length;
+      
+      document.getElementById('data-products-count').textContent = `${dataProductsCount} items`;
+      document.getElementById('functions-count').textContent = `${functionsCount} items`;
+      document.getElementById('agents-count').textContent = `${agentsCount} items`;
+    }
+    
+    // Filter resources
+    function filterResources(filter) {
+      currentFilter = filter;
+      
+      // Update active filter button
+      document.querySelectorAll('.catalog-filter').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Show/hide sections based on filter
+      const sections = ['data-products-section', 'functions-section', 'agents-section'];
+      sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (filter === 'all' || sectionId.startsWith(filter.replace('-', '-'))) {
+          section.style.display = 'block';
+        } else if (filter === 'active') {
+          section.style.display = 'block';
+        } else {
+          section.style.display = 'none';
+        }
+      });
+      
+      renderCatalog();
+    }
+    
+    // Open resource details
+    function openResource(type, title) {
+      console.log(`Opening ${type}: ${title}`);
+      // TODO: Implement resource detail modal or page
+      alert(`Opening ${type}: ${title}\n\nThis would show detailed information about the resource, including:\n- Full specification\n- API documentation\n- Usage examples\n- Dependencies`);
+    }
+    
+    // Refresh catalog
+    async function refreshCatalog() {
+      document.querySelectorAll('.catalog-grid').forEach(grid => {
+        grid.innerHTML = '<div class="catalog-loading" style="margin: auto;"></div>';
+      });
+      
+      await loadCatalogData();
+      renderCatalog();
+    }
+    
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+    }
+    
+    // Load saved preferences
+    if (localStorage.getItem('darkMode') === 'false') {
+      document.body.classList.remove('dark-mode');
+    }
+    
+    // ===========================================
+    // AI INTELLIGENCE FUNCTIONS
+    // ===========================================
+    
+    let aiIntelligence = {
+      predictions: [],
+      insights: [],
+      relationships: {},
+      personalization: {}
+    };
+    
+    // Initialize AI intelligence engine
+    async function initializeAIIntelligence() {
+      try {
+        // Get user context
+        const userContext = {
+          userId: localStorage.getItem('userId') || 'anonymous',
+          role: localStorage.getItem('userRole') || 'Finance',
+          currentTime: new Date().toISOString(),
+          sessionStart: performance.now()
+        };
+        
+        // Get recent activity from localStorage
+        const recentActivity = JSON.parse(localStorage.getItem('recentActivity') || '[]');
+        
+        // Call AI prediction endpoint
+        const response = await fetch('/api/catalog-intelligence?action=predict-resources', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userContext,
+            currentTime: new Date().toISOString(),
+            recentActivity
+          })
+        });
+        
+        if (response.ok) {
+          const intelligence = await response.json();
+          aiIntelligence.predictions = intelligence.predictions || [];
+          aiIntelligence.insights = intelligence.insights || [];
+          
+          // Show AI-powered hero insights
+          updateHeroWithIntelligence();
+          
+          // Add predictive sections
+          addPredictiveSection();
+        }
+        
+        console.log('AI Intelligence loaded:', aiIntelligence);
+      } catch (error) {
+        console.error('Failed to initialize AI intelligence:', error);
+        // Graceful fallback - catalog still works without AI
+      }
+    }
+    
+    // Show intelligent loading state
+    function showIntelligentLoadingState() {
+      const hero = document.querySelector('.catalog-hero');
+      if (hero) {
+        hero.innerHTML = `
+          <div style="opacity: 0; animation: hero-appear 1s ease-out 0.3s forwards;">
+            <h1 class="catalog-hero-title">Analyzing your needs...</h1>
+            <p class="catalog-hero-subtitle">AI is preparing personalized resource recommendations</p>
+            <div style="margin-top: 24px;">
+              <div class="catalog-loading"></div>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Update hero with AI intelligence
+    function updateHeroWithIntelligence() {
+      const hero = document.querySelector('.catalog-hero');
+      if (!hero) return;
+      
+      const topInsight = aiIntelligence.insights[0];
+      const predictionCount = aiIntelligence.predictions.length;
+      
+      hero.innerHTML = `
+        <div style="opacity: 0; animation: hero-appear 1s ease-out forwards;">
+          <h1 class="catalog-hero-title">Resource Catalog</h1>
+          <p class="catalog-hero-subtitle">AI found ${predictionCount} resources likely relevant to your current work</p>
+          ${topInsight ? `
+            <div style="margin-top: 16px; padding: 12px; background: linear-gradient(135deg, rgba(0, 122, 255, 0.1), rgba(175, 82, 222, 0.05)); border-radius: 8px; border: 1px solid rgba(0, 122, 255, 0.2);">
+              <div style="font-size: 13px; color: var(--jobs-blue); display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <span style="animation: pulse-glow 2s ease-in-out infinite;">✨</span>
+                ${topInsight.message}
+                <span style="font-size: 11px; background: rgba(0, 122, 255, 0.1); padding: 2px 6px; border-radius: 4px;">${Math.round(topInsight.confidence * 100)}% confident</span>
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+    
+    // Add predictive section at top
+    function addPredictiveSection() {
+      if (!aiIntelligence.predictions.length) return;
+      
+      const container = document.querySelector('.catalog-container');
+      const firstSection = container.querySelector('.catalog-section');
+      
+      if (!firstSection) return;
+      
+      const predictiveSection = document.createElement('div');
+      predictiveSection.className = 'catalog-section';
+      predictiveSection.style.opacity = '0';
+      predictiveSection.style.animation = 'hero-appear 1s ease-out 1.2s forwards';
+      
+      predictiveSection.innerHTML = `
+        <div class="catalog-section-header" style="background: linear-gradient(135deg, rgba(0, 122, 255, 0.05), rgba(52, 199, 89, 0.05)); border: 1px solid rgba(0, 122, 255, 0.1);">
+          <h2 class="catalog-section-title" style="display: flex; align-items: center; gap: 8px;">
+            <span style="animation: pulse-glow 2s ease-in-out infinite;">🧠</span>
+            AI Recommendations
+          </h2>
+          <span class="catalog-section-count">${aiIntelligence.predictions.length} predictions</span>
+        </div>
+        <div class="catalog-grid" id="ai-predictions-grid"></div>
+      `;
+      
+      firstSection.parentNode.insertBefore(predictiveSection, firstSection);
+      
+      // Render AI predictions
+      renderAIPredictions();
+    }
+    
+    // Render AI prediction cards
+    function renderAIPredictions() {
+      const grid = document.getElementById('ai-predictions-grid');
+      if (!grid) return;
+      
+      grid.innerHTML = aiIntelligence.predictions.map((prediction, index) => `
+        <div class="catalog-card ai-prediction" onclick="openPredictedResource('${prediction.resourceId}', '${prediction.resourceType}')" style="opacity: 0; animation: hero-appear 0.6s ease-out ${1.5 + index * 0.1}s forwards; border: 1px solid rgba(0, 122, 255, 0.2); position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; right: 0; background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple)); padding: 4px 8px; border-bottom-left-radius: 8px; font-size: 10px; color: white; font-weight: 600;">
+            ${Math.round(prediction.confidence * 100)}% match
+          </div>
+          <div class="catalog-card-header">
+            <div style="display: flex; align-items: center; flex: 1;">
+              <div class="catalog-card-icon ${prediction.resourceType}" style="position: relative;">
+                ${getResourceIcon(prediction.resourceType)}
+                <div style="position: absolute; -top: 2px; -right: 2px; width: 12px; height: 12px; background: var(--jobs-green); border-radius: 50%; border: 2px solid white; animation: pulse-glow 1.5s ease-in-out infinite;"></div>
+              </div>
+              <div>
+                <h3 class="catalog-card-title">${formatResourceTitle(prediction.resourceId)}</h3>
+                <div style="font-size: 11px; color: var(--jobs-blue); margin-top: 2px;">AI predicted</div>
+              </div>
+            </div>
+            <span class="catalog-card-status ${prediction.urgency === 'high' ? 'urgent' : 'active'}">${prediction.urgency}</span>
+          </div>
+          <p class="catalog-card-description">${prediction.reasoning}</p>
+          <div class="catalog-card-meta">
+            <span class="catalog-card-tag ai-tag">${prediction.suggestedAction}</span>
+            <span class="catalog-card-tag">${prediction.resourceType}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Handle predicted resource interaction
+    async function openPredictedResource(resourceId, resourceType) {
+      // Track AI prediction usage
+      trackAIPredictionClick(resourceId, resourceType);
+      
+      // Get detailed relationships
+      try {
+        const response = await fetch('/api/catalog-intelligence?action=analyze-relationships', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ resourceId, resourceType })
+        });
+        
+        if (response.ok) {
+          const relationships = await response.json();
+          showResourceWithRelationships(resourceId, resourceType, relationships.relationships);
+        } else {
+          openResource(resourceType, resourceId);
+        }
+      } catch (error) {
+        console.error('Failed to get resource relationships:', error);
+        openResource(resourceType, resourceId);
+      }
+    }
+    
+    // Show resource with AI-powered relationship context
+    function showResourceWithRelationships(resourceId, resourceType, relationships) {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+        background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+        z-index: 2000; display: flex; align-items: center; justify-content: center;
+        opacity: 0; animation: hero-appear 0.3s ease-out forwards;
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: var(--jobs-white); border-radius: 16px; padding: 32px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+          <button onclick="this.closest('[style*=fixed]').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--jobs-gray);">×</button>
+          
+          <div style="margin-bottom: 24px;">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+              <div class="catalog-card-icon ${resourceType}">${getResourceIcon(resourceType)}</div>
+              ${formatResourceTitle(resourceId)}
+            </h2>
+            <p style="color: var(--jobs-gray); margin: 8px 0 0 0;">${resourceType} • AI recommended with ${Math.round((aiIntelligence.predictions.find(p => p.resourceId === resourceId)?.confidence || 0.8) * 100)}% confidence</p>
+          </div>
+          
+          ${relationships.directDependencies?.length ? `
+            <div style="margin-bottom: 24px;">
+              <h3 style="font-size: 16px; margin: 0 0 12px 0;">Dependencies</h3>
+              <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                ${relationships.directDependencies.map(dep => `
+                  <div style="padding: 6px 12px; background: var(--jobs-light-gray); border-radius: 16px; font-size: 12px; cursor: pointer;" onclick="openResource('${dep.resourceType}', '${dep.resourceId}')">
+                    ${dep.resourceId} (${Math.round(dep.strength * 100)}%)
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+          
+          ${relationships.relatedWorkflows?.length ? `
+            <div style="margin-bottom: 24px;">
+              <h3 style="font-size: 16px; margin: 0 0 12px 0;">Related Workflows</h3>
+              ${relationships.relatedWorkflows.map(workflow => `
+                <div style="padding: 12px; border: 1px solid var(--jobs-light-gray); border-radius: 8px; margin-bottom: 8px;">
+                  <div style="font-weight: 600; margin-bottom: 4px;">${workflow.workflowName}</div>
+                  <div style="font-size: 13px; color: var(--jobs-gray);">${workflow.description}</div>
+                  <div style="font-size: 11px; color: var(--jobs-blue); margin-top: 4px;">${Math.round(workflow.confidence * 100)}% relevance</div>
+                </div>
+              `).join('')}
+            </div>
+          ` : ''}
+          
+          <div style="display: flex; gap: 12px; margin-top: 24px;">
+            <button onclick="useResource('${resourceId}', '${resourceType}')" style="flex: 1; padding: 12px; background: var(--jobs-blue); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+              Use Resource
+            </button>
+            <button onclick="this.closest('[style*=fixed]').remove()" style="padding: 12px 16px; background: var(--jobs-light-gray); border: none; border-radius: 8px; cursor: pointer;">
+              Close
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    // Utility functions
+    function getResourceIcon(type) {
+      switch (type) {
+        case 'data-product': return '📊';
+        case 'function': return '⚡';
+        case 'agent': return '🤖';
+        default: return '📋';
+      }
+    }
+    
+    function getQualityBadge(level) {
+      switch (level) {
+        case 'gold': return '<span style="color: #FFD700;">🏆 Gold</span>';
+        case 'silver': return '<span style="color: #C0C0C0;">🥈 Silver</span>';
+        case 'bronze': return '<span style="color: #CD7F32;">🥉 Bronze</span>';
+        case 'raw': return '<span style="color: var(--jobs-gray);">📊 Raw</span>';
+        default: return level;
+      }
+    }
+    
+    function formatResourceTitle(resourceId) {
+      return resourceId.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join(' ');
+    }
+    
+    function trackAIPredictionClick(resourceId, resourceType) {
+      const activity = JSON.parse(localStorage.getItem('recentActivity') || '[]');
+      activity.unshift({
+        action: 'ai-prediction-click',
+        resourceId,
+        resourceType,
+        timestamp: new Date().toISOString()
+      });
+      
+      // Keep last 50 activities
+      localStorage.setItem('recentActivity', JSON.stringify(activity.slice(0, 50)));
+    }
+    
+    function useResource(resourceId, resourceType) {
+      console.log(`Using ${resourceType}: ${resourceId}`);
+      trackAIPredictionClick(resourceId, resourceType);
+      
+      // Route to appropriate interface
+      switch (resourceType) {
+        case 'agent':
+          window.location.href = `/model-jobs.html#${resourceId}`;
+          break;
+        case 'function':
+          window.location.href = `/analyze-jobs.html#${resourceId}`;
+          break;
+        case 'data-product':
+          window.location.href = `/treasury-insights.html#${resourceId}`;
+          break;
+        default:
+          alert(`Opening ${resourceType}: ${resourceId}`);
+      }
+    }
+    
+    // ===========================================
+    // REFERENCE DATA MANAGEMENT FUNCTIONS
+    // ===========================================
+    
+    // Render reference data section with AI intelligence
+    function renderReferenceData() {
+      const content = document.getElementById('reference-data-content');
+      if (!content) return;
+      
+      const refData = catalogData.referenceData;
+      if (!refData?.success) {
+        content.innerHTML = '<div class="catalog-empty">Reference data not available</div>';
+        return;
+      }
+      
+      const { referenceData, intelligence, statistics } = refData;
+      
+      content.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; margin-bottom: 24px;">
+          
+          <!-- Database Enums -->
+          <div class="reference-data-category">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span style="background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple)); padding: 6px; border-radius: 6px; color: white; font-size: 12px;">DB</span>
+              Database Enums
+            </h3>
+            <div class="enum-grid">
+              ${Object.entries(referenceData?.database || {}).map(([enumName, values]) => `
+                <div class="enum-card" onclick="analyzeEnum('${enumName}', 'database')">
+                  <div class="enum-header">
+                    <span class="enum-name">${enumName}</span>
+                    <span class="enum-count">${Array.isArray(values) ? values.length : 0}</span>
+                  </div>
+                  <div class="enum-values">
+                    ${Array.isArray(values) ? values.slice(0, 3).map(val => `<span class="enum-value">${val}</span>`).join('') : ''}
+                    ${Array.isArray(values) && values.length > 3 ? '<span class="enum-more">+' + (values.length - 3) + ' more</span>' : ''}
+                  </div>
+                  ${getEnumIntelligence(enumName, intelligence)}
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- A2A Standard Enums -->
+          <div class="reference-data-category">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span style="background: linear-gradient(135deg, var(--jobs-green), var(--jobs-blue)); padding: 6px; border-radius: 6px; color: white; font-size: 12px;">A2A</span>
+              A2A Standard
+            </h3>
+            <div class="enum-grid">
+              ${Object.entries(referenceData?.a2a || {}).map(([enumName, values]) => `
+                <div class="enum-card" onclick="analyzeEnum('${enumName}', 'a2a')">
+                  <div class="enum-header">
+                    <span class="enum-name">${enumName}</span>
+                    <span class="enum-count">${Array.isArray(values) ? values.length : 0}</span>
+                  </div>
+                  <div class="enum-values">
+                    ${Array.isArray(values) ? values.slice(0, 3).map(val => `<span class="enum-value">${val}</span>`).join('') : ''}
+                    ${Array.isArray(values) && values.length > 3 ? '<span class="enum-more">+' + (values.length - 3) + ' more</span>' : ''}
+                  </div>
+                  <div class="enum-standard">A2A Compliant</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          
+          <!-- ORD Standard Enums -->
+          <div class="reference-data-category">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span style="background: linear-gradient(135deg, var(--jobs-orange), var(--jobs-red)); padding: 6px; border-radius: 6px; color: white; font-size: 12px;">ORD</span>
+              ORD Standard
+            </h3>
+            <div class="enum-grid">
+              ${Object.entries(referenceData?.ord || {}).map(([enumName, values]) => `
+                <div class="enum-card" onclick="analyzeEnum('${enumName}', 'ord')">
+                  <div class="enum-header">
+                    <span class="enum-name">${enumName}</span>
+                    <span class="enum-count">${Array.isArray(values) ? values.length : 0}</span>
+                  </div>
+                  <div class="enum-values">
+                    ${Array.isArray(values) ? values.slice(0, 3).map(val => `<span class="enum-value">${val}</span>`).join('') : ''}
+                    ${Array.isArray(values) && values.length > 3 ? '<span class="enum-more">+' + (values.length - 3) + ' more</span>' : ''}
+                  </div>
+                  <div class="enum-standard">ORD Compliant</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+        
+        <!-- AI Intelligence Panel -->
+        ${intelligence ? `
+          <div class="ai-intelligence-panel">
+            <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+              <span style="animation: pulse-glow 2s ease-in-out infinite;">🧠</span>
+              AI Intelligence
+            </h3>
+            
+            ${intelligence.inconsistencies?.length ? `
+              <div class="intelligence-section">
+                <h4 style="font-size: 14px; font-weight: 600; color: var(--jobs-orange); margin-bottom: 8px;">Inconsistencies Detected</h4>
+                ${intelligence.inconsistencies.map(issue => `
+                  <div class="intelligence-item warning">
+                    <div class="intelligence-title">${issue.description}</div>
+                    <div class="intelligence-detail">${issue.recommendation}</div>
+                    <span class="intelligence-severity ${issue.severity}">${issue.severity}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+            
+            ${intelligence.optimizations?.length ? `
+              <div class="intelligence-section">
+                <h4 style="font-size: 14px; font-weight: 600; color: var(--jobs-blue); margin-bottom: 8px;">Optimization Opportunities</h4>
+                ${intelligence.optimizations.map(opt => `
+                  <div class="intelligence-item optimization">
+                    <div class="intelligence-title">${opt.enumType}: ${opt.suggestion}</div>
+                    <div class="intelligence-detail">${opt.justification}</div>
+                    <span class="intelligence-impact ${opt.impact}">${opt.impact} impact</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        ` : ''}
+      `;
+      
+      // Add reference data specific styles
+      addReferenceDataStyles();
+    }
+    
+    // Add CSS styles for reference data section
+    function addReferenceDataStyles() {
+      if (document.getElementById('reference-data-styles')) return;
+      
+      const style = document.createElement('style');
+      style.id = 'reference-data-styles';
+      style.textContent = `
+        .reference-data-category {
+          background: var(--jobs-white);
+          border: 1px solid var(--jobs-light-gray);
+          border-radius: 12px;
+          padding: 20px;
+        }
+        
+        body.dark-mode .reference-data-category {
+          background: #1C1C1E;
+          border-color: #38383A;
+        }
+        
+        .enum-grid {
+          display: grid;
+          gap: 12px;
+        }
+        
+        .enum-card {
+          background: var(--jobs-light-gray);
+          border-radius: 8px;
+          padding: 12px;
+          cursor: pointer;
+          transition: all var(--jobs-duration) var(--jobs-animation);
+          border: 1px solid transparent;
+        }
+        
+        .enum-card:hover {
+          border-color: var(--jobs-blue);
+          background: rgba(0, 122, 255, 0.05);
+        }
+        
+        body.dark-mode .enum-card {
+          background: #2C2C2E;
+        }
+        
+        body.dark-mode .enum-card:hover {
+          background: rgba(0, 122, 255, 0.1);
+        }
+        
+        .enum-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+        }
+        
+        .enum-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: var(--jobs-black);
+        }
+        
+        body.dark-mode .enum-name {
+          color: var(--jobs-white);
+        }
+        
+        .enum-count {
+          background: var(--jobs-blue);
+          color: white;
+          padding: 2px 6px;
+          border-radius: 10px;
+          font-size: 10px;
+          font-weight: 600;
+        }
+        
+        .enum-values {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+          margin-bottom: 8px;
+        }
+        
+        .enum-value {
+          background: var(--jobs-white);
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 10px;
+          color: var(--jobs-gray);
+        }
+        
+        body.dark-mode .enum-value {
+          background: #38383A;
+          color: var(--jobs-white);
+        }
+        
+        .enum-more {
+          font-size: 10px;
+          color: var(--jobs-gray);
+          font-style: italic;
+        }
+        
+        .enum-standard {
+          font-size: 9px;
+          color: var(--jobs-green);
+          font-weight: 500;
+        }
+        
+        .ai-intelligence-panel {
+          background: linear-gradient(135deg, rgba(0, 122, 255, 0.02), rgba(175, 82, 222, 0.02));
+          border: 1px solid rgba(0, 122, 255, 0.1);
+          border-radius: 12px;
+          padding: 20px;
+          margin-top: 24px;
+        }
+        
+        .intelligence-section {
+          margin-bottom: 20px;
+        }
+        
+        .intelligence-item {
+          background: var(--jobs-white);
+          border-radius: 8px;
+          padding: 12px;
+          margin-bottom: 8px;
+          border-left: 4px solid var(--jobs-blue);
+          position: relative;
+        }
+        
+        .intelligence-item.warning {
+          border-left-color: var(--jobs-orange);
+        }
+        
+        body.dark-mode .intelligence-item {
+          background: #1C1C1E;
+        }
+        
+        .intelligence-title {
+          font-size: 13px;
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+        
+        .intelligence-detail {
+          font-size: 12px;
+          color: var(--jobs-gray);
+          margin-bottom: 8px;
+        }
+        
+        .intelligence-severity,
+        .intelligence-impact {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+          padding: 2px 6px;
+          border-radius: 4px;
+          font-size: 9px;
+          font-weight: 600;
+          text-transform: uppercase;
+        }
+        
+        .intelligence-severity.high,
+        .intelligence-impact.high {
+          background: rgba(255, 59, 48, 0.1);
+          color: var(--jobs-red);
+        }
+        
+        .intelligence-severity.medium,
+        .intelligence-impact.medium {
+          background: rgba(255, 149, 0, 0.1);
+          color: var(--jobs-orange);
+        }
+        
+        .intelligence-severity.low,
+        .intelligence-impact.low {
+          background: rgba(52, 199, 89, 0.1);
+          color: var(--jobs-green);
+        }
+      `;
+      
+      document.head.appendChild(style);
+    }
+    
+    // Get AI intelligence for specific enum
+    function getEnumIntelligence(enumName, intelligence) {
+      if (!intelligence?.enhancedEnums?.database?.[enumName]) return '';
+      
+      const enumIntel = intelligence.enhancedEnums.database[enumName];
+      if (enumIntel.recommendations?.length) {
+        return `<div class="enum-intelligence">
+          <span style="font-size: 9px; color: var(--jobs-blue);">💡 ${enumIntel.recommendations[0]}</span>
+        </div>`;
+      }
+      
+      return '';
+    }
+    
+    // Analyze specific enum with AI
+    async function analyzeEnum(enumName, category) {
+      try {
+        const response = await fetch('/api/reference-data-intelligence?action=analyze-enum-usage', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            enumType: enumName,
+            timeframe: '30d'
+          })
+        });
+        
+        if (response.ok) {
+          const analysis = await response.json();
+          showEnumAnalysisModal(enumName, category, analysis.analysis);
+        }
+      } catch (error) {
+        console.error('Failed to analyze enum:', error);
+        alert(`Analysis for ${enumName} (${category}) - Feature coming soon!`);
+      }
+    }
+    
+    // Show enum analysis modal with AI insights
+    function showEnumAnalysisModal(enumName, category, analysis) {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0; 
+        background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px);
+        z-index: 2000; display: flex; align-items: center; justify-content: center;
+        opacity: 0; animation: hero-appear 0.3s ease-out forwards;
+      `;
+      
+      modal.innerHTML = `
+        <div style="background: var(--jobs-white); border-radius: 16px; padding: 32px; max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+          <button onclick="this.closest('[style*=fixed]').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--jobs-gray);">×</button>
+          
+          <div style="margin-bottom: 24px;">
+            <h2 style="margin: 0; display: flex; align-items: center; gap: 12px;">
+              <span style="background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple)); padding: 8px; border-radius: 8px; color: white; font-size: 14px;">${category.toUpperCase()}</span>
+              ${enumName}
+            </h2>
+            <p style="color: var(--jobs-gray); margin: 8px 0 0 0;">AI-powered enum analysis and recommendations</p>
+          </div>
+          
+          ${analysis ? `
+            <div style="display: grid; gap: 20px;">
+              ${analysis.usageAnalysis ? `
+                <div>
+                  <h3 style="font-size: 16px; margin: 0 0 12px 0;">Usage Analysis</h3>
+                  <div style="background: var(--jobs-light-gray); padding: 16px; border-radius: 8px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+                      <div>
+                        <div style="font-size: 12px; color: var(--jobs-gray);">Most Used</div>
+                        <div style="font-weight: 600;">${analysis.usageAnalysis.mostUsed?.value || 'N/A'}</div>
+                        <div style="font-size: 11px; color: var(--jobs-green);">${analysis.usageAnalysis.mostUsed?.percentage || 0}%</div>
+                      </div>
+                      <div>
+                        <div style="font-size: 12px; color: var(--jobs-gray);">Least Used</div>
+                        <div style="font-weight: 600;">${analysis.usageAnalysis.leastUsed?.value || 'N/A'}</div>
+                        <div style="font-size: 11px; color: var(--jobs-red);">${analysis.usageAnalysis.leastUsed?.percentage || 0}%</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ` : ''}
+              
+              ${analysis.optimization ? `
+                <div>
+                  <h3 style="font-size: 16px; margin: 0 0 12px 0;">AI Recommendations</h3>
+                  ${analysis.optimization.missingValues?.map(missing => `
+                    <div style="background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                      <div style="font-weight: 600; color: var(--jobs-green);">➕ Add: ${missing.value}</div>
+                      <div style="font-size: 12px; color: var(--jobs-gray); margin-top: 4px;">${missing.justification}</div>
+                    </div>
+                  `).join('') || ''}
+                  
+                  ${analysis.optimization.deprecationCandidates?.map(deprecated => `
+                    <div style="background: rgba(255, 149, 0, 0.1); border: 1px solid rgba(255, 149, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 8px;">
+                      <div style="font-weight: 600; color: var(--jobs-orange);">⚠️ Consider removing: ${deprecated.value}</div>
+                      <div style="font-size: 12px; color: var(--jobs-gray); margin-top: 4px;">${deprecated.reason}</div>
+                    </div>
+                  `).join('') || ''}
+                </div>
+              ` : ''}
+            </div>
+          ` : '<div style="text-align: center; padding: 40px; color: var(--jobs-gray);">AI analysis in progress...</div>'}
+          
+          <div style="display: flex; gap: 12px; margin-top: 24px;">
+            <button onclick="optimizeEnum('${enumName}')" style="flex: 1; padding: 12px; background: var(--jobs-blue); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">
+              Optimize Enum
+            </button>
+            <button onclick="this.closest('[style*=fixed]').remove()" style="padding: 12px 16px; background: var(--jobs-light-gray); border: none; border-radius: 8px; cursor: pointer;">
+              Close
+            </button>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(modal);
+    }
+    
+    // Optimize enum with AI recommendations
+    async function optimizeEnum(enumName) {
+      try {
+        const response = await fetch('/api/reference-data-intelligence?action=optimize-enums', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scope: enumName,
+            targetCompliance: ['a2a', 'ord']
+          })
+        });
+        
+        if (response.ok) {
+          const optimization = await response.json();
+          alert(`Optimization plan generated for ${enumName}. Check console for details.`);
+          console.log('Enum optimization plan:', optimization);
+        }
+      } catch (error) {
+        console.error('Failed to optimize enum:', error);
+        alert('Optimization failed. Please try again.');
+      }
+    }
+    
+    // Update section counts including reference data
+    function updateCounts() {
+      const dataProductsCount = filterData(catalogData.dataProducts, 'data-products').length;
+      const functionsCount = filterData(catalogData.functions, 'functions').length;
+      const agentsCount = filterData(catalogData.agents, 'agents').length;
+      
+      document.getElementById('data-products-count').textContent = `${dataProductsCount} items`;
+      document.getElementById('functions-count').textContent = `${functionsCount} items`;
+      document.getElementById('agents-count').textContent = `${agentsCount} items`;
+      
+      // Update reference data count
+      const refData = catalogData.referenceData?.referenceData;
+      const totalEnums = Object.keys(refData?.database || {}).length + 
+                        Object.keys(refData?.a2a || {}).length + 
+                        Object.keys(refData?.ord || {}).length;
+      document.getElementById('reference-data-count').textContent = `${totalEnums} enums`;
+    }
+  </script>
+</body>
+</html>

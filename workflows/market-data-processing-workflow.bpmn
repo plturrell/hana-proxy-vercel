@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="MarketDataProcessingWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_MarketData">
+    <bpmn2:participant id="Participant_MarketDataAgent" name="Market Data Agent" processRef="Process_MarketDataProcessing"/>
+    <bpmn2:participant id="Participant_AnalyticsAgents" name="Analytics Agents" processRef="Process_DataConsumption"/>
+  </bpmn2:collaboration>
+
+  <!-- Main Market Data Processing -->
+  <bpmn2:process id="Process_MarketDataProcessing" name="Market Data Processing" isExecutable="true">
+    
+    <!-- Timer Start Events -->
+    <bpmn2:startEvent id="StartEvent_RealTimeQuotes" name="Real-time Quotes Timer">
+      <bpmn2:documentation>Triggers every minute during market hours for real-time quote updates</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_QuotesToGateway</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */1 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.data.market_data"/>
+          <camunda:property name="ord_capability" value="real_time_data_ingestion"/>
+          <camunda:property name="market_hours_only" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_MarketIndices" name="Market Indices Timer">
+      <bpmn2:documentation>Triggers every 5 minutes for market index updates</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_IndicesToGateway</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */5 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.data.market_data"/>
+          <camunda:property name="ord_capability" value="market_index_tracking"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ForexUpdate" name="Forex Update Timer">
+      <bpmn2:documentation>Triggers every 2 minutes for forex rate updates</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ForexToGateway</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */2 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.data.market_data"/>
+          <camunda:property name="ord_capability" value="forex_monitoring"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_DailyData" name="Daily Company Data Timer">
+      <bpmn2:documentation>Triggers at market close for daily company data update</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_DailyToGateway</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 0 16 ? * MON-FRI</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.data.market_data"/>
+          <camunda:property name="ord_capability" value="historical_data_retrieval"/>
+          <camunda:property name="market_close_trigger" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- Gateway for coordinating different data streams -->
+    <bpmn2:parallelGateway id="ParallelGateway_DataTypes" name="Data Stream Coordinator">
+      <bpmn2:documentation>Coordinates different types of market data processing</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_QuotesToGateway</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_IndicesToGateway</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ForexToGateway</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_DailyToGateway</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToDataFetch</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+
+    <!-- Market Status Check -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_MarketStatus" name="Market Status Check">
+      <bpmn2:documentation>Checks if market is open for real-time data or if it's a scheduled update</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToDataFetch</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MarketOpen</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_MarketClosed</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ForexAlwaysOpen</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Parallel Data Fetching -->
+    <bpmn2:parallelGateway id="ParallelGateway_DataFetch" name="Parallel Data Fetch">
+      <bpmn2:documentation>Enables parallel fetching from multiple data sources</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_MarketOpen</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_MarketClosed</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ForexAlwaysOpen</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToFinhub</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToFMP</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+
+    <!-- Service Tasks for Data Fetching -->
+    <bpmn2:serviceTask id="ServiceTask_FinhubFetch" name="Fetch from Finhub API">
+      <bpmn2:documentation>Fetches real-time market data from Finhub API</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToFinhub</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_FinhubToJoin</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://finnhub.io/api/v1/quote</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="X-Finnhub-Token">${environment.FINHUB_API_KEY}</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="real_time_data_ingestion"/>
+          <camunda:property name="ord_resource_path" value="/api/agents/market-data"/>
+          <camunda:property name="data_source" value="finhub"/>
+          <camunda:property name="retry_policy" value="exponential_backoff"/>
+          <camunda:property name="rate_limit" value="60_per_minute"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_FMPFetch" name="Fetch from FMP API">
+      <bpmn2:documentation>Fetches market data from Financial Modeling Prep API as fallback</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToFMP</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_FMPToJoin</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">GET</camunda:inputParameter>
+            <camunda:inputParameter name="url">https://financialmodelingprep.com/api/v3/quote</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="apikey">${environment.FMP_API_KEY}</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="real_time_data_ingestion"/>
+          <camunda:property name="ord_resource_path" value="/api/agents/market-data"/>
+          <camunda:property name="data_source" value="fmp"/>
+          <camunda:property name="fallback_source" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Data Consolidation -->
+    <bpmn2:parallelGateway id="ParallelGateway_DataJoin" name="Data Consolidation">
+      <bpmn2:documentation>Consolidates data from multiple sources</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_FinhubToJoin</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_FMPToJoin</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToNormalization</bpmn2:outgoing>
+    </bpmn2:parallelGateway>
+
+    <!-- Data Processing Tasks -->
+    <bpmn2:serviceTask id="ServiceTask_DataNormalization" name="Normalize Market Data">
+      <bpmn2:documentation>Normalizes data from different sources into consistent format</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToNormalization</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToValidation</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="data_normalization"/>
+          <camunda:property name="ord_function" value="data_standardization"/>
+          <camunda:property name="processing_agent" value="finsight.data.market_data"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_DataValidation" name="Validate Data Quality">
+      <bpmn2:documentation>Validates data quality and completeness</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToValidation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToStorage</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="data_quality_validation"/>
+          <camunda:property name="validation_rules" value="price_range,volume_sanity,temporal_consistency"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Database Storage -->
+    <bpmn2:serviceTask id="ServiceTask_DataStorage" name="Store Market Data">
+      <bpmn2:documentation>Stores processed market data in Supabase database</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToStorage</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToNotification</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="url">${environment.SUPABASE_URL}/rest/v1/market_data</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Authorization">Bearer ${environment.SUPABASE_SERVICE_KEY}</camunda:entry>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+        <camunda:properties>
+          <camunda:property name="database_table" value="market_data"/>
+          <camunda:property name="upsert_strategy" value="on_conflict_update"/>
+          <camunda:property name="data_retention" value="365_days"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Conditional Notification Based on Data Impact -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_NotificationCheck" name="High Impact Check">
+      <bpmn2:documentation>Checks if data changes are significant enough to notify analytics agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToNotification</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_HighImpact</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_NormalUpdate</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Multi-Agent Notification -->
+    <bpmn2:serviceTask id="ServiceTask_NotifyAnalytics" name="Notify Analytics Agents">
+      <bpmn2:documentation>Notifies subscribed analytics agents about high-impact market data changes</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_HighImpact</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NotificationToEnd</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn2:loopCardinality xsi:type="bpmn2:tFormalExpression">${subscribedAgents.size()}</bpmn2:loopCardinality>
+      </bpmn2:multiInstanceLoopCharacteristics>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_message_type" value="market_data_update"/>
+          <camunda:property name="notification_targets" value="analytics_agents"/>
+          <camunda:property name="ord_discovery" value="automatic"/>
+          <camunda:property name="message_priority" value="high"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Performance Monitoring -->
+    <bpmn2:serviceTask id="ServiceTask_PerformanceLogging" name="Log Performance Metrics">
+      <bpmn2:documentation>Logs processing performance and system metrics</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_NormalUpdate</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_NotificationToEnd</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToEndEvent</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="metrics_table" value="agent_performance_logs"/>
+          <camunda:property name="tracked_metrics" value="processing_time,data_volume,success_rate"/>
+          <camunda:property name="a2a_agent_id" value="finsight.data.market_data"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- End Event -->
+    <bpmn2:endEvent id="EndEvent_ProcessingComplete" name="Processing Complete">
+      <bpmn2:documentation>Market data processing workflow completed successfully</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToEndEvent</bpmn2:incoming>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="completion_status" value="success"/>
+          <camunda:property name="next_execution" value="scheduled"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_QuotesToGateway" sourceRef="StartEvent_RealTimeQuotes" targetRef="ParallelGateway_DataTypes"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_IndicesToGateway" sourceRef="StartEvent_MarketIndices" targetRef="ParallelGateway_DataTypes"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ForexToGateway" sourceRef="StartEvent_ForexUpdate" targetRef="ParallelGateway_DataTypes"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_DailyToGateway" sourceRef="StartEvent_DailyData" targetRef="ParallelGateway_DataTypes"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToDataFetch" sourceRef="ParallelGateway_DataTypes" targetRef="ExclusiveGateway_MarketStatus"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_MarketOpen" name="Market Open" sourceRef="ExclusiveGateway_MarketStatus" targetRef="ParallelGateway_DataFetch">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${marketStatus.isOpen()}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_MarketClosed" name="Market Closed" sourceRef="ExclusiveGateway_MarketStatus" targetRef="ParallelGateway_DataFetch">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${!marketStatus.isOpen() && triggerType == 'daily'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ForexAlwaysOpen" name="24/7 Markets" sourceRef="ExclusiveGateway_MarketStatus" targetRef="ParallelGateway_DataFetch">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${triggerType == 'forex'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToFinhub" sourceRef="ParallelGateway_DataFetch" targetRef="ServiceTask_FinhubFetch"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToFMP" sourceRef="ParallelGateway_DataFetch" targetRef="ServiceTask_FMPFetch"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_FinhubToJoin" sourceRef="ServiceTask_FinhubFetch" targetRef="ParallelGateway_DataJoin"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_FMPToJoin" sourceRef="ServiceTask_FMPFetch" targetRef="ParallelGateway_DataJoin"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToNormalization" sourceRef="ParallelGateway_DataJoin" targetRef="ServiceTask_DataNormalization"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToValidation" sourceRef="ServiceTask_DataNormalization" targetRef="ServiceTask_DataValidation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToStorage" sourceRef="ServiceTask_DataValidation" targetRef="ServiceTask_DataStorage"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToNotification" sourceRef="ServiceTask_DataStorage" targetRef="ExclusiveGateway_NotificationCheck"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_HighImpact" name="High Impact" sourceRef="ExclusiveGateway_NotificationCheck" targetRef="ServiceTask_NotifyAnalytics">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${marketData.isHighImpact()}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_NormalUpdate" name="Normal Update" sourceRef="ExclusiveGateway_NotificationCheck" targetRef="ServiceTask_PerformanceLogging">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${!marketData.isHighImpact()}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_NotificationToEnd" sourceRef="ServiceTask_NotifyAnalytics" targetRef="ServiceTask_PerformanceLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToEndEvent" sourceRef="ServiceTask_PerformanceLogging" targetRef="EndEvent_ProcessingComplete"/>
+  </bpmn2:process>
+
+  <!-- Data Consumption Process for Analytics Agents -->
+  <bpmn2:process id="Process_DataConsumption" name="Data Consumption" isExecutable="true">
+    <bpmn2:startEvent id="StartEvent_DataRequest" name="Data Request">
+      <bpmn2:documentation>Analytics agents request market data</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_RequestToQuery</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_DataRequest"/>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_QueryData" name="Query Market Data">
+      <bpmn2:documentation>Retrieves requested market data from database</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RequestToQuery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_QueryToResponse</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:endEvent id="EndEvent_DataResponse" name="Data Response">
+      <bpmn2:documentation>Returns requested data to analytics agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_QueryToResponse</bpmn2:incoming>
+      <bpmn2:messageEventDefinition messageRef="Message_DataResponse"/>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_RequestToQuery" sourceRef="StartEvent_DataRequest" targetRef="ServiceTask_QueryData"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_QueryToResponse" sourceRef="ServiceTask_QueryData" targetRef="EndEvent_DataResponse"/>
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_DataRequest" name="MarketDataRequest"/>
+  <bpmn2:message id="Message_DataResponse" name="MarketDataResponse"/>
+  <bpmn2:message id="Message_HighImpactAlert" name="HighImpactMarketDataAlert"/>
+
+  <!-- A2A and ORD Integration Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="a2a_agent_orchestration"/>
+      <camunda:property name="ord_compliance" value="v1.12"/>
+      <camunda:property name="primary_agent" value="finsight.data.market_data"/>
+      <camunda:property name="data_sources" value="finhub,fmp"/>
+      <camunda:property name="consumer_agents" value="analytics_agents"/>
+      <camunda:property name="processing_frequency" value="variable"/>
+      <camunda:property name="error_handling" value="exponential_backoff"/>
+      <camunda:property name="monitoring" value="enabled"/>
+      <camunda:property name="performance_tracking" value="comprehensive"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>

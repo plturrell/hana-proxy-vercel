@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="A2ACoordinationWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_A2ACoordination">
+    <bpmn2:participant id="Participant_ProtocolManager" name="A2A Protocol Manager" processRef="Process_CoordinationManagement"/>
+    <bpmn2:participant id="Participant_AgentEcosystem" name="Agent Ecosystem" processRef="Process_AgentInteractions"/>
+  </bpmn2:collaboration>
+
+  <!-- Main Coordination Management Process -->
+  <bpmn2:process id="Process_CoordinationManagement" name="A2A Coordination Management" isExecutable="true">
+    
+    <!-- Timer Events for Periodic Tasks -->
+    <bpmn2:startEvent id="StartEvent_HealthCheck" name="Agent Health Check Timer">
+      <bpmn2:documentation>Triggers every minute for agent health monitoring</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToHealthCheck</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */1 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.a2a_protocol_manager"/>
+          <camunda:property name="ord_capability" value="agent_health_monitoring"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_MessageProcessing" name="Message Queue Processing Timer">
+      <bpmn2:documentation>Triggers every 30 seconds for message queue processing</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToMessageProcessing</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">*/30 * * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.a2a_protocol_manager"/>
+          <camunda:property name="ord_capability" value="message_routing"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_WorkflowMonitoring" name="Workflow Monitoring Timer">
+      <bpmn2:documentation>Triggers every 2 minutes for workflow monitoring</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToWorkflowMonitoring</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */2 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.a2a_protocol_manager"/>
+          <camunda:property name="ord_capability" value="workflow_orchestration"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ConsensusManagement" name="Consensus Management Timer">
+      <bpmn2:documentation>Triggers every 5 minutes for consensus process management</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToConsensusManagement</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */5 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.a2a_protocol_manager"/>
+          <camunda:property name="ord_capability" value="consensus_management"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- Message-based Events -->
+    <bpmn2:startEvent id="StartEvent_CoordinationRequest" name="Coordination Request">
+      <bpmn2:documentation>Triggered when agents request coordination services</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_RequestToRouter</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_CoordinationRequest"/>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_WorkflowTrigger" name="Workflow Trigger">
+      <bpmn2:documentation>Triggered when workflows need to be executed</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_TriggerToExecution</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_WorkflowTrigger"/>
+    </bpmn2:startEvent>
+
+    <!-- Service Tasks for Core Functions -->
+    <bpmn2:serviceTask id="ServiceTask_HealthCheck" name="Perform Agent Health Check">
+      <bpmn2:documentation>Checks health status of all registered agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToHealthCheck</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_HealthToAnalysis</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="agent_health_monitoring"/>
+          <camunda:property name="ord_function" value="health_check"/>
+          <camunda:property name="processing_agent" value="finsight.coordination.a2a_protocol_manager"/>
+          <camunda:property name="timeout_ms" value="30000"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_MessageProcessing" name="Process Message Queue">
+      <bpmn2:documentation>Processes pending messages and routes them appropriately</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToMessageProcessing</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MessageToRouting</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="message_routing"/>
+          <camunda:property name="ord_function" value="message_processing"/>
+          <camunda:property name="batch_size" value="50"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_WorkflowMonitoring" name="Monitor Active Workflows">
+      <bpmn2:documentation>Monitors status of active workflows and handles timeouts</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToWorkflowMonitoring</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_WorkflowToManagement</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="workflow_orchestration"/>
+          <camunda:property name="ord_function" value="workflow_monitoring"/>
+          <camunda:property name="timeout_threshold" value="300000"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ConsensusManagement" name="Manage Consensus Processes">
+      <bpmn2:documentation>Manages active consensus processes and finalizes results</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToConsensusManagement</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ConsensusToFinalization</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="consensus_management"/>
+          <camunda:property name="ord_function" value="consensus_processing"/>
+          <camunda:property name="consensus_threshold" value="0.7"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Request Routing and Processing -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_RequestRouter" name="Request Type Router">
+      <bpmn2:documentation>Routes coordination requests based on type</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RequestToRouter</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToMultiAgentTask</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToResourceAllocation</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToConflictResolution</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToLoadBalancing</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Multi-Agent Task Coordination -->
+    <bpmn2:serviceTask id="ServiceTask_MultiAgentTask" name="Coordinate Multi-Agent Task">
+      <bpmn2:documentation>Coordinates execution of tasks involving multiple agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToMultiAgentTask</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_TaskToNotification</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn2:loopCardinality xsi:type="bpmn2:tFormalExpression">${agentsInvolved.size()}</bpmn2:loopCardinality>
+      </bpmn2:multiInstanceLoopCharacteristics>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="multi_agent_coordination"/>
+          <camunda:property name="ord_function" value="task_coordination"/>
+          <camunda:property name="coordination_strategy" value="parallel"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Resource Allocation -->
+    <bpmn2:serviceTask id="ServiceTask_ResourceAllocation" name="Manage Resource Allocation">
+      <bpmn2:documentation>Allocates computational resources among agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToResourceAllocation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResourceToMonitoring</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="resource_management"/>
+          <camunda:property name="ord_function" value="resource_allocation"/>
+          <camunda:property name="allocation_strategy" value="fair_share"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Conflict Resolution -->
+    <bpmn2:serviceTask id="ServiceTask_ConflictResolution" name="Resolve Agent Conflicts">
+      <bpmn2:documentation>Mediates and resolves conflicts between agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToConflictResolution</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ConflictToResolution</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="conflict_resolution"/>
+          <camunda:property name="ord_function" value="mediation"/>
+          <camunda:property name="resolution_strategy" value="consensus_based"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Load Balancing -->
+    <bpmn2:serviceTask id="ServiceTask_LoadBalancing" name="Balance Agent Workloads">
+      <bpmn2:documentation>Distributes workload across available agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToLoadBalancing</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_LoadToOptimization</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="load_balancing"/>
+          <camunda:property name="ord_function" value="workload_distribution"/>
+          <camunda:property name="balancing_algorithm" value="least_loaded"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Workflow Execution -->
+    <bpmn2:serviceTask id="ServiceTask_WorkflowExecution" name="Execute BPMN Workflow">
+      <bpmn2:documentation>Orchestrates execution of BPMN workflows</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_TriggerToExecution</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ExecutionToMonitoring</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="workflow_orchestration"/>
+          <camunda:property name="ord_function" value="workflow_execution"/>
+          <camunda:property name="execution_mode" value="distributed"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Analysis and Decision Making -->
+    <bpmn2:businessRuleTask id="BusinessRuleTask_HealthAnalysis" name="Analyze Agent Health">
+      <bpmn2:documentation>Analyzes health check results and determines actions</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_HealthToAnalysis</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AnalysisToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="decision_table" value="agent_health_rules"/>
+          <camunda:property name="rule_engine" value="drools"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:businessRuleTask>
+
+    <!-- Decision Gateway for Health Actions -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_HealthDecision" name="Health Action Decision">
+      <bpmn2:documentation>Decides what action to take based on health analysis</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_AnalysisToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToAgentRestart</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToAlerting</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToNormalOperation</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Health Action Tasks -->
+    <bpmn2:serviceTask id="ServiceTask_AgentRestart" name="Restart Unhealthy Agent">
+      <bpmn2:documentation>Attempts to restart agents that have failed health checks</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAgentRestart</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RestartToMonitoring</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="restart_strategy" value="graceful"/>
+          <camunda:property name="max_restart_attempts" value="3"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_AlertGeneration" name="Generate Health Alerts">
+      <bpmn2:documentation>Generates alerts for persistent health issues</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAlerting</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AlertToLogging</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="alert_channels" value="email,slack,webhook"/>
+          <camunda:property name="alert_severity" value="warning"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Performance Monitoring -->
+    <bpmn2:serviceTask id="ServiceTask_PerformanceMonitoring" name="Monitor System Performance">
+      <bpmn2:documentation>Monitors overall system performance and coordination metrics</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_MessageToRouting</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_WorkflowToManagement</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ResourceToMonitoring</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ExecutionToMonitoring</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_RestartToMonitoring</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MonitoringToLogging</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="metrics_collection" value="enabled"/>
+          <camunda:property name="performance_thresholds" value="response_time:1000ms,throughput:100msg/min"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Notification and Logging -->
+    <bpmn2:serviceTask id="ServiceTask_NotificationDispatch" name="Dispatch Agent Notifications">
+      <bpmn2:documentation>Sends notifications to relevant agents about coordination results</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_TaskToNotification</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ConflictToResolution</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_LoadToOptimization</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NotificationToLogging</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn2:loopCardinality xsi:type="bpmn2:tFormalExpression">${notificationTargets.size()}</bpmn2:loopCardinality>
+      </bpmn2:multiInstanceLoopCharacteristics>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="notification_method" value="a2a_message"/>
+          <camunda:property name="delivery_confirmation" value="required"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ActivityLogging" name="Log Coordination Activity">
+      <bpmn2:documentation>Logs all coordination activities for audit and analysis</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToNormalOperation</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_AlertToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_MonitoringToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_NotificationToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ConsensusToFinalization</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToEndEvent</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="log_level" value="info"/>
+          <camunda:property name="log_destination" value="database,file"/>
+          <camunda:property name="retention_period" value="90_days"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- End Events -->
+    <bpmn2:endEvent id="EndEvent_CoordinationComplete" name="Coordination Complete">
+      <bpmn2:documentation>Coordination process completed successfully</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToEndEvent</bpmn2:incoming>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="completion_status" value="success"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_ToHealthCheck" sourceRef="StartEvent_HealthCheck" targetRef="ServiceTask_HealthCheck"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToMessageProcessing" sourceRef="StartEvent_MessageProcessing" targetRef="ServiceTask_MessageProcessing"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToWorkflowMonitoring" sourceRef="StartEvent_WorkflowMonitoring" targetRef="ServiceTask_WorkflowMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToConsensusManagement" sourceRef="StartEvent_ConsensusManagement" targetRef="ServiceTask_ConsensusManagement"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_RequestToRouter" sourceRef="StartEvent_CoordinationRequest" targetRef="ExclusiveGateway_RequestRouter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_TriggerToExecution" sourceRef="StartEvent_WorkflowTrigger" targetRef="ServiceTask_WorkflowExecution"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToMultiAgentTask" name="Multi-Agent Task" sourceRef="ExclusiveGateway_RequestRouter" targetRef="ServiceTask_MultiAgentTask">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${requestType == 'multi_agent_task'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToResourceAllocation" name="Resource Allocation" sourceRef="ExclusiveGateway_RequestRouter" targetRef="ServiceTask_ResourceAllocation">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${requestType == 'resource_allocation'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToConflictResolution" name="Conflict Resolution" sourceRef="ExclusiveGateway_RequestRouter" targetRef="ServiceTask_ConflictResolution">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${requestType == 'conflict_resolution'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToLoadBalancing" name="Load Balancing" sourceRef="ExclusiveGateway_RequestRouter" targetRef="ServiceTask_LoadBalancing">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${requestType == 'load_balancing'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_HealthToAnalysis" sourceRef="ServiceTask_HealthCheck" targetRef="BusinessRuleTask_HealthAnalysis"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AnalysisToDecision" sourceRef="BusinessRuleTask_HealthAnalysis" targetRef="ExclusiveGateway_HealthDecision"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAgentRestart" name="Critical Issues" sourceRef="ExclusiveGateway_HealthDecision" targetRef="ServiceTask_AgentRestart">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${healthStatus == 'critical'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAlerting" name="Warning Issues" sourceRef="ExclusiveGateway_HealthDecision" targetRef="ServiceTask_AlertGeneration">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${healthStatus == 'warning'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToNormalOperation" name="Healthy" sourceRef="ExclusiveGateway_HealthDecision" targetRef="ServiceTask_ActivityLogging">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${healthStatus == 'healthy'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_MessageToRouting" sourceRef="ServiceTask_MessageProcessing" targetRef="ServiceTask_PerformanceMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_WorkflowToManagement" sourceRef="ServiceTask_WorkflowMonitoring" targetRef="ServiceTask_PerformanceMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ConsensusToFinalization" sourceRef="ServiceTask_ConsensusManagement" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_TaskToNotification" sourceRef="ServiceTask_MultiAgentTask" targetRef="ServiceTask_NotificationDispatch"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ResourceToMonitoring" sourceRef="ServiceTask_ResourceAllocation" targetRef="ServiceTask_PerformanceMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ConflictToResolution" sourceRef="ServiceTask_ConflictResolution" targetRef="ServiceTask_NotificationDispatch"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LoadToOptimization" sourceRef="ServiceTask_LoadBalancing" targetRef="ServiceTask_NotificationDispatch"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ExecutionToMonitoring" sourceRef="ServiceTask_WorkflowExecution" targetRef="ServiceTask_PerformanceMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RestartToMonitoring" sourceRef="ServiceTask_AgentRestart" targetRef="ServiceTask_PerformanceMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AlertToLogging" sourceRef="ServiceTask_AlertGeneration" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MonitoringToLogging" sourceRef="ServiceTask_PerformanceMonitoring" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_NotificationToLogging" sourceRef="ServiceTask_NotificationDispatch" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToEndEvent" sourceRef="ServiceTask_ActivityLogging" targetRef="EndEvent_CoordinationComplete"/>
+    
+  </bpmn2:process>
+
+  <!-- Agent Interactions Process -->
+  <bpmn2:process id="Process_AgentInteractions" name="Agent Interactions" isExecutable="true">
+    
+    <bpmn2:startEvent id="StartEvent_AgentMessage" name="Agent Message">
+      <bpmn2:documentation>Triggered when agents send messages</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_MessageToProcessing</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_AgentCommunication"/>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_MessageRouting" name="Route Agent Message">
+      <bpmn2:documentation>Routes messages between agents via Protocol Manager</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_MessageToProcessing</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RoutingToDelivery</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:endEvent id="EndEvent_MessageDelivered" name="Message Delivered">
+      <bpmn2:documentation>Message successfully delivered to target agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RoutingToDelivery</bpmn2:incoming>
+      <bpmn2:messageEventDefinition messageRef="Message_DeliveryConfirmation"/>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_MessageToProcessing" sourceRef="StartEvent_AgentMessage" targetRef="ServiceTask_MessageRouting"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RoutingToDelivery" sourceRef="ServiceTask_MessageRouting" targetRef="EndEvent_MessageDelivered"/>
+    
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_CoordinationRequest" name="CoordinationRequest"/>
+  <bpmn2:message id="Message_WorkflowTrigger" name="WorkflowTrigger"/>
+  <bpmn2:message id="Message_AgentCommunication" name="AgentCommunication"/>
+  <bpmn2:message id="Message_DeliveryConfirmation" name="DeliveryConfirmation"/>
+  <bpmn2:message id="Message_HealthCheckResponse" name="HealthCheckResponse"/>
+  <bpmn2:message id="Message_ConsensusVote" name="ConsensusVote"/>
+
+  <!-- A2A and ORD Integration Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="a2a_coordination"/>
+      <camunda:property name="ord_compliance" value="v1.12"/>
+      <camunda:property name="primary_agent" value="finsight.coordination.a2a_protocol_manager"/>
+      <camunda:property name="coordination_scope" value="all_agents"/>
+      <camunda:property name="monitoring_enabled" value="comprehensive"/>
+      <camunda:property name="error_handling" value="graceful_degradation"/>
+      <camunda:property name="performance_tracking" value="detailed"/>
+      <camunda:property name="consensus_management" value="enabled"/>
+      <camunda:property name="load_balancing" value="automatic"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>

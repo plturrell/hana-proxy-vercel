@@ -462,7 +462,7 @@ Always act in accordance with your role and goals. Be strategic but ethical.`;
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'grok-beta',
+          model: 'grok-4-0709',
           messages: [
             { role: 'system', content: systemPrompt },
             { role: 'user', content: question }

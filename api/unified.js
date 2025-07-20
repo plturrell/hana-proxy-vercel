@@ -928,8 +928,8 @@ async function completeDeployment(deployment, res) {
 
   return res.json({
     success: true,
-    address: fakeAddress,
-    txHash: fakeTxHash,
+    address: deterministicAddress,
+    txHash: deterministicTxHash,
     network: deployment.network,
     gasUsed: deployment.gas_limit,
     status: 'deployed',
@@ -943,13 +943,59 @@ async function handleGrokExplanation(req, res) {
     const { sourceCode, contractName } = req.body;
     
     try {
-      // Simulate Grok AI explanation
-      const explanation = generateSmartContractExplanation(sourceCode, contractName);
+      // Use real Grok AI if available
+      const GROK_API_KEY = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+      let explanation;
+      
+      if (GROK_API_KEY) {
+        try {
+          const response = await fetch('https://api.x.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${GROK_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: 'grok-2',
+              messages: [
+                {
+                  role: 'system',
+                  content: 'You are an expert explaining smart contracts to business users.'
+                },
+                {
+                  role: 'user',
+                  content: `Explain this smart contract in simple business terms: ${contractName}\n\nCode:\n${sourceCode}`
+                }
+              ],
+              temperature: 0.7,
+              max_tokens: 500
+            })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            explanation = data.choices[0].message.content;
+          } else {
+            throw new Error(`Grok API error: ${response.status}`);
+          }
+        } catch (error) {
+          console.error('Grok API call failed:', error);
+          return res.status(503).json({
+            error: 'AI service unavailable',
+            details: 'Grok API is not configured or unavailable'
+          });
+        }
+      } else {
+        return res.status(503).json({
+          error: 'AI service not configured',
+          details: 'Please configure GROK_API_KEY environment variable'
+        });
+      }
       
       return res.json({
         success: true,
         explanation: explanation,
-        model: 'grok-beta',
+        model: 'grok-2',
         timestamp: new Date().toISOString()
       });
       
@@ -971,13 +1017,70 @@ async function handleGrokQA(req, res) {
     const { question, sourceCode, contractName, conversationHistory } = req.body;
     
     try {
-      // Simulate Grok AI Q&A response
-      const answer = generateQAResponse(question, sourceCode, contractName, conversationHistory);
+      // Use real Grok AI if available
+      const GROK_API_KEY = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
+      let answer;
+      
+      if (GROK_API_KEY) {
+        try {
+          const messages = [
+            {
+              role: 'system',
+              content: 'You are an expert answering questions about smart contracts and business processes.'
+            }
+          ];
+          
+          // Add conversation history
+          if (conversationHistory && conversationHistory.length > 0) {
+            conversationHistory.forEach(entry => {
+              messages.push({ role: 'user', content: entry.question });
+              messages.push({ role: 'assistant', content: entry.answer });
+            });
+          }
+          
+          messages.push({
+            role: 'user',
+            content: `Question about ${contractName}: ${question}\n\nContract code:\n${sourceCode}`
+          });
+          
+          const response = await fetch('https://api.x.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${GROK_API_KEY}`
+            },
+            body: JSON.stringify({
+              model: 'grok-2',
+              messages: messages,
+              temperature: 0.7,
+              max_tokens: 400
+            })
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            answer = data.choices[0].message.content;
+          } else {
+            throw new Error(`Grok API error: ${response.status}`);
+          }
+        } catch (error) {
+          console.error('Grok API call failed:', error);
+          return res.status(503).json({
+            error: 'AI service unavailable',
+            details: 'Grok API is not configured or unavailable'
+          });
+        }
+      } else {
+        return res.status(503).json({
+          error: 'AI service not configured',
+          details: 'Please configure GROK_API_KEY environment variable'
+        });
+      }
       
       return res.json({
         success: true,
         answer: answer,
-        model: 'grok-beta',
+        model: 'grok-2',
         timestamp: new Date().toISOString(),
         confidence: 0.92
       });
@@ -994,151 +1097,9 @@ async function handleGrokQA(req, res) {
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
-// Generate smart contract explanation using simulated Grok AI
-function generateSmartContractExplanation(sourceCode, contractName) {
-  const codeLines = sourceCode.split('\n').length;
-  const hasTimelock = sourceCode.toLowerCase().includes('timelock');
-  const hasMultisig = sourceCode.toLowerCase().includes('multisig') || sourceCode.toLowerCase().includes('threshold');
-  const hasEvents = sourceCode.includes('event ');
-  const hasModifiers = sourceCode.includes('modifier ');
-  
-  let explanation = ``;
-  
-  if (contractName.includes('Multi-Person Approval')) {
-    explanation = `This process requires multiple team members to approve important decisions.
-Think of it like requiring two keys to open a vault - no single person can act alone.
+// Removed fake AI explanation generator - now using real Grok API
 
-<strong>Example with your agents:</strong>
-Use the Risk Analyst, Financial Advisor, and Compliance Officer agents together. When processing a large transaction, all three must review and approve before funds move. The Risk Analyst checks exposure, Financial Advisor validates strategy, and Compliance Officer ensures regulations are met.
-
-<strong>Benefits:</strong>
-• Shared responsibility across your team
-• Protection against single points of failure  
-• Complete transparency in decision-making
-• Automatic audit trail for compliance`;
-  } else if (contractName.includes('Review Period')) {
-    explanation = `This process adds a mandatory waiting period before changes take effect.
-Like a cooling-off period, it gives everyone time to review and potentially stop actions.
-
-<strong>Example with your agents:</strong>
-Deploy the Scenario Analyzer and Portfolio Optimizer agents. When proposing portfolio changes, the system waits 24 hours while these agents run simulations. During this time, the Market Analyst agent can flag concerns if market conditions change.
-
-<strong>Benefits:</strong>
-• Time to review and analyze proposed changes
-• Opportunity to cancel if conditions change
-• Thorough risk assessment before execution
-• Protection against hasty decisions`;
-  } else if (contractName.includes('If-This-Then-That')) {
-    explanation = `This process creates automatic triggers based on conditions you define.
-When specific events happen, predefined actions execute automatically.
-
-<strong>Example with your agents:</strong>
-Connect the News Sentiment Tracker, Market Data Collector, and Trading Strategy agents. When news sentiment drops below -0.5 for a stock you own, automatically trigger the Risk Calculator to assess exposure and notify the Portfolio Manager agent to review positions.
-
-<strong>Benefits:</strong>
-• Automated response to market conditions
-• Consistent execution of your strategy
-• 24/7 monitoring without manual work
-• Reduced human error and emotion`;
-  } else if (contractName.includes('Role-Based Access')) {
-    explanation = `This process controls who can do what based on their role in the organization.
-Different team members get appropriate access levels for their responsibilities.
-
-<strong>Example with your agents:</strong>
-Set up three tiers: Analysts (FX Analyzer, Credit Risk agents) can view data and make recommendations. Managers (Portfolio Optimizer, Strategy Builder agents) can execute trades up to $1M. Only Executive agents (Compliance Officer, Chief Risk Officer) can approve trades over $1M or change risk parameters.
-
-<strong>Benefits:</strong>
-• Clear boundaries for each role
-• Prevents unauthorized actions
-• Maintains compliance requirements
-• Flexible permissions as roles change`;
-  } else {
-    explanation = `This system provides automated business process management with built-in security and compliance.
-
-<strong>Key Benefits:</strong>
-• Complete transparency and audit trails
-• Automated execution of business rules
-• Protection against unauthorized changes
-• Integration with your existing agents`;
-  }
-  
-  explanation += `
-
-<strong>Getting Started:</strong>
-1. Select the agents you want to use from your existing library
-2. Define the rules and conditions for your process
-3. Test with small transactions to ensure everything works
-4. Deploy to production with confidence`;
-  
-  return explanation;
-}
-
-// Generate Q&A response using simulated Grok AI
-function generateQAResponse(question, sourceCode, contractName, conversationHistory) {
-  const lowerQuestion = question.toLowerCase();
-  
-  // Agent-related questions
-  if (lowerQuestion.includes('agent') || lowerQuestion.includes('use') || lowerQuestion.includes('which')) {
-    return `Based on your existing agent library, here are the best agents for this process:
-
-For Multi-Person Approval: Use Risk Analyst + Financial Advisor + Compliance Officer
-For Review Period: Use Scenario Analyzer + Portfolio Optimizer + Market Analyst  
-For Automated Logic: Use News Sentiment Tracker + Market Data Collector + Trading Strategy
-For Role-Based Access: Use tiered agents based on authority levels
-
-Each combination works together to provide security and automation.`;
-  }
-  
-  // Security-related questions
-  if (lowerQuestion.includes('secure') || lowerQuestion.includes('safe') || lowerQuestion.includes('vulnerability')) {
-    return `Your business is protected through multiple layers:
-• No single person can make changes alone
-• Every action creates a permanent record
-• Emergency stop features if needed
-• Based on proven systems used by major companies
-
-Think of it as a digital version of requiring multiple signatures on a check.`;
-  }
-  
-  // Cost and investment questions
-  if (lowerQuestion.includes('cost') || lowerQuestion.includes('expensive') || lowerQuestion.includes('fee') || lowerQuestion.includes('price') || lowerQuestion.includes('investment')) {
-    return `This solution costs less than traditional corporate treasury services:
-• One-time setup (like opening a business account)
-• Lower transaction fees than wire transfers
-• No monthly maintenance charges
-• Savings from prevented fraud and streamlined operations
-
-Most businesses save money within the first year through efficiency gains.`;
-  }
-  
-  // How it works questions
-  if (lowerQuestion.includes('how') || lowerQuestion.includes('work') || lowerQuestion.includes('explain')) {
-    return `Simple 4-step process:
-1. Someone proposes an action
-2. Required approvers review it
-3. After enough approvals, it executes
-4. Everyone gets notified
-
-Just like multiple signatures on a business check, but automated.`;
-  }
-  
-  // Setup and implementation questions
-  if (lowerQuestion.includes('deploy') || lowerQuestion.includes('setup') || lowerQuestion.includes('configure') || lowerQuestion.includes('start') || lowerQuestion.includes('implement')) {
-    return `Getting started is straightforward:
-• Define your approval rules
-• Add your team members
-• Test with small amounts
-• Train your team on the process
-• Connect to your existing systems
-
-Most businesses are running within days.`;
-  }
-  
-  // Default response for general questions
-  return `I understand you're asking about "${question}".
-
-This ${contractName} process helps automate and secure your business operations. Would you like me to explain how it works with your specific agents, or discuss the security features?`;
-}
+// Removed fake Q&A response generator - now using real Grok API
 
 // Helper function to get default templates
 function getDefaultTemplates() {

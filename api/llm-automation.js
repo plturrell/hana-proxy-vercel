@@ -48,60 +48,83 @@ class LLMAutomationEngine {
         this.agents = data || [];
     }
     
-    // Parse natural language to process design
+    // Parse natural language to process design using real NLP
     async parseDescription(description) {
-        const lower = description.toLowerCase();
+        // Use real AI for natural language processing
+        const grokApiKey = process.env.GROK_API_KEY || process.env.XAI_API_KEY;
         
-        // Extract key intent
-        const intents = {
-            'risk': 'risk assessment',
-            'optimize': 'portfolio optimization',
-            'compliance': 'compliance check',
-            'monitor': 'market monitoring',
-            'hedge': 'risk hedging',
-            'trade': 'trading execution'
-        };
+        if (!grokApiKey) {
+            console.error('AI API key not configured - natural language parsing unavailable');
+            return null;
+        }
         
-        let primaryIntent = null;
-        for (const [keyword, intent] of Object.entries(intents)) {
-            if (lower.includes(keyword)) {
-                primaryIntent = intent;
-                break;
+        try {
+            const response = await fetch('https://api.x.ai/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${grokApiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'grok-4-0709',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are a financial process automation NLP expert. Parse natural language descriptions into structured process definitions.'
+                        },
+                        {
+                            role: 'user',
+                            content: `Parse this financial process description into structured components:
+
+"${description}"
+
+Extract and return JSON:
+{
+  "primaryIntent": "risk assessment|portfolio optimization|compliance check|market monitoring|trading execution|other",
+  "trigger": {
+    "type": "timer|event|conditional|manual",
+    "frequency": "daily|hourly|real-time|on-demand|on-condition"
+  },
+  "conditions": [
+    {
+      "type": "threshold-exceeded|threshold-below|market-condition|time-based|event-driven",
+      "parameter": "specific parameter",
+      "value": "threshold value",
+      "operator": ">|<|=|>=|<="
+    }
+  ],
+  "entities": ["extracted entities"],
+  "instruments": ["financial instruments mentioned"],
+  "actions": ["specific actions to take"],
+  "outputs": ["expected outputs"],
+  "priority": "high|medium|low",
+  "complexity": "simple|moderate|complex"
+}`
+                        }
+                    ],
+                    temperature: 0.2,
+                    max_tokens: 1000
+                })
+            });
+
+            if (!response.ok) {
+                console.error('NLP parsing API failed:', response.status);
+                return null;
             }
-        }
-        
-        // Extract frequency/trigger
-        const triggers = {
-            'daily': { type: 'timer', frequency: 'daily' },
-            'hourly': { type: 'timer', frequency: 'hourly' },
-            'real-time': { type: 'event', frequency: 'immediate' },
-            'when': { type: 'conditional', frequency: 'on-condition' },
-            'if': { type: 'conditional', frequency: 'on-condition' }
-        };
-        
-        let trigger = { type: 'manual', frequency: 'on-demand' };
-        for (const [keyword, config] of Object.entries(triggers)) {
-            if (lower.includes(keyword)) {
-                trigger = config;
-                break;
+
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            
+            try {
+                return JSON.parse(content);
+            } catch {
+                console.error('Failed to parse NLP response');
+                return null;
             }
+        } catch (error) {
+            console.error('Natural language parsing failed:', error);
+            return null;
         }
-        
-        // Extract conditions
-        const conditions = [];
-        if (lower.includes('exceeds') || lower.includes('above')) {
-            conditions.push({ type: 'threshold-exceeded' });
-        }
-        if (lower.includes('below') || lower.includes('under')) {
-            conditions.push({ type: 'threshold-below' });
-        }
-        
-        return {
-            intent: primaryIntent,
-            trigger,
-            conditions,
-            originalDescription: description
-        };
     }
     
     // Build BPMN from parsed intent

@@ -91,7 +91,7 @@ async function testA2AJSONRPCMessage() {
   };
   
   try {
-    const response = await fetch(`${BASE_URL}/api/agent/agent-pearson-correlation/message`, {
+    const response = await fetch(`${BASE_URL}/api/agent/finsight.analytics.temporal_correlations/message`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(message)
@@ -297,7 +297,7 @@ async function testORDOpenAPI() {
   console.log(`\n${colors.blue}🔌 ORD Test 3: OpenAPI Definitions${colors.reset}`);
   
   try {
-    const response = await fetch(`${BASE_URL}/api/agent/agent-pearson-correlation/openapi.json`);
+    const response = await fetch(`${BASE_URL}/api/agent/finsight.analytics.temporal_correlations/openapi.json`);
     
     if (!response.ok) {
       console.log(`${colors.red}❌ OpenAPI endpoint returned ${response.status}${colors.reset}`);

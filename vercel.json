@@ -39,6 +39,42 @@
     },
     "api/websocket-server.js": {
       "maxDuration": 60
+    },
+    "api/market-data-finhub.js": {
+      "maxDuration": 30
+    },
+    "api/market-data-fmp.js": {
+      "maxDuration": 30
+    },
+    "api/market-data-unified.js": {
+      "maxDuration": 30
+    },
+    "api/fmp-key-manager.js": {
+      "maxDuration": 30
+    },
+    "api/graphql.js": {
+      "maxDuration": 60
+    },
+    "api/agents/news-intelligence.js": {
+      "maxDuration": 30
+    },
+    "api/agents/market-data.js": {
+      "maxDuration": 30
+    },
+    "api/agents/a2a-protocol-manager.js": {
+      "maxDuration": 30
+    },
+    "api/agents/ord-registry-manager.js": {
+      "maxDuration": 30
+    },
+    "api/agents/api-gateway.js": {
+      "maxDuration": 30
+    },
+    "api/agents/curriculum-learning.js": {
+      "maxDuration": 30
+    },
+    "api/agents/news-assessment-hedge.js": {
+      "maxDuration": 30
     }
   },
   "rewrites": [

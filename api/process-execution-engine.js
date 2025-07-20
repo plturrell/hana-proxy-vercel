@@ -202,7 +202,7 @@ class ProcessExecutionEngine extends EventEmitter {
     
     async executeRiskAssessment(agent, input) {
         // Real risk calculation using treasury calculator
-        const calculator = require('../lib/treasury-calculator.js');
+        const { treasuryCalculator: calculator } = await import('../lib/treasury-calculator-esm.js');
         
         const portfolio = input.portfolio || [];
         const returns = portfolio.map(asset => asset.return || 0);
@@ -222,7 +222,7 @@ class ProcessExecutionEngine extends EventEmitter {
     
     async executePortfolioOptimization(agent, input) {
         // Real portfolio optimization
-        const calculator = require('../lib/treasury-calculator.js');
+        const { treasuryCalculator: calculator } = await import('../lib/treasury-calculator-esm.js');
         
         const assets = input.assets || [];
         const constraints = input.constraints || {};
@@ -270,7 +270,7 @@ class ProcessExecutionEngine extends EventEmitter {
     }
     
     async executeCalculation(agent, input) {
-        const calculator = require('../lib/treasury-calculator.js');
+        const { treasuryCalculator: calculator } = await import('../lib/treasury-calculator-esm.js');
         
         const { formula, parameters } = input;
         const result = calculator.calculate(formula, parameters);

@@ -371,7 +371,7 @@ async function enhanceAgentWithAI(agent) {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'grok-beta',
+          model: 'grok-4-0709',
           messages: [
             {
               role: 'system',

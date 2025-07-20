@@ -49,7 +49,17 @@ export default async function handler(req, res) {
     }
     
     if (path.startsWith('/open-resource-discovery/v1/documents/')) {
-      return handleORDDocument(req, res);
+      const documentType = path.split('/').pop();
+      switch (documentType) {
+        case 'analytics-platform':
+          return handleORDDocument(req, res);
+        case 'data-products':
+          return handleDataProductsDocument(req, res);
+        case 'function-registry':
+          return handleFunctionRegistryDocument(req, res);
+        default:
+          return handleORDDocument(req, res);
+      }
     }
 
     // ========================================
@@ -123,31 +133,47 @@ async function handleORDConfiguration(req, res) {
   return res.json({
     baseUrl: BASE_URL,
     ordDocumentUrls: [
-      "/open-resource-discovery/v1/documents/analytics-platform"
+      "/open-resource-discovery/v1/documents/analytics-platform",
+      "/open-resource-discovery/v1/documents/data-products",
+      "/open-resource-discovery/v1/documents/function-registry"
     ],
     ordExtensions: {
       "sap.blockchain": {
         "enabled": true,
         "network": "supabase-private"
+      },
+      "finsight.unified": {
+        "registry": true,
+        "crossReferences": true,
+        "dataLineage": true
       }
     }
   });
 }
 
 async function handleORDDocument(req, res) {
-  // Check if Supabase is configured
-  if (!supabase) {
-    return res.status(503).json({
-      error: 'Database not configured',
-      message: 'Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables. Please configure these in your Vercel project settings.'
-    });
-  }
+  try {
+    // Check if Supabase is configured
+    if (!supabase) {
+      return res.status(503).json({
+        error: 'Database not configured',
+        message: 'Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables. Please configure these in your Vercel project settings.'
+      });
+    }
 
-  const { data: agents } = await supabase
-    .from('a2a_agents')
-    .select('*')
-    .eq('agent_type', 'analytics')
-    .eq('status', 'active');
+    const { data: agents, error } = await supabase
+      .from('a2a_agents')
+      .select('*')
+      .eq('agent_type', 'analytics')
+      .eq('status', 'active');
+    
+    if (error) {
+      console.error('Supabase query error:', error);
+      return res.status(500).json({
+        error: 'Database query failed',
+        details: error.message
+      });
+    }
 
   const ordDocument = {
     "$schema": "https://sap.github.io/open-resource-discovery/spec-v1/interfaces/Document.schema.json",
@@ -196,37 +222,73 @@ async function handleORDDocument(req, res) {
         "groupTypeId": "sap:core:groupType:capabilities"
       }
     ],
-    "capabilities": agents?.map(agent => ({
+    "capabilities": (agents || []).map(agent => ({
       "ordId": `urn:${VENDOR}:${PRODUCT}:capability:${agent.agent_id}:v1`,
       "title": agent.agent_name || agent.name,
       "shortDescription": agent.description || `${agent.agent_name} capability`,
       "description": formatMarkdown(agent),
       "version": agent.agent_version || "1.0.0",
-      "releaseStatus": "active",
-      "visibility": "public",
+      "releaseStatus": agent.ord_release_status || "active",
+      "visibility": agent.ord_visibility || "public",
       "partOfPackage": determinePackage(agent.agent_id),
       "partOfGroups": [determineGroup(agent.agent_id)],
       "apiResources": [`urn:${VENDOR}:${PRODUCT}:apiResource:${agent.agent_id}-api:v1`],
       "extensible": {
-        "supported": "automatic",
+        "supported": agent.ord_capability_extensibility || "automatic",
         "description": "Extensible via blockchain voting"
       },
       "labels": {
         "voting-power": [(agent.connection_config?.voting_power || 100).toString()],
-        "agent-type": [agent.agent_type || 'analytics']
+        "agent-type": [agent.agent_type || 'analytics'],
+        "a2a-protocol": [agent.protocol_version_enum || agent.protocol_version || 'a2a/v1.0'],
+        "a2a-role": [agent.agent_role || 'autonomous'],
+        "verification-level": [agent.verification_level || 'basic']
+      },
+      "supportedUseCases": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:useCase:financial-analysis:v1`,
+          "title": "Financial Analysis",
+          "description": `Use ${agent.agent_name || agent.name} for comprehensive financial analysis`
+        }
+      ],
+      "inputDependencies": [
+        `urn:${VENDOR}:${PRODUCT}:dataProduct:unified-market-data:v1`,
+        `urn:${VENDOR}:${PRODUCT}:dataProduct:calculation-history:v1`
+      ],
+      "outputDependencies": [
+        `urn:${VENDOR}:${PRODUCT}:dataProduct:calculation-history:v1`
+      ],
+      "metadata": {
+        "a2a": {
+          "protocolVersion": agent.protocol_version_enum || agent.protocol_version || 'a2a/v1.0',
+          "capabilities": agent.capabilities_enum || agent.capabilities || [],
+          "role": agent.agent_role || 'autonomous',
+          "verificationLevel": agent.verification_level || 'basic',
+          "communicationPattern": agent.communication_pattern || 'asynchronous'
+        },
+        "ord": {
+          "releaseStatus": agent.ord_release_status || "active",
+          "visibility": agent.ord_visibility || "public",
+          "entityLevel": agent.ord_entity_level || "1"
+        },
+        "compliance": {
+          "a2aStatus": agent.a2a_compliance_status || 'unknown',
+          "ordStatus": agent.ord_compliance_status || 'unknown',
+          "lastValidated": agent.last_validated_at
+        }
       }
-    })) || [],
-    "apiResources": agents?.map(agent => ({
+    })),
+    "apiResources": (agents || []).map(agent => ({
       "ordId": `urn:${VENDOR}:${PRODUCT}:apiResource:${agent.agent_id}-api:v1`,
       "title": `${agent.agent_name || agent.name} API`,
       "shortDescription": `REST API for ${agent.agent_name || agent.name}`,
-      "description": `Provides A2A-compliant access to ${agent.name}`,
+      "description": `Provides A2A-compliant access to ${agent.agent_name || agent.name}`,
       "version": "1.0.0",
       "releaseStatus": "active",
       "visibility": "public",
       "partOfPackage": determinePackage(agent.agent_id),
       "apiProtocol": "rest",
-      "tags": ["a2a", "analytics", agent.type],
+      "tags": ["a2a", "analytics", agent.agent_type || 'analytics'],
       "countries": ["us"],
       "lineOfBusiness": ["Finance"],
       "industry": ["Financial Services"],
@@ -241,12 +303,18 @@ async function handleORDDocument(req, res) {
         {
           "entityTypeId": `urn:${VENDOR}:${PRODUCT}:entityType:AnalyticsRequest:v1`
         }
+      ],
+      "inputDependencies": [
+        `urn:${VENDOR}:${PRODUCT}:dataProduct:unified-market-data:v1`
+      ],
+      "outputDependencies": [
+        `urn:${VENDOR}:${PRODUCT}:dataProduct:calculation-history:v1`
       ]
-    })) || [],
-    "eventResources": agents?.slice(0, 10).map(agent => ({
+    })),
+    "eventResources": (agents || []).slice(0, 10).map(agent => ({
       "ordId": `urn:${VENDOR}:${PRODUCT}:eventResource:${agent.agent_id}-complete:v1`,
-      "title": `${agent.name} Completion Event`,
-      "shortDescription": `Event when ${agent.name} completes calculation`,
+      "title": `${agent.agent_name || agent.name} Completion Event`,
+      "shortDescription": `Event when ${agent.agent_name || agent.name} completes calculation`,
       "description": "Async notification of calculation completion",
       "version": "1.0.0",
       "releaseStatus": "active",
@@ -260,7 +328,7 @@ async function handleORDDocument(req, res) {
           "url": "#inline",
           "content": JSON.stringify({
             asyncapi: "2.6.0",
-            info: { title: `${agent.name} Events`, version: "1.0.0" },
+            info: { title: `${agent.agent_name || agent.name} Events`, version: "1.0.0" },
             channels: {
               [`agent.${agent.agent_id}.complete`]: {
                 subscribe: {
@@ -282,7 +350,7 @@ async function handleORDDocument(req, res) {
           })
         }
       ]
-    })) || [],
+    })),
     "entityTypes": [
       {
         "ordId": `urn:${VENDOR}:${PRODUCT}:entityType:AnalyticsRequest:v1`,
@@ -319,10 +387,46 @@ async function handleORDDocument(req, res) {
         }
       }
     ],
-    "integrationDependencies": []
+    "integrationDependencies": [
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:supabase:v1`,
+        "title": "Supabase Database Integration",
+        "description": "Primary data persistence and real-time subscriptions",
+        "systemInstanceId": "supabase.com",
+        "version": "1.0.0"
+      },
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:blockchain:v1`,
+        "title": "Blockchain Integration",
+        "description": "Agent consensus and data lineage verification",
+        "systemInstanceId": "private-blockchain",
+        "version": "1.0.0"
+      },
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:function-registry:v1`,
+        "title": "Function Registry Integration",
+        "description": "Cross-reference to computational functions",
+        "systemInstanceId": `urn:${VENDOR}:${PRODUCT}:system:function-platform:v1`,
+        "version": "1.0.0"
+      },
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:data-platform:v1`,
+        "title": "Data Platform Integration", 
+        "description": "Cross-reference to data products and sources",
+        "systemInstanceId": `urn:${VENDOR}:${PRODUCT}:system:data-platform:v1`,
+        "version": "1.0.0"
+      }
+    ]
   };
 
   return res.json(ordDocument);
+  } catch (err) {
+    console.error('ORD Document generation error:', err);
+    return res.status(500).json({
+      error: 'Failed to generate ORD document',
+      details: err.message
+    });
+  }
 }
 
 // ========================================
@@ -843,18 +947,21 @@ async function handleRegisterAgent(req, res) {
       .from('a2a_agents')
       .insert({
         agent_id,
-        name,
-        type: type || 'custom',
+        agent_name: name,
+        agent_type: type || 'analytics',
+        agent_version: '1.0.0',
+        protocol_version: 'A2A/1.0+ORD/1.12',
         description,
         capabilities: capabilities || [],
-        goals: goals || [],
-        personality: personality || 'collaborative',
-        voting_power: voting_power || 100,
-        status: 'pending',
-        blockchain_config: {
+        function_name: agent_id.split('.').pop() || 'analytics_function',
+        status: 'active',
+        connection_config: {
           wallet_address,
           consensus_weight: 1.0,
-          network: 'private'
+          network: 'private',
+          voting_power: voting_power || 100,
+          goals: goals || [],
+          personality: personality || 'collaborative'
         }
       })
       .select()
@@ -894,8 +1001,7 @@ async function handleOnboardAgent(req, res) {
       .from('a2a_agents')
       .update({
         status: 'active',
-        onboarded_at: new Date().toISOString(),
-        'blockchain_config.transaction_hash': transaction_hash
+        updated_at: new Date().toISOString()
       })
       .eq('agent_id', agent_id)
       .select()
@@ -925,9 +1031,11 @@ function formatMarkdown(agent) {
   let md = `# ${agent.agent_name || agent.name}\n\n`;
   md += `${agent.description || 'Analytics capability'}\n\n`;
   md += `## Capabilities\n`;
-  agent.capabilities?.forEach(cap => {
-    md += `- ${cap}\n`;
-  });
+  if (agent.capabilities && Array.isArray(agent.capabilities)) {
+    agent.capabilities.forEach(cap => {
+      md += `- ${cap}\n`;
+    });
+  }
   md += `\n## Metadata\n`;
   md += `- Voting Power: ${agent.connection_config?.voting_power || 100}\n`;
   md += `- Agent Type: ${agent.agent_type || 'analytics'}\n`;
@@ -950,14 +1058,17 @@ function determineGroup(agentId) {
 }
 
 async function processAnalyticsRequest(agent, method, params) {
-  // Simulate analytics calculation
+  // Return null when real analytics not available
+  console.warn(`⚠️ Analytics calculation for method ${method} not implemented`);
   return {
-    value: Math.random() * 100,
-    confidence: 0.95,
+    value: null,
+    confidence: 0,
+    error: 'Analytics calculation not implemented',
     metadata: {
       calculatedBy: agent.agent_id,
       method,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      status: 'not_implemented'
     }
   };
 }
@@ -976,6 +1087,409 @@ function broadcastTaskUpdate(agentId, taskId, status, result) {
       })}\n\n`);
     }
   }
+}
+
+// ========================================
+// DATA PRODUCTS ORD DOCUMENT
+// ========================================
+
+async function handleDataProductsDocument(req, res) {
+  const dataProducts = [
+    {
+      "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:fmp-market-data:v1`,
+      "title": "FMP Market Data",
+      "shortDescription": "Financial Modeling Prep real-time market data",
+      "description": "Comprehensive financial data including quotes, fundamentals, and historical prices from FMP",
+      "version": "1.0.0",
+      "releaseStatus": "active",
+      "visibility": "public",
+      "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:core-analytics:v1`,
+      "type": "primary",
+      "category": "analytical",
+      "dataQualityLevel": "gold",
+      "securityClassification": "public",
+      "outputPorts": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:fmp-market-data:port:api:v1`,
+          "title": "FMP Data API",
+          "description": "REST API for FMP market data",
+          "resourceDefinitions": [
+            {
+              "type": "openapi-v3",
+              "mediaType": "application/json",
+              "url": "/api/market-data-fmp"
+            }
+          ]
+        }
+      ],
+      "dataProductLinks": {
+        "catalog": `${BASE_URL}/api/market-data-fmp`,
+        "documentation": `${BASE_URL}/docs/fmp-data-api`
+      },
+      "responsible": "fmp.com",
+      "dataSource": {
+        "type": "external-api",
+        "vendor": "Financial Modeling Prep",
+        "refreshFrequency": "real-time",
+        "dataLineage": ["stocks", "fundamentals", "historical", "forex"]
+      }
+    },
+    {
+      "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:finhub-market-data:v1`,
+      "title": "Finhub Market Data",
+      "shortDescription": "Finnhub real-time market data and news",
+      "description": "Real-time quotes, company profiles, and financial news from Finnhub",
+      "version": "1.0.0",
+      "releaseStatus": "active",
+      "visibility": "public",
+      "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:core-analytics:v1`,
+      "type": "primary",
+      "category": "financial",
+      "outputPorts": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:finhub-market-data:port:api:v1`,
+          "title": "Finhub Data API",
+          "description": "REST API for Finhub market data",
+          "resourceDefinitions": [
+            {
+              "type": "openapi-v3",
+              "mediaType": "application/json",
+              "url": "/api/market-data-finhub"
+            }
+          ]
+        }
+      ],
+      "dataProductLinks": {
+        "catalog": `${BASE_URL}/api/market-data-finhub`,
+        "documentation": `${BASE_URL}/docs/finhub-data-api`
+      },
+      "responsible": "finnhub.io",
+      "dataSource": {
+        "type": "external-api",
+        "vendor": "Finnhub",
+        "refreshFrequency": "real-time",
+        "dataLineage": ["quotes", "news", "forex", "economic-calendar"]
+      }
+    },
+    {
+      "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:perplexity-analysis:v1`,
+      "title": "Perplexity AI Analysis",
+      "shortDescription": "AI-powered financial analysis and insights",
+      "description": "Natural language financial analysis and market insights powered by Perplexity AI",
+      "version": "1.0.0",
+      "releaseStatus": "active",
+      "visibility": "public", 
+      "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:advanced-analytics:v1`,
+      "type": "derived",
+      "category": "analytical",
+      "outputPorts": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:perplexity-analysis:port:ios:v1`,
+          "title": "Perplexity iOS Client",
+          "description": "iOS native client for AI analysis",
+          "resourceDefinitions": [
+            {
+              "type": "swift-client",
+              "mediaType": "application/json",
+              "url": "/ios-client/perplexity-finance"
+            }
+          ]
+        }
+      ],
+      "dataProductLinks": {
+        "catalog": `${BASE_URL}/ios-client/perplexity-finance`,
+        "documentation": `${BASE_URL}/docs/perplexity-ai-integration`
+      },
+      "responsible": "perplexity.ai",
+      "dataSource": {
+        "type": "ai-service",
+        "vendor": "Perplexity AI",
+        "refreshFrequency": "on-demand",
+        "dataLineage": ["financial-analysis", "market-sentiment", "portfolio-insights"]
+      }
+    },
+    {
+      "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:unified-market-data:v1`,
+      "title": "Unified Market Data",
+      "shortDescription": "Aggregated data from multiple sources",
+      "description": "Intelligent aggregation of FMP, Finhub, and Perplexity data with conflict resolution",
+      "version": "1.0.0",
+      "releaseStatus": "active",
+      "visibility": "public",
+      "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:core-analytics:v1`,
+      "type": "derived",
+      "category": "financial",
+      "outputPorts": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:unified-market-data:port:api:v1`,
+          "title": "Unified Data API",
+          "description": "Single API for all market data sources",
+          "resourceDefinitions": [
+            {
+              "type": "openapi-v3",
+              "mediaType": "application/json",
+              "url": "/api/market-data-unified"
+            }
+          ]
+        }
+      ],
+      "dataProductLinks": {
+        "catalog": `${BASE_URL}/api/market-data-unified`,
+        "documentation": `${BASE_URL}/docs/unified-market-data`
+      },
+      "responsible": "finsight.ai",
+      "dataSource": {
+        "type": "aggregated",
+        "vendor": "FinSight Analytics",
+        "refreshFrequency": "real-time",
+        "dataLineage": ["fmp-data", "finhub-data", "perplexity-analysis"],
+        "inputDependencies": [
+          `urn:${VENDOR}:${PRODUCT}:dataProduct:fmp-market-data:v1`,
+          `urn:${VENDOR}:${PRODUCT}:dataProduct:finhub-market-data:v1`,
+          `urn:${VENDOR}:${PRODUCT}:dataProduct:perplexity-analysis:v1`
+        ]
+      }
+    },
+    {
+      "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:calculation-history:v1`,
+      "title": "Calculation History",
+      "shortDescription": "Historical analytics calculations",
+      "description": "Complete audit trail of all calculations with blockchain verification",
+      "version": "1.0.0",
+      "releaseStatus": "active",
+      "visibility": "internal",
+      "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:core-analytics:v1`,
+      "type": "audit",
+      "category": "operational",
+      "outputPorts": [
+        {
+          "ordId": `urn:${VENDOR}:${PRODUCT}:dataProduct:calculation-history:port:api:v1`,
+          "title": "Analytics History API",
+          "description": "Query interface for calculation history",
+          "resourceDefinitions": [
+            {
+              "type": "graphql",
+              "mediaType": "application/json",
+              "url": "/api/analytics-history"
+            }
+          ]
+        }
+      ],
+      "dataProductLinks": {
+        "catalog": `${BASE_URL}/api/analytics-history`,
+        "documentation": `${BASE_URL}/docs/calculation-history`
+      },
+      "responsible": "finsight.ai",
+      "dataSource": {
+        "type": "blockchain-verified",
+        "vendor": "FinSight Analytics",
+        "refreshFrequency": "continuous",
+        "dataLineage": ["agent-calculations", "blockchain-logs", "audit-trails"]
+      }
+    }
+  ];
+
+  const ordDocument = {
+    "$schema": "https://sap.github.io/open-resource-discovery/spec-v1/interfaces/Document.schema.json",
+    "openResourceDiscovery": ORD_VERSION,
+    "perspective": "data-products",
+    "policyLevel": "sap:core:v1",
+    "systemInstance": {
+      "systemId": `urn:${VENDOR}:${PRODUCT}:system:data-platform:v1`,
+      "name": "Financial Data Platform",
+      "description": "Unified financial data platform with multiple source integration",
+      "baseUrl": BASE_URL,
+      "labels": {
+        "data-sources": ["fmp", "finhub", "perplexity"],
+        "real-time": ["true"],
+        "compliance": ["ord-v1.12", "csn-v1"]
+      }
+    },
+    "packages": [
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:package:market-data:v1`,
+        "title": "Market Data Package",
+        "shortDescription": "External market data sources",
+        "description": "Real-time and historical financial data from multiple providers",
+        "version": "1.0.0",
+        "vendor": VENDOR,
+        "tags": ["market-data", "real-time", "external"]
+      }
+    ],
+    "dataProducts": dataProducts,
+    "integrationDependencies": [
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:supabase:v1`,
+        "title": "Supabase Database Integration",
+        "description": "Primary data persistence and real-time subscriptions",
+        "systemInstanceId": "supabase.com",
+        "version": "1.0.0"
+      },
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:integration:blockchain:v1`,
+        "title": "Blockchain Integration",
+        "description": "Data lineage verification and agent consensus",
+        "systemInstanceId": "private-blockchain",
+        "version": "1.0.0"
+      }
+    ]
+  };
+
+  return res.json(ordDocument);
+}
+
+// ========================================
+// FUNCTION REGISTRY ORD DOCUMENT
+// ========================================
+
+async function handleFunctionRegistryDocument(req, res) {
+  // Import function registry from comprehensive-function-registry.js
+  const FUNCTION_REGISTRY = {
+    'pearson_correlation': {
+      category: 'statistical',
+      description: 'Calculates Pearson correlation coefficient between two variables',
+      endpoint: '/api/functions/pearson_correlation',
+      method: 'POST',
+      status: 'active',
+      inputs: {
+        x_values: { type: 'array', required: true, description: 'First dataset' },
+        y_values: { type: 'array', required: true, description: 'Second dataset' }
+      },
+      outputs: {
+        correlation: { type: 'number', description: 'Correlation coefficient (-1 to 1)' },
+        p_value: { type: 'number', description: 'Statistical significance' }
+      }
+    },
+    'sharpe_ratio': {
+      category: 'performance',
+      description: 'Calculates risk-adjusted returns using Sharpe ratio',
+      endpoint: '/api/functions/sharpe_ratio',
+      method: 'POST',
+      status: 'active',
+      inputs: {
+        returns: { type: 'array', required: true, description: 'Return series' },
+        risk_free_rate: { type: 'number', required: false, default: 0.02 }
+      },
+      outputs: {
+        sharpe_ratio: { type: 'number', description: 'Risk-adjusted return ratio' }
+      }
+    },
+    'value_at_risk': {
+      category: 'risk',
+      description: 'Calculates Value at Risk using multiple methods',
+      endpoint: '/api/functions/value_at_risk',
+      method: 'POST',
+      status: 'active',
+      inputs: {
+        returns: { type: 'array', required: true, description: 'Return series' },
+        confidence_level: { type: 'number', required: false, default: 0.95 },
+        method: { type: 'string', required: false, default: 'historical' }
+      },
+      outputs: {
+        var: { type: 'number', description: 'Value at Risk' },
+        expected_shortfall: { type: 'number', description: 'Conditional VaR' }
+      }
+    }
+  };
+
+  const functionApiResources = Object.entries(FUNCTION_REGISTRY).map(([funcName, func]) => ({
+    "ordId": `urn:${VENDOR}:${PRODUCT}:apiResource:function-${funcName}:v1`,
+    "title": `${funcName.replace(/_/g, ' ')} Function`,
+    "shortDescription": func.description,
+    "description": func.description,
+    "version": "1.0.0",
+    "releaseStatus": func.status === 'active' ? "active" : "planned",
+    "visibility": "public",
+    "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:${func.category}-functions:v1`,
+    "apiProtocol": "rest",
+    "tags": ["function", func.category, "computational"],
+    "countries": ["us"],
+    "lineOfBusiness": ["Finance"],
+    "industry": ["Financial Services"],
+    "resourceDefinitions": [
+      {
+        "type": "openapi-v3",
+        "mediaType": "application/json",
+        "url": func.endpoint,
+        "accessStrategies": [
+          {
+            "type": "api-key",
+            "customType": "supabase-auth"
+          }
+        ]
+      }
+    ],
+    "entityTypeMappings": [
+      {
+        "entityTypeId": `urn:${VENDOR}:${PRODUCT}:entityType:FunctionRequest:v1`
+      }
+    ],
+    "supportedUseCases": [
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:useCase:${func.category}-analysis:v1`,
+        "title": `${func.category} Analysis`,
+        "description": `Use ${funcName} for ${func.category} analysis`
+      }
+    ]
+  }));
+
+  const packages = [...new Set(Object.values(FUNCTION_REGISTRY).map(f => f.category))].map(category => ({
+    "ordId": `urn:${VENDOR}:${PRODUCT}:package:${category}-functions:v1`,
+    "title": `${category.charAt(0).toUpperCase() + category.slice(1)} Functions`,
+    "shortDescription": `${category} computational functions`,
+    "description": `Mathematical and financial functions for ${category} analysis`,
+    "version": "1.0.0",
+    "vendor": VENDOR,
+    "tags": ["functions", category, "computational"]
+  }));
+
+  const ordDocument = {
+    "$schema": "https://sap.github.io/open-resource-discovery/spec-v1/interfaces/Document.schema.json",
+    "openResourceDiscovery": ORD_VERSION,
+    "perspective": "function-registry",
+    "policyLevel": "sap:core:v1",
+    "systemInstance": {
+      "systemId": `urn:${VENDOR}:${PRODUCT}:system:function-platform:v1`,
+      "name": "Financial Function Platform",
+      "description": "Comprehensive library of financial and statistical functions",
+      "baseUrl": BASE_URL,
+      "labels": {
+        "function-types": ["statistical", "performance", "risk", "derivatives"],
+        "computation": ["sql", "javascript", "edge-functions"],
+        "compliance": ["ord-v1.12"]
+      }
+    },
+    "packages": packages,
+    "apiResources": functionApiResources,
+    "entityTypes": [
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:entityType:FunctionRequest:v1`,
+        "title": "Function Request",
+        "shortDescription": "Standard request structure for function calls",
+        "description": "Common input format for all computational functions",
+        "version": "1.0.0",
+        "releaseStatus": "active",
+        "visibility": "public",
+        "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:statistical-functions:v1`,
+        "level": 1,
+        "tags": ["entity", "request", "function"]
+      },
+      {
+        "ordId": `urn:${VENDOR}:${PRODUCT}:entityType:FunctionResponse:v1`,
+        "title": "Function Response",
+        "shortDescription": "Standard response structure for function results",
+        "description": "Common output format for all computational functions",
+        "version": "1.0.0",
+        "releaseStatus": "active", 
+        "visibility": "public",
+        "partOfPackage": `urn:${VENDOR}:${PRODUCT}:package:statistical-functions:v1`,
+        "level": 1,
+        "tags": ["entity", "response", "function"]
+      }
+    ]
+  };
+
+  return res.json(ordDocument);
 }
 
 function generateGenericOpenAPISpec(agentId) {

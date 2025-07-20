@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="APIGatewayWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_APIGateway">
+    <bpmn2:participant id="Participant_APIGateway" name="API Gateway Agent" processRef="Process_RequestRouting"/>
+    <bpmn2:participant id="Participant_Clients" name="API Clients" processRef="Process_ClientRequests"/>
+  </bpmn2:collaboration>
+
+  <!-- Main Request Routing Process -->
+  <bpmn2:process id="Process_RequestRouting" name="API Request Routing" isExecutable="true">
+    
+    <!-- Timer Events for Maintenance Tasks -->
+    <bpmn2:startEvent id="StartEvent_RateLimitCleanup" name="Rate Limit Cleanup Timer">
+      <bpmn2:documentation>Triggers every minute for rate limiter maintenance</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToRateLimitCleanup</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */1 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.interface.api_gateway"/>
+          <camunda:property name="ord_capability" value="rate_limiting"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_AuthCacheCleanup" name="Auth Cache Cleanup Timer">
+      <bpmn2:documentation>Triggers every 5 minutes for authentication cache cleanup</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToAuthCleanup</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */5 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.interface.api_gateway"/>
+          <camunda:property name="ord_capability" value="authentication"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_MetricsAggregation" name="Metrics Aggregation Timer">
+      <bpmn2:documentation>Triggers every 10 minutes for metrics collection</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToMetricsAggregation</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */10 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.interface.api_gateway"/>
+          <camunda:property name="ord_capability" value="performance_monitoring"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_RoutingTableRefresh" name="Routing Table Refresh Timer">
+      <bpmn2:documentation>Triggers every 15 minutes to refresh routing table</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToRoutingRefresh</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */15 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.interface.api_gateway"/>
+          <camunda:property name="ord_capability" value="request_routing"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- Message Events for Request Processing -->
+    <bpmn2:startEvent id="StartEvent_IncomingRequest" name="Incoming API Request">
+      <bpmn2:documentation>Triggered when clients send API requests</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_RequestToAuthentication</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_APIRequest"/>
+    </bpmn2:startEvent>
+
+    <!-- Request Processing Pipeline -->
+    <bpmn2:serviceTask id="ServiceTask_Authentication" name="Authenticate Request">
+      <bpmn2:documentation>Validates request authentication using multiple providers</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RequestToAuthentication</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AuthToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="authentication"/>
+          <camunda:property name="auth_methods" value="jwt,api_key,a2a"/>
+          <camunda:property name="cache_enabled" value="true"/>
+          <camunda:property name="timeout_ms" value="5000"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_AuthDecision" name="Authentication Decision">
+      <bpmn2:documentation>Routes based on authentication result</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_AuthToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AuthSuccess</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_AuthFailure</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_RateLimitCheck" name="Check Rate Limits">
+      <bpmn2:documentation>Validates request against rate limiting policies</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_AuthSuccess</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RateLimitToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="rate_limiting"/>
+          <camunda:property name="limiter_types" value="default,functions,agents,discovery"/>
+          <camunda:property name="algorithm" value="token_bucket"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_RateLimitDecision" name="Rate Limit Decision">
+      <bpmn2:documentation>Routes based on rate limit check result</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RateLimitToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RateLimitPass</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_RateLimitExceeded</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_RouteResolution" name="Resolve Route">
+      <bpmn2:documentation>Determines target service for the request</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RateLimitPass</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RouteToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="request_routing"/>
+          <camunda:property name="routing_strategy" value="exact_match,pattern_match"/>
+          <camunda:property name="load_balancing" value="round_robin"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_RouteDecision" name="Route Found Decision">
+      <bpmn2:documentation>Routes based on whether target service was found</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RouteToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RouteFound</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_RouteNotFound</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_CircuitBreakerCheck" name="Check Circuit Breaker">
+      <bpmn2:documentation>Validates service availability using circuit breaker pattern</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RouteFound</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CircuitToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="circuit_breaking"/>
+          <camunda:property name="failure_threshold" value="5"/>
+          <camunda:property name="recovery_timeout" value="60000"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_CircuitDecision" name="Circuit Breaker Decision">
+      <bpmn2:documentation>Routes based on circuit breaker state</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_CircuitToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CircuitClosed</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_CircuitOpen</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Request Transformation and Forwarding -->
+    <bpmn2:serviceTask id="ServiceTask_RequestTransformation" name="Transform Request">
+      <bpmn2:documentation>Modifies request before forwarding to target service</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_CircuitClosed</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_TransformToForward</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="request_transformation"/>
+          <camunda:property name="transformations" value="headers,body,parameters"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RequestForwarding" name="Forward Request">
+      <bpmn2:documentation>Forwards transformed request to target service</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_TransformToForward</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ForwardToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="request_forwarding"/>
+          <camunda:property name="timeout" value="30000"/>
+          <camunda:property name="retry_attempts" value="3"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Response Processing -->
+    <bpmn2:serviceTask id="ServiceTask_ResponseTransformation" name="Transform Response">
+      <bpmn2:documentation>Modifies response before returning to client</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ForwardToResponse</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResponseToMetrics</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="response_transformation"/>
+          <camunda:property name="transformations" value="headers,caching,compression"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Error Response Generation -->
+    <bpmn2:serviceTask id="ServiceTask_AuthErrorResponse" name="Generate Auth Error">
+      <bpmn2:documentation>Creates authentication error response</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_AuthFailure</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AuthErrorToMetrics</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="error_code" value="401"/>
+          <camunda:property name="error_message" value="Unauthorized"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RateLimitErrorResponse" name="Generate Rate Limit Error">
+      <bpmn2:documentation>Creates rate limit exceeded error response</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RateLimitExceeded</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RateLimitErrorToMetrics</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="error_code" value="429"/>
+          <camunda:property name="error_message" value="Rate limit exceeded"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_NotFoundErrorResponse" name="Generate Not Found Error">
+      <bpmn2:documentation>Creates endpoint not found error response</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RouteNotFound</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NotFoundErrorToMetrics</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="error_code" value="404"/>
+          <camunda:property name="error_message" value="Endpoint not found"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ServiceUnavailableResponse" name="Generate Service Unavailable Error">
+      <bpmn2:documentation>Creates service unavailable error response</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_CircuitOpen</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ServiceUnavailableToMetrics</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="error_code" value="503"/>
+          <camunda:property name="error_message" value="Service temporarily unavailable"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Metrics and Monitoring -->
+    <bpmn2:serviceTask id="ServiceTask_UpdateMetrics" name="Update Request Metrics">
+      <bpmn2:documentation>Records request metrics for monitoring and analytics</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ResponseToMetrics</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_AuthErrorToMetrics</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_RateLimitErrorToMetrics</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_NotFoundErrorToMetrics</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ServiceUnavailableToMetrics</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MetricsToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="metrics_types" value="response_time,status_code,endpoint,client_id"/>
+          <camunda:property name="aggregation_window" value="1_minute"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Maintenance Tasks -->
+    <bpmn2:serviceTask id="ServiceTask_RateLimitCleanup" name="Cleanup Rate Limiters">
+      <bpmn2:documentation>Removes expired rate limiting entries</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToRateLimitCleanup</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RateLimitCleanupToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="cleanup_strategy" value="time_window_expired"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_AuthCacheCleanup" name="Cleanup Auth Cache">
+      <bpmn2:documentation>Removes expired authentication cache entries</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAuthCleanup</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AuthCleanupToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="cleanup_strategy" value="ttl_expired"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_MetricsAggregation" name="Aggregate Performance Metrics">
+      <bpmn2:documentation>Aggregates and stores performance metrics</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToMetricsAggregation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MetricsAggregationToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="aggregation_types" value="avg_response_time,error_rate,throughput"/>
+          <camunda:property name="storage_retention" value="30_days"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RoutingTableRefresh" name="Refresh Routing Table">
+      <bpmn2:documentation>Updates routing table with latest service discovery</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToRoutingRefresh</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RoutingRefreshToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="discovery_sources" value="ord_registry,a2a_agents,function_endpoints"/>
+          <camunda:property name="refresh_strategy" value="incremental"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- End Events -->
+    <bpmn2:endEvent id="EndEvent_RequestComplete" name="Request Complete">
+      <bpmn2:documentation>API request processing completed</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_MetricsToResponse</bpmn2:incoming>
+      <bpmn2:messageEventDefinition messageRef="Message_APIResponse"/>
+    </bpmn2:endEvent>
+
+    <bpmn2:endEvent id="EndEvent_MaintenanceComplete" name="Maintenance Complete">
+      <bpmn2:documentation>Maintenance task completed</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RateLimitCleanupToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_AuthCleanupToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_MetricsAggregationToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_RoutingRefreshToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_RequestToAuthentication" sourceRef="StartEvent_IncomingRequest" targetRef="ServiceTask_Authentication"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AuthToDecision" sourceRef="ServiceTask_Authentication" targetRef="ExclusiveGateway_AuthDecision"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_AuthSuccess" name="Authenticated" sourceRef="ExclusiveGateway_AuthDecision" targetRef="ServiceTask_RateLimitCheck">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${authResult.valid == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_AuthFailure" name="Unauthorized" sourceRef="ExclusiveGateway_AuthDecision" targetRef="ServiceTask_AuthErrorResponse">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${authResult.valid == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_RateLimitToDecision" sourceRef="ServiceTask_RateLimitCheck" targetRef="ExclusiveGateway_RateLimitDecision"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RateLimitPass" name="Within Limits" sourceRef="ExclusiveGateway_RateLimitDecision" targetRef="ServiceTask_RouteResolution">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${rateLimitResult.allowed == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_RateLimitExceeded" name="Limit Exceeded" sourceRef="ExclusiveGateway_RateLimitDecision" targetRef="ServiceTask_RateLimitErrorResponse">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${rateLimitResult.allowed == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_RouteToDecision" sourceRef="ServiceTask_RouteResolution" targetRef="ExclusiveGateway_RouteDecision"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RouteFound" name="Route Found" sourceRef="ExclusiveGateway_RouteDecision" targetRef="ServiceTask_CircuitBreakerCheck">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${route != null}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_RouteNotFound" name="Route Not Found" sourceRef="ExclusiveGateway_RouteDecision" targetRef="ServiceTask_NotFoundErrorResponse">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${route == null}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_CircuitToDecision" sourceRef="ServiceTask_CircuitBreakerCheck" targetRef="ExclusiveGateway_CircuitDecision"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_CircuitClosed" name="Service Available" sourceRef="ExclusiveGateway_CircuitDecision" targetRef="ServiceTask_RequestTransformation">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${circuitState != 'open'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_CircuitOpen" name="Service Unavailable" sourceRef="ExclusiveGateway_CircuitDecision" targetRef="ServiceTask_ServiceUnavailableResponse">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${circuitState == 'open'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_TransformToForward" sourceRef="ServiceTask_RequestTransformation" targetRef="ServiceTask_RequestForwarding"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ForwardToResponse" sourceRef="ServiceTask_RequestForwarding" targetRef="ServiceTask_ResponseTransformation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ResponseToMetrics" sourceRef="ServiceTask_ResponseTransformation" targetRef="ServiceTask_UpdateMetrics"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_AuthErrorToMetrics" sourceRef="ServiceTask_AuthErrorResponse" targetRef="ServiceTask_UpdateMetrics"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RateLimitErrorToMetrics" sourceRef="ServiceTask_RateLimitErrorResponse" targetRef="ServiceTask_UpdateMetrics"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_NotFoundErrorToMetrics" sourceRef="ServiceTask_NotFoundErrorResponse" targetRef="ServiceTask_UpdateMetrics"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ServiceUnavailableToMetrics" sourceRef="ServiceTask_ServiceUnavailableResponse" targetRef="ServiceTask_UpdateMetrics"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_MetricsToResponse" sourceRef="ServiceTask_UpdateMetrics" targetRef="EndEvent_RequestComplete"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToRateLimitCleanup" sourceRef="StartEvent_RateLimitCleanup" targetRef="ServiceTask_RateLimitCleanup"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAuthCleanup" sourceRef="StartEvent_AuthCacheCleanup" targetRef="ServiceTask_AuthCacheCleanup"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToMetricsAggregation" sourceRef="StartEvent_MetricsAggregation" targetRef="ServiceTask_MetricsAggregation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToRoutingRefresh" sourceRef="StartEvent_RoutingTableRefresh" targetRef="ServiceTask_RoutingTableRefresh"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_RateLimitCleanupToEnd" sourceRef="ServiceTask_RateLimitCleanup" targetRef="EndEvent_MaintenanceComplete"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AuthCleanupToEnd" sourceRef="ServiceTask_AuthCacheCleanup" targetRef="EndEvent_MaintenanceComplete"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MetricsAggregationToEnd" sourceRef="ServiceTask_MetricsAggregation" targetRef="EndEvent_MaintenanceComplete"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RoutingRefreshToEnd" sourceRef="ServiceTask_RoutingTableRefresh" targetRef="EndEvent_MaintenanceComplete"/>
+    
+  </bpmn2:process>
+
+  <!-- Client Request Process -->
+  <bpmn2:process id="Process_ClientRequests" name="Client API Requests" isExecutable="true">
+    
+    <bpmn2:startEvent id="StartEvent_ClientRequest" name="Client Request">
+      <bpmn2:documentation>Client initiates API request</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ClientToGateway</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_SendRequest" name="Send API Request">
+      <bpmn2:documentation>Client sends request to API Gateway</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ClientToGateway</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RequestToWait</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_Response" name="Await Response">
+      <bpmn2:documentation>Client waits for response from API Gateway</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RequestToWait</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResponseToEnd</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_APIResponse"/>
+    </bpmn2:intermediateCatchEvent>
+
+    <bpmn2:endEvent id="EndEvent_ClientComplete" name="Request Complete">
+      <bpmn2:documentation>Client receives response</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ResponseToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_ClientToGateway" sourceRef="StartEvent_ClientRequest" targetRef="ServiceTask_SendRequest"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RequestToWait" sourceRef="ServiceTask_SendRequest" targetRef="IntermediateCatchEvent_Response"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ResponseToEnd" sourceRef="IntermediateCatchEvent_Response" targetRef="EndEvent_ClientComplete"/>
+    
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_APIRequest" name="APIRequest"/>
+  <bpmn2:message id="Message_APIResponse" name="APIResponse"/>
+  <bpmn2:message id="Message_AuthenticationRequest" name="AuthenticationRequest"/>
+  <bpmn2:message id="Message_RateLimitAlert" name="RateLimitAlert"/>
+
+  <!-- Gateway Integration Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="api_gateway"/>
+      <camunda:property name="ord_compliance" value="v1.12"/>
+      <camunda:property name="primary_agent" value="finsight.interface.api_gateway"/>
+      <camunda:property name="request_routing" value="intelligent"/>
+      <camunda:property name="authentication_methods" value="jwt,api_key,a2a"/>
+      <camunda:property name="rate_limiting" value="token_bucket"/>
+      <camunda:property name="circuit_breaking" value="enabled"/>
+      <camunda:property name="monitoring" value="comprehensive"/>
+      <camunda:property name="security_features" value="ddos_protection,request_validation"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>

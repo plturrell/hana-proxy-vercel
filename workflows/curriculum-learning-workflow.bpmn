@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="CurriculumLearningWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_CurriculumLearning">
+    <bpmn2:participant id="Participant_CurriculumAgent" name="Curriculum Learning Agent" processRef="Process_DomainEducation"/>
+    <bpmn2:participant id="Participant_OtherAgents" name="Other System Agents" processRef="Process_AgentLearning"/>
+    <bpmn2:participant id="Participant_BusinessContext" name="Business Context" processRef="Process_ContextProvider"/>
+  </bpmn2:collaboration>
+
+  <!-- Main Curriculum Learning Process -->
+  <bpmn2:process id="Process_DomainEducation" name="Domain Education and Validation" isExecutable="true">
+    
+    <!-- Timer Events for Scheduled Activities -->
+    <bpmn2:startEvent id="StartEvent_KnowledgeValidation" name="Knowledge Validation Timer">
+      <bpmn2:documentation>Triggers every 15 minutes to validate agent knowledge</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToKnowledgeValidation</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */15 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.education.curriculum_learning"/>
+          <camunda:property name="capability" value="domain_knowledge_validation"/>
+          <camunda:property name="cfa_compliance" value="required"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ContextUpdate" name="Context Update Timer">
+      <bpmn2:documentation>Triggers hourly to update context overlays</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToContextUpdate</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 0 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.education.curriculum_learning"/>
+          <camunda:property name="capability" value="context_engineering"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_CurriculumReview" name="Curriculum Review Timer">
+      <bpmn2:documentation>Triggers daily to review and update curricula</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToCurriculumReview</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 0 0 * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.education.curriculum_learning"/>
+          <camunda:property name="capability" value="curriculum_design"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- Message Events for Agent Interactions -->
+    <bpmn2:startEvent id="StartEvent_ValidationRequest" name="Validation Request">
+      <bpmn2:documentation>Triggered when agents need output validation</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToValidateOutput</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_ValidationRequest"/>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_TeachingRequest" name="Teaching Request">
+      <bpmn2:documentation>Triggered when agents need to learn new concepts</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToAssessKnowledge</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_TeachingRequest"/>
+    </bpmn2:startEvent>
+
+    <!-- Knowledge Validation Process -->
+    <bpmn2:serviceTask id="ServiceTask_ValidateKnowledge" name="Validate Agent Knowledge">
+      <bpmn2:documentation>Validates agent outputs against CFA/Treasury standards</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToKnowledgeValidation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToValidationDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="domain_knowledge_validation"/>
+          <camunda:property name="validation_standards" value="cfa_level_1,treasury_afp"/>
+          <camunda:property name="error_tolerance" value="0.15"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_ValidationDecision" name="Validation Result">
+      <bpmn2:documentation>Routes based on validation outcome</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToValidationDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ValidationPassed</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ValidationFailed</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_RecordCompliance" name="Record Compliance">
+      <bpmn2:documentation>Records successful compliance for agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ValidationPassed</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ComplianceToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="update_score" value="true"/>
+          <camunda:property name="notify_agent" value="false"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_CreateCorrection" name="Create Correction Plan">
+      <bpmn2:documentation>Creates correction plan for non-compliant output</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ValidationFailed</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CorrectionToTeaching</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="identify_gaps" value="true"/>
+          <camunda:property name="generate_curriculum" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Teaching Process -->
+    <bpmn2:serviceTask id="ServiceTask_AssessKnowledge" name="Assess Current Knowledge">
+      <bpmn2:documentation>Assesses agent's current knowledge level</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAssessKnowledge</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_CorrectionToTeaching</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToCreateCurriculum</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="assessment_depth" value="comprehensive"/>
+          <camunda:property name="identify_prerequisites" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_CreateCurriculum" name="Create Learning Curriculum">
+      <bpmn2:documentation>Creates personalized curriculum based on gaps</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToCreateCurriculum</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToDeliverModules</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="curriculum_type" value="adaptive"/>
+          <camunda:property name="include_cfa_modules" value="true"/>
+          <camunda:property name="include_treasury_modules" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:subProcess id="SubProcess_DeliverModules" name="Deliver Learning Modules">
+      <bpmn2:documentation>Iteratively delivers learning modules</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToDeliverModules</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToFinalAssessment</bpmn2:outgoing>
+      
+      <bpmn2:startEvent id="StartEvent_ModuleDelivery" name="Start Module Delivery">
+        <bpmn2:outgoing>SequenceFlow_StartModule</bpmn2:outgoing>
+      </bpmn2:startEvent>
+
+      <bpmn2:serviceTask id="ServiceTask_DeliverContent" name="Deliver Module Content">
+        <bpmn2:documentation>Delivers educational content to agent</bpmn2:documentation>
+        <bpmn2:incoming>SequenceFlow_StartModule</bpmn2:incoming>
+        <bpmn2:incoming>SequenceFlow_Reteach</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_ToCheckUnderstanding</bpmn2:outgoing>
+      </bpmn2:serviceTask>
+
+      <bpmn2:serviceTask id="ServiceTask_CheckUnderstanding" name="Check Understanding">
+        <bpmn2:documentation>Verifies agent understood the module</bpmn2:documentation>
+        <bpmn2:incoming>SequenceFlow_ToCheckUnderstanding</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_ToUnderstandingDecision</bpmn2:outgoing>
+      </bpmn2:serviceTask>
+
+      <bpmn2:exclusiveGateway id="ExclusiveGateway_Understanding" name="Understanding Level">
+        <bpmn2:incoming>SequenceFlow_ToUnderstandingDecision</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_Understood</bpmn2:outgoing>
+        <bpmn2:outgoing>SequenceFlow_NeedsReteaching</bpmn2:outgoing>
+      </bpmn2:exclusiveGateway>
+
+      <bpmn2:serviceTask id="ServiceTask_Reteach" name="Reteach with Different Approach">
+        <bpmn2:documentation>Uses alternative teaching method</bpmn2:documentation>
+        <bpmn2:incoming>SequenceFlow_NeedsReteaching</bpmn2:incoming>
+        <bpmn2:outgoing>SequenceFlow_Reteach</bpmn2:outgoing>
+      </bpmn2:serviceTask>
+
+      <bpmn2:endEvent id="EndEvent_ModuleComplete" name="Module Complete">
+        <bpmn2:incoming>SequenceFlow_Understood</bpmn2:incoming>
+      </bpmn2:endEvent>
+
+      <bpmn2:sequenceFlow id="SequenceFlow_StartModule" sourceRef="StartEvent_ModuleDelivery" targetRef="ServiceTask_DeliverContent"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_ToCheckUnderstanding" sourceRef="ServiceTask_DeliverContent" targetRef="ServiceTask_CheckUnderstanding"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_ToUnderstandingDecision" sourceRef="ServiceTask_CheckUnderstanding" targetRef="ExclusiveGateway_Understanding"/>
+      <bpmn2:sequenceFlow id="SequenceFlow_Understood" name="Score >= Required" sourceRef="ExclusiveGateway_Understanding" targetRef="EndEvent_ModuleComplete">
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${understanding.score >= module.required_score}</bpmn2:conditionExpression>
+      </bpmn2:sequenceFlow>
+      <bpmn2:sequenceFlow id="SequenceFlow_NeedsReteaching" name="Score < Required" sourceRef="ExclusiveGateway_Understanding" targetRef="ServiceTask_Reteach">
+        <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${understanding.score < module.required_score}</bpmn2:conditionExpression>
+      </bpmn2:sequenceFlow>
+      <bpmn2:sequenceFlow id="SequenceFlow_Reteach" sourceRef="ServiceTask_Reteach" targetRef="ServiceTask_DeliverContent"/>
+    </bpmn2:subProcess>
+
+    <bpmn2:serviceTask id="ServiceTask_FinalAssessment" name="Conduct Final Assessment">
+      <bpmn2:documentation>Final assessment after curriculum completion</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToFinalAssessment</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AssessmentToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="record_improvement" value="true"/>
+          <camunda:property name="update_agent_profile" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Context Engineering Process -->
+    <bpmn2:serviceTask id="ServiceTask_UpdateContext" name="Update Context Overlays">
+      <bpmn2:documentation>Updates business context for all agents</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToContextUpdate</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ContextToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="context_sources" value="cfa_standards,treasury_policies,market_conditions"/>
+          <camunda:property name="propagate_to_agents" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Curriculum Review Process -->
+    <bpmn2:serviceTask id="ServiceTask_ReviewCurricula" name="Review Active Curricula">
+      <bpmn2:documentation>Reviews and updates all active curricula</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToCurriculumReview</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ReviewToUpdate</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="check_effectiveness" value="true"/>
+          <camunda:property name="update_content" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_UpdateCurricula" name="Update Curricula Content">
+      <bpmn2:documentation>Updates curriculum content based on review</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ReviewToUpdate</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_UpdateToEnd</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Direct Validation Process -->
+    <bpmn2:serviceTask id="ServiceTask_ValidateOutput" name="Validate Agent Output">
+      <bpmn2:documentation>Validates specific agent output on request</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToValidateOutput</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_OutputValidationToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="validation_depth" value="comprehensive"/>
+          <camunda:property name="check_cfa_compliance" value="true"/>
+          <camunda:property name="check_treasury_compliance" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_OutputValidation" name="Output Valid?">
+      <bpmn2:incoming>SequenceFlow_OutputValidationToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_OutputValid</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_OutputInvalid</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_SendValidationResult" name="Send Validation Result">
+      <bpmn2:documentation>Sends validation result back to requesting agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_OutputValid</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ValidationResultToEnd</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_ValidationResponse"/>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_SendCorrection" name="Send Correction Requirements">
+      <bpmn2:documentation>Sends correction requirements to agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_OutputInvalid</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CorrectionSentToEnd</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_CorrectionRequired"/>
+    </bpmn2:serviceTask>
+
+    <!-- End Events -->
+    <bpmn2:endEvent id="EndEvent_ValidationComplete" name="Validation Complete">
+      <bpmn2:incoming>SequenceFlow_ComplianceToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ValidationResultToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_CorrectionSentToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:endEvent id="EndEvent_TeachingComplete" name="Teaching Complete">
+      <bpmn2:incoming>SequenceFlow_AssessmentToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:endEvent id="EndEvent_MaintenanceComplete" name="Maintenance Complete">
+      <bpmn2:incoming>SequenceFlow_ContextToEnd</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_UpdateToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_ToKnowledgeValidation" sourceRef="StartEvent_KnowledgeValidation" targetRef="ServiceTask_ValidateKnowledge"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToValidationDecision" sourceRef="ServiceTask_ValidateKnowledge" targetRef="ExclusiveGateway_ValidationDecision"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ValidationPassed" name="Compliant" sourceRef="ExclusiveGateway_ValidationDecision" targetRef="ServiceTask_RecordCompliance">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${validation.compliance_score >= 0.85}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ValidationFailed" name="Non-Compliant" sourceRef="ExclusiveGateway_ValidationDecision" targetRef="ServiceTask_CreateCorrection">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${validation.compliance_score < 0.85}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ComplianceToEnd" sourceRef="ServiceTask_RecordCompliance" targetRef="EndEvent_ValidationComplete"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_CorrectionToTeaching" sourceRef="ServiceTask_CreateCorrection" targetRef="ServiceTask_AssessKnowledge"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAssessKnowledge" sourceRef="StartEvent_TeachingRequest" targetRef="ServiceTask_AssessKnowledge"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToCreateCurriculum" sourceRef="ServiceTask_AssessKnowledge" targetRef="ServiceTask_CreateCurriculum"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToDeliverModules" sourceRef="ServiceTask_CreateCurriculum" targetRef="SubProcess_DeliverModules"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToFinalAssessment" sourceRef="SubProcess_DeliverModules" targetRef="ServiceTask_FinalAssessment"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AssessmentToEnd" sourceRef="ServiceTask_FinalAssessment" targetRef="EndEvent_TeachingComplete"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToContextUpdate" sourceRef="StartEvent_ContextUpdate" targetRef="ServiceTask_UpdateContext"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ContextToEnd" sourceRef="ServiceTask_UpdateContext" targetRef="EndEvent_MaintenanceComplete"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToCurriculumReview" sourceRef="StartEvent_CurriculumReview" targetRef="ServiceTask_ReviewCurricula"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ReviewToUpdate" sourceRef="ServiceTask_ReviewCurricula" targetRef="ServiceTask_UpdateCurricula"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_UpdateToEnd" sourceRef="ServiceTask_UpdateCurricula" targetRef="EndEvent_MaintenanceComplete"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToValidateOutput" sourceRef="StartEvent_ValidationRequest" targetRef="ServiceTask_ValidateOutput"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_OutputValidationToDecision" sourceRef="ServiceTask_ValidateOutput" targetRef="ExclusiveGateway_OutputValidation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_OutputValid" name="Valid" sourceRef="ExclusiveGateway_OutputValidation" targetRef="ServiceTask_SendValidationResult">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${validationResult.errors.length == 0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_OutputInvalid" name="Invalid" sourceRef="ExclusiveGateway_OutputValidation" targetRef="ServiceTask_SendCorrection">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${validationResult.errors.length > 0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ValidationResultToEnd" sourceRef="ServiceTask_SendValidationResult" targetRef="EndEvent_ValidationComplete"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_CorrectionSentToEnd" sourceRef="ServiceTask_SendCorrection" targetRef="EndEvent_ValidationComplete"/>
+
+  </bpmn2:process>
+
+  <!-- Agent Learning Process (Other Agents) -->
+  <bpmn2:process id="Process_AgentLearning" name="Agent Learning Process" isExecutable="true">
+    
+    <bpmn2:startEvent id="StartEvent_NeedLearning" name="Need to Learn">
+      <bpmn2:documentation>Agent identifies need for learning</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToRequestTeaching</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_RequestTeaching" name="Request Teaching">
+      <bpmn2:documentation>Sends teaching request to Curriculum Agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToRequestTeaching</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToReceiveCurriculum</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_TeachingRequest"/>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ReceiveCurriculum" name="Receive Curriculum">
+      <bpmn2:documentation>Receives personalized curriculum</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToReceiveCurriculum</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToLearn</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_Learn" name="Learn from Modules">
+      <bpmn2:documentation>Processes learning modules</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToLearn</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToApplyKnowledge</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ApplyKnowledge" name="Apply New Knowledge">
+      <bpmn2:documentation>Applies learned concepts to tasks</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToApplyKnowledge</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_LearningComplete</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:endEvent id="EndEvent_LearningComplete" name="Learning Complete">
+      <bpmn2:incoming>SequenceFlow_LearningComplete</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_ToRequestTeaching" sourceRef="StartEvent_NeedLearning" targetRef="ServiceTask_RequestTeaching"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToReceiveCurriculum" sourceRef="ServiceTask_RequestTeaching" targetRef="ServiceTask_ReceiveCurriculum"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToLearn" sourceRef="ServiceTask_ReceiveCurriculum" targetRef="ServiceTask_Learn"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToApplyKnowledge" sourceRef="ServiceTask_Learn" targetRef="ServiceTask_ApplyKnowledge"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LearningComplete" sourceRef="ServiceTask_ApplyKnowledge" targetRef="EndEvent_LearningComplete"/>
+
+  </bpmn2:process>
+
+  <!-- Business Context Process -->
+  <bpmn2:process id="Process_ContextProvider" name="Business Context Provider" isExecutable="true">
+    
+    <bpmn2:startEvent id="StartEvent_ContextChange" name="Context Change">
+      <bpmn2:documentation>Business context changes</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToNotifyAgent</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_NotifyAgent" name="Notify Curriculum Agent">
+      <bpmn2:documentation>Notifies agent of context change</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToNotifyAgent</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NotificationSent</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:endEvent id="EndEvent_ContextUpdated" name="Context Updated">
+      <bpmn2:incoming>SequenceFlow_NotificationSent</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_ToNotifyAgent" sourceRef="StartEvent_ContextChange" targetRef="ServiceTask_NotifyAgent"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_NotificationSent" sourceRef="ServiceTask_NotifyAgent" targetRef="EndEvent_ContextUpdated"/>
+
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_ValidationRequest" name="ValidationRequest"/>
+  <bpmn2:message id="Message_ValidationResponse" name="ValidationResponse"/>
+  <bpmn2:message id="Message_TeachingRequest" name="TeachingRequest"/>
+  <bpmn2:message id="Message_CorrectionRequired" name="CorrectionRequired"/>
+
+  <!-- Curriculum Learning Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="education_validation"/>
+      <camunda:property name="primary_agent" value="finsight.education.curriculum_learning"/>
+      <camunda:property name="compliance_standards" value="cfa_institute,afp_treasury"/>
+      <camunda:property name="knowledge_domains" value="portfolio_theory,risk_management,treasury_operations"/>
+      <camunda:property name="teaching_methods" value="adaptive,interactive,reinforcement"/>
+      <camunda:property name="validation_frequency" value="continuous"/>
+      <camunda:property name="curriculum_adaptation" value="real_time"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>

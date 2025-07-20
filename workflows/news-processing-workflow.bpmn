@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  xmlns:a2a="http://finsight.com/a2a"
+                  xmlns:ord="http://finsight.com/ord"
+                  id="NewsProcessingWorkflow"
+                  targetNamespace="http://finsight.com/workflows">
+  
+  <bpmn:collaboration id="NewsProcessingCollaboration">
+    <bpmn:participant id="NewsSystem" name="News Processing System" processRef="NewsProcessingProcess" />
+  </bpmn:collaboration>
+  
+  <bpmn:process id="NewsProcessingProcess" isExecutable="true">
+    
+    <!-- Start Event: News Processing Timer -->
+    <bpmn:startEvent id="StartEvent_Timer" name="Every 5 minutes">
+      <bpmn:outgoing>Flow_1</bpmn:outgoing>
+      <bpmn:timerEventDefinition>
+        <bpmn:timeCycle>R/PT5M</bpmn:timeCycle>
+      </bpmn:timerEventDefinition>
+    </bpmn:startEvent>
+    
+    <!-- Service Task: Fetch News -->
+    <bpmn:serviceTask id="Task_FetchNews" name="Fetch Latest News" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:agentType>data_product</a2a:agentType>
+          <a2a:action>fetchNewsByCategory</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="categories" type="array">
+              <a2a:value>financial_markets</a2a:value>
+              <a2a:value>company_earnings</a2a:value>
+              <a2a:value>economic_indicators</a2a:value>
+              <a2a:value>regulatory_changes</a2a:value>
+              <a2a:value>geopolitical_events</a2a:value>
+            </a2a:parameter>
+          </a2a:inputParameters>
+          <a2a:outputParameters>
+            <a2a:parameter name="newsArticles" type="array" />
+          </a2a:outputParameters>
+        </a2a:agent>
+        <ord:discovery>
+          <ord:protocol>ORD</ord:protocol>
+          <ord:capability>news_ingestion</ord:capability>
+        </ord:discovery>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1</bpmn:incoming>
+      <bpmn:outgoing>Flow_2</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway: Process Multiple Articles -->
+    <bpmn:parallelGateway id="Gateway_Split" name="Split for Processing">
+      <bpmn:incoming>Flow_2</bpmn:incoming>
+      <bpmn:outgoing>Flow_3</bpmn:outgoing>
+      <bpmn:outgoing>Flow_4</bpmn:outgoing>
+      <bpmn:outgoing>Flow_5</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Service Task: Entity Extraction -->
+    <bpmn:serviceTask id="Task_ExtractEntities" name="Extract Entities" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:action>extractEntities</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="articles" type="array" ref="newsArticles" />
+          </a2a:inputParameters>
+          <a2a:outputParameters>
+            <a2a:parameter name="entities" type="object" />
+          </a2a:outputParameters>
+        </a2a:agent>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_3</bpmn:incoming>
+      <bpmn:outgoing>Flow_6</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Service Task: Sentiment Analysis -->
+    <bpmn:serviceTask id="Task_AnalyzeSentiment" name="Analyze Sentiment" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:action>analyzeSentiment</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="articles" type="array" ref="newsArticles" />
+          </a2a:inputParameters>
+          <a2a:outputParameters>
+            <a2a:parameter name="sentiments" type="array" />
+          </a2a:outputParameters>
+        </a2a:agent>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_4</bpmn:incoming>
+      <bpmn:outgoing>Flow_7</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Service Task: Market Impact Assessment -->
+    <bpmn:serviceTask id="Task_AssessImpact" name="Assess Market Impact" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:action>assessMarketImpact</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="articles" type="array" ref="newsArticles" />
+            <a2a:parameter name="entities" type="object" ref="entities" />
+            <a2a:parameter name="sentiments" type="array" ref="sentiments" />
+          </a2a:inputParameters>
+          <a2a:outputParameters>
+            <a2a:parameter name="marketImpacts" type="array" />
+          </a2a:outputParameters>
+        </a2a:agent>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_5</bpmn:incoming>
+      <bpmn:outgoing>Flow_8</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Parallel Gateway: Join -->
+    <bpmn:parallelGateway id="Gateway_Join" name="Join Results">
+      <bpmn:incoming>Flow_6</bpmn:incoming>
+      <bpmn:incoming>Flow_7</bpmn:incoming>
+      <bpmn:incoming>Flow_8</bpmn:incoming>
+      <bpmn:outgoing>Flow_9</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    
+    <!-- Service Task: Store Processed News -->
+    <bpmn:serviceTask id="Task_StoreNews" name="Store in Database" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:action>storeProcessedNews</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="processedArticles" type="array" />
+          </a2a:inputParameters>
+          <a2a:outputParameters>
+            <a2a:parameter name="storedCount" type="number" />
+          </a2a:outputParameters>
+        </a2a:agent>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_9</bpmn:incoming>
+      <bpmn:outgoing>Flow_10</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- Exclusive Gateway: Check for High Impact News -->
+    <bpmn:exclusiveGateway id="Gateway_CheckImpact" name="High Impact News?">
+      <bpmn:incoming>Flow_10</bpmn:incoming>
+      <bpmn:outgoing>Flow_11</bpmn:outgoing>
+      <bpmn:outgoing>Flow_12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    
+    <!-- Service Task: Notify Analytics Agents -->
+    <bpmn:serviceTask id="Task_NotifyAgents" name="Notify Analytics Agents" a2a:agentId="finsight.data.news_intelligence">
+      <bpmn:extensionElements>
+        <a2a:agent>
+          <a2a:action>notifySubscribers</a2a:action>
+          <a2a:inputParameters>
+            <a2a:parameter name="highImpactArticles" type="array" />
+          </a2a:inputParameters>
+        </a2a:agent>
+        <a2a:broadcast>
+          <a2a:targetAgents>
+            <a2a:agent>finsight.analytics.regime_detection</a2a:agent>
+            <a2a:agent>finsight.analytics.portfolio_rebalancing</a2a:agent>
+            <a2a:agent>finsight.analytics.stress_testing</a2a:agent>
+          </a2a:targetAgents>
+        </a2a:broadcast>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_11</bpmn:incoming>
+      <bpmn:outgoing>Flow_13</bpmn:outgoing>
+    </bpmn:serviceTask>
+    
+    <!-- End Events -->
+    <bpmn:endEvent id="EndEvent_Normal" name="Processing Complete">
+      <bpmn:incoming>Flow_12</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <bpmn:endEvent id="EndEvent_HighImpact" name="High Impact Processed">
+      <bpmn:incoming>Flow_13</bpmn:incoming>
+    </bpmn:endEvent>
+    
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_Timer" targetRef="Task_FetchNews" />
+    <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_FetchNews" targetRef="Gateway_Split" />
+    <bpmn:sequenceFlow id="Flow_3" sourceRef="Gateway_Split" targetRef="Task_ExtractEntities" />
+    <bpmn:sequenceFlow id="Flow_4" sourceRef="Gateway_Split" targetRef="Task_AnalyzeSentiment" />
+    <bpmn:sequenceFlow id="Flow_5" sourceRef="Gateway_Split" targetRef="Task_AssessImpact" />
+    <bpmn:sequenceFlow id="Flow_6" sourceRef="Task_ExtractEntities" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_7" sourceRef="Task_AnalyzeSentiment" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_8" sourceRef="Task_AssessImpact" targetRef="Gateway_Join" />
+    <bpmn:sequenceFlow id="Flow_9" sourceRef="Gateway_Join" targetRef="Task_StoreNews" />
+    <bpmn:sequenceFlow id="Flow_10" sourceRef="Task_StoreNews" targetRef="Gateway_CheckImpact" />
+    <bpmn:sequenceFlow id="Flow_11" name="Yes" sourceRef="Gateway_CheckImpact" targetRef="Task_NotifyAgents">
+      <bpmn:conditionExpression>marketImpacts.some(impact => impact.level === 'high')</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_12" name="No" sourceRef="Gateway_CheckImpact" targetRef="EndEvent_Normal" />
+    <bpmn:sequenceFlow id="Flow_13" sourceRef="Task_NotifyAgents" targetRef="EndEvent_HighImpact" />
+    
+  </bpmn:process>
+  
+  <!-- Diagram Information -->
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="NewsProcessingCollaboration">
+      <bpmndi:BPMNShape id="Participant_NewsSystem_di" bpmnElement="NewsSystem" isHorizontal="true">
+        <dc:Bounds x="160" y="80" width="1200" height="400" />
+      </bpmndi:BPMNShape>
+      
+      <!-- Shape definitions for all elements would go here -->
+      <!-- Simplified for brevity -->
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn:definitions>

@@ -131,7 +131,7 @@ export default async function handler(req, res) {
           parameters = { ...parameters, ...(req.body.parameters || {}) };
           
           // Call the actual treasury calculator
-          const treasuryCalculator = require('../lib/treasury-calculator.js');
+          const { default: treasuryCalculator } = await import('../lib/treasury-calculator-esm.js');
           const startTime = Date.now();
           const result = await treasuryCalculator.calculate(formula, parameters);
           const executionTime = Date.now() - startTime;

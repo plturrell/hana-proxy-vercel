@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="NewsAssessmentHedgeWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_NewsHedging">
+    <bpmn2:participant id="Participant_NewsHedgeAgent" name="News Assessment & Hedge Agent" processRef="Process_NewsHedging"/>
+    <bpmn2:participant id="Participant_NewsIntelligence" name="News Intelligence Agent" processRef="Process_NewsProvider"/>
+    <bpmn2:participant id="Participant_MarketData" name="Market Data Agent" processRef="Process_MarketDataProvider"/>
+    <bpmn2:participant id="Participant_CurriculumLearning" name="Curriculum Learning Agent" processRef="Process_Validator"/>
+  </bpmn2:collaboration>
+
+  <!-- Main News Assessment & Hedge Process -->
+  <bpmn2:process id="Process_NewsHedging" name="News Assessment & Hedge Process" isExecutable="true">
+    
+    <!-- Event Triggers -->
+    <bpmn2:startEvent id="StartEvent_NewsReceived" name="News Event Received">
+      <bpmn2:documentation>Triggered when news intelligence agent sends a market-moving event</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToClassifyNews</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_NewsEvent"/>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.risk.news_assessment_hedge"/>
+          <camunda:property name="capability" value="news_impact_quantification"/>
+          <camunda:property name="priority" value="high"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ScheduledScan" name="Scheduled News Scan">
+      <bpmn2:documentation>Triggers every 5 minutes to scan for new market-moving events</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToScanNews</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */5 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.risk.news_assessment_hedge"/>
+          <camunda:property name="capability" value="news_impact_quantification"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- News Processing Pipeline -->
+    <bpmn2:serviceTask id="ServiceTask_ScanNews" name="Scan for News Events">
+      <bpmn2:documentation>Proactively scans news intelligence feed for new events</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToScanNews</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ScanToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="news_impact_quantification"/>
+          <camunda:property name="data_source" value="news_intelligence_agent"/>
+          <camunda:property name="scan_window_minutes" value="5"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_NewsFound" name="Market-Moving News Found?">
+      <bpmn2:incoming>SequenceFlow_ScanToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NewsFound</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_NoNews</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_ClassifyNews" name="Classify News Event">
+      <bpmn2:documentation>Categorizes news event by type and assesses market impact severity</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToClassifyNews</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_NewsFound</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToAssessImpact</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="event_driven_scenario_modeling"/>
+          <camunda:property name="classification_categories" value="central_bank,geopolitical,economic_data,corporate"/>
+          <camunda:property name="sentiment_analysis" value="enabled"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Impact Assessment -->
+    <bpmn2:serviceTask id="ServiceTask_AssessImpact" name="Assess Portfolio Impact">
+      <bpmn2:documentation>Quantifies potential P&L impact on portfolio positions</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAssessImpact</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToImpactDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="portfolio_data_source" value="portfolio_management_system"/>
+          <camunda:property name="risk_factor_models" value="duration,beta,fx_exposure"/>
+          <camunda:property name="var_confidence_level" value="99"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_ImpactThreshold" name="Impact Above Threshold?">
+      <bpmn2:documentation>Routes based on materiality of portfolio impact</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToImpactDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MaterialImpact</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ImmaterialImpact</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Scenario Generation -->
+    <bpmn2:serviceTask id="ServiceTask_GenerateScenarios" name="Generate Event Scenarios">
+      <bpmn2:documentation>Creates probability-weighted scenarios for the news event</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_MaterialImpact</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToGetMarketData</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="scenario_types" value="base_case,stress_case,extreme_case"/>
+          <camunda:property name="probability_model" value="historical_correlation"/>
+          <camunda:property name="time_horizons" value="1d,1w,1m"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Market Data Integration -->
+    <bpmn2:serviceTask id="ServiceTask_GetMarketData" name="Get Hedge Instrument Pricing">
+      <bpmn2:documentation>Retrieves real-time pricing for potential hedge instruments</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToGetMarketData</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToGenerateHedges</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_MarketDataRequest"/>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="data_provider" value="market_data_agent"/>
+          <camunda:property name="instrument_types" value="futures,options,swaps,forwards"/>
+          <camunda:property name="pricing_frequency" value="real_time"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Hedge Strategy Generation -->
+    <bpmn2:serviceTask id="ServiceTask_GenerateHedges" name="Generate Hedge Recommendations">
+      <bpmn2:documentation>Creates optimal hedge recommendations with cost-benefit analysis</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToGenerateHedges</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToValidateHedges</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="hedge_instrument_selection"/>
+          <camunda:property name="optimization_criteria" value="minimum_variance,cost_effectiveness"/>
+          <camunda:property name="hedge_ratio_method" value="regression_based"/>
+          <camunda:property name="max_recommendations" value="5"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Strategy Validation -->
+    <bpmn2:serviceTask id="ServiceTask_ValidateHedges" name="Validate Hedge Strategies">
+      <bpmn2:documentation>Validates hedge recommendations against CFA and treasury standards</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToValidateHedges</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToValidationDecision</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_ValidationRequest"/>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="validator" value="curriculum_learning_agent"/>
+          <camunda:property name="validation_criteria" value="cfa_compliance,treasury_policy,regulatory"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_ValidationResult" name="Strategies Valid?">
+      <bpmn2:incoming>SequenceFlow_ToValidationDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_Valid</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_Invalid</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Recommendation Output -->
+    <bpmn2:serviceTask id="ServiceTask_PublishRecommendations" name="Publish Hedge Recommendations">
+      <bpmn2:documentation>Publishes validated hedge recommendations to stakeholders</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_Valid</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToSetupMonitoring</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="output_channels" value="dashboard,api,alerts"/>
+          <camunda:property name="urgency_based_routing" value="enabled"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RefineStrategy" name="Refine Strategy">
+      <bpmn2:documentation>Refines hedge strategy based on validation feedback</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_Invalid</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_BackToGenerate</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- Monitoring Setup -->
+    <bpmn2:serviceTask id="ServiceTask_SetupMonitoring" name="Setup Hedge Monitoring">
+      <bpmn2:documentation>Establishes monitoring for hedge effectiveness tracking</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToSetupMonitoring</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MonitoringToEnd</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="monitoring_frequency" value="real_time"/>
+          <camunda:property name="effectiveness_threshold" value="0.8"/>
+          <camunda:property name="rebalance_triggers" value="hedge_ratio_drift,effectiveness_decline"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Logging -->
+    <bpmn2:serviceTask id="ServiceTask_LogAnalysis" name="Log Analysis">
+      <bpmn2:documentation>Logs news analysis for audit and learning purposes</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ImmaterialImpact</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_LogToEnd</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <!-- End Events -->
+    <bpmn2:endEvent id="EndEvent_RecommendationsPublished" name="Recommendations Published">
+      <bpmn2:incoming>SequenceFlow_MonitoringToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:endEvent id="EndEvent_NoActionRequired" name="No Action Required">
+      <bpmn2:incoming>SequenceFlow_NoNews</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_LogToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_ToScanNews" sourceRef="StartEvent_ScheduledScan" targetRef="ServiceTask_ScanNews"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ScanToDecision" sourceRef="ServiceTask_ScanNews" targetRef="ExclusiveGateway_NewsFound"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_NewsFound" name="News Found" sourceRef="ExclusiveGateway_NewsFound" targetRef="ServiceTask_ClassifyNews">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${newsEvents.length > 0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_NoNews" name="No News" sourceRef="ExclusiveGateway_NewsFound" targetRef="EndEvent_NoActionRequired">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${newsEvents.length == 0}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToClassifyNews" sourceRef="StartEvent_NewsReceived" targetRef="ServiceTask_ClassifyNews"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAssessImpact" sourceRef="ServiceTask_ClassifyNews" targetRef="ServiceTask_AssessImpact"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToImpactDecision" sourceRef="ServiceTask_AssessImpact" targetRef="ExclusiveGateway_ImpactThreshold"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_MaterialImpact" name="Material Impact" sourceRef="ExclusiveGateway_ImpactThreshold" targetRef="ServiceTask_GenerateScenarios">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Math.abs(impact.total_portfolio_var_change) > 100000}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ImmaterialImpact" name="Immaterial Impact" sourceRef="ExclusiveGateway_ImpactThreshold" targetRef="ServiceTask_LogAnalysis">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${Math.abs(impact.total_portfolio_var_change) <= 100000}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToGetMarketData" sourceRef="ServiceTask_GenerateScenarios" targetRef="ServiceTask_GetMarketData"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToGenerateHedges" sourceRef="ServiceTask_GetMarketData" targetRef="ServiceTask_GenerateHedges"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToValidateHedges" sourceRef="ServiceTask_GenerateHedges" targetRef="ServiceTask_ValidateHedges"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToValidationDecision" sourceRef="ServiceTask_ValidateHedges" targetRef="ExclusiveGateway_ValidationResult"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_Valid" name="Valid" sourceRef="ExclusiveGateway_ValidationResult" targetRef="ServiceTask_PublishRecommendations">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${validation.cfa_compliant && validation.treasury_compliant}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_Invalid" name="Invalid" sourceRef="ExclusiveGateway_ValidationResult" targetRef="ServiceTask_RefineStrategy">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${!validation.cfa_compliant || !validation.treasury_compliant}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_BackToGenerate" sourceRef="ServiceTask_RefineStrategy" targetRef="ServiceTask_GenerateHedges"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToSetupMonitoring" sourceRef="ServiceTask_PublishRecommendations" targetRef="ServiceTask_SetupMonitoring"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MonitoringToEnd" sourceRef="ServiceTask_SetupMonitoring" targetRef="EndEvent_RecommendationsPublished"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_LogToEnd" sourceRef="ServiceTask_LogAnalysis" targetRef="EndEvent_NoActionRequired"/>
+
+  </bpmn2:process>
+
+  <!-- Supporting Processes -->
+  <bpmn2:process id="Process_NewsProvider" name="News Intelligence Provider" isExecutable="false">
+    <bpmn2:startEvent id="StartEvent_NewsDetected" name="Market-Moving News Detected"/>
+    <bpmn2:serviceTask id="ServiceTask_SendNewsEvent" name="Send News Event">
+      <bpmn2:messageEventDefinition messageRef="Message_NewsEvent"/>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="EndEvent_NewsSent" name="News Event Sent"/>
+  </bpmn2:process>
+
+  <bpmn2:process id="Process_MarketDataProvider" name="Market Data Provider" isExecutable="false">
+    <bpmn2:startEvent id="StartEvent_DataRequest" name="Data Request Received">
+      <bpmn2:messageEventDefinition messageRef="Message_MarketDataRequest"/>
+    </bpmn2:startEvent>
+    <bpmn2:serviceTask id="ServiceTask_FetchPricing" name="Fetch Real-time Pricing"/>
+    <bpmn2:serviceTask id="ServiceTask_SendPricing" name="Send Pricing Data">
+      <bpmn2:messageEventDefinition messageRef="Message_MarketDataResponse"/>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="EndEvent_DataSent" name="Data Sent"/>
+  </bpmn2:process>
+
+  <bpmn2:process id="Process_Validator" name="Strategy Validator" isExecutable="false">
+    <bpmn2:startEvent id="StartEvent_ValidationRequest" name="Validation Request">
+      <bpmn2:messageEventDefinition messageRef="Message_ValidationRequest"/>
+    </bpmn2:startEvent>
+    <bpmn2:serviceTask id="ServiceTask_ValidateStrategy" name="Validate Against CFA Standards"/>
+    <bpmn2:serviceTask id="ServiceTask_SendValidation" name="Send Validation Result">
+      <bpmn2:messageEventDefinition messageRef="Message_ValidationResponse"/>
+    </bpmn2:serviceTask>
+    <bpmn2:endEvent id="EndEvent_ValidationSent" name="Validation Sent"/>
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_NewsEvent" name="NewsEvent"/>
+  <bpmn2:message id="Message_MarketDataRequest" name="MarketDataRequest"/>
+  <bpmn2:message id="Message_MarketDataResponse" name="MarketDataResponse"/>
+  <bpmn2:message id="Message_ValidationRequest" name="ValidationRequest"/>
+  <bpmn2:message id="Message_ValidationResponse" name="ValidationResponse"/>
+
+  <!-- News Assessment & Hedge Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="news_driven_hedging"/>
+      <camunda:property name="primary_agent" value="finsight.risk.news_assessment_hedge"/>
+      <camunda:property name="integration_agents" value="news_intelligence,market_data,curriculum_learning"/>
+      <camunda:property name="risk_categories" value="interest_rate,currency,equity,commodity"/>
+      <camunda:property name="hedge_strategies" value="futures,options,swaps,forwards"/>
+      <camunda:property name="monitoring_frequency" value="real_time"/>
+      <camunda:property name="impact_threshold" value="100000"/>
+      <camunda:property name="effectiveness_threshold" value="0.8"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>

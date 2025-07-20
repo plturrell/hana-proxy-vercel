@@ -296,7 +296,7 @@ class A2AAutonomyClient {
           break;
           
         case 'verify_reputation':
-          result = await this.simulateReputationCheck(agentId, params);
+          result = await this.checkReputationWithAI(agentId, params);
           break;
           
         default:
@@ -374,38 +374,101 @@ class A2AAutonomyClient {
     };
   }
 
-  async simulateReputationCheck(agentId, params) {
-    // Calculate real reputation based on agent blockchain activities
+  async checkReputationWithAI(agentId, params) {
+    // Use real AI to assess agent reputation based on comprehensive data
+    if (!this.apiKey) {
+      console.error('AI API key not configured - reputation analysis unavailable');
+      return null;
+    }
+    
+    // Get comprehensive agent data
     const { data: activities } = await this.supabase
       .from('agent_blockchain_activities')
       .select('*')
       .eq('agent_id', agentId)
-      .eq('status', 'confirmed');
+      .order('created_at', { ascending: false })
+      .limit(100);
     
     const { data: agent } = await this.supabase
       .from('a2a_agents')
-      .select('success_rate, total_requests, created_at')
+      .select('*')
       .eq('agent_id', agentId)
       .single();
+      
+    const { data: messages } = await this.supabase
+      .from('a2a_messages')
+      .select('message_type, success, created_at')
+      .eq('sender_id', agentId)
+      .order('created_at', { ascending: false })
+      .limit(50);
     
-    // Calculate reputation score from real data
-    const activityScore = (activities?.length || 0) * 10;
-    const successScore = (agent?.success_rate || 100) * 5;
-    const experienceScore = Math.min(200, (agent?.total_requests || 0) * 2);
-    
-    const totalScore = Math.min(1000, Math.max(0, activityScore + successScore + experienceScore));
-    
-    return {
-      qualified: totalScore >= 500,
-      score: Math.round(totalScore),
-      address: params.address,
-      last_updated: new Date().toISOString(),
-      breakdown: {
-        activity: activityScore,
-        success: successScore,
-        experience: experienceScore
+    try {
+      const response = await fetch('https://api.x.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.apiKey}`
+        },
+        body: JSON.stringify({
+          model: 'grok-2',
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a blockchain reputation analysis expert. Assess agent reputation based on comprehensive behavioral and performance data.'
+            },
+            {
+              role: 'user',
+              content: `Analyze the reputation of agent ${agentId}:
+
+Agent Data: ${JSON.stringify(agent)}
+Recent Activities: ${JSON.stringify(activities)}
+Recent Messages: ${JSON.stringify(messages)}
+Analysis Request: ${JSON.stringify(params)}
+
+Assess based on:
+- Blockchain transaction history and success rates
+- Message quality and response patterns
+- Compliance with protocol standards
+- Consistency and reliability over time
+- Risk factors and anomalies
+
+Return JSON:
+{
+  "qualified": true|false,
+  "score": <number 0-1000>,
+  "confidence": <number 0-1>,
+  "risk_level": "low|medium|high",
+  "trust_factors": ["factor1", "factor2"],
+  "concerns": ["concern1", "concern2"],
+  "recommendations": ["rec1", "rec2"],
+  "last_updated": "ISO timestamp",
+  "analysis_summary": "detailed explanation"
+}`
+            }
+          ],
+          temperature: 0.2,
+          max_tokens: 1000
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Reputation analysis API failed:', response.status);
+        return null;
       }
-    };
+
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content;
+      
+      try {
+        return JSON.parse(content);
+      } catch {
+        console.error('Failed to parse reputation analysis response');
+        return null;
+      }
+    } catch (error) {
+      console.error('AI reputation analysis failed:', error);
+      return null;
+    }
   }
 
   /**
@@ -544,7 +607,7 @@ class A2AAutonomyClient {
           'Authorization': `Bearer ${this.apiKey}`
         },
         body: JSON.stringify({
-          model: 'grok-3-latest',
+          model: 'grok-4-0709',
           messages: messages,
           max_tokens: 4000,
           temperature: 0.7

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+                   xmlns:camunda="http://camunda.org/schema/1.0/bpmn" 
+                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+                   id="ORDManagementWorkflow" 
+                   targetNamespace="http://finsight.ai/workflows"
+                   exporter="Claude Code" 
+                   exporterVersion="1.0">
+
+  <bpmn2:collaboration id="Collaboration_ORDManagement">
+    <bpmn2:participant id="Participant_ORDManager" name="ORD Registry Manager" processRef="Process_ORDManagement"/>
+    <bpmn2:participant id="Participant_ResourceProviders" name="Resource Providers" processRef="Process_ResourceRegistration"/>
+  </bpmn2:collaboration>
+
+  <!-- Main ORD Management Process -->
+  <bpmn2:process id="Process_ORDManagement" name="ORD Registry Management" isExecutable="true">
+    
+    <!-- Timer Events for Periodic Tasks -->
+    <bpmn2:startEvent id="StartEvent_RegistryDiscovery" name="Registry Discovery Timer">
+      <bpmn2:documentation>Triggers every 5 minutes for comprehensive registry discovery</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToDiscovery</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */5 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.ord_registry_manager"/>
+          <camunda:property name="ord_capability" value="registry_discovery"/>
+          <camunda:property name="discovery_scope" value="comprehensive"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_MetadataRefresh" name="Metadata Refresh Timer">
+      <bpmn2:documentation>Triggers every minute for metadata updates</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToMetadataRefresh</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */1 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.ord_registry_manager"/>
+          <camunda:property name="ord_capability" value="metadata_tracking"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ComplianceValidation" name="Compliance Validation Timer">
+      <bpmn2:documentation>Triggers every 15 minutes for ORD compliance validation</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToComplianceCheck</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */15 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.ord_registry_manager"/>
+          <camunda:property name="ord_capability" value="compliance_validation"/>
+          <camunda:property name="ord_version" value="1.12"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_RegistryCleanup" name="Registry Cleanup Timer">
+      <bpmn2:documentation>Triggers every 30 minutes for registry maintenance</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_ToCleanup</bpmn2:outgoing>
+      <bpmn2:timerEventDefinition>
+        <bpmn2:timeCycle xsi:type="bpmn2:tFormalExpression">0 */30 * * * ?</bpmn2:timeCycle>
+      </bpmn2:timerEventDefinition>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_agent_id" value="finsight.coordination.ord_registry_manager"/>
+          <camunda:property name="ord_capability" value="registry_management"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:startEvent>
+
+    <!-- Message-based Events -->
+    <bpmn2:startEvent id="StartEvent_DiscoveryRequest" name="Discovery Request">
+      <bpmn2:documentation>Triggered when agents request capability discovery</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_RequestToRouting</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_DiscoveryRequest"/>
+    </bpmn2:startEvent>
+
+    <bpmn2:startEvent id="StartEvent_ResourceRegistration" name="Resource Registration">
+      <bpmn2:documentation>Triggered when new resources register with ORD</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_RegistrationToValidation</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_ResourceRegistration"/>
+    </bpmn2:startEvent>
+
+    <!-- Core Discovery Process -->
+    <bpmn2:serviceTask id="ServiceTask_RegistryDiscovery" name="Perform Registry Discovery">
+      <bpmn2:documentation>Discovers all available resources and builds registry cache</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToDiscovery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_DiscoveryToIndexing</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="registry_discovery"/>
+          <camunda:property name="ord_function" value="comprehensive_discovery"/>
+          <camunda:property name="discovery_sources" value="ord_analytics_resources,a2a_agents"/>
+          <camunda:property name="cache_update" value="full"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_CapabilityIndexing" name="Build Capability Index">
+      <bpmn2:documentation>Creates searchable index of all available capabilities</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_DiscoveryToIndexing</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_IndexingToDependencies</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="capability_discovery"/>
+          <camunda:property name="ord_function" value="capability_indexing"/>
+          <camunda:property name="index_type" value="searchable_map"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_DependencyAnalysis" name="Analyze Resource Dependencies">
+      <bpmn2:documentation>Builds dependency graph and calculates metrics</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_IndexingToDependencies</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_DependenciesToNotification</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="dependency_resolution"/>
+          <camunda:property name="ord_function" value="dependency_analysis"/>
+          <camunda:property name="graph_analysis" value="enabled"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Metadata Management -->
+    <bpmn2:serviceTask id="ServiceTask_MetadataRefresh" name="Refresh Resource Metadata">
+      <bpmn2:documentation>Updates metadata for all registered resources</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToMetadataRefresh</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MetadataToValidation</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="metadata_tracking"/>
+          <camunda:property name="ord_function" value="metadata_refresh"/>
+          <camunda:property name="refresh_strategy" value="incremental"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Compliance Validation -->
+    <bpmn2:serviceTask id="ServiceTask_ComplianceValidation" name="Validate ORD Compliance">
+      <bpmn2:documentation>Validates all resources against ORD v1.12 standards</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToComplianceCheck</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_MetadataToValidation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ComplianceToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="compliance_validation"/>
+          <camunda:property name="ord_function" value="compliance_check"/>
+          <camunda:property name="ord_version" value="1.12"/>
+          <camunda:property name="validation_rules" value="required_fields,metadata_structure,capability_format"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Compliance Decision Gateway -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_ComplianceDecision" name="Compliance Status Check">
+      <bpmn2:documentation>Routes based on compliance validation results</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ComplianceToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToNonCompliantHandling</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToCompliantProcessing</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Non-Compliant Resource Handling -->
+    <bpmn2:serviceTask id="ServiceTask_NonCompliantHandling" name="Handle Non-Compliant Resources">
+      <bpmn2:documentation>Processes resources that fail compliance validation</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToNonCompliantHandling</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_NonCompliantToAlert</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="handling_strategy" value="remediation_guidance"/>
+          <camunda:property name="notification_required" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ComplianceAlerting" name="Generate Compliance Alerts">
+      <bpmn2:documentation>Creates alerts for compliance issues</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_NonCompliantToAlert</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AlertToLogging</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="alert_channels" value="a2a_message,log"/>
+          <camunda:property name="alert_severity" value="warning"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Registry Cleanup -->
+    <bpmn2:serviceTask id="ServiceTask_RegistryCleanup" name="Clean Registry Entries">
+      <bpmn2:documentation>Removes stale and inactive registry entries</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToCleanup</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CleanupToOptimization</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="registry_management"/>
+          <camunda:property name="ord_function" value="registry_cleanup"/>
+          <camunda:property name="cleanup_criteria" value="stale_threshold,inactive_status"/>
+          <camunda:property name="retention_period" value="7_days"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RegistryOptimization" name="Optimize Registry Performance">
+      <bpmn2:documentation>Optimizes registry structures for better performance</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_CleanupToOptimization</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_OptimizationToMonitoring</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="optimization_type" value="index_rebuild,cache_optimization"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Discovery Request Processing -->
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_DiscoveryRouter" name="Discovery Request Router">
+      <bpmn2:documentation>Routes discovery requests based on type</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RequestToRouting</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToCapabilityDiscovery</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToResourceDiscovery</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToDependencyDiscovery</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToAgentDiscovery</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <!-- Discovery Processing Tasks -->
+    <bpmn2:serviceTask id="ServiceTask_CapabilityDiscovery" name="Process Capability Discovery">
+      <bpmn2:documentation>Searches capabilities based on request filters</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToCapabilityDiscovery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_CapabilityToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="capability_discovery"/>
+          <camunda:property name="search_algorithm" value="indexed_search"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_ResourceDiscovery" name="Process Resource Discovery">
+      <bpmn2:documentation>Searches resources based on request criteria</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToResourceDiscovery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResourceToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="resource_cataloging"/>
+          <camunda:property name="search_algorithm" value="filtered_search"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_DependencyDiscovery" name="Process Dependency Discovery">
+      <bpmn2:documentation>Analyzes and returns dependency information</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToDependencyDiscovery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_DependencyToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="dependency_resolution"/>
+          <camunda:property name="analysis_depth" value="recursive"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_AgentDiscovery" name="Process Agent Discovery">
+      <bpmn2:documentation>Discovers agents based on request parameters</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToAgentDiscovery</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AgentToResponse</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="a2a_capability" value="agent_discovery"/>
+          <camunda:property name="filter_criteria" value="status,type,capabilities"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Resource Registration Processing -->
+    <bpmn2:serviceTask id="ServiceTask_RegistrationValidation" name="Validate New Registration">
+      <bpmn2:documentation>Validates new resource registration for ORD compliance</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_RegistrationToValidation</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ValidationToDecision</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="validation_type" value="ord_compliance"/>
+          <camunda:property name="required_fields" value="agent_id,resource_type,capabilities"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:exclusiveGateway id="ExclusiveGateway_RegistrationDecision" name="Registration Validation Decision">
+      <bpmn2:documentation>Decides whether to accept or reject registration</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ValidationToDecision</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToRegistrationAccept</bpmn2:outgoing>
+      <bpmn2:outgoing>SequenceFlow_ToRegistrationReject</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+
+    <bpmn2:serviceTask id="ServiceTask_AcceptRegistration" name="Accept Registration">
+      <bpmn2:documentation>Processes accepted resource registration</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToRegistrationAccept</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_AcceptToUpdate</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="registration_action" value="add_to_registry"/>
+          <camunda:property name="index_update" value="required"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RejectRegistration" name="Reject Registration">
+      <bpmn2:documentation>Handles rejected resource registration with feedback</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToRegistrationReject</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_RejectToNotification</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="rejection_reason" value="compliance_failure"/>
+          <camunda:property name="feedback_required" value="true"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Response and Notification Tasks -->
+    <bpmn2:serviceTask id="ServiceTask_DiscoveryResponse" name="Send Discovery Response">
+      <bpmn2:documentation>Sends discovery results back to requesting agent</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_CapabilityToResponse</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ResourceToResponse</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_DependencyToResponse</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_AgentToResponse</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResponseToLogging</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="response_format" value="ord_compliant"/>
+          <camunda:property name="delivery_method" value="a2a_message"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <bpmn2:serviceTask id="ServiceTask_RegistryUpdateNotification" name="Notify Registry Updates">
+      <bpmn2:documentation>Notifies agents about registry changes</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_DependenciesToNotification</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_AcceptToUpdate</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_RejectToNotification</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_UpdateNotificationToLogging</bpmn2:outgoing>
+      <bpmn2:multiInstanceLoopCharacteristics isSequential="false">
+        <bpmn2:loopCardinality xsi:type="bpmn2:tFormalExpression">${subscribedAgents.size()}</bpmn2:loopCardinality>
+      </bpmn2:multiInstanceLoopCharacteristics>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="notification_type" value="registry_update"/>
+          <camunda:property name="target_agents" value="interested_subscribers"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Performance Monitoring -->
+    <bpmn2:serviceTask id="ServiceTask_PerformanceMonitoring" name="Monitor ORD Performance">
+      <bpmn2:documentation>Monitors ORD system performance and registry health</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToCompliantProcessing</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_OptimizationToMonitoring</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_MonitoringToLogging</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="metrics_collection" value="comprehensive"/>
+          <camunda:property name="performance_indicators" value="discovery_latency,compliance_rate,registry_size"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- Activity Logging -->
+    <bpmn2:serviceTask id="ServiceTask_ActivityLogging" name="Log ORD Activities">
+      <bpmn2:documentation>Logs all ORD management activities for audit and analysis</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_AlertToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_ResponseToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_UpdateNotificationToLogging</bpmn2:incoming>
+      <bpmn2:incoming>SequenceFlow_MonitoringToLogging</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ToEndEvent</bpmn2:outgoing>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="log_level" value="info"/>
+          <camunda:property name="log_retention" value="90_days"/>
+          <camunda:property name="audit_trail" value="enabled"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:serviceTask>
+
+    <!-- End Event -->
+    <bpmn2:endEvent id="EndEvent_ORDComplete" name="ORD Process Complete">
+      <bpmn2:documentation>ORD management process completed successfully</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ToEndEvent</bpmn2:incoming>
+      <bpmn2:extensionElements>
+        <camunda:properties>
+          <camunda:property name="completion_status" value="success"/>
+        </camunda:properties>
+      </bpmn2:extensionElements>
+    </bpmn2:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn2:sequenceFlow id="SequenceFlow_ToDiscovery" sourceRef="StartEvent_RegistryDiscovery" targetRef="ServiceTask_RegistryDiscovery"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToMetadataRefresh" sourceRef="StartEvent_MetadataRefresh" targetRef="ServiceTask_MetadataRefresh"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToComplianceCheck" sourceRef="StartEvent_ComplianceValidation" targetRef="ServiceTask_ComplianceValidation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToCleanup" sourceRef="StartEvent_RegistryCleanup" targetRef="ServiceTask_RegistryCleanup"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_RequestToRouting" sourceRef="StartEvent_DiscoveryRequest" targetRef="ExclusiveGateway_DiscoveryRouter"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RegistrationToValidation" sourceRef="StartEvent_ResourceRegistration" targetRef="ServiceTask_RegistrationValidation"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_DiscoveryToIndexing" sourceRef="ServiceTask_RegistryDiscovery" targetRef="ServiceTask_CapabilityIndexing"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_IndexingToDependencies" sourceRef="ServiceTask_CapabilityIndexing" targetRef="ServiceTask_DependencyAnalysis"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_DependenciesToNotification" sourceRef="ServiceTask_DependencyAnalysis" targetRef="ServiceTask_RegistryUpdateNotification"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_MetadataToValidation" sourceRef="ServiceTask_MetadataRefresh" targetRef="ServiceTask_ComplianceValidation"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ComplianceToDecision" sourceRef="ServiceTask_ComplianceValidation" targetRef="ExclusiveGateway_ComplianceDecision"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToNonCompliantHandling" name="Non-Compliant" sourceRef="ExclusiveGateway_ComplianceDecision" targetRef="ServiceTask_NonCompliantHandling">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${complianceStatus == 'non_compliant'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToCompliantProcessing" name="Compliant" sourceRef="ExclusiveGateway_ComplianceDecision" targetRef="ServiceTask_PerformanceMonitoring">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${complianceStatus == 'compliant'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_NonCompliantToAlert" sourceRef="ServiceTask_NonCompliantHandling" targetRef="ServiceTask_ComplianceAlerting"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AlertToLogging" sourceRef="ServiceTask_ComplianceAlerting" targetRef="ServiceTask_ActivityLogging"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_CleanupToOptimization" sourceRef="ServiceTask_RegistryCleanup" targetRef="ServiceTask_RegistryOptimization"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_OptimizationToMonitoring" sourceRef="ServiceTask_RegistryOptimization" targetRef="ServiceTask_PerformanceMonitoring"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ToCapabilityDiscovery" name="Capabilities" sourceRef="ExclusiveGateway_DiscoveryRouter" targetRef="ServiceTask_CapabilityDiscovery">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${discoveryType == 'capabilities'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToResourceDiscovery" name="Resources" sourceRef="ExclusiveGateway_DiscoveryRouter" targetRef="ServiceTask_ResourceDiscovery">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${discoveryType == 'resources'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToDependencyDiscovery" name="Dependencies" sourceRef="ExclusiveGateway_DiscoveryRouter" targetRef="ServiceTask_DependencyDiscovery">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${discoveryType == 'dependencies'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToAgentDiscovery" name="Agents" sourceRef="ExclusiveGateway_DiscoveryRouter" targetRef="ServiceTask_AgentDiscovery">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${discoveryType == 'agents'}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_CapabilityToResponse" sourceRef="ServiceTask_CapabilityDiscovery" targetRef="ServiceTask_DiscoveryResponse"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ResourceToResponse" sourceRef="ServiceTask_ResourceDiscovery" targetRef="ServiceTask_DiscoveryResponse"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_DependencyToResponse" sourceRef="ServiceTask_DependencyDiscovery" targetRef="ServiceTask_DiscoveryResponse"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_AgentToResponse" sourceRef="ServiceTask_AgentDiscovery" targetRef="ServiceTask_DiscoveryResponse"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ValidationToDecision" sourceRef="ServiceTask_RegistrationValidation" targetRef="ExclusiveGateway_RegistrationDecision"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToRegistrationAccept" name="Valid" sourceRef="ExclusiveGateway_RegistrationDecision" targetRef="ServiceTask_AcceptRegistration">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${registrationValid == true}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToRegistrationReject" name="Invalid" sourceRef="ExclusiveGateway_RegistrationDecision" targetRef="ServiceTask_RejectRegistration">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression">${registrationValid == false}</bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_AcceptToUpdate" sourceRef="ServiceTask_AcceptRegistration" targetRef="ServiceTask_RegistryUpdateNotification"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_RejectToNotification" sourceRef="ServiceTask_RejectRegistration" targetRef="ServiceTask_RegistryUpdateNotification"/>
+    
+    <bpmn2:sequenceFlow id="SequenceFlow_ResponseToLogging" sourceRef="ServiceTask_DiscoveryResponse" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_UpdateNotificationToLogging" sourceRef="ServiceTask_RegistryUpdateNotification" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_MonitoringToLogging" sourceRef="ServiceTask_PerformanceMonitoring" targetRef="ServiceTask_ActivityLogging"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ToEndEvent" sourceRef="ServiceTask_ActivityLogging" targetRef="EndEvent_ORDComplete"/>
+    
+  </bpmn2:process>
+
+  <!-- Resource Registration Process -->
+  <bpmn2:process id="Process_ResourceRegistration" name="Resource Registration" isExecutable="true">
+    
+    <bpmn2:startEvent id="StartEvent_NewResource" name="New Resource">
+      <bpmn2:documentation>New resource wants to register with ORD</bpmn2:documentation>
+      <bpmn2:outgoing>SequenceFlow_NewToSubmission</bpmn2:outgoing>
+    </bpmn2:startEvent>
+
+    <bpmn2:serviceTask id="ServiceTask_SubmitRegistration" name="Submit ORD Registration">
+      <bpmn2:documentation>Submits resource registration to ORD Registry Manager</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_NewToSubmission</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_SubmissionToWait</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+
+    <bpmn2:intermediateCatchEvent id="IntermediateCatchEvent_RegistrationResponse" name="Await Registration Response">
+      <bpmn2:documentation>Waits for registration response from ORD Manager</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_SubmissionToWait</bpmn2:incoming>
+      <bpmn2:outgoing>SequenceFlow_ResponseToEnd</bpmn2:outgoing>
+      <bpmn2:messageEventDefinition messageRef="Message_RegistrationResponse"/>
+    </bpmn2:intermediateCatchEvent>
+
+    <bpmn2:endEvent id="EndEvent_RegistrationComplete" name="Registration Complete">
+      <bpmn2:documentation>Resource registration process completed</bpmn2:documentation>
+      <bpmn2:incoming>SequenceFlow_ResponseToEnd</bpmn2:incoming>
+    </bpmn2:endEvent>
+
+    <bpmn2:sequenceFlow id="SequenceFlow_NewToSubmission" sourceRef="StartEvent_NewResource" targetRef="ServiceTask_SubmitRegistration"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_SubmissionToWait" sourceRef="ServiceTask_SubmitRegistration" targetRef="IntermediateCatchEvent_RegistrationResponse"/>
+    <bpmn2:sequenceFlow id="SequenceFlow_ResponseToEnd" sourceRef="IntermediateCatchEvent_RegistrationResponse" targetRef="EndEvent_RegistrationComplete"/>
+    
+  </bpmn2:process>
+
+  <!-- Message Definitions -->
+  <bpmn2:message id="Message_DiscoveryRequest" name="DiscoveryRequest"/>
+  <bpmn2:message id="Message_ResourceRegistration" name="ResourceRegistration"/>
+  <bpmn2:message id="Message_RegistrationResponse" name="RegistrationResponse"/>
+  <bpmn2:message id="Message_ComplianceAlert" name="ComplianceAlert"/>
+  <bpmn2:message id="Message_RegistryUpdate" name="RegistryUpdate"/>
+
+  <!-- ORD Integration Properties -->
+  <bpmn2:extensionElements>
+    <camunda:properties>
+      <camunda:property name="workflow_type" value="ord_management"/>
+      <camunda:property name="ord_compliance" value="v1.12"/>
+      <camunda:property name="primary_agent" value="finsight.coordination.ord_registry_manager"/>
+      <camunda:property name="discovery_enabled" value="comprehensive"/>
+      <camunda:property name="compliance_enforcement" value="strict"/>
+      <camunda:property name="performance_monitoring" value="enabled"/>
+      <camunda:property name="dependency_tracking" value="full"/>
+      <camunda:property name="metadata_management" value="automated"/>
+    </camunda:properties>
+  </bpmn2:extensionElements>
+
+</bpmn2:definitions>
