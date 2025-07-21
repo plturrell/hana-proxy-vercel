@@ -221,7 +221,6 @@ class AgentRunner {
         Content: ${JSON.stringify(message.content)}
         
         Should you respond? If yes, what should you say?
-        Respond in JSON: {"shouldRespond": boolean, "response": string, "reasoning": string}
       `);
 
       if (decision.shouldRespond) {
@@ -251,8 +250,7 @@ class AgentRunner {
         Your preferences: ${JSON.stringify(this.agent.voting_preferences)}
         Your goals: ${JSON.stringify(this.agent.goals)}
         
-        How should you vote? Respond in JSON:
-        {"vote": "APPROVE|REJECT|ABSTAIN", "reasoning": string}
+        How should you vote?
       `);
 
       if (decision.vote) {
@@ -292,7 +290,38 @@ Personality: ${this.agent.personality}
 Goals: ${this.agent.goals?.join(', ')}
 Capabilities: ${this.agent.capabilities?.join(', ')}
 
-Always respond in valid JSON format. Be decisive but thoughtful.`;
+Be decisive but thoughtful.`;
+
+      // Determine which schema to use based on the prompt content
+      let schema;
+      if (prompt.includes('vote') || prompt.includes('proposal')) {
+        schema = {
+          name: "voting_decision",
+          schema: {
+            type: "object",
+            properties: {
+              vote: { type: "string", enum: ["APPROVE", "REJECT", "ABSTAIN"] },
+              reasoning: { type: "string" }
+            },
+            required: ["vote", "reasoning"],
+            additionalProperties: false
+          }
+        };
+      } else {
+        schema = {
+          name: "agent_response",
+          schema: {
+            type: "object",
+            properties: {
+              shouldRespond: { type: "boolean" },
+              response: { type: "string" },
+              reasoning: { type: "string" }
+            },
+            required: ["shouldRespond", "reasoning"],
+            additionalProperties: false
+          }
+        };
+      }
 
       const response = await fetch(`${this.grokBaseUrl}/chat/completions`, {
         method: 'POST',
@@ -307,7 +336,11 @@ Always respond in valid JSON format. Be decisive but thoughtful.`;
             { role: 'user', content: prompt }
           ],
           temperature: 0.7,
-          max_tokens: 500
+          max_tokens: 500,
+          response_format: {
+            type: "json_schema",
+            json_schema: schema
+          }
         })
       });
 
@@ -316,9 +349,8 @@ Always respond in valid JSON format. Be decisive but thoughtful.`;
       }
 
       const data = await response.json();
-      const content = data.choices[0]?.message?.content || '{}';
-      
-      return JSON.parse(content);
+      // With structured outputs, content is already a parsed object
+      return data.choices[0]?.message?.content || { shouldRespond: false, vote: 'ABSTAIN', reasoning: 'No response generated' };
     } catch (error) {
       console.error('AI decision error:', error);
       return { shouldRespond: false, vote: 'ABSTAIN', reasoning: 'AI decision failed' };

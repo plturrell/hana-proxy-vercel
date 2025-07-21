@@ -5,6 +5,8 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { callGrokStructured } from '../lib/grok-structured-schemas.js';
+import { storeAnomalyDetection } from '../lib/ai-to-database-mapper.js';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -70,21 +72,199 @@ async function detectMarketAnomalies(req, res) {
     return res.json(cached);
   }
   
-  const anomalies = await callGrokAPI({
-    messages: [
-      {
-        role: 'system',
-        content: `You are an advanced market anomaly detection AI with expertise in:
+  // Define anomaly detection schema
+  const anomalySchema = {
+    name: "market_anomaly_detection",
+    schema: {
+      type: "object",
+      properties: {
+        anomalies_detected: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              type: {
+                type: "string",
+                enum: ["price", "volume", "pattern", "statistical", "regime", "microstructure"]
+              },
+              severity: {
+                type: "string",
+                enum: ["low", "medium", "high", "critical"]
+              },
+              confidence: {
+                type: "number",
+                minimum: 0,
+                maximum: 1
+              },
+              description: { type: "string" },
+              current_value: { type: "number" },
+              expected_range: {
+                type: "array",
+                items: { type: "number" },
+                minItems: 2,
+                maxItems: 2
+              },
+              z_score: { type: "number" },
+              probability: {
+                type: "number",
+                minimum: 0,
+                maximum: 1
+              },
+              timeframe_detected: { type: "string" },
+              potential_causes: {
+                type: "array",
+                items: { type: "string" }
+              },
+              trading_implications: {
+                type: "object",
+                properties: {
+                  direction: {
+                    type: "string",
+                    enum: ["bullish", "bearish", "neutral"]
+                  },
+                  suggested_action: {
+                    type: "string",
+                    enum: ["buy", "sell", "hold", "monitor"]
+                  },
+                  risk_level: {
+                    type: "string",
+                    enum: ["low", "medium", "high"]
+                  },
+                  timeframe: { type: "string" }
+                },
+                required: ["direction", "suggested_action", "risk_level"]
+              },
+              historical_context: { type: "string" }
+            },
+            required: ["type", "severity", "confidence", "description"]
+          }
+        },
+        pattern_analysis: {
+          type: "object",
+          properties: {
+            chart_patterns: {
+              type: "array",
+              items: { type: "string" }
+            },
+            support_resistance: {
+              type: "object",
+              properties: {
+                key_levels: {
+                  type: "array",
+                  items: { type: "number" }
+                },
+                strength: {
+                  type: "string",
+                  enum: ["weak", "moderate", "strong"]
+                },
+                test_count: { type: "integer" }
+              }
+            },
+            trend_analysis: {
+              type: "object",
+              properties: {
+                current_trend: {
+                  type: "string",
+                  enum: ["uptrend", "downtrend", "sideways"]
+                },
+                trend_strength: {
+                  type: "number",
+                  minimum: 0,
+                  maximum: 1
+                },
+                trend_duration: { type: "string" },
+                potential_reversal: {
+                  type: "number",
+                  minimum: 0,
+                  maximum: 1
+                }
+              }
+            }
+          }
+        },
+        volume_profile: {
+          type: "object",
+          properties: {
+            volume_anomalies: {
+              type: "array",
+              items: { type: "string" }
+            },
+            institutional_activity: {
+              type: "string",
+              enum: ["accumulation", "distribution", "neutral"]
+            },
+            volume_price_divergence: { type: "boolean" }
+          }
+        },
+        cross_market_impact: {
+          type: "object",
+          properties: {
+            sector_correlation: {
+              type: "number",
+              minimum: -1,
+              maximum: 1
+            },
+            market_correlation: {
+              type: "number",
+              minimum: -1,
+              maximum: 1
+            },
+            relative_strength: { type: "number" },
+            beta_anomaly: { type: "boolean" }
+          }
+        },
+        risk_assessment: {
+          type: "object",
+          properties: {
+            volatility_expansion: { type: "boolean" },
+            overall_risk: {
+              type: "string",
+              enum: ["low", "medium", "high", "extreme"]
+            },
+            black_swan_probability: {
+              type: "number",
+              minimum: 0,
+              maximum: 1
+            }
+          }
+        },
+        ai_recommendations: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              action: { type: "string" },
+              confidence: {
+                type: "number",
+                minimum: 0,
+                maximum: 1
+              },
+              reasoning: { type: "string" },
+              timeframe: { type: "string" }
+            },
+            required: ["action", "confidence", "reasoning"]
+          }
+        }
+      },
+      required: ["anomalies_detected", "pattern_analysis", "risk_assessment"],
+      additionalProperties: false
+    }
+  };
+
+  const messages = [
+    {
+      role: 'system',
+      content: `You are an advanced market anomaly detection AI with expertise in:
 - Statistical anomaly detection using Z-scores and isolation forests
 - Technical pattern recognition (flags, pennants, triangles, head & shoulders)
 - Volume analysis and institutional flow detection
 - Price-action discrepancies and market inefficiencies
 - Cross-asset correlation breakdowns
 - Regime change detection`
-      },
-      {
-        role: 'user',
-        content: `Analyze this market data for anomalies and unusual patterns:
+    },
+    {
+      role: 'user',
+      content: `Analyze this market data for anomalies and unusual patterns:
 
 Symbol: ${symbol}
 Timeframe: ${timeframe}
@@ -96,58 +276,31 @@ Detect and classify anomalies by:
 3. **Technical Patterns**: Chart patterns nearing completion or breaking
 4. **Statistical Outliers**: Z-score > 2 or isolation forest detected outliers
 5. **Regime Changes**: Volatility shifts, correlation breakdowns
-6. **Market Microstructure**: Bid-ask spread anomalies, order flow imbalances
+6. **Market Microstructure**: Bid-ask spread anomalies, order flow imbalances`
+    }
+  ];
 
-Return detailed analysis as JSON:
-{
-  "anomalies_detected": [
-    {
-      "type": "price|volume|pattern|statistical|regime|microstructure",
-      "severity": "low|medium|high|critical",
-      "confidence": <0-1>,
-      "description": "detailed description of anomaly",
-      "current_value": <value>,
-      "expected_range": [<min>, <max>],
-      "z_score": <number>,
-      "probability": <0-1>,
-      "timeframe_detected": "timeframe",
-      "potential_causes": ["cause1", "cause2"],
-      "trading_implications": {
-        "direction": "bullish|bearish|neutral",
-        "suggested_action": "buy|sell|hold|monitor",
-        "risk_level": "low|medium|high",
-        "timeframe": "minutes|hours|days"
-      },
-      "historical_context": "similar past occurrences and outcomes"
+  const anomalies = await callGrokStructured(GROK_API_KEY, messages, anomalySchema, {
+    temperature: 0.3,
+    max_tokens: 2000
+  });
+
+  // Store anomalies in database
+  if (anomalies && anomalies.anomalies_detected.length > 0) {
+    try {
+      const storageResult = await storeAnomalyDetection(
+        symbol,
+        anomalies,
+        'agent-anomaly-detector'
+      );
+      
+      // Add storage info to response
+      anomalies._storage = storageResult;
+    } catch (storeError) {
+      console.warn('Failed to store anomaly detection:', storeError.message);
+      anomalies._storage = { success: false, error: storeError.message };
     }
-  ],
-  "pattern_analysis": {
-    "chart_patterns": ["pattern1", "pattern2"],
-    "support_resistance": {
-      "key_levels": [<level1>, <level2>],
-      "strength": "weak|moderate|strong",
-      "test_count": <number>
-    },
-    "trend_analysis": {
-      "current_trend": "uptrend|downtrend|sideways",
-      "trend_strength": <0-1>,
-      "trend_duration": "days",
-      "potential_reversal": <0-1>
-    }
-  },
-  "volume_profile": {
-    "volume_anomalies": ["high_volume_spike", "unusual_distribution"],
-    "institutional_activity": "accumulation|distribution|neutral",
-    "volume_price_divergence": true|false
-  },
-  "cross_market_impact": {
-    "sector_correlation": <-1 to 1>,
-    "market_correlation": <-1 to 1>,
-    "relative_strength": <number>,
-    "beta_anomaly": true|false
-  },
-  "risk_assessment": {
-    "volatility_expansion": true|false,
+  }
     "correlation_breakdown": true|false,
     "liquidity_concerns": true|false,
     "overall_risk": "low|medium|high|extreme"

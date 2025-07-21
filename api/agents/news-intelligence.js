@@ -3,7 +3,7 @@
  * RESTful interface for the News Intelligence Agent
  */
 
-import { NewsIntelligenceAgent } from '../../agents/news-intelligence-agent.js';
+import { IntelligentNewsIntelligenceAgent } from '../../agents/news-intelligence-agent-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase with error handling
@@ -41,7 +41,7 @@ async function initializeAgent() {
         }
       };
       
-      newsAgent = new NewsIntelligenceAgent(agentData);
+      newsAgent = new IntelligentNewsIntelligenceAgent(agentData);
       await newsAgent.initialize();
       
       console.log('🔵 News Intelligence Agent initialized and ready');

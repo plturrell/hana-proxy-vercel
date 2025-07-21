@@ -3,7 +3,7 @@
  * RESTful interface for news-driven hedge recommendations and risk assessment
  */
 
-import { NewsAssessmentHedgeAgent } from '../../agents/news-assessment-hedge-agent.js';
+import { IntelligentNewsAssessmentAgent } from '../../agents/news-assessment-hedge-agent-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase with error handling
@@ -40,7 +40,7 @@ async function initializeNewsHedgeAgent() {
     };
     
     // Always create the agent instance
-    newsHedgeAgent = new NewsAssessmentHedgeAgent(agentData);
+    newsHedgeAgent = new IntelligentNewsAssessmentAgent(agentData);
     
     try {
       // Try to initialize with database connections

@@ -75,6 +75,51 @@
     },
     "api/agents/news-assessment-hedge.js": {
       "maxDuration": 30
+    },
+    "api/functions/calculate.js": {
+      "maxDuration": 30
+    },
+    "api/functions/orchestrator.js": {
+      "maxDuration": 30
+    },
+    "api/functions/black_scholes.js": {
+      "maxDuration": 30
+    },
+    "api/functions/clustering.js": {
+      "maxDuration": 30
+    },
+    "api/functions/pearson_correlation.js": {
+      "maxDuration": 30
+    },
+    "api/functions/sharpe_ratio.js": {
+      "maxDuration": 30
+    },
+    "api/functions/value_at_risk.js": {
+      "maxDuration": 30
+    },
+    "api/functions/kelly_criterion.js": {
+      "maxDuration": 30
+    },
+    "api/functions/monte_carlo.js": {
+      "maxDuration": 30
+    },
+    "api/functions/regression.js": {
+      "maxDuration": 30
+    },
+    "api/functions/time_series_analysis.js": {
+      "maxDuration": 30
+    },
+    "api/functions/outlier_detection.js": {
+      "maxDuration": 30
+    },
+    "api/functions/technical_indicators.js": {
+      "maxDuration": 30
+    },
+    "api/grok-portfolio-impact.js": {
+      "maxDuration": 60
+    },
+    "api/news-intelligence-verify.js": {
+      "maxDuration": 60
     }
   },
   "rewrites": [

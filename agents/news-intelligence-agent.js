@@ -255,7 +255,7 @@ export class NewsIntelligenceAgent extends A2AAgent {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-large-128k-online',
+          model: 'sonar-deep-research',
           messages: [
             {
               role: 'system',
@@ -398,7 +398,7 @@ export class NewsIntelligenceAgent extends A2AAgent {
           'Authorization': `Bearer ${this.perplexityApiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-large-128k-online',
+          model: 'sonar-deep-research',
           messages: [
             {
               role: 'system',
@@ -689,7 +689,7 @@ Focus on:
           'Authorization': `Bearer ${this.perplexityApiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-large-128k-online',
+          model: 'sonar-deep-research',
           messages: [
             {
               role: 'system',
@@ -796,7 +796,7 @@ Provide advanced sentiment analysis:
           'Authorization': `Bearer ${this.perplexityApiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-large-128k-online',
+          model: 'sonar-deep-research',
           messages: [
             {
               role: 'system',
@@ -1209,7 +1209,7 @@ Return JSON format:
           'Authorization': `Bearer ${this.perplexityApiKey}`
         },
         body: JSON.stringify({
-          model: 'llama-3.1-sonar-large-128k-online',
+          model: 'sonar-deep-research',
           messages: [
             {
               role: 'system',

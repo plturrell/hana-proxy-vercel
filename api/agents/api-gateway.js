@@ -3,7 +3,7 @@
  * RESTful interface for gateway management and request routing
  */
 
-import { APIGatewayAgent } from '../../agents/api-gateway-agent.js';
+import { IntelligentAPIGatewayAgent } from '../../agents/api-gateway-agent-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       };
       
       try {
-        gatewayInstance = new APIGatewayAgent(agentData);
+        gatewayInstance = new IntelligentAPIGatewayAgent(agentData);
         await gatewayInstance.initialize();
       } catch (initError) {
         console.error('Failed to initialize API Gateway Agent:', initError);

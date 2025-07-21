@@ -5,6 +5,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import { AGENT_ENHANCEMENT_SCHEMA, callGrokStructured } from './lib/grok-structured-schemas.js';
 
 dotenv.config();
 
@@ -45,7 +46,14 @@ const COMPLIANCE_REQUIREMENTS = {
 async function enhanceAgentWithAI(agent) {
   console.log(`\n🤖 Enhancing agent: ${agent.name}`);
   
-  const prompt = `You are an AI compliance assistant helping to register financial analytics agents for A2A (Agent-to-Agent) and ORD (Open Resource Discovery) compliance.
+  const messages = [
+    {
+      role: 'system',
+      content: 'You are a compliance expert for financial analytics systems.'
+    },
+    {
+      role: 'user',
+      content: `You are an AI compliance assistant helping to register financial analytics agents for A2A (Agent-to-Agent) and ORD (Open Resource Discovery) compliance.
 
 Current agent data:
 ${JSON.stringify(agent, null, 2)}
@@ -63,52 +71,16 @@ ORD Requirements:
 - Must have proper categorization (package assignment, group membership)
 - Must have clear API documentation
 
-Please provide enhanced metadata for this agent that ensures full compliance. Return a JSON object with the following structure:
-{
-  "enhanced_description": "Detailed markdown description",
-  "capabilities": ["capability1", "capability2", ...],
-  "inputSchema": { /* JSON schema for inputs */ },
-  "outputSchema": { /* JSON schema for outputs */ },
-  "goals": ["goal1", "goal2", ...],
-  "personality_traits": ["trait1", "trait2", ...],
-  "collaboration_preferences": { /* how this agent works with others */ },
-  "performance_metrics": { /* what metrics this agent tracks */ },
-  "compliance_notes": "Any specific compliance considerations"
-}`;
+Please provide enhanced metadata for this agent that ensures full compliance.`
+    }
+  ];
 
   try {
-    const response = await fetch('https://api.x.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${XAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'grok-4-0709',
-        messages: [
-          {
-            role: 'system',
-            content: 'You are a compliance expert for financial analytics systems. Always return valid JSON.'
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 2000
-      })
+    const enhanced = await callGrokStructured(XAI_API_KEY, messages, AGENT_ENHANCEMENT_SCHEMA, {
+      temperature: 0.7,
+      max_tokens: 2000
     });
-
-    if (!response.ok) {
-      throw new Error(`XAI API error: ${response.status}`);
-    }
-
-    const data = await response.json();
-    const content = data.choices[0].message.content;
     
-    // Parse the JSON response
-    const enhanced = JSON.parse(content);
     return enhanced;
   } catch (error) {
     console.error(`❌ AI enhancement failed for ${agent.name}:`, error.message);

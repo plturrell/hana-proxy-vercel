@@ -565,6 +565,24 @@
         <div class="jobs-metric-value">+18.7%</div>
         <div class="jobs-metric-change positive">↗ +1.2%</div>
       </div>
+      
+      <!-- News Impact Analysis Card -->
+      <div class="jobs-card" onclick="analyzeNewsImpact()" style="position: relative; overflow: hidden;">
+        <div class="jobs-gesture-hint">Tap to analyze current news</div>
+        <div class="jobs-metric-label">News Impact</div>
+        <div class="jobs-metric-value" id="news-impact-value">Loading...</div>
+        <div class="jobs-metric-change" id="news-impact-change">Analyzing...</div>
+        <div style="position: absolute; top: 8px; right: 8px; font-size: 12px; color: var(--jobs-blue);">LIVE</div>
+      </div>
+      
+      <!-- Market Sentiment Card -->
+      <div class="jobs-card" onclick="viewNewsDetails()" style="position: relative;">
+        <div class="jobs-gesture-hint">View latest financial news</div>
+        <div class="jobs-metric-label">Market Sentiment</div>
+        <div class="jobs-metric-value" id="market-sentiment">Real-time</div>
+        <div class="jobs-metric-change" id="sentiment-source">Perplexity AI</div>
+        <div style="position: absolute; top: 8px; right: 8px; font-size: 12px; color: var(--jobs-green);">✓</div>
+      </div>
     </div>
     
     <!-- Actions Section -->
@@ -664,6 +682,141 @@
       if (diff < -100) {
         location.reload();
       }
+    });
+    
+    // News Impact Analysis Functions
+    let currentNewsData = null;
+    
+    async function analyzeNewsImpact() {
+      const impactValue = document.getElementById('news-impact-value');
+      const impactChange = document.getElementById('news-impact-change');
+      
+      // Show loading state
+      impactValue.textContent = 'Analyzing...';
+      impactChange.textContent = 'Fetching news...';
+      impactChange.className = 'jobs-metric-change';
+      
+      try {
+        console.log('🤖 Starting real-time news impact analysis...');
+        
+        // Call our deployed API endpoint
+        const response = await fetch('/api/grok-portfolio-impact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            fetch_current_news: true,
+            portfolio_id: 'TEST_NEWS_IMPACT'
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`API Error: ${response.status}`);
+        }
+        
+        const analysis = await response.json();
+        console.log('✅ News impact analysis complete:', analysis);
+        
+        if (analysis.success && analysis.real_news_analysis) {
+          const totalImpact = analysis.combined_impact.total_dollar_impact;
+          const confidence = analysis.combined_impact.avg_confidence;
+          const newsCount = analysis.news_analyzed;
+          
+          // Update UI with real results
+          impactValue.textContent = `$${Math.abs(totalImpact).toFixed(1)}K`;
+          const impactDirection = totalImpact >= 0 ? 'positive' : 'negative';
+          const arrow = totalImpact >= 0 ? '↗' : '↘';
+          impactChange.textContent = `${arrow} ${newsCount} articles (${Math.round(confidence * 100)}% conf)`;
+          impactChange.className = `jobs-metric-change ${impactDirection}`;
+          
+          // Store for details view
+          currentNewsData = analysis;
+          
+          // Update market sentiment
+          updateMarketSentiment(analysis);
+          
+        } else {
+          impactValue.textContent = 'No Impact';
+          impactChange.textContent = analysis.error || 'No current news found';
+          impactChange.className = 'jobs-metric-change';
+        }
+        
+      } catch (error) {
+        console.error('❌ News analysis failed:', error);
+        impactValue.textContent = 'Error';
+        impactChange.textContent = 'Check API status';
+        impactChange.className = 'jobs-metric-change negative';
+      }
+    }
+    
+    function updateMarketSentiment(analysis) {
+      const sentimentValue = document.getElementById('market-sentiment');
+      const sentimentSource = document.getElementById('sentiment-source');
+      
+      if (analysis.analyses && analysis.analyses.length > 0) {
+        const sentiments = analysis.analyses.map(a => a.news_item.market_impact).filter(Boolean);
+        const positive = sentiments.filter(s => s === 'positive').length;
+        const negative = sentiments.filter(s => s === 'negative').length;
+        
+        let overallSentiment = 'Neutral';
+        if (positive > negative) overallSentiment = 'Bullish';
+        else if (negative > positive) overallSentiment = 'Bearish';
+        
+        sentimentValue.textContent = overallSentiment;
+        sentimentSource.textContent = `${sentiments.length} sources`;
+      }
+    }
+    
+    function viewNewsDetails() {
+      if (currentNewsData && currentNewsData.analyses) {
+        // Create a simple modal to show news details
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+          position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+          background: rgba(0,0,0,0.8); z-index: 1000;
+          display: flex; align-items: center; justify-content: center;
+          padding: 20px;
+        `;
+        
+        const content = document.createElement('div');
+        content.style.cssText = `
+          background: var(--jobs-white); border-radius: 12px;
+          padding: 24px; max-width: 600px; max-height: 80vh;
+          overflow-y: auto; color: var(--jobs-black);
+        `;
+        
+        let newsHtml = '<h2>Current Financial News Impact</h2>';
+        currentNewsData.analyses.forEach((analysis, i) => {
+          const news = analysis.news_item;
+          newsHtml += `
+            <div style="border-bottom: 1px solid #eee; padding: 16px 0;">
+              <h3 style="margin: 0 0 8px 0; font-size: 16px;">${news.title}</h3>
+              <p style="margin: 0 0 8px 0; color: #666; font-size: 14px;">
+                ${news.source} • ${news.age_hours} hours ago • ${news.market_impact}
+              </p>
+              <p style="margin: 0; font-size: 14px;">Impact: $${analysis.analysis?.total_impact || 0}</p>
+            </div>
+          `;
+        });
+        
+        newsHtml += '<button onclick="this.parentElement.parentElement.remove()" style="margin-top: 16px; padding: 8px 16px; background: var(--jobs-blue); color: white; border: none; border-radius: 6px;">Close</button>';
+        
+        content.innerHTML = newsHtml;
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        modal.onclick = (e) => {
+          if (e.target === modal) modal.remove();
+        };
+      } else {
+        alert('No news data available. Click "Analyze News Impact" first.');
+      }
+    }
+    
+    // Auto-load news impact on page load
+    window.addEventListener('load', () => {
+      setTimeout(analyzeNewsImpact, 1000); // Load after 1 second
     });
   </script>
   

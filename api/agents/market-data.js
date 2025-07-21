@@ -3,7 +3,7 @@
  * RESTful interface for real-time market data ingestion and processing
  */
 
-import { MarketDataAgent } from '../../agents/market-data-agent.js';
+import { IntelligentMarketDataAgent } from '../../agents/market-data-agent-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       };
       
       try {
-        marketDataInstance = new MarketDataAgent(agentData);
+        marketDataInstance = new IntelligentMarketDataAgent(agentData);
         await marketDataInstance.initialize();
       } catch (initError) {
         console.error('Failed to initialize Market Data Agent:', initError);

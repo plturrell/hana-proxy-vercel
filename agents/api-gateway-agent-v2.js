@@ -18,17 +18,50 @@ const PERPLEXITY_BASE_URL = 'https://api.perplexity.ai/chat/completions';
 
 // Mathematical client for quantitative analysis
 const mathClient = {
+  baseUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.BASE_URL || 'http://localhost:3000'),
+  
   async callFunction(functionName, params) {
     try {
-      const response = await fetch('/api/functions/calculate', {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ function: functionName, parameters: params })
       });
-      return await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`Function call failed: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.status === 'error') {
+        console.error(`Function ${functionName} error:`, result.error);
+        return null;
+      }
+      
+      return result;
     } catch (error) {
       console.error(`Math function ${functionName} failed:`, error);
       return null;
+    }
+  },
+  
+  async callBatch(requests) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Batch call failed: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Batch function call failed:', error);
+      return { status: 'error', error: error.message };
     }
   }
 };
@@ -931,6 +964,130 @@ Return as structured JSON with specific actions.`
         }
       }
     }
+  }
+
+  /**
+   * Simplify API performance output for users
+   */
+  simplifyPerformanceOutput(performanceData) {
+    try {
+      const latencyStats = this.calculateLatencyStats();
+      const throughputStats = this.calculateThroughputStats();
+      const errorStats = this.calculateErrorStats();
+      
+      return {
+        // System Status
+        status: {
+          health: this.getSystemHealth(latencyStats, errorStats),
+          message: this.getStatusMessage(latencyStats, errorStats),
+          uptime: `${((Date.now() - this.startTime) / 3600000).toFixed(1)} hours`
+        },
+        
+        // Performance Metrics
+        performance: {
+          speed: `${Math.round(latencyStats.p50)}ms average`,
+          capacity: `${this.formatNumber(throughputStats.current)} requests/sec`,
+          reliability: `${((1 - errorStats.rate) * 100).toFixed(2)}% success rate`
+        },
+        
+        // Protection & Savings
+        protection: {
+          threatsBlocked: this.formatNumber(this.quantitativeMetrics.anomaliesDetected.size),
+          costSavings: this.formatCurrency(this.calculateMonthlySavings()),
+          efficiencyGain: `${Math.round(performanceData.optimizationImpact * 100)}%`
+        },
+        
+        // Recommendations
+        insights: {
+          optimization: performanceData.recommendations?.[0] || 'System running optimally',
+          nextAction: this.getNextOptimizationAction(performanceData)
+        }
+      };
+      
+    } catch (error) {
+      return {
+        status: {
+          health: 'Unknown',
+          message: 'Unable to calculate metrics',
+          error: error.message
+        }
+      };
+    }
+  }
+
+  // Helper methods for simplification
+  getSystemHealth(latencyStats, errorStats) {
+    if (latencyStats.p99 < 100 && errorStats.rate < 0.01) return 'Excellent';
+    if (latencyStats.p99 < 500 && errorStats.rate < 0.05) return 'Good';
+    if (latencyStats.p99 < 1000 && errorStats.rate < 0.1) return 'Fair';
+    return 'Needs Attention';
+  }
+
+  getStatusMessage(latencyStats, errorStats) {
+    if (latencyStats.p99 < 100 && errorStats.rate < 0.01) {
+      return 'All systems performing optimally';
+    }
+    if (errorStats.rate > 0.05) {
+      return 'Elevated error rates detected';
+    }
+    if (latencyStats.p99 > 500) {
+      return 'Higher than normal latency';
+    }
+    return 'System operating normally';
+  }
+
+  calculateLatencyStats() {
+    const latencies = Array.from(this.quantitativeMetrics.requestLatencies.values());
+    if (latencies.length === 0) return { p50: 0, p99: 0 };
+    
+    latencies.sort((a, b) => a - b);
+    return {
+      p50: latencies[Math.floor(latencies.length * 0.5)],
+      p99: latencies[Math.floor(latencies.length * 0.99)]
+    };
+  }
+
+  calculateThroughputStats() {
+    const throughputs = Array.from(this.quantitativeMetrics.throughputRates.values());
+    const current = throughputs[throughputs.length - 1] || 0;
+    const avg = throughputs.reduce((a, b) => a + b, 0) / throughputs.length || 0;
+    
+    return { current, average: avg };
+  }
+
+  calculateErrorStats() {
+    const errors = Array.from(this.quantitativeMetrics.errorRates.values());
+    const rate = errors[errors.length - 1] || 0;
+    
+    return { rate, count: errors.filter(e => e > 0).length };
+  }
+
+  calculateMonthlySavings() {
+    // Estimate based on optimized requests and prevented errors
+    const optimizedRequests = this.quantitativeMetrics.totalRequests * 0.2; // 20% optimization
+    const savingsPerRequest = 0.001; // $0.001 per optimized request
+    return optimizedRequests * savingsPerRequest * 30; // Monthly estimate
+  }
+
+  formatNumber(num) {
+    if (num >= 1000000) return `${(num / 1000000).toFixed(1)}M`;
+    if (num >= 1000) return `${(num / 1000).toFixed(1)}K`;
+    return num.toString();
+  }
+
+  formatCurrency(amount) {
+    if (amount >= 1000) return `$${(amount / 1000).toFixed(1)}K`;
+    return `$${amount.toFixed(0)}`;
+  }
+
+  getNextOptimizationAction(data) {
+    if (data.latencyTrend === 'increasing') {
+      return 'Consider scaling up resources';
+    }
+    if (data.errorTrend === 'increasing') {
+      return 'Review error patterns';
+    }
+    return 'Continue monitoring';
   }
 }
 

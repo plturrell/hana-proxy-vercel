@@ -18,17 +18,50 @@ const PERPLEXITY_BASE_URL = 'https://api.perplexity.ai/chat/completions';
 
 // Mathematical client for performance analytics
 const mathClient = {
+  baseUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.BASE_URL || 'http://localhost:3000'),
+  
   async callFunction(functionName, params) {
     try {
-      const response = await fetch('/api/functions/calculate', {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ function: functionName, parameters: params })
       });
-      return await response.json();
+      
+      if (!response.ok) {
+        throw new Error(`Function call failed: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.status === 'error') {
+        console.error(`Function ${functionName} error:`, result.error);
+        return null;
+      }
+      
+      return result;
     } catch (error) {
       console.error(`Math function ${functionName} failed:`, error);
       return null;
+    }
+  },
+  
+  async callBatch(requests) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Batch call failed: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Batch function call failed:', error);
+      return { status: 'error', error: error.message };
     }
   }
 };
@@ -895,6 +928,156 @@ Return anomalies with severity levels and recommended actions.`
     });
     
     this.performanceAnalytics.optimizationOpportunities = opportunities;
+  }
+  /**
+   * Simplify registry output for users
+   */
+  simplifyRegistryOutput(registryData) {
+    try {
+      const totalResources = this.ordRegistry.size;
+      const activeResources = Array.from(this.ordRegistry.values())
+        .filter(r => r.status === 'active').length;
+      
+      return {
+        // Registry Overview
+        registry: {
+          status: this.getRegistryHealth(),
+          totalResources: totalResources,
+          activeResources: activeResources,
+          resourceTypes: this.getResourceTypeDistribution()
+        },
+        
+        // Performance
+        performance: {
+          avgDiscoveryTime: `${Math.round(this.calculateAvgDiscoveryTime())}ms`,
+          cacheHitRate: `${(this.calculateCacheHitRate() * 100).toFixed(1)}%`,
+          optimizationLevel: `${Math.round(this.getOptimizationLevel() * 100)}%`
+        },
+        
+        // Top Resources
+        resources: {
+          mostUsed: this.getMostUsedResources(5),
+          recentlyAdded: this.getRecentlyAddedResources(3),
+          highPerformance: this.getHighPerformanceResources(3)
+        },
+        
+        // Insights
+        insights: {
+          recommendation: this.getRegistryRecommendation(),
+          anomalies: this.getResourceAnomalies().length,
+          nextOptimization: this.getNextOptimizationTime()
+        }
+      };
+      
+    } catch (error) {
+      return {
+        registry: {
+          status: 'Error',
+          message: 'Unable to retrieve registry status',
+          error: error.message
+        }
+      };
+    }
+  }
+
+  // Helper methods for simplification
+  getRegistryHealth() {
+    const activeRatio = Array.from(this.ordRegistry.values())
+      .filter(r => r.status === 'active').length / this.ordRegistry.size;
+    
+    if (activeRatio > 0.95) return 'Excellent';
+    if (activeRatio > 0.8) return 'Good';
+    if (activeRatio > 0.6) return 'Fair';
+    return 'Needs Attention';
+  }
+
+  getResourceTypeDistribution() {
+    const distribution = {};
+    for (const resource of this.ordRegistry.values()) {
+      const type = resource.resource_type || 'unknown';
+      distribution[type] = (distribution[type] || 0) + 1;
+    }
+    return distribution;
+  }
+
+  calculateAvgDiscoveryTime() {
+    const metrics = Array.from(this.resourceMetrics.discoveryLatency.values());
+    return metrics.length > 0 ? 
+      metrics.reduce((a, b) => a + b, 0) / metrics.length : 0;
+  }
+
+  calculateCacheHitRate() {
+    const hits = this.resourceMetrics.cacheHits.size;
+    const total = this.resourceMetrics.discoveryLatency.size;
+    return total > 0 ? hits / total : 0;
+  }
+
+  getOptimizationLevel() {
+    const optimized = Array.from(this.ordRegistry.values())
+      .filter(r => r.optimization_score && r.optimization_score > 0.7).length;
+    return this.ordRegistry.size > 0 ? optimized / this.ordRegistry.size : 0;
+  }
+
+  getMostUsedResources(count) {
+    return Array.from(this.resourceMetrics.usageFrequency.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, count)
+      .map(([id, frequency]) => ({
+        id,
+        name: this.ordRegistry.get(id)?.resource_name || id,
+        usageCount: frequency
+      }));
+  }
+
+  getRecentlyAddedResources(count) {
+    return Array.from(this.ordRegistry.entries())
+      .sort((a, b) => new Date(b[1].created_at) - new Date(a[1].created_at))
+      .slice(0, count)
+      .map(([id, resource]) => ({
+        id,
+        name: resource.resource_name,
+        addedAt: new Date(resource.created_at).toLocaleDateString()
+      }));
+  }
+
+  getHighPerformanceResources(count) {
+    return Array.from(this.ordRegistry.entries())
+      .filter(([id, r]) => r.performance_score)
+      .sort((a, b) => (b[1].performance_score || 0) - (a[1].performance_score || 0))
+      .slice(0, count)
+      .map(([id, resource]) => ({
+        id,
+        name: resource.resource_name,
+        score: `${Math.round((resource.performance_score || 0) * 100)}%`
+      }));
+  }
+
+  getResourceAnomalies() {
+    return Array.from(this.resourceMetrics.performanceAnomalies.values())
+      .filter(anomaly => new Date() - anomaly.timestamp < 3600000); // Last hour
+  }
+
+  getRegistryRecommendation() {
+    const anomalies = this.getResourceAnomalies();
+    const underused = Array.from(this.resourceMetrics.usageFrequency.entries())
+      .filter(([id, freq]) => freq < 10).length;
+    
+    if (anomalies.length > 5) {
+      return 'Multiple resource anomalies detected - review performance';
+    }
+    if (underused > this.ordRegistry.size * 0.3) {
+      return 'Many underused resources - consider consolidation';
+    }
+    if (this.calculateCacheHitRate() < 0.5) {
+      return 'Low cache hit rate - optimize discovery patterns';
+    }
+    return 'Registry operating efficiently';
+  }
+
+  getNextOptimizationTime() {
+    // Next scheduled optimization in human-readable format
+    const nextRun = new Date(Date.now() + 30 * 60 * 1000); // 30 minutes
+    return nextRun.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 }
 

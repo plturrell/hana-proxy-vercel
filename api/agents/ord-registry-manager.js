@@ -3,7 +3,7 @@
  * RESTful interface for ORD compliance management and capability discovery
  */
 
-import { ORDRegistryManager } from '../../agents/ord-registry-manager.js';
+import { IntelligentORDRegistryManager } from '../../agents/ord-registry-manager-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       };
       
       try {
-        ordManagerInstance = new ORDRegistryManager(agentData);
+        ordManagerInstance = new IntelligentORDRegistryManager(agentData);
         await ordManagerInstance.initialize();
       } catch (initError) {
         console.error('Failed to initialize ORD Registry Manager:', initError);

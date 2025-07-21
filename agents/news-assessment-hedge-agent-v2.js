@@ -132,26 +132,52 @@ export class QuantitativeNewsHedgeAgent extends A2AAgent {
     
     // Financial calculation function client
     this.mathClient = {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+      baseUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.BASE_URL || 'http://localhost:3000'),
       
       async callFunction(functionName, params) {
         try {
-          const response = await fetch(`${this.baseUrl}/api/functions/${functionName}`, {
+          const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(params)
+            body: JSON.stringify({ function: functionName, parameters: params })
           });
           
           if (!response.ok) {
             throw new Error(`Function ${functionName} failed: ${response.status}`);
           }
           
-          return await response.json();
+          const result = await response.json();
+          
+          if (result.status === 'error') {
+            console.error(`Function ${functionName} error:`, result.error);
+            return null;
+          }
+          
+          return result;
         } catch (error) {
           console.error(`Math function ${functionName} error:`, error);
-          throw error;
+          return null;
+        }
+      },
+      
+      async callBatch(requests) {
+        try {
+          const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requests })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Batch call failed: ${response.status}`);
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('Batch function call failed:', error);
+          return { status: 'error', error: error.message };
         }
       }
     };
@@ -631,7 +657,8 @@ export class QuantitativeNewsHedgeAgent extends A2AAgent {
       // Store in news event log
       this.newsEventLog.push(analysisResults);
 
-      return analysisResults;
+      // Return simplified output for users
+      return this.simplifyAnalysisOutput(analysisResults);
 
     } catch (error) {
       console.error('Quantitative news analysis workflow failed:', error);
@@ -1557,6 +1584,149 @@ Format as structured JSON with specific, actionable recommendations.
     } catch (error) {
       return { raw_response: response, parse_error: error.message };
     }
+  }
+
+  /**
+   * Simplify complex analysis output for user consumption
+   */
+  simplifyAnalysisOutput(analysisResults) {
+    try {
+      // Extract key data from step results
+      const perplexity = analysisResults.step_results.get('perplexity_analysis');
+      const impact = analysisResults.step_results.get('quantitative_impact_modeling');
+      const risk = analysisResults.step_results.get('portfolio_risk_assessment');
+      const hedges = analysisResults.step_results.get('hedge_optimization');
+      const validation = analysisResults.step_results.get('monte_carlo_validation');
+      const sizing = analysisResults.step_results.get('kelly_position_sizing');
+      
+      // Build clean output
+      return {
+        // Event summary
+        event: {
+          headline: analysisResults.news_event.headline,
+          timestamp: analysisResults.news_event.timestamp,
+          source: analysisResults.news_event.source
+        },
+        
+        // Impact assessment (no math details)
+        impact: {
+          severity: this.extractSeverity(perplexity, impact),
+          portfolioExposure: this.extractExposure(impact, risk),
+          affectedAssets: this.extractAffectedAssets(perplexity, impact)
+        },
+        
+        // Protection status
+        protection: {
+          available: hedges?.status === 'completed',
+          effectiveness: this.extractEffectiveness(hedges, validation),
+          cost: this.extractCost(hedges, sizing),
+          coverage: this.extractCoverage(validation)
+        },
+        
+        // Simple recommendation
+        recommendation: {
+          action: this.extractRecommendation(hedges, risk),
+          urgency: this.extractUrgency(impact, risk),
+          confidence: this.extractConfidence(perplexity, validation)
+        },
+        
+        // Execution status
+        status: {
+          analyzed: true,
+          executionId: analysisResults.execution_id,
+          completedAt: analysisResults.timestamp
+        }
+      };
+    } catch (error) {
+      console.error('Error simplifying output:', error);
+      // Fallback to basic info
+      return {
+        event: {
+          headline: analysisResults.news_event?.headline || 'Unknown event',
+          error: 'Analysis simplification failed'
+        },
+        status: {
+          analyzed: false,
+          error: error.message
+        }
+      };
+    }
+  }
+
+  // Helper methods to extract clean values from complex results
+  extractSeverity(perplexity, impact) {
+    const varChange = impact?.quantitative_impact?.var_change;
+    const aiAssessment = perplexity?.analysis?.structured_insights?.volatility_spike;
+    
+    if (varChange > 0.5 || aiAssessment > 0.5) return 'Critical';
+    if (varChange > 0.3 || aiAssessment > 0.3) return 'High';
+    if (varChange > 0.1 || aiAssessment > 0.1) return 'Medium';
+    return 'Low';
+  }
+
+  extractExposure(impact, risk) {
+    const exposure = impact?.quantitative_impact?.portfolio_exposure || 
+                    risk?.portfolio_risk?.total_exposure || 0;
+    return this.formatCurrency(exposure);
+  }
+
+  extractAffectedAssets(perplexity, impact) {
+    return perplexity?.analysis?.structured_insights?.affected_assets || 
+           impact?.quantitative_impact?.affected_sectors || 
+           ['Unknown'];
+  }
+
+  extractEffectiveness(hedges, validation) {
+    const effectiveness = validation?.validation_results?.overall_hedge_quality || 
+                         hedges?.hedge_strategies?.overall_effectiveness || 0;
+    return `${Math.round(effectiveness * 100)}%`;
+  }
+
+  extractCost(hedges, sizing) {
+    const cost = sizing?.total_hedge_cost || hedges?.total_cost || 0;
+    const portfolioValue = sizing?.portfolio_value || 1000000; // default 1M
+    const percentage = (cost / portfolioValue * 100).toFixed(1);
+    return {
+      amount: this.formatCurrency(cost),
+      percentage: `${percentage}%`
+    };
+  }
+
+  extractCoverage(validation) {
+    const coverage = validation?.validation_results?.overall_hedge_quality || 0.85;
+    return `${Math.round(coverage * 100)}% downside protected`;
+  }
+
+  extractRecommendation(hedges, risk) {
+    if (!hedges || hedges.status === 'failed') return 'Monitor situation';
+    if (risk?.portfolio_risk?.severity === 'critical') return 'Immediate protection required';
+    if (hedges?.hedge_strategies) return 'Activate recommended hedges';
+    return 'No action needed';
+  }
+
+  extractUrgency(impact, risk) {
+    const severity = impact?.quantitative_impact?.severity || risk?.portfolio_risk?.severity;
+    if (severity === 'critical') return 'Immediate';
+    if (severity === 'high') return 'Today';
+    return 'Monitor';
+  }
+
+  extractConfidence(perplexity, validation) {
+    const aiConfidence = perplexity?.analysis?.confidence_score || 0.7;
+    const validationScore = validation?.validation_results?.confidence || 0.8;
+    const combined = (aiConfidence + validationScore) / 2;
+    
+    if (combined > 0.9) return 'Very High';
+    if (combined > 0.7) return 'High';
+    if (combined > 0.5) return 'Moderate';
+    return 'Low';
+  }
+
+  formatCurrency(amount) {
+    if (!amount || amount === 0) return '$0';
+    if (amount >= 1000000) return `$${(amount / 1000000).toFixed(1)}M`;
+    if (amount >= 1000) return `$${Math.round(amount / 1000)}K`;
+    return `$${Math.round(amount)}`;
   }
 }
 

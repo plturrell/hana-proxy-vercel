@@ -3,7 +3,7 @@
  * RESTful interface for agent coordination and protocol management
  */
 
-import { A2AProtocolManager } from '../../agents/a2a-protocol-manager.js';
+import { IntelligentA2AProtocolManager } from '../../agents/a2a-protocol-manager-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       };
       
       try {
-        protocolManagerInstance = new A2AProtocolManager(agentData);
+        protocolManagerInstance = new IntelligentA2AProtocolManager(agentData);
         await protocolManagerInstance.initialize();
       } catch (initError) {
         console.error('Failed to initialize A2A Protocol Manager:', initError);

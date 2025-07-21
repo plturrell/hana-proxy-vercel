@@ -17,6 +17,56 @@ const GROK_BASE_URL = 'https://api.x.ai/v1';
 const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY;
 const PERPLEXITY_BASE_URL = 'https://api.perplexity.ai/chat/completions';
 
+// Mathematical client for performance analytics
+const mathClient = {
+  baseUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.BASE_URL || 'http://localhost:3000'),
+  
+  async callFunction(functionName, params) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ function: functionName, parameters: params })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Function call failed: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.status === 'error') {
+        console.error(`Function ${functionName} error:`, result.error);
+        return null;
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`Math function ${functionName} failed:`, error);
+      return null;
+    }
+  },
+  
+  async callBatch(requests) {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ requests })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Batch call failed: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error('Batch function call failed:', error);
+      return { status: 'error', error: error.message };
+    }
+  }
+};
+
 // Perplexity client for deep research on coordination patterns
 const perplexityClient = {
   async analyze(prompt, options = {}) {
@@ -2800,6 +2850,143 @@ Format as JSON array.
     };
     
     return status;
+  }
+
+  /**
+   * Simplify coordination output for users
+   */
+  simplifyCoordinationOutput(coordinationData) {
+    try {
+      const activeCoordinations = this.messageQueue.size;
+      const completedToday = Array.from(this.messageQueue.values())
+        .filter(c => c.metrics.completion_status === 'completed' && 
+                     new Date(c.metrics.start_time).toDateString() === new Date().toDateString())
+        .length;
+      
+      return {
+        // System Overview
+        coordination: {
+          status: this.getCoordinationHealth(),
+          message: this.getCoordinationMessage(),
+          activeProcesses: activeCoordinations,
+          completedToday: completedToday
+        },
+        
+        // Performance Metrics
+        performance: {
+          avgResponseTime: `${Math.round(this.calculateAvgResponseTime())}ms`,
+          successRate: `${(this.calculateSuccessRate() * 100).toFixed(1)}%`,
+          efficiency: `${(this.calculateEfficiency() * 100).toFixed(0)}% optimal`
+        },
+        
+        // Agent Network
+        network: {
+          activeAgents: this.agentRegistry.size,
+          healthyAgents: this.getHealthyAgentCount(),
+          collaborations: this.getActiveCollaborations(),
+          bottlenecks: this.getBottleneckCount()
+        },
+        
+        // Insights
+        insights: {
+          topPerformers: this.getTopPerformingAgents(3).map(a => a.agentId),
+          optimization: coordinationData.optimizations?.[0] || 'System running efficiently',
+          recommendation: this.getCoordinationRecommendation()
+        }
+      };
+      
+    } catch (error) {
+      return {
+        coordination: {
+          status: 'Unknown',
+          message: 'Unable to calculate coordination metrics',
+          error: error.message
+        }
+      };
+    }
+  }
+
+  // Helper methods for simplification
+  getCoordinationHealth() {
+    const systemHealth = this.calculateSystemHealth();
+    if (systemHealth > 0.9) return 'Excellent';
+    if (systemHealth > 0.75) return 'Good';
+    if (systemHealth > 0.5) return 'Fair';
+    return 'Needs Attention';
+  }
+
+  getCoordinationMessage() {
+    const anomalyCount = this.coordinationAnalytics.coordinationAnomalies.length;
+    const recentAnomalies = this.coordinationAnalytics.coordinationAnomalies
+      .filter(a => new Date() - a.timestamp < 3600000).length; // Last hour
+    
+    if (recentAnomalies > 5) {
+      return 'Multiple coordination issues detected';
+    }
+    if (anomalyCount === 0) {
+      return 'All agents coordinating smoothly';
+    }
+    return 'Normal coordination with minor adjustments';
+  }
+
+  calculateAvgResponseTime() {
+    const allResponseTimes = [];
+    for (const [agentId, profile] of this.agentRegistry.entries()) {
+      allResponseTimes.push(...profile.performance_metrics.response_times);
+    }
+    return allResponseTimes.length > 0 ? 
+      allResponseTimes.reduce((a, b) => a + b, 0) / allResponseTimes.length : 0;
+  }
+
+  calculateSuccessRate() {
+    let totalSuccess = 0;
+    let totalAttempts = 0;
+    
+    for (const [agentId, profile] of this.agentRegistry.entries()) {
+      const successes = profile.performance_metrics.success_rates.filter(r => r === 1).length;
+      totalSuccess += successes;
+      totalAttempts += profile.performance_metrics.success_rates.length;
+    }
+    
+    return totalAttempts > 0 ? totalSuccess / totalAttempts : 0;
+  }
+
+  calculateEfficiency() {
+    const routingEfficiency = Array.from(this.coordinationAnalytics.messageRoutingEfficiency.values());
+    return routingEfficiency.length > 0 ?
+      routingEfficiency.reduce((a, b) => a + b, 0) / routingEfficiency.length : 0.5;
+  }
+
+  getHealthyAgentCount() {
+    return Array.from(this.agentRegistry.values())
+      .filter(profile => profile.health_status === 'active' && profile.coordination_score > 0.7)
+      .length;
+  }
+
+  getActiveCollaborations() {
+    return Array.from(this.messageQueue.values())
+      .filter(c => c.metrics.completion_status === 'in_progress')
+      .length;
+  }
+
+  getBottleneckCount() {
+    return this.coordinationAnalytics.coordinationAnomalies
+      .filter(a => a.type === 'bottleneck' && new Date() - a.timestamp < 3600000)
+      .length;
+  }
+
+  getCoordinationRecommendation() {
+    const anomalies = this.categorizeAnomalies();
+    if (anomalies.performance_drop > 3) {
+      return 'Consider agent performance optimization';
+    }
+    if (anomalies.communication_timeout > 5) {
+      return 'Review network connectivity';
+    }
+    if (this.findUnderutilizedAgents().length > 3) {
+      return 'Redistribute workload to underutilized agents';
+    }
+    return 'Continue monitoring';
   }
 }
 

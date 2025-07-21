@@ -1,7 +1,9 @@
 // Enhanced GraphQL endpoint that uses existing News and Market Data agents + Deep Research
 import { createClient } from '@supabase/supabase-js';
-import { NewsIntelligenceAgent } from '../agents/news-intelligence-agent.js';
-import { MarketDataAgent } from '../agents/market-data-agent.js';
+import { IntelligentNewsIntelligenceAgent } from '../agents/news-intelligence-agent-v2.js';
+import { IntelligentMarketDataAgent } from '../agents/market-data-agent-v2.js';
+import { MARKET_ANALYSIS_SCHEMA, callGrokStructured } from '../lib/grok-structured-schemas.js';
+import { storeMarketAnalysis, storeNewsAnalysis } from '../lib/ai-to-database-mapper.js';
 
 // Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -16,7 +18,7 @@ let marketAgent;
 
 async function initializeAgents() {
   if (!newsAgent) {
-    newsAgent = new NewsIntelligenceAgent({
+    newsAgent = new IntelligentNewsIntelligenceAgent({
       id: 'news-intelligence-001',
       name: 'News Intelligence Agent',
       metadata: { capabilities: ['sentiment_analysis', 'entity_extraction'] }
@@ -24,7 +26,7 @@ async function initializeAgents() {
   }
   
   if (!marketAgent) {
-    marketAgent = new MarketDataAgent({
+    marketAgent = new IntelligentMarketDataAgent({
       id: 'market-data-001',
       name: 'Market Data Agent',
       metadata: { capabilities: ['real_time_quotes', 'technical_analysis'] }

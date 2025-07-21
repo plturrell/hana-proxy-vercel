@@ -6,6 +6,7 @@
 
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { storeComplianceAnalysis } from '../lib/ai-to-database-mapper.js';
 
 // Initialize Supabase
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -96,6 +97,34 @@ async function aiEnhancedORDResponse(req, res, path) {
   // Get base ORD document
   const baseDocument = await generateBaseORDDocument(path);
   
+  // Define ORD document schema
+  const ordDocumentSchema = {
+    name: "ord_document",
+    schema: {
+      type: "object",
+      properties: {
+        "$schema": { type: "string" },
+        openResourceDiscovery: { type: "string" },
+        policyLevel: { type: "string" },
+        documents: { type: "array", items: { type: "object" } },
+        capabilities: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              ordId: { type: "string" },
+              title: { type: "string" },
+              releaseStatus: { type: "string", enum: ["active", "beta", "deprecated"] },
+              visibility: { type: "string", enum: ["public", "internal", "private"] }
+            }
+          }
+        }
+      },
+      required: ["openResourceDiscovery"],
+      additionalProperties: true
+    }
+  };
+
   // Enhance with AI
   const enhanced = await callGrokAPI({
     messages: [
@@ -115,14 +144,12 @@ Requirements:
 2. All required fields must be present
 3. Relationships between resources must be consistent
 4. Labels and metadata should follow best practices
-5. Add industry-specific enhancements for financial services
-
-Return the enhanced document as valid JSON.`
+5. Add industry-specific enhancements for financial services`
       }
     ],
     temperature: 0.2,
     max_tokens: 4000
-  });
+  }, ordDocumentSchema);
 
   const enhancedDocument = enhanced || baseDocument;
   
@@ -157,6 +184,44 @@ Return the enhanced document as valid JSON.`
 async function aiEnhancedAgentRegistration(req, res) {
   const originalBody = req.body;
   
+  // Define agent registration schema
+  const agentRegistrationSchema = {
+    name: "agent_registration",
+    schema: {
+      type: "object",
+      properties: {
+        agent_id: { type: "string" },
+        name: { type: "string" },
+        type: { type: "string", enum: ["analytics", "coordinator", "gateway", "intelligence"] },
+        description: { type: "string" },
+        capabilities: { type: "array", items: { type: "string" } },
+        goals: { type: "array", items: { type: "string" } },
+        personality: { type: "string" },
+        voting_power: { type: "number", minimum: 0 },
+        metadata: {
+          type: "object",
+          properties: {
+            inputSchema: { type: "object" },
+            outputSchema: { type: "object" },
+            collaboration_preferences: { type: "object" },
+            performance_metrics: { type: "object" },
+            ord: { type: "object" }
+          }
+        },
+        _aiEnhanced: {
+          type: "object",
+          properties: {
+            timestamp: { type: "string" },
+            fixesApplied: { type: "number" },
+            complianceScore: { type: "number" }
+          }
+        }
+      },
+      required: ["agent_id", "name", "type", "capabilities"],
+      additionalProperties: true
+    }
+  };
+
   // Predict compliance issues
   const prediction = await callGrokAPI({
     messages: [
@@ -175,14 +240,12 @@ Auto-fix:
 2. Correct enum values to valid A2A types
 3. Generate appropriate metadata
 4. Ensure blockchain compatibility
-5. Add industry best practices
-
-Return the fixed registration data as JSON.`
+5. Add industry best practices`
       }
     ],
     temperature: 0.3,
     max_tokens: 2000
-  });
+  }, agentRegistrationSchema);
 
   // Apply fixes invisibly
   const fixedBody = prediction || originalBody;
@@ -193,6 +256,19 @@ Return the fixed registration data as JSON.`
     fixesApplied: countObjectDifferences(originalBody, fixedBody),
     complianceScore: 100
   };
+  
+  // Store compliance analysis if we have structured data
+  if (prediction && prediction.predictions) {
+    try {
+      await storeComplianceAnalysis(
+        originalBody.agent_id || originalBody.resource_id || 'unknown',
+        prediction,
+        'agent-compliance-ai'
+      );
+    } catch (storeError) {
+      console.warn('Failed to store compliance analysis:', storeError.message);
+    }
+  }
   
   // Update request body
   req.body = fixedBody;
@@ -212,6 +288,34 @@ Return the fixed registration data as JSON.`
 async function aiEnhancedAgentMessage(req, res, path) {
   const { jsonrpc, method, params, id } = req.body;
   
+  // Define message analysis schema
+  const messageAnalysisSchema = {
+    name: "message_analysis",
+    schema: {
+      type: "object",
+      properties: {
+        issues: {
+          type: "array",
+          items: { type: "string" }
+        },
+        optimizedParams: {
+          type: "object",
+          additionalProperties: true
+        },
+        performanceHints: {
+          type: "array",
+          items: { type: "string" }
+        },
+        securityRecommendations: {
+          type: "array",
+          items: { type: "string" }
+        }
+      },
+      required: ["issues", "optimizedParams", "performanceHints", "securityRecommendations"],
+      additionalProperties: false
+    }
+  };
+
   // Predict potential issues with the request
   const analysis = await callGrokAPI({
     messages: [
@@ -231,20 +335,12 @@ Check for:
 2. Missing required fields
 3. Optimization opportunities
 4. Security concerns
-5. Performance improvements
-
-Return analysis and optimized parameters as JSON:
-{
-  "issues": [],
-  "optimizedParams": {},
-  "performanceHints": [],
-  "securityRecommendations": []
-}`
+5. Performance improvements`
       }
     ],
     temperature: 0.3,
     max_tokens: 1500
-  });
+  }, messageAnalysisSchema);
 
   // Apply optimizations invisibly
   if (analysis?.optimizedParams) {
@@ -291,20 +387,30 @@ async function learnFromRegistration(original, fixed, result) {
  * Helper Functions
  */
 
-async function callGrokAPI(config) {
+async function callGrokAPI(config, schema = null) {
   if (!GROK_API_KEY) return null;
   
   try {
+    const requestBody = {
+      ...config,
+      model: 'grok-4-0709'
+    };
+
+    // Add structured output schema if provided
+    if (schema) {
+      requestBody.response_format = {
+        type: "json_schema",
+        json_schema: schema
+      };
+    }
+
     const response = await fetch(GROK_API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${GROK_API_KEY}`
       },
-      body: JSON.stringify({
-        ...config,
-        model: 'grok-4-0709'
-      })
+      body: JSON.stringify(requestBody)
     });
 
     if (!response.ok) {
@@ -315,11 +421,8 @@ async function callGrokAPI(config) {
     const data = await response.json();
     const content = data.choices?.[0]?.message?.content;
     
-    try {
-      return JSON.parse(content);
-    } catch {
-      return null;
-    }
+    // With structured outputs, content is already parsed
+    return schema ? content : (typeof content === 'string' ? JSON.parse(content) : content);
   } catch (error) {
     console.error('Grok API call failed:', error);
     return null;

@@ -141,26 +141,52 @@ export class QuantitativeMarketDataAgent extends A2AAgent {
     
     // Financial calculation function client
     this.mathClient = {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000',
+      baseUrl: process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : (process.env.BASE_URL || 'http://localhost:3000'),
       
       async callFunction(functionName, params) {
         try {
-          const response = await fetch(`${this.baseUrl}/api/functions/${functionName}`, {
+          const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(params)
+            body: JSON.stringify({ function: functionName, parameters: params })
           });
           
           if (!response.ok) {
             throw new Error(`Function ${functionName} failed: ${response.status}`);
           }
           
-          return await response.json();
+          const result = await response.json();
+          
+          if (result.status === 'error') {
+            console.error(`Function ${functionName} error:`, result.error);
+            return null;
+          }
+          
+          return result;
         } catch (error) {
           console.error(`Math function ${functionName} error:`, error);
-          throw error;
+          return null;
+        }
+      },
+      
+      async callBatch(requests) {
+        try {
+          const response = await fetch(`${this.baseUrl}/api/functions/calculate`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ requests })
+          });
+          
+          if (!response.ok) {
+            throw new Error(`Batch call failed: ${response.status}`);
+          }
+          
+          return await response.json();
+        } catch (error) {
+          console.error('Batch function call failed:', error);
+          return { status: 'error', error: error.message };
         }
       }
     };
@@ -643,13 +669,14 @@ export class QuantitativeMarketDataAgent extends A2AAgent {
           });
       }
 
-      return analysisResults;
+      // Return simplified output for users
+      return this.simplifyMarketAnalysis(analysisResults);
 
     } catch (error) {
       console.error('Quantitative analysis workflow failed:', error);
       analysisResults.overall_status = 'failed';
       analysisResults.error = error.message;
-      return analysisResults;
+      return this.simplifyMarketAnalysis(analysisResults);
     }
   }
 
@@ -1391,6 +1418,195 @@ Focus on actionable insights derived from the quantitative models.
 
   extractMonteCarloData(analysisResults) {
     return analysisResults.step_results.get('monte_carlo_simulation')?.results || {};
+  }
+
+  /**
+   * Simplify complex market analysis for user consumption
+   */
+  simplifyMarketAnalysis(analysisResults) {
+    try {
+      // Extract key data from complex analysis
+      const technicalAnalysis = analysisResults.step_results.get('technical_analysis');
+      const riskAnalysis = analysisResults.step_results.get('risk_analysis');
+      const performanceAnalysis = analysisResults.step_results.get('performance_analysis');
+      const aiInterpretation = analysisResults.step_results.get('ai_interpretation');
+      const deepResearch = analysisResults.step_results.get('deep_market_research');
+      
+      return {
+        // Market status (no technical jargon)
+        market: {
+          status: this.extractMarketStatus(technicalAnalysis, riskAnalysis),
+          direction: this.extractMarketDirection(technicalAnalysis),
+          volatility: this.extractVolatilityLevel(riskAnalysis),
+          confidence: this.extractAnalysisConfidence(aiInterpretation)
+        },
+        
+        // Alerts (actionable insights only)
+        alerts: this.extractMarketAlerts(technicalAnalysis, riskAnalysis, aiInterpretation),
+        
+        // Opportunities (clear recommendations)
+        opportunities: {
+          sectors: this.extractSectorOpportunities(performanceAnalysis),
+          timing: this.extractTimingGuidance(technicalAnalysis),
+          risk: this.extractRiskGuidance(riskAnalysis)
+        },
+        
+        // Research insights (simplified)
+        insights: this.extractResearchInsights(deepResearch, aiInterpretation),
+        
+        // System status
+        analysis: {
+          completed: analysisResults.overall_status === 'completed',
+          timestamp: analysisResults.timestamp,
+          dataQuality: this.assessDataQuality(analysisResults)
+        }
+      };
+    } catch (error) {
+      console.error('Error simplifying market analysis:', error);
+      return {
+        market: {
+          status: 'Analysis Error',
+          error: error.message
+        },
+        analysis: {
+          completed: false,
+          timestamp: new Date()
+        }
+      };
+    }
+  }
+
+  // Helper methods to extract clean insights
+  extractMarketStatus(technical, risk) {
+    const riskLevel = risk?.var_analysis?.current_var || 0;
+    const trendStrength = technical?.trend_analysis?.strength || 0;
+    
+    if (riskLevel > 0.8) return 'High Risk';
+    if (riskLevel > 0.5) return 'Volatile';
+    if (trendStrength > 0.7) return 'Strong Trend';
+    return 'Normal';
+  }
+
+  extractMarketDirection(technical) {
+    const trend = technical?.trend_analysis?.direction || 'neutral';
+    const momentum = technical?.momentum_indicators?.overall || 0;
+    
+    if (momentum > 0.6) return 'Bullish';
+    if (momentum < -0.6) return 'Bearish';
+    return 'Sideways';
+  }
+
+  extractVolatilityLevel(risk) {
+    const volatility = risk?.volatility_analysis?.current_volatility || 0;
+    
+    if (volatility > 0.4) return 'Extreme';
+    if (volatility > 0.25) return 'High';
+    if (volatility > 0.15) return 'Elevated';
+    return 'Low';
+  }
+
+  extractAnalysisConfidence(ai) {
+    const confidence = ai?.confidence_score || 0.7;
+    
+    if (confidence > 0.9) return 'Very High';
+    if (confidence > 0.7) return 'High';
+    if (confidence > 0.5) return 'Moderate';
+    return 'Low';
+  }
+
+  extractMarketAlerts(technical, risk, ai) {
+    const alerts = [];
+    
+    // Check for anomalies
+    if (technical?.anomaly_detection?.anomalies?.length > 0) {
+      alerts.push({
+        type: 'anomaly',
+        message: 'Unusual market pattern detected',
+        severity: 'medium'
+      });
+    }
+    
+    // Check for high risk
+    if (risk?.var_analysis?.current_var > 0.7) {
+      alerts.push({
+        type: 'risk',
+        message: 'Elevated market risk detected',
+        severity: 'high'
+      });
+    }
+    
+    // Check AI warnings
+    if (ai?.warnings?.length > 0) {
+      alerts.push({
+        type: 'ai_warning',
+        message: ai.warnings[0],
+        severity: 'medium'
+      });
+    }
+    
+    return alerts;
+  }
+
+  extractSectorOpportunities(performance) {
+    const sectors = performance?.sector_analysis || {};
+    const opportunities = [];
+    
+    Object.entries(sectors).forEach(([sector, data]) => {
+      if (data.sharpe_ratio > 1.5) {
+        opportunities.push({
+          sector,
+          reason: 'Strong risk-adjusted returns',
+          strength: 'high'
+        });
+      }
+    });
+    
+    return opportunities;
+  }
+
+  extractTimingGuidance(technical) {
+    const signals = technical?.trading_signals || {};
+    
+    if (signals.overall_signal === 'strong_buy') return 'Good entry point';
+    if (signals.overall_signal === 'strong_sell') return 'Consider reducing exposure';
+    return 'Hold current positions';
+  }
+
+  extractRiskGuidance(risk) {
+    const varLevel = risk?.var_analysis?.current_var || 0;
+    
+    if (varLevel > 0.7) return 'Reduce position sizes';
+    if (varLevel > 0.4) return 'Add some hedging';
+    return 'Normal risk levels';
+  }
+
+  extractResearchInsights(research, ai) {
+    const insights = [];
+    
+    if (research?.key_findings) {
+      research.key_findings.forEach(finding => {
+        insights.push(finding.summary || finding);
+      });
+    }
+    
+    if (ai?.key_insights) {
+      insights.push(...ai.key_insights);
+    }
+    
+    return insights.slice(0, 3); // Top 3 insights only
+  }
+
+  assessDataQuality(results) {
+    const steps = results.step_results.size;
+    const completed = Array.from(results.step_results.values())
+      .filter(step => step.status === 'completed').length;
+    
+    const quality = completed / steps;
+    
+    if (quality > 0.9) return 'Excellent';
+    if (quality > 0.7) return 'Good';
+    if (quality > 0.5) return 'Fair';
+    return 'Poor';
   }
 
   // Additional required methods for BPMN workflow compatibility

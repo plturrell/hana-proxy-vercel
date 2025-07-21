@@ -3,7 +3,7 @@
  * RESTful interface for CFA/Treasury domain expertise and context engineering
  */
 
-import { CurriculumLearningAgent } from '../../agents/curriculum-learning-agent.js';
+import { IntelligentCurriculumLearningAgent } from '../../agents/curriculum-learning-agent-v2.js';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase with error handling
@@ -40,7 +40,7 @@ async function initializeCurriculumAgent() {
     };
     
     // Always create the agent instance
-    curriculumAgent = new CurriculumLearningAgent(agentData);
+    curriculumAgent = new IntelligentCurriculumLearningAgent(agentData);
     
     try {
       // Try to initialize with database connections

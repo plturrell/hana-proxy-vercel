@@ -3,7 +3,7 @@
  */
 
 import dotenv from 'dotenv';
-import { CurriculumLearningAgent } from './agents/curriculum-learning-agent.js';
+import { IntelligentCurriculumLearningAgent } from './agents/curriculum-learning-agent-v2.js';
 
 dotenv.config({ path: '.env.local' });
 
@@ -28,7 +28,7 @@ async function testAgent() {
     };
     
     console.log('Creating agent instance...');
-    const agent = new CurriculumLearningAgent(agentData);
+    const agent = new IntelligentCurriculumLearningAgent(agentData);
     
     console.log('Agent created successfully!');
     console.log('Agent ID:', agent.id);
