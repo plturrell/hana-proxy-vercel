@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "buildCommand": "echo 'Building...'",
-  "outputDirectory": "./",
   "functions": {
     "api/supabase-proxy.js": {
       "maxDuration": 30
