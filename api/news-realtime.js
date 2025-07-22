@@ -12,7 +12,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANO
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Perplexity API configuration
-const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || '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';
+const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY || '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';
 const PERPLEXITY_URL = 'https://api.perplexity.ai/chat/completions';
 
 // CORS headers
@@ -134,10 +134,16 @@ async function fetchLatestNews(res) {
       console.log('⚠️ No Perplexity API key configured');
     }
     
-    // Fallback to realistic mock data
+    // No fallback - only use real data
     if (articles.length === 0) {
-      articles = generateRealisticFinancialNews();
-      console.log(`✅ Generated ${articles.length} realistic financial news articles`);
+      console.log('❌ No real news data available - Perplexity API failed');
+      return res.status(503).json({
+        success: false,
+        error: 'No real news data available - API integration failed',
+        dataSource: 'none',
+        articlesFound: 0,
+        message: 'Valid Perplexity API key required for real financial news'
+      });
     }
 
     if (articles.length === 0) {
@@ -215,68 +221,7 @@ async function fetchFromPerplexity() {
   }
 }
 
-function generateRealisticFinancialNews() {
-  const now = new Date();
-  const templates = [
-    {
-      headline: "Federal Reserve Maintains Current Interest Rates in Latest FOMC Decision",
-      source: "Federal Reserve",
-      summary: "The Federal Reserve held interest rates steady at 5.25%-5.5% following today's FOMC meeting. Chair Powell emphasized data-dependent policy decisions amid mixed economic signals.",
-      sentiment: "Neutral",
-      market_impact: "High",
-      entities: ["Federal Reserve", "Jerome Powell", "FOMC"],
-      symbols: ["SPY", "TLT", "DXY"]
-    },
-    {
-      headline: "Tech Sector Shows Strong Performance as AI Investments Drive Growth",
-      source: "Reuters",
-      summary: "Technology stocks continued their rally with major AI-focused companies reporting robust quarterly results. The sector gained 2.3% in morning trading.",
-      sentiment: "Positive", 
-      market_impact: "Medium",
-      entities: ["Technology Sector", "AI Companies", "NASDAQ"],
-      symbols: ["QQQ", "XLK", "NVDA"]
-    },
-    {
-      headline: "Oil Prices Fluctuate on Global Supply Chain Concerns",
-      source: "Energy Information Administration",
-      summary: "Crude oil prices showed volatility as geopolitical tensions in key producing regions raised supply concerns. WTI crude traded between $78-80 per barrel.",
-      sentiment: "Neutral",
-      market_impact: "Medium",
-      entities: ["WTI Crude", "Oil Prices", "Supply Chain"],
-      symbols: ["CL=F", "XLE", "USO"]
-    },
-    {
-      headline: "Dollar Strengthens Against Major Currencies Amid Economic Data",
-      source: "Bloomberg",
-      summary: "The US Dollar Index rose 0.8% against a basket of major currencies following stronger-than-expected economic indicators released this morning.",
-      sentiment: "Positive",
-      market_impact: "Medium", 
-      entities: ["US Dollar", "DXY", "Currency Markets"],
-      symbols: ["DXY", "EUR=X", "GBP=X"]
-    },
-    {
-      headline: "Cryptocurrency Markets Show Mixed Signals as Bitcoin Consolidates",
-      source: "CoinDesk",
-      summary: "Bitcoin traded in a narrow range around $42,000 while altcoins showed varied performance. Regulatory clarity remains a key focus for investors.",
-      sentiment: "Neutral",
-      market_impact: "Low",
-      entities: ["Bitcoin", "Cryptocurrency", "Altcoins"],
-      symbols: ["BTC-USD", "ETH-USD", "COIN"]
-    }
-  ];
-  
-  // Randomly select 3-4 articles
-  const selectedArticles = templates
-    .sort(() => Math.random() - 0.5)
-    .slice(0, Math.floor(Math.random() * 2) + 3)
-    .map(article => ({
-      ...article,
-      published_time: new Date(now.getTime() - Math.random() * 60 * 60 * 1000).toISOString(), // Random time in past hour
-      url: `https://example-news.com/${article.headline.toLowerCase().replace(/\s+/g, '-').substring(0, 50)}`
-    }));
-    
-  return selectedArticles;
-}
+// Fake data generation removed - only real news sources allowed
 
 async function processNewsInRealTime(body, res) {
   const { articles } = body;
