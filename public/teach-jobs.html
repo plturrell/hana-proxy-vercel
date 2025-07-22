@@ -381,53 +381,7 @@
     }
     
     /* Learning Overview */
-    .jobs-overview-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: var(--jobs-spacing-lg);
-      padding: 0 var(--jobs-spacing-lg);
-      max-width: 1200px;
-      margin: 0 auto var(--jobs-spacing-xxl);
-    }
-    
-    .jobs-overview-card {
-      background: var(--jobs-white);
-      border: 1px solid var(--jobs-light-gray);
-      border-radius: 12px;
-      padding: var(--jobs-spacing-lg);
-      text-align: center;
-      transition: all var(--jobs-duration) var(--jobs-animation);
-    }
-    
-    .jobs-overview-card:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-    }
-    
-    .jobs-overview-value {
-      font-size: var(--jobs-font-size-headline);
-      font-weight: 600;
-      margin-bottom: var(--jobs-spacing-xs);
-    }
-    
-    .jobs-overview-label {
-      font-size: var(--jobs-font-size-caption);
-      color: var(--jobs-gray);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    
-    .jobs-overview-value.active {
-      color: var(--jobs-green);
-    }
-    
-    .jobs-overview-value.learning {
-      color: var(--jobs-orange);
-    }
-    
-    .jobs-overview-value.completed {
-      color: var(--jobs-blue);
-    }
+    /* Removed old jobs-overview styles - now using standard jobs-card layout */
     
     /* Category Headers */
     .jobs-category-header {
@@ -862,10 +816,6 @@
         gap: var(--jobs-spacing-md);
       }
       
-      .jobs-overview-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      
       .jobs-learning-metrics {
         flex-direction: column;
         gap: var(--jobs-spacing-sm);
@@ -914,8 +864,9 @@
     }
     
     .jobs-card-icon {
-      font-size: 20px;
-      opacity: 0.7;
+      font-size: 18px;
+      opacity: 0.6;
+      margin-left: auto;
     }
     
     .jobs-metric-label {
@@ -939,6 +890,10 @@
     
     .jobs-metric-change.positive {
       color: var(--jobs-green);
+    }
+    
+    .jobs-metric-change.neutral {
+      color: var(--jobs-orange);
     }
     
     .jobs-metric-change.negative {
@@ -1033,7 +988,7 @@
         <div class="jobs-card">
           <div class="jobs-card-header">
             <h3 class="jobs-card-title">Active Students</h3>
-            <div class="jobs-card-icon">👥</div>
+            <span class="jobs-card-icon">👥</span>
           </div>
           <div class="jobs-metric-label">Currently Learning</div>
           <div class="jobs-metric-value" id="active-students">Loading...</div>
@@ -1043,7 +998,7 @@
         <div class="jobs-card">
           <div class="jobs-card-header">
             <h3 class="jobs-card-title">Course Completion</h3>
-            <div class="jobs-card-icon">✅</div>
+            <span class="jobs-card-icon">✅</span>
           </div>
           <div class="jobs-metric-label">Average Progress</div>
           <div class="jobs-metric-value" id="course-completion">Loading...</div>
@@ -1053,7 +1008,7 @@
         <div class="jobs-card">
           <div class="jobs-card-header">
             <h3 class="jobs-card-title">Skill Mastery</h3>
-            <div class="jobs-card-icon">🎯</div>
+            <span class="jobs-card-icon">🎯</span>
           </div>
           <div class="jobs-metric-label">Students at 80%+</div>
           <div class="jobs-metric-value" id="skill-mastery">Loading...</div>
