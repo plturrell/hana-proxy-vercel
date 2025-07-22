@@ -1227,20 +1227,49 @@
     
     
     // Auto-refresh system metrics
-    function refreshMetrics() {
-      // Simulate metric updates
-      const metrics = {
-        'function-count': Math.floor(Math.random() * 4) + 28,
-        'active-connections': Math.floor(Math.random() * 100) + 800,
-        'data-throughput': (Math.random() * 0.5 + 2.0).toFixed(1)
-      };
-      
-      Object.entries(metrics).forEach(([id, value]) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.textContent = typeof value === 'string' ? value + ' GB/s' : value;
-        }
-      });
+    async function refreshMetrics() {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rpc',
+            function_name: 'get_system_metrics',
+            params: {}
+          })
+        });
+        
+        const result = await response.json();
+        const data = result.data || {};
+        
+        const metrics = {
+          'function-count': `${data.functions_online || 0}/${data.total_functions || 0}`,
+          'active-connections': data.active_connections || '0',
+          'data-throughput': `${data.throughput_gbps || '0.0'} GB/s`
+        };
+        
+        Object.entries(metrics).forEach(([id, value]) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = value;
+          }
+        });
+      } catch (error) {
+        console.error('Error loading system metrics:', error);
+        // Show error state
+        const errorMetrics = {
+          'function-count': 'Error',
+          'active-connections': 'Error', 
+          'data-throughput': 'Error'
+        };
+        
+        Object.entries(errorMetrics).forEach(([id, value]) => {
+          const element = document.getElementById(id);
+          if (element) {
+            element.textContent = value;
+          }
+        });
+      }
     }
     
     // Refresh metrics every 30 seconds

@@ -639,7 +639,7 @@
           console.error('Failed to load real agents:', error);
           // Fallback to direct API call
           try {
-            const response = await fetch('/api/a2a-protocol-production', {
+            const response = await fetch('/api/a2a-agent-system', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ action: 'list_agents' })

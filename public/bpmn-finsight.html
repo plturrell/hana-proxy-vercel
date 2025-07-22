@@ -2248,9 +2248,35 @@
         }
         
         // Load template
-        function loadTemplate(templateId) {
-            // This would load pre-defined BPMN templates
-            alert(`Loading template: ${templateId}\n\nIn production, this would load a complete BPMN process template.`);
+        async function loadTemplate(templateId) {
+            try {
+                // Load BPMN template from database
+                const response = await fetch('/api/supabase-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'bpmn_templates',
+                        conditions: { template_id: templateId }
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to load template');
+                }
+                
+                const data = await response.json();
+                if (data.data && data.data.length > 0) {
+                    const template = data.data[0];
+                    await modeler.importXML(template.xml);
+                    showNotification(`Template "${template.name}" loaded successfully`, 'success');
+                } else {
+                    showNotification(`Template ${templateId} not found`, 'error');
+                }
+            } catch (error) {
+                console.error('Error loading template:', error);
+                showNotification('Failed to load template', 'error');
+            }
         }
         
         // Enable auto-save functionality

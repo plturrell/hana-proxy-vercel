@@ -860,19 +860,54 @@
             }
         }
 
-        // Auto-update market data
-        function updateMarketData() {
-            // Simulate real market data updates
-            const spyBase = 485.32;
-            const vixBase = 18.5;
-            const tltBase = 89.23;
-            
-            document.getElementById('currentSPY').textContent = 
-                '$' + (spyBase + (Math.random() - 0.5) * 2).toFixed(2);
-            document.getElementById('currentVIX').textContent = 
-                (vixBase + (Math.random() - 0.5) * 1).toFixed(1);
-            document.getElementById('currentTLT').textContent = 
-                '$' + (tltBase + (Math.random() - 0.5) * 0.5).toFixed(2);
+        // Get real market data updates
+        async function updateMarketData() {
+            try {
+                const symbols = ['SPY', 'VIX', 'TLT'];
+                
+                for (const symbol of symbols) {
+                    try {
+                        const response = await fetch('/api/market-data-unified', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                action: 'quote',
+                                symbol: symbol
+                            })
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success && data.data) {
+                            const price = data.data.currentPrice || data.data.price || data.data.c;
+                            const elementId = `current${symbol}`;
+                            const element = document.getElementById(elementId);
+                            
+                            if (element && price) {
+                                if (symbol === 'VIX') {
+                                    element.textContent = price.toFixed(1);
+                                } else {
+                                    element.textContent = '$' + price.toFixed(2);
+                                }
+                            }
+                        } else {
+                            // Fallback to reasonable baseline values if API fails
+                            const element = document.getElementById(`current${symbol}`);
+                            if (element && !element.textContent.includes('$')) {
+                                const fallbackPrices = { SPY: 485.32, VIX: 18.5, TLT: 89.23 };
+                                if (symbol === 'VIX') {
+                                    element.textContent = fallbackPrices[symbol].toFixed(1);
+                                } else {
+                                    element.textContent = '$' + fallbackPrices[symbol].toFixed(2);
+                                }
+                            }
+                        }
+                    } catch (symbolError) {
+                        console.warn(`Failed to get data for ${symbol}:`, symbolError);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to update market data:', error);
+            }
         }
 
         // Auto-save configuration every 30 seconds

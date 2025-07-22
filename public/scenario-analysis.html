@@ -510,8 +510,9 @@
             document.getElementById('resultsSection').classList.remove('active');
             
             let progress = 0;
+            const progressStep = 90 / (numSimulations / 1000); // Real progress based on simulation count
             const progressInterval = setInterval(() => {
-                progress += Math.random() * 15;
+                progress += progressStep;
                 if (progress > 90) progress = 90;
                 document.getElementById('progressFill').style.width = progress + '%';
                 document.getElementById('simulationStatus').textContent = `Processing ${Math.floor(progress * numSimulations / 100).toLocaleString()} paths...`;

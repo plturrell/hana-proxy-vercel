@@ -1359,51 +1359,185 @@
       alert(`Opening ${service} service interface...\n\nThis would provide:\n- Service configuration\n- API management\n- Usage analytics\n- Performance monitoring`);
     }
     
-    function quickQuery(service) {
+    async function quickQuery(service) {
       const query = prompt(`Quick query for ${service}:\n\nWhat would you like to ask?`);
       if (query) {
-        console.log('Quick query:', service, query);
-        alert(`Processing query with ${service}...\n\nQuery: ${query}\n\nResponse would appear here in real implementation.`);
+        try {
+          // Use the same AI response system as the chat
+          const response = await getAIResponse(query, service);
+          alert(`${service} Response:\n\n${response}`);
+        } catch (error) {
+          console.error('Quick query error:', error);
+          alert(`Error processing query with ${service}. Please try again.`);
+        }
       }
     }
     
-    function viewHistory(service) {
-      console.log('Viewing history for:', service);
-      alert(`${service} History:\n\n- Recent queries\n- Performance metrics\n- Response times\n- Usage patterns`);
+    async function viewHistory(service) {
+      try {
+        // Load chat history for this service
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'select',
+            table: 'chat_messages',
+            conditions: { ai_type: service, user_id: getUserId() },
+            limit: 10,
+            orderBy: { column: 'timestamp', ascending: false }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load history');
+        }
+        
+        const data = await response.json();
+        if (data.data && data.data.length > 0) {
+          const historyText = data.data.map(msg => 
+            `${new Date(msg.timestamp).toLocaleString()}: ${msg.message.substring(0, 50)}...`
+          ).join('\n');
+          alert(`${service} Recent History:\n\n${historyText}`);
+        } else {
+          alert(`No chat history found for ${service}`);
+        }
+      } catch (error) {
+        console.error('Error loading history:', error);
+        alert(`Unable to load ${service} history. Please try again.`);
+      }
     }
     
     // Integration functions
     function openIntegration(integration) {
-      console.log('Opening integration:', integration);
-      alert(`Integration: ${integration}\n\nThis would show:\n- Connection status\n- Data flow monitoring\n- Configuration options\n- Error logs`);
+      // Navigate to the appropriate configuration page
+      const integrationPages = {
+        'perplexity': '/news-market-data-config.html',
+        'supabase': '/catalog.html',
+        'openai': '/ai-jobs.html',
+        'xai': '/ai-jobs.html'
+      };
+      
+      const targetPage = integrationPages[integration.toLowerCase()];
+      if (targetPage) {
+        window.location.href = targetPage;
+      } else {
+        alert(`${integration} integration configuration not yet available. Please check back later.`);
+      }
     }
     
     function manageIntegration(integration) {
-      console.log('Managing integration:', integration);
-      alert(`Managing ${integration}:\n\n- Add/remove data sources\n- Configure API keys\n- Set update frequencies\n- Monitor data quality`);
+      // Open the configuration page for the specific integration
+      openIntegration(integration);
     }
     
     function viewIntegration(integration) {
-      console.log('Viewing integration:', integration);
-      alert(`Viewing ${integration} data:\n\n- Real-time data feeds\n- Historical data\n- Quality metrics\n- Processing status`);
+      // Navigate to the data view for the integration
+      openIntegration(integration);
     }
     
     // AI Tool functions
     function openAITool(tool) {
-      console.log('Opening AI tool:', tool);
-      alert(`AI Tool: ${tool}\n\nThis would provide:\n- Tool interface\n- Configuration options\n- Usage examples\n- Results history`);
+      // Navigate to the appropriate tool interface
+      const toolPages = {
+        'summary': () => generateSummary(),
+        'risk': () => assessRisk(),
+        'market': () => predictMarket(),
+        'templates': () => viewTemplates()
+      };
+      
+      const toolFunction = toolPages[tool.toLowerCase()];
+      if (toolFunction) {
+        toolFunction();
+      } else {
+        alert(`AI Tool "${tool}" interface will be available in a future update.`);
+      }
     }
     
-    function generateSummary() {
-      alert('Generating financial summary...\n\nThis would:\n- Analyze portfolio performance\n- Summarize market conditions\n- Generate insights\n- Create formatted report');
+    async function generateSummary() {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rpc',
+            function_name: 'generate_portfolio_summary',
+            params: { portfolio_id: 1 }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to generate summary');
+        }
+        
+        const data = await response.json();
+        if (data.data) {
+          alert(`Financial Summary:\n\n${JSON.stringify(data.data, null, 2)}`);
+        } else {
+          alert('Portfolio summary function executed but returned no data');
+        }
+      } catch (error) {
+        console.error('Summary generation error:', error);
+        alert('Portfolio summary function not available or failed to execute');
+      }
     }
     
-    function assessRisk() {
-      alert('Assessing portfolio risk...\n\nThis would:\n- Analyze risk metrics\n- Predict volatility\n- Identify risk factors\n- Provide recommendations');
+    async function assessRisk() {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rpc',
+            function_name: 'calculate_portfolio_risk',
+            params: { portfolio_id: 1 }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to assess risk');
+        }
+        
+        const data = await response.json();
+        if (data.data) {
+          alert(`Risk Assessment:\n\n${JSON.stringify(data.data, null, 2)}`);
+        } else {
+          alert('Risk assessment function executed but returned no data');
+        }
+      } catch (error) {
+        console.error('Risk assessment error:', error);
+        alert('Risk assessment function not available or failed to execute');
+      }
     }
     
-    function predictMarket() {
-      alert('Predicting market trends...\n\nThis would:\n- Analyze market data\n- Apply ML models\n- Generate forecasts\n- Provide confidence intervals');
+    async function predictMarket() {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'rpc',
+            function_name: 'predict_market_trends',
+            params: { 
+              symbols: ['SPY', 'AAPL', 'MSFT'],
+              horizon_days: 30
+            }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to predict market trends');
+        }
+        
+        const data = await response.json();
+        if (data.data) {
+          alert(`Market Predictions:\n\n${JSON.stringify(data.data, null, 2)}`);
+        } else {
+          alert('Market prediction function executed but returned no data');
+        }
+      } catch (error) {
+        console.error('Market prediction error:', error);
+        alert('Market prediction function not available or failed to execute');
+      }
     }
     
     function viewTemplates() {

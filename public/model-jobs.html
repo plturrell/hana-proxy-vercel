@@ -3708,10 +3708,39 @@
     }
     
     // Open model details
-    function openModelDetails(modelId) {
-      console.log('Opening model details for:', modelId);
-      // In real implementation, would show detailed model information
-      alert(`Model Details: ${modelId}\n\nThis would open a detailed view with:\n- Model architecture\n- Training history\n- Performance metrics\n- Configuration options\n- Real-time monitoring`);
+    async function openModelDetails(modelId) {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'select',
+            table: 'ml_models',
+            conditions: { model_id: modelId }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load model details');
+        }
+        
+        const data = await response.json();
+        if (data.data && data.data.length > 0) {
+          const model = data.data[0];
+          alert(`Model Details: ${model.name || modelId}
+
+Architecture: ${model.architecture || 'Not specified'}
+Status: ${model.status || 'Unknown'}
+Accuracy: ${model.accuracy || 'Not measured'}
+Last Updated: ${model.updated_at || 'Unknown'}
+Description: ${model.description || 'No description available'}`);
+        } else {
+          alert(`Model ${modelId} not found in database`);
+        }
+      } catch (error) {
+        console.error('Error loading model details:', error);
+        alert('Failed to load model details. Database connection may be unavailable.');
+      }
     }
     
     // Run model
@@ -5129,15 +5158,65 @@ if (result.success) {
       d.fy = null;
     }
     
-    // Placeholder functions for agent interaction
-    function sendMessageToAgent(agentId) {
-      console.log('Sending message to agent:', agentId);
-      alert(`Message interface for ${agentId} would open here`);
+    // Agent interaction functions
+    async function sendMessageToAgent(agentId) {
+      const message = prompt(`Send message to ${agentId}:`);
+      if (message) {
+        try {
+          const response = await fetch('/api/a2a-agent-system', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'send_message',
+              from_agent: 'user',
+              to_agent: agentId,
+              message: message
+            })
+          });
+          
+          if (!response.ok) {
+            throw new Error('Failed to send message');
+          }
+          
+          alert(`Message sent to ${agentId} successfully`);
+        } catch (error) {
+          console.error('Error sending message:', error);
+          alert('Failed to send message. Agent communication system may be unavailable.');
+        }
+      }
     }
     
-    function viewAgentLogs(agentId) {
-      console.log('Viewing logs for agent:', agentId);
-      alert(`Logs for ${agentId} would be displayed here`);
+    async function viewAgentLogs(agentId) {
+      try {
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'select',
+            table: 'agent_activity',
+            conditions: { agent_id: agentId },
+            limit: 10,
+            orderBy: { column: 'created_at', ascending: false }
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load agent logs');
+        }
+        
+        const data = await response.json();
+        if (data.data && data.data.length > 0) {
+          const logs = data.data.map(log => 
+            `${new Date(log.created_at).toLocaleString()}: ${log.activity_type} - ${JSON.stringify(log.details || {})}`
+          ).join('\n');
+          alert(`Logs for ${agentId}:\n\n${logs}`);
+        } else {
+          alert(`No activity logs found for agent ${agentId}`);
+        }
+      } catch (error) {
+        console.error('Error loading agent logs:', error);
+        alert('Failed to load agent logs. Database connection may be unavailable.');
+      }
     }
     
     // Initialize network visualization when page loads (since it's in overview)

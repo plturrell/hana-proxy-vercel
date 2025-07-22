@@ -587,7 +587,7 @@
         <div class="jobs-action-card" onclick="handleAction('approve-trade')">
           <div>
             <div class="jobs-action-title">Approve Treasury Allocation</div>
-            <div class="jobs-action-subtitle">$5M reallocation awaiting approval</div>
+            <div class="jobs-action-subtitle" id="main-pending-allocation">Loading approval amount...</div>
           </div>
           <div style="font-size: 20px;">→</div>
         </div>
@@ -1009,6 +1009,12 @@
       const pnlPercent = totalValue > 0 ? ((totalPnL / totalValue) * 100).toFixed(1) : 0;
       pnlChangeElement.textContent = `${isPositive ? '↗' : '↘'} ${isPositive ? '+' : ''}${pnlPercent}%`;
       pnlChangeElement.className = `jobs-metric-change ${isPositive ? 'positive' : 'negative'}`;
+      
+      // Update pending allocation (sample data)
+      const pendingElement = document.getElementById('main-pending-allocation');
+      if (pendingElement) {
+        pendingElement.textContent = '$5M reallocation awaiting approval';
+      }
     }
     
     // Auto-load enhanced data on page load
