@@ -211,12 +211,22 @@ async function fetchFromPerplexity() {
   const data = await response.json();
   const newsContent = data.choices[0].message.content;
   
-  // Parse the news content
+  // Parse the news content - handle markdown code blocks
   try {
+    console.log('Raw Perplexity response:', newsContent.substring(0, 200));
+    
+    // Try to extract JSON from markdown code blocks first
+    const codeBlockMatch = newsContent.match(/```json\s*([\s\S]*?)\s*```/);
+    if (codeBlockMatch) {
+      return JSON.parse(codeBlockMatch[1]);
+    }
+    
+    // Fallback to direct JSON array search
     const jsonMatch = newsContent.match(/\[[\s\S]*?\]/);
     return jsonMatch ? JSON.parse(jsonMatch[0]) : [];
   } catch (e) {
     console.error('Failed to parse Perplexity JSON:', e);
+    console.error('Content was:', newsContent);
     return [];
   }
 }
