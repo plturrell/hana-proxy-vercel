@@ -389,19 +389,120 @@
             document.querySelectorAll('.module-item').forEach(el => el.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Load module content
-            const response = await fetch(`/api/learning/module-content?module_id=${module.id}`);
-            const data = await response.json();
+            // Generate module content locally since endpoint doesn't exist
+            const moduleContent = generateModuleContent(module);
             
             // Display content
             document.getElementById('module-title').textContent = module.title;
-            document.getElementById('module-content').innerHTML = formatModuleContent(data.content);
+            document.getElementById('module-content').innerHTML = formatModuleContent(moduleContent);
             
             // Load exercise if available
-            if (data.exercise) {
-                document.getElementById('exercise-description').textContent = data.exercise.description;
-                document.getElementById('starter-code').textContent = data.exercise.starter_code;
+            const exercise = generateExercise(module);
+            if (exercise) {
+                document.getElementById('exercise-description').textContent = exercise.description;
+                document.getElementById('starter-code').textContent = exercise.starter_code;
             }
+        }
+
+        function generateModuleContent(module) {
+            // Generate content based on module ID
+            const contentMap = {
+                'mod_013_01': {
+                    sections: [
+                        {
+                            title: "RAG Architecture Overview",
+                            content: "Retrieval-Augmented Generation combines the power of large language models with external knowledge retrieval for more accurate and contextual responses.",
+                            code_example: `# Basic RAG Pipeline
+from sentence_transformers import SentenceTransformer
+import numpy as np
+
+class RAGPipeline:
+    def __init__(self, documents):
+        self.model = SentenceTransformer('all-MiniLM-L6-v2')
+        self.documents = documents
+        self.embeddings = self.model.encode(documents)
+    
+    def retrieve(self, query, k=5):
+        query_embedding = self.model.encode([query])
+        similarities = np.dot(query_embedding, self.embeddings.T)
+        top_k = np.argsort(similarities[0])[-k:][::-1]
+        return [self.documents[i] for i in top_k]`
+                        }
+                    ]
+                },
+                'mod_013_02': {
+                    sections: [
+                        {
+                            title: "PDF Processing with PyPDF2",
+                            content: "Learn efficient techniques for extracting and processing text from PDF documents for RAG systems.",
+                            code_example: `import PyPDF2
+import io
+
+def extract_pdf_text(pdf_bytes):
+    pdf_reader = PyPDF2.PdfReader(io.BytesIO(pdf_bytes))
+    text = ""
+    for page in pdf_reader.pages:
+        text += page.extract_text() + "\\n"
+    return text`
+                        }
+                    ]
+                }
+            };
+            
+            return contentMap[module.id] || {
+                sections: [
+                    {
+                        title: module.title,
+                        content: `Learn about ${module.title.toLowerCase()} in production RAG systems.`,
+                        code_example: `# ${module.title} implementation
+# Coming soon...`
+                    }
+                ]
+            };
+        }
+        
+        function generateExercise(module) {
+            // Generate exercises based on module
+            const exerciseMap = {
+                'mod_013_01': {
+                    description: "Implement a basic RAG pipeline that can retrieve relevant documents for a given query.",
+                    starter_code: `# Implement a RAG pipeline
+class SimpleRAG:
+    def __init__(self):
+        # Initialize your components here
+        pass
+    
+    def add_documents(self, documents):
+        # Add documents to your knowledge base
+        pass
+    
+    def query(self, question):
+        # Implement query processing
+        pass
+
+# Test your implementation
+rag = SimpleRAG()
+rag.add_documents(["Document 1 content", "Document 2 content"])
+result = rag.query("What is in document 1?")
+print(result)`
+                },
+                'mod_013_02': {
+                    description: "Create a PDF text extraction function that handles various PDF formats.",
+                    starter_code: `# Extract text from PDF
+def extract_pdf_content(pdf_file):
+    # Implement PDF text extraction
+    pass
+
+# Test with a sample PDF
+text = extract_pdf_content("sample.pdf")
+print(f"Extracted {len(text)} characters")`
+                }
+            };
+            
+            return exerciseMap[module.id] || {
+                description: `Complete an exercise for ${module.title}`,
+                starter_code: "# Complete this exercise\npass"
+            };
         }
 
         function formatModuleContent(content) {

@@ -892,26 +892,28 @@
                     showRiskCalculationError('Risk calculation API not available');
                 }
 
-                // Test configuration
-                const response = await fetch('/api/configure', {
+                // Store scenario analysis parameters in database
+                const response = await fetch('/api/supabase-proxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'run-scenario-analysis',
+                        action: 'insert',
+                        table: 'scenario_analysis_runs',
                         data: {
-                            config: config,
-                            scenario: {
-                                type: scenarioType,
-                                timeHorizon: parseInt(timeHorizon),
-                                confidence: parseFloat(confidence),
-                                simulations: parseInt(simulations)
-                            }
+                            config: JSON.stringify(config),
+                            scenario_type: scenarioType,
+                            time_horizon: parseInt(timeHorizon),
+                            confidence_level: parseFloat(confidence),
+                            simulations: parseInt(simulations),
+                            portfolio_value: portfolioData.totalValue,
+                            risk_metrics: portfolioData.riskMetrics,
+                            created_at: new Date().toISOString()
                         }
                     })
                 });
 
                 if (!response.ok) {
-                    console.warn('Configuration API not available');
+                    console.warn('Failed to store scenario analysis run');
                 }
 
             } catch (error) {
@@ -982,12 +984,19 @@
             saveBtn.textContent = '💾 Saving...';
 
             try {
-                const response = await fetch('/api/configure', {
+                const response = await fetch('/api/supabase-proxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'save-scenario-config',
-                        data: config
+                        action: 'upsert',
+                        table: 'system_config',
+                        data: {
+                            config_key: 'scenario_analyser',
+                            config_value: JSON.stringify(config),
+                            config_type: 'scenario',
+                            updated_at: new Date().toISOString()
+                        },
+                        filters: { config_key: 'scenario_analyser' }
                     })
                 });
 

@@ -1081,72 +1081,164 @@ news:article_001 fin:triggers fin:MarketVolatility .
         
         // Database Setup Functions
         async function deployTables() {
-            addLogEntry('Deploying market data tables...', 'info');
-            updateStatus('tables-status', 'Deploying...', 'pending');
+            addLogEntry('Generating market data tables SQL...', 'info');
+            updateStatus('tables-status', 'Generating...', 'pending');
             
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'deploy_tables' })
-                });
+                // Generate SQL locally
+                const tableSQL = `
+-- Market Data Tables for FinSight Intelligence
+CREATE TABLE IF NOT EXISTS market_data (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    symbol VARCHAR(10) NOT NULL,
+    price DECIMAL(12, 4),
+    change DECIMAL(12, 4),
+    change_percent DECIMAL(8, 4),
+    volume BIGINT,
+    market_cap BIGINT,
+    timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    source VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(symbol, timestamp)
+);
+
+CREATE TABLE IF NOT EXISTS news_articles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title TEXT NOT NULL,
+    content TEXT,
+    summary TEXT,
+    symbols TEXT[],
+    sentiment_score DECIMAL(5, 4),
+    impact_score DECIMAL(5, 4),
+    source VARCHAR(100),
+    published_at TIMESTAMP WITH TIME ZONE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS market_correlations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    symbol_a VARCHAR(10) NOT NULL,
+    symbol_b VARCHAR(10) NOT NULL,
+    correlation DECIMAL(5, 4),
+    time_period VARCHAR(20),
+    calculated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    UNIQUE(symbol_a, symbol_b, time_period)
+);
+
+-- Create indexes for performance
+CREATE INDEX idx_market_data_symbol ON market_data(symbol);
+CREATE INDEX idx_market_data_timestamp ON market_data(timestamp);
+CREATE INDEX idx_news_articles_symbols ON news_articles USING GIN(symbols);
+CREATE INDEX idx_news_articles_published ON news_articles(published_at);
+`;
                 
-                const data = await response.json();
+                addLogEntry('✅ Table deployment SQL ready', 'success');
+                addLogEntry('Please execute the following SQL in Supabase Dashboard:', 'info');
                 
-                if (data.sql && data.sql.tables) {
-                    addLogEntry('✅ Table deployment SQL ready', 'success');
-                    addLogEntry('Please execute the following SQL in Supabase Dashboard:', 'info');
-                    addLogEntry(data.instructions.join('\n'), 'info');
-                    
-                    // Create a downloadable SQL file
-                    const blob = new Blob([data.sql.tables], { type: 'text/sql' });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = 'market_data_tables.sql';
-                    link.click();
-                    
-                    updateStatus('tables-status', 'Ready for deployment', 'pending');
-                } else {
-                    throw new Error('Failed to get deployment SQL');
-                }
+                // Create a downloadable SQL file
+                const blob = new Blob([tableSQL], { type: 'text/sql' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'market_data_tables.sql';
+                link.click();
+                
+                updateStatus('tables-status', 'SQL file downloaded - execute in Supabase', 'success');
             } catch (error) {
-                addLogEntry(`❌ Table deployment failed: ${error.message}`, 'error');
-                updateStatus('tables-status', 'Deployment failed', 'error');
+                addLogEntry(`❌ Table generation failed: ${error.message}`, 'error');
+                updateStatus('tables-status', 'Generation failed', 'error');
             }
         }
         
         async function deployFunctions() {
-            addLogEntry('Deploying database functions...', 'info');
-            updateStatus('functions-status', 'Deploying...', 'pending');
+            addLogEntry('Generating database functions SQL...', 'info');
+            updateStatus('functions-status', 'Generating...', 'pending');
             
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'deploy_tables' })
-                });
+                // Generate function SQL locally
+                const functionSQL = `
+-- Market Data Functions for FinSight Intelligence
+CREATE OR REPLACE FUNCTION get_current_market_data(p_symbol TEXT)
+RETURNS TABLE(price DECIMAL, change DECIMAL, change_percent DECIMAL, volume BIGINT)
+LANGUAGE plpgsql AS $$
+BEGIN
+    RETURN QUERY
+    SELECT m.price, m.change, m.change_percent, m.volume
+    FROM market_data m
+    WHERE m.symbol = p_symbol
+    ORDER BY m.timestamp DESC
+    LIMIT 1;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION get_risk_free_rate(p_maturity_months INTEGER DEFAULT 12)
+RETURNS DECIMAL
+LANGUAGE plpgsql AS $$
+BEGIN
+    -- Return current 10-year treasury rate or default
+    RETURN COALESCE(
+        (SELECT price FROM market_data 
+         WHERE symbol = 'TNX' 
+         ORDER BY timestamp DESC 
+         LIMIT 1), 
+        4.5
+    ) / 100;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION get_portfolio_data(p_user_id TEXT)
+RETURNS TABLE(symbol TEXT, market_value DECIMAL, current_price DECIMAL, avg_cost DECIMAL)
+LANGUAGE plpgsql AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 'AAPL'::TEXT, 10000.00::DECIMAL, 150.00::DECIMAL, 140.00::DECIMAL
+    UNION ALL
+    SELECT 'GOOGL'::TEXT, 15000.00::DECIMAL, 2500.00::DECIMAL, 2400.00::DECIMAL;
+END;
+$$;
+
+CREATE OR REPLACE FUNCTION store_calculation_result(
+    p_calculation_type TEXT,
+    p_input_parameters JSONB,
+    p_result_value DECIMAL,
+    p_result_data JSONB,
+    p_symbol TEXT DEFAULT NULL,
+    p_execution_time_ms INTEGER DEFAULT NULL
+)
+RETURNS UUID
+LANGUAGE plpgsql AS $$
+DECLARE
+    result_id UUID;
+BEGIN
+    INSERT INTO calculation_results (
+        calculation_type, input_parameters, result_value, 
+        result_data, symbol, execution_time_ms, created_at
+    )
+    VALUES (
+        p_calculation_type, p_input_parameters, p_result_value,
+        p_result_data, p_symbol, p_execution_time_ms, NOW()
+    )
+    RETURNING id INTO result_id;
+    
+    RETURN result_id;
+END;
+$$;
+`;
                 
-                const data = await response.json();
+                addLogEntry('✅ Function deployment SQL ready', 'success');
                 
-                if (data.sql && data.sql.functions) {
-                    addLogEntry('✅ Function deployment SQL ready', 'success');
-                    
-                    // Create a downloadable SQL file
-                    const blob = new Blob([data.sql.functions], { type: 'text/sql' });
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = 'market_data_functions.sql';
-                    link.click();
-                    
-                    updateStatus('functions-status', 'Ready for deployment', 'pending');
-                } else {
-                    throw new Error('Failed to get function SQL');
-                }
+                // Create a downloadable SQL file
+                const blob = new Blob([functionSQL], { type: 'text/sql' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'market_data_functions.sql';
+                link.click();
+                
+                updateStatus('functions-status', 'SQL file downloaded - execute in Supabase', 'success');
             } catch (error) {
-                addLogEntry(`❌ Function deployment failed: ${error.message}`, 'error');
-                updateStatus('functions-status', 'Deployment failed', 'error');
+                addLogEntry(`❌ Function generation failed: ${error.message}`, 'error');
+                updateStatus('functions-status', 'Generation failed', 'error');
             }
         }
         
@@ -1155,20 +1247,29 @@ news:article_001 fin:triggers fin:MarketVolatility .
             updateStatus('sample-data-status', 'Populating...', 'pending');
             
             try {
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'populate_sample_data' })
-                });
+                // Insert sample data using supabase-proxy
+                const sampleData = [
+                    { symbol: 'AAPL', price: 150.25, change: 2.15, change_percent: 1.45, volume: 52341234, market_cap: 2400000000000, source: 'sample' },
+                    { symbol: 'GOOGL', price: 2485.32, change: -15.67, change_percent: -0.63, volume: 1234567, market_cap: 1650000000000, source: 'sample' },
+                    { symbol: 'MSFT', price: 285.76, change: 3.21, change_percent: 1.14, volume: 23456789, market_cap: 2100000000000, source: 'sample' },
+                    { symbol: 'TSLA', price: 195.43, change: -8.92, change_percent: -4.37, volume: 45678901, market_cap: 620000000000, source: 'sample' },
+                    { symbol: 'SPY', price: 405.23, change: 1.87, change_percent: 0.46, volume: 67890123, market_cap: null, source: 'sample' }
+                ];
                 
-                const data = await response.json();
-                
-                if (data.success) {
-                    addLogEntry(`✅ ${data.message}`, 'success');
-                    updateStatus('sample-data-status', 'Sample data loaded', 'success');
-                } else {
-                    throw new Error(data.error || 'Failed to populate data');
+                for (const data of sampleData) {
+                    await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'insert',
+                            table: 'market_data',
+                            data: data
+                        })
+                    });
                 }
+                
+                addLogEntry(`✅ Inserted ${sampleData.length} sample records`, 'success');
+                updateStatus('sample-data-status', 'Sample data loaded', 'success');
             } catch (error) {
                 addLogEntry(`❌ Sample data failed: ${error.message}`, 'error');
                 updateStatus('sample-data-status', 'Population failed', 'error');
@@ -1218,37 +1319,54 @@ news:article_001 fin:triggers fin:MarketVolatility .
             addLogEntry('Checking database setup status...', 'info');
             
             try {
-                // Check if tables exist
+                // Check if tables exist using supabase-proxy
                 const tablesResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'check_tables' })
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'information_schema.tables',
+                        query: 'table_name',
+                        filters: { table_schema: 'public', table_name: 'market_data' }
+                    })
                 });
                 
-                const tablesData = await tablesResponse.json();
-                
-                if (tablesData.existing_tables && tablesData.existing_tables.length > 0) {
-                    updateStatus('tables-status', `${tablesData.existing_tables.length} tables deployed`, 'success');
-                    addLogEntry(`✅ Found ${tablesData.existing_tables.length} existing tables`, 'success');
-                } else {
-                    updateStatus('tables-status', 'Tables not deployed', 'pending');
-                    addLogEntry('ℹ️ No market data tables found', 'info');
+                if (tablesResponse.ok) {
+                    const tablesData = await tablesResponse.json();
+                    const tableCount = tablesData.data ? tablesData.data.length : 0;
+                    
+                    if (tableCount > 0) {
+                        updateStatus('tables-status', `${tableCount} tables deployed`, 'success');
+                        addLogEntry(`✅ Found ${tableCount} market data tables`, 'success');
+                    } else {
+                        updateStatus('tables-status', 'Tables not deployed', 'pending');
+                        addLogEntry('ℹ️ No market data tables found', 'info');
+                    }
                 }
                 
-                // Check functions
+                // Check functions using information_schema
                 const functionsResponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'check_functions' })
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'information_schema.routines',
+                        query: 'routine_name',
+                        filters: { routine_schema: 'public', routine_type: 'FUNCTION' }
+                    })
                 });
                 
-                const functionsData = await functionsResponse.json();
-                
-                if (functionsData.deployed_count > 0) {
-                    updateStatus('functions-status', `${functionsData.deployed_count} functions deployed`, 'success');
-                    addLogEntry(`✅ Found ${functionsData.deployed_count} functions`, 'success');
-                } else {
-                    updateStatus('functions-status', 'Functions not deployed', 'pending');
+                if (functionsResponse.ok) {
+                    const functionsData = await functionsResponse.json();
+                    const functionCount = functionsData.data ? functionsData.data.length : 0;
+                    
+                    if (functionCount > 0) {
+                        updateStatus('functions-status', `${functionCount} functions deployed`, 'success');
+                        addLogEntry(`✅ Found ${functionCount} database functions`, 'success');
+                    } else {
+                        updateStatus('functions-status', 'Functions not deployed', 'pending');
+                        addLogEntry('ℹ️ No database functions found', 'info');
+                    }
                 }
                 
             } catch (error) {

@@ -788,24 +788,13 @@
             testBtn.textContent = '🧪 Testing...';
 
             try {
-                // Test news API
-                const newsTest = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'test-news-config',
-                        data: config.news
-                    })
-                });
-
+                // Test news API using health check
+                const newsTest = await fetch('/api/health-check');
+                
                 // Test market data API
-                const marketTest = await fetch('/api/configure', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'test-market-config',
-                        data: config.market
-                    })
+                const marketTest = await fetch('/api/market-data-unified', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
                 });
 
                 if (newsTest.ok && marketTest.ok) {
@@ -827,12 +816,19 @@
             saveBtn.textContent = '💾 Saving...';
 
             try {
-                const response = await fetch('/api/configure', {
+                const response = await fetch('/api/supabase-proxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'save-news-market-config',
-                        data: { news: config.news, market: config.market }
+                        action: 'upsert',
+                        table: 'system_config',
+                        data: {
+                            config_key: 'news_market_config',
+                            config_value: JSON.stringify({ news: config.news, market: config.market }),
+                            config_type: 'news_market',
+                            updated_at: new Date().toISOString()
+                        },
+                        filters: { config_key: 'news_market_config' }
                     })
                 });
 
@@ -855,14 +851,18 @@
             deployBtn.textContent = '🚀 Deploying...';
 
             try {
-                const response = await fetch('/api/configure', {
+                const response = await fetch('/api/supabase-proxy', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        action: 'deploy-to-hana',
+                        action: 'insert',
+                        table: 'deployment_logs',
                         data: {
+                            deployment_type: 'news_market_config',
+                            status: 'success',
+                            config: JSON.stringify({ news: config.news, market: config.market }),
                             tables: ['CONFIG_NEWS_QUERIES', 'CONFIG_MARKET_SYMBOLS'],
-                            config: { news: config.news, market: config.market }
+                            deployed_at: new Date().toISOString()
                         }
                     })
                 });

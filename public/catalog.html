@@ -449,29 +449,55 @@
       renderCatalog();
     });
     
-    // Load data from ORD endpoints
+    // Load data from API endpoints
     async function loadCatalogData() {
       try {
-        // Load data products
-        const dataProductsResponse = await fetch('/open-resource-discovery/v1/documents/data-products');
-        const dataProductsDoc = await dataProductsResponse.json();
-        catalogData.dataProducts = dataProductsDoc.dataProducts || [];
+        // Load data from Supabase
+        const tablesResponse = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'select',
+            table: 'information_schema.tables',
+            query: 'table_name,table_type',
+            filters: { table_schema: 'public' }
+          })
+        });
         
-        // Load functions  
-        const functionsResponse = await fetch('/open-resource-discovery/v1/documents/function-registry');
-        const functionsDoc = await functionsResponse.json();
-        catalogData.functions = (functionsDoc.apiResources || []).map(apiResource => ({
-          ...apiResource,
-          title: apiResource.title || apiResource.name || 'Unnamed Function'
-        }));
+        if (tablesResponse.ok) {
+          const tablesData = await tablesResponse.json();
+          catalogData.dataProducts = (tablesData.data || []).map(table => ({
+            title: table.table_name,
+            shortDescription: `Database table: ${table.table_name}`,
+            releaseStatus: 'active',
+            category: 'data',
+            visibility: 'public'
+          }));
+        }
         
-        // Load agents
-        const agentsResponse = await fetch('/open-resource-discovery/v1/documents/analytics-platform');
-        const agentsDoc = await agentsResponse.json();
-        catalogData.agents = (agentsDoc.capabilities || []).map(capability => ({
-          ...capability,
-          title: capability.title || capability.name || capability.agent_name || 'Unnamed Agent'
-        }));
+        // Load functions from function registry
+        const functionsResponse = await fetch('/api/comprehensive-function-registry');
+        if (functionsResponse.ok) {
+          const functionsData = await functionsResponse.json();
+          catalogData.functions = Object.entries(functionsData.functions || {}).map(([key, func]) => ({
+            title: func.name || key,
+            shortDescription: func.description,
+            category: func.category || 'finance',
+            path: func.path
+          }));
+        }
+        
+        // Load agents from unified API
+        const agentsResponse = await fetch('/api/unified?action=a2a_agents');
+        if (agentsResponse.ok) {
+          const agentsData = await agentsResponse.json();
+          catalogData.agents = (agentsData.agents || []).map(agent => ({
+            title: agent.name || agent.agent_name,
+            shortDescription: agent.description,
+            category: agent.category || 'analytics',
+            status: agent.status || 'active'
+          }));
+        }
         
         // Load reference data with AI intelligence
         const referenceResponse = await fetch('/api/reference-data-intelligence?action=get-reference-data');

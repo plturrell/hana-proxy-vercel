@@ -2182,6 +2182,18 @@
         }
       } catch (error) {
         console.error('Status refresh error:', error);
+        // Show configuration needed message
+        document.getElementById('total-documents').textContent = 'Setup Required';
+        document.getElementById('total-chunks').textContent = 'Setup Required';
+        document.getElementById('storage-used').textContent = 'Setup Required';
+        document.getElementById('total-searches').textContent = 'Setup Required';
+        
+        // Show system needs setup
+        const ragStatus = document.getElementById('rag-status');
+        if (ragStatus) {
+          ragStatus.className = 'jobs-learning-status error';
+          ragStatus.textContent = 'Needs Setup';
+        }
       }
     }
 

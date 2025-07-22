@@ -912,20 +912,17 @@
                 // Collect all parameter values
                 const parameters = collectParameterValues();
                 
-                // Make API call to calculation engine
-                const response = await fetch('/api/configure', {
+                // Make API call to calculation engine using supabase-proxy
+                const response = await fetch('/api/supabase-proxy', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        action: 'test-formula',
-                        userMode: userMode,
-                        data: {
-                            formula: currentFormula,
-                            scenario: currentScenario,
-                            parameters: parameters
-                        }
+                        action: 'calculate_treasury',
+                        formula: currentFormula,
+                        parameters: parameters,
+                        user_id: 'test_user'
                     })
                 });
 

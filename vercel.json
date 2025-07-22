@@ -120,8 +120,17 @@
     },
     "api/news-intelligence-verify.js": {
       "maxDuration": 60
+    },
+    "api/news-realtime.js": {
+      "maxDuration": 60
     }
   },
+  "crons": [
+    {
+      "path": "/api/news-realtime?action=fetch",
+      "schedule": "*/5 * * * *"
+    }
+  ],
   "rewrites": [
     {
       "source": "/.well-known/open-resource-discovery/v1/configuration",
