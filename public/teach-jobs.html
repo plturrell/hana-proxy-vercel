@@ -913,6 +913,11 @@
       opacity: 0.7;
     }
     
+    .jobs-card-icon {
+      font-size: 20px;
+      opacity: 0.7;
+    }
+    
     .jobs-metric-label {
       font-size: var(--jobs-font-size-caption);
       color: var(--jobs-gray);
@@ -1023,40 +1028,40 @@
     <!-- Summary Section -->
     <div id="summary" class="jobs-section active">
       
-      <!-- Teaching Overview Metrics -->
-      <div class="jobs-overview-grid">
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="active-students">Loading...</div>
-          <div class="jobs-overview-label">Active Students</div>
+      <!-- Key Educational Metrics -->
+      <div class="jobs-grid">
+        <div class="jobs-card">
+          <div class="jobs-card-header">
+            <h3 class="jobs-card-title">Active Students</h3>
+            <div class="jobs-card-icon">👥</div>
+          </div>
+          <div class="jobs-metric-label">Currently Learning</div>
+          <div class="jobs-metric-value" id="active-students">Loading...</div>
+          <div class="jobs-metric-change positive">↗ Growing</div>
         </div>
         
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value active" id="course-completion">Loading...</div>
-          <div class="jobs-overview-label">Course Completion</div>
+        <div class="jobs-card">
+          <div class="jobs-card-header">
+            <h3 class="jobs-card-title">Course Completion</h3>
+            <div class="jobs-card-icon">✅</div>
+          </div>
+          <div class="jobs-metric-label">Average Progress</div>
+          <div class="jobs-metric-value" id="course-completion">Loading...</div>
+          <div class="jobs-metric-change positive" id="completion-trend">Loading...</div>
         </div>
         
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value learning" id="skill-mastery">Loading...</div>
-          <div class="jobs-overview-label">Skill Mastery</div>
-        </div>
-        
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value completed" id="knowledge-retention">Loading...</div>
-          <div class="jobs-overview-label">Knowledge Retention</div>
-        </div>
-        
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="time-to-mastery">Loading...</div>
-          <div class="jobs-overview-label">Avg Time to Mastery</div>
-        </div>
-        
-        <div class="jobs-overview-card">
-          <div class="jobs-overview-value" id="engagement-rate">Loading...</div>
-          <div class="jobs-overview-label">Engagement Rate</div>
+        <div class="jobs-card">
+          <div class="jobs-card-header">
+            <h3 class="jobs-card-title">Skill Mastery</h3>
+            <div class="jobs-card-icon">🎯</div>
+          </div>
+          <div class="jobs-metric-label">Students at 80%+</div>
+          <div class="jobs-metric-value" id="skill-mastery">Loading...</div>
+          <div class="jobs-metric-change positive" id="mastery-trend">Loading...</div>
         </div>
       </div>
 
-      <!-- Teaching Management Cards -->
+      <!-- Detailed Learning Analytics -->
       <div class="jobs-grid">
         <!-- Student Progress Card -->
         <div class="jobs-card">
@@ -2268,9 +2273,6 @@
                 
                 // Refresh the learning metrics
                 refreshLearningMetrics();
-            } else {
-                throw new Error(data.error || 'Failed to clear data');
-            }
         } catch (error) {
             alert('❌ Failed to clear learning data: ' + error.message);
         }
@@ -2284,6 +2286,19 @@
     function updateElement(id, value) {
       const element = document.getElementById(id);
       if (element) element.textContent = value;
+    }
+
+    // Toggle sidebar function
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.querySelector('.jobs-sidebar-overlay');
+      
+      if (sidebar) {
+        sidebar.classList.toggle('open');
+      }
+      if (overlay) {
+        overlay.classList.toggle('open');
+      }
     }
 
     // Load Summary Data with Real Values
@@ -2349,16 +2364,25 @@
         const avgSessionTime = sessions.length > 0 ? 
           Math.round(sessions.reduce((a, s) => a + (s.duration || 0), 0) / sessions.length) : 0;
         
-        // Update with real calculated data
+        // Update with real calculated data for the simplified cards
         document.getElementById('active-students').textContent = activeStudents;
         document.getElementById('course-completion').textContent = activeStudents > 0 ? `${avgCompletion}%` : '0%';
         document.getElementById('skill-mastery').textContent = activeStudents > 0 ? `${skillMastery}%` : '0%';
-        document.getElementById('knowledge-retention').textContent = sessions.filter(s => s.completed).length > 0 ? 
-          `${Math.round((sessions.filter(s => s.completed).length / sessions.length) * 100)}%` : '0%';
-        document.getElementById('time-to-mastery').textContent = activeStudents > 0 ? 
-          `${Math.round(avgSessionTime / (60 * 7))} weeks` : 'N/A';
-        document.getElementById('engagement-rate').textContent = sessions.length > 0 ? 
-          `${Math.round((sessions.filter(s => s.duration > 30).length / sessions.length) * 100)}%` : '0%';
+        
+        // Update trend indicators
+        const completionTrend = document.getElementById('completion-trend');
+        if (completionTrend) {
+          completionTrend.textContent = avgCompletion > 70 ? '↗ Above target' : avgCompletion > 50 ? '→ On track' : '↘ Needs attention';
+          completionTrend.className = avgCompletion > 70 ? 'jobs-metric-change positive' : 
+                                     avgCompletion > 50 ? 'jobs-metric-change neutral' : 'jobs-metric-change negative';
+        }
+        
+        const masteryTrend = document.getElementById('mastery-trend');
+        if (masteryTrend) {
+          masteryTrend.textContent = skillMastery > 60 ? '↗ Excellent' : skillMastery > 40 ? '→ Good' : '↘ Improving';
+          masteryTrend.className = skillMastery > 60 ? 'jobs-metric-change positive' : 
+                                  skillMastery > 40 ? 'jobs-metric-change neutral' : 'jobs-metric-change negative';
+        }
         
         // Update card metrics with real curriculum data
         updateElement('studentProgress', activeStudents > 0 ? `${avgCompletion}%` : '0%');
