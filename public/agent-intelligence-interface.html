@@ -278,7 +278,7 @@
                         <span class="alert-badge alert-urgent">Action Needed</span>
                     </div>
                     <div class="alert-content">
-                        Similar pattern to March 2023. Your exposure: $4.2M across 3 holdings.
+                        <span id="banking-exposure">Loading exposure data...</span>
                     </div>
                     <div class="alert-action">
                         <button class="action-button primary">Protect Now</button>
@@ -304,7 +304,7 @@
                         <span class="alert-badge alert-info">Optimized</span>
                     </div>
                     <div class="alert-content">
-                        Response time improved by 50%. Monthly savings: $3,200.
+                        <span id="performance-savings">Loading performance metrics...</span>
                     </div>
                 </div>
             </div>
@@ -312,19 +312,19 @@
             <!-- Key Metrics -->
             <div class="metrics-grid">
                 <div class="metric-card">
-                    <div class="metric-value">0.8%</div>
+                    <div class="metric-value" id="portfolio-risk">Loading...</div>
                     <div class="metric-label">Max Portfolio Risk</div>
-                    <div class="metric-trend">↓ 87% protected</div>
+                    <div class="metric-trend" id="risk-trend">Loading...</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">45ms</div>
+                    <div class="metric-value" id="response-time">Loading...</div>
                     <div class="metric-label">Response Time</div>
-                    <div class="metric-trend">↓ 50% faster</div>
+                    <div class="metric-trend" id="response-trend">Loading...</div>
                 </div>
                 <div class="metric-card">
-                    <div class="metric-value">$3.2K</div>
+                    <div class="metric-value" id="monthly-savings">Loading...</div>
                     <div class="metric-label">Monthly Savings</div>
-                    <div class="metric-trend">↑ 32% below budget</div>
+                    <div class="metric-trend" id="savings-trend">Loading...</div>
                 </div>
             </div>
 
@@ -372,18 +372,107 @@
             }
         }
 
-        // Simulate real-time updates
-        setTimeout(() => {
+        // Load real data from APIs
+        async function loadAgentData() {
+            try {
+                // Load portfolio risk data
+                const riskResponse = await fetch('/api/portfolio-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_risk_metrics' })
+                });
+                
+                if (riskResponse.ok) {
+                    const riskData = await riskResponse.json();
+                    document.getElementById('portfolio-risk').textContent = 
+                        riskData.max_portfolio_risk ? `${riskData.max_portfolio_risk}%` : 'No data';
+                    document.getElementById('risk-trend').textContent = 
+                        riskData.risk_protection ? `↓ ${riskData.risk_protection}% protected` : 'No data';
+                }
+                
+                // Load performance metrics
+                const perfResponse = await fetch('/api/unified', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'get_performance_metrics' })
+                });
+                
+                if (perfResponse.ok) {
+                    const perfData = await perfResponse.json();
+                    document.getElementById('response-time').textContent = 
+                        perfData.response_time || 'No data';
+                    document.getElementById('response-trend').textContent = 
+                        perfData.response_improvement || 'No data';
+                    document.getElementById('monthly-savings').textContent = 
+                        perfData.monthly_savings || 'No data';
+                    document.getElementById('savings-trend').textContent = 
+                        perfData.savings_trend || 'No data';
+                    
+                    // Update performance alert
+                    if (perfData.monthly_savings) {
+                        document.getElementById('performance-savings').textContent = 
+                            `Response time improved. Monthly savings: ${perfData.monthly_savings}.`;
+                    }
+                }
+                
+                // Load exposure data
+                const exposureResponse = await fetch('/api/portfolio-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'get_sector_exposure',
+                        sector: 'banking'
+                    })
+                });
+                
+                if (exposureResponse.ok) {
+                    const exposureData = await exposureResponse.json();
+                    if (exposureData.exposure) {
+                        document.getElementById('banking-exposure').textContent = 
+                            `Your exposure: ${exposureData.exposure.total_value || 'Unknown'} across ${exposureData.exposure.holdings_count || 0} holdings.`;
+                    }
+                }
+                
+                // Load real alerts from database
+                const alertsResponse = await fetch('/api/supabase-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'select',
+                        table: 'agent_alerts',
+                        conditions: { active: true },
+                        limit: 5,
+                        orderBy: { column: 'created_at', ascending: false }
+                    })
+                });
+                
+                if (alertsResponse.ok) {
+                    const alertsData = await alertsResponse.json();
+                    if (alertsData.data && alertsData.data.length > 0) {
+                        // Add real alerts to the container
+                        alertsData.data.forEach(alert => {
+                            addRealAlert(alert);
+                        });
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading agent data:', error);
+            }
+        }
+        
+        // Add real alert to the UI
+        function addRealAlert(alertData) {
             const newAlert = document.createElement('div');
             newAlert.className = 'alert-card';
             newAlert.style.opacity = '0';
             newAlert.innerHTML = `
                 <div class="alert-header">
-                    <span class="alert-title">Unusual Options Activity</span>
-                    <span class="alert-badge alert-info">Monitoring</span>
+                    <span class="alert-title">${alertData.title || 'New Alert'}</span>
+                    <span class="alert-badge alert-${alertData.severity || 'info'}">${alertData.status || 'New'}</span>
                 </div>
                 <div class="alert-content">
-                    Large put buying in SPY. Analyzing impact on your portfolio...
+                    ${alertData.content || 'Alert details unavailable'}
                 </div>
             `;
             document.getElementById('alertsContainer').prepend(newAlert);
@@ -393,7 +482,13 @@
                 newAlert.style.transition = 'opacity 0.5s ease';
                 newAlert.style.opacity = '1';
             }, 100);
-        }, 5000);
+        }
+        
+        // Load data on page load
+        loadAgentData();
+        
+        // Refresh data every 30 seconds
+        setInterval(loadAgentData, 30000);
     </script>
 </body>
 </html>

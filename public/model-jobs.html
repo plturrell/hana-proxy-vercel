@@ -4577,20 +4577,8 @@ if (result.success) {
       });
     });
     
-    // Simulate A2A agent connection
-    async function simulateAgentConnection(agentId) {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Return mock success
-      return {
-        success: true,
-        agentId: agentId,
-        protocol: 'A2A v1.0',
-        timestamp: new Date().toISOString(),
-        capabilities: getAgentCapabilities(agentId.split('.')[1], agentId.split('.')[2])
-      };
-    }
+    // REMOVED: simulateAgentConnection function 
+    // All agent connections now use real API calls to /api/supabase-proxy
     
     // Get agent capabilities
     function getAgentCapabilities(category, functionName) {
@@ -4635,23 +4623,52 @@ if (result.success) {
       return capabilityMap[category] || ['• General processing capabilities'];
     }
 
-    // Auto-refresh model metrics
-    function refreshModelMetrics() {
-      // Simulate metric updates
-      const metrics = {
-        'active-models': `${Math.floor(Math.random() * 2) + 12}/13`,
-        'avg-accuracy': `${(Math.random() * 2 + 93).toFixed(1)}%`,
-        'training-jobs': Math.floor(Math.random() * 3) + 2,
-        'predictions-today': `${(Math.random() * 0.5 + 2.0).toFixed(1)}M`,
-        'inference-time': `${(Math.random() * 0.1 + 0.08).toFixed(2)}s`
-      };
-      
-      Object.entries(metrics).forEach(([id, value]) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.textContent = value;
+    // Load real model metrics from database
+    async function refreshModelMetrics() {
+      try {
+        // Get real agent/model statistics from database
+        const response = await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'get_agent_statistics'
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const stats = data.result || {};
+          
+          // Update with real data
+          const metricElements = {
+            'active-models': stats.active_agents ? `${stats.active_agents}/${stats.total_agents || stats.active_agents}` : 'No data',
+            'avg-accuracy': stats.avg_performance ? `${stats.avg_performance}%` : 'No data',
+            'training-jobs': stats.active_jobs || 'No data',
+            'predictions-today': stats.predictions_today || 'No data',
+            'inference-time': stats.avg_response_time ? `${stats.avg_response_time}s` : 'No data'
+          };
+          
+          Object.entries(metricElements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+              element.textContent = value;
+            }
+          });
+        } else {
+          // Show "No data" when API fails - NO SIMULATION
+          ['active-models', 'avg-accuracy', 'training-jobs', 'predictions-today', 'inference-time'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) element.textContent = 'No data';
+          });
         }
-      });
+      } catch (error) {
+        console.error('Model metrics error:', error);
+        // Show error state - NO FAKE DATA
+        ['active-models', 'avg-accuracy', 'training-jobs', 'predictions-today', 'inference-time'].forEach(id => {
+          const element = document.getElementById(id);
+          if (element) element.textContent = 'Error';
+        });
+      }
     }
     
     // Refresh metrics every 30 seconds
@@ -4818,14 +4835,14 @@ if (result.success) {
             // Update overview with real connection data
             updateNetworkOverviewReal(networkData_resp);
           } else {
-            console.log('⚠️ Falling back to synthetic links');
-            networkData.links = generateSyntheticLinks(networkData.nodes);
+            console.log('⚠️ No network connection data available');
+            networkData.links = []; // No fake data - show empty network
             updateNetworkOverview();
             updateConnectionStatusButton();
           }
         } catch (networkError) {
-          console.log('⚠️ Network fetch failed, using synthetic links:', networkError.message);
-          networkData.links = generateSyntheticLinks(networkData.nodes);
+          console.log('⚠️ Network fetch failed:', networkError.message);
+          networkData.links = []; // No synthetic data - show error state
           updateNetworkOverview();
           updateConnectionStatusButton();
         }
@@ -4834,63 +4851,20 @@ if (result.success) {
         renderNetwork();
       } catch (error) {
         console.error('Error loading network data:', error);
-        // Use fallback data
-        networkData = generateFallbackNetworkData();
+        // Show error state - NO FAKE DATA
+        networkData = { nodes: [], links: [] };
+        showNetworkError('Unable to load agent network data');
         updateNetworkOverview();
         renderNetwork();
       }
     }
     
-    // Generate synthetic links between agents
-    function generateSyntheticLinks(nodes) {
-      const links = [];
-      const linkCount = Math.min(nodes.length * 2, 50); // Limit links for performance
-      
-      for (let i = 0; i < linkCount; i++) {
-        const sourceIndex = Math.floor(Math.random() * nodes.length);
-        let targetIndex = Math.floor(Math.random() * nodes.length);
-        
-        // Avoid self-links
-        while (targetIndex === sourceIndex) {
-          targetIndex = Math.floor(Math.random() * nodes.length);
-        }
-        
-        // Check if link already exists
-        const existingLink = links.find(l => 
-          (l.source === nodes[sourceIndex].id && l.target === nodes[targetIndex].id) ||
-          (l.source === nodes[targetIndex].id && l.target === nodes[sourceIndex].id)
-        );
-        
-        if (!existingLink) {
-          links.push({
-            source: nodes[sourceIndex].id,
-            target: nodes[targetIndex].id,
-            strength: Math.random() * 0.5 + 0.5
-          });
-        }
-      }
-      
-      return links;
-    }
+    // REMOVED: Synthetic data generation functions
+    // All network data now comes from real Supabase A2A connections
     
-    // Generate fallback network data
-    function generateFallbackNetworkData() {
-      const nodes = [];
-      const types = ['analytics', 'financial', 'ml', 'data'];
-      
-      for (let i = 0; i < 20; i++) {
-        nodes.push({
-          id: `agent-${i}`,
-          name: `Agent ${i}`,
-          type: types[i % types.length],
-          status: Math.random() > 0.2 ? 'active' : 'inactive'
-        });
-      }
-      
-      return {
-        nodes,
-        links: generateSyntheticLinks(nodes)
-      };
+    function showNetworkError(message) {
+      console.error('Network error:', message);
+      // Empty network will show no connections which is accurate when APIs fail
     }
     
     // Update network overview cards
@@ -4929,20 +4903,20 @@ if (result.success) {
       });
     }
     
-    // Update connection status button based on real vs simulated data
+    // Update connection status button with real data only
     function updateConnectionStatusButton() {
       const btn = document.getElementById('connection-status-btn');
-      const hasRealConnections = networkData.links.some(link => link.real);
       const realConnections = networkData.links.filter(link => link.real).length;
+      const totalConnections = networkData.links.length;
       
-      if (hasRealConnections) {
-        btn.innerHTML = `✅ ${realConnections} Real`;
+      if (realConnections > 0) {
+        btn.innerHTML = `✅ ${realConnections} Active`;
         btn.className = 'jobs-action-button primary';
         btn.title = `${realConnections} real connections from Supabase A2A system`;
       } else {
-        btn.innerHTML = '⚠️ Simulated';
+        btn.innerHTML = `⚠️ No Connections`;
         btn.className = 'jobs-action-button secondary';
-        btn.title = 'Currently showing simulated connections';
+        btn.title = 'No real agent connections found - connect agents to see network';
       }
     }
     
@@ -5133,7 +5107,7 @@ if (result.success) {
       if (hasRealConnections) {
         alert(`✅ Network Connections Status\n\nDisplaying REAL agent-to-agent connections from Supabase!\n\nConnection Details:\n• ${realConnections} real connections\n• ${totalConnections - realConnections} synthetic connections\n• Real connections include:\n  - A2A message communications (blue lines)\n  - Consensus voting connections (green dashed lines)\n  - Hybrid connections (orange lines)\n\nData Source: Live Supabase A2A messages and consensus votes`);
       } else {
-        alert('⚠️ Network Connections Status\n\nCurrently displaying SIMULATED connections between agents for visualization purposes.\n\nTo see real agent-to-agent connections:\n• Real connections are tracked in Supabase A2A messages table\n• Use the A2A Visual Trust Builder to create real connections\n• Deploy agents to live network for authentic interactions\n\nClick "Trust" tab to access the Visual Trust Builder.');
+        alert('⚠️ Network Connections Status\n\nNo real agent-to-agent connections found.\n\nTo create real agent connections:\n• Real connections are tracked in Supabase A2A messages table\n• Use the A2A Visual Trust Builder to create connections\n• Connect agents using the "Connect" buttons above\n• Deploy agents to live network for authentic interactions\n\nClick "Trust" tab to access the Visual Trust Builder.');
       }
     }
     

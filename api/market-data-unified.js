@@ -1,10 +1,32 @@
 // Unified Market Data API - Combines Finhub and FMP
+// ENHANCED: Now includes data validation using validate_market_data_freshness()
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.SUPABASE_SERVICE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 );
+
+// Add validation helper
+async function validateDataFreshness(maxAgeHours = 1) {
+    try {
+        const { data, error } = await supabase
+            .rpc('validate_market_data_freshness', { max_age_hours: maxAgeHours });
+        
+        if (error) {
+            console.warn('Data validation error:', error);
+            return { isValid: false, details: null };
+        }
+        
+        return {
+            isValid: !data.status.includes('WARNING'),
+            details: data
+        };
+    } catch (error) {
+        console.warn('Validation check failed:', error);
+        return { isValid: false, details: null };
+    }
+}
 
 // Import market data providers
 async function getFinhubData(action, params) {
@@ -237,8 +259,17 @@ export default async function handler(req, res) {
                 if (!symbol) {
                     return res.status(400).json({ error: 'Symbol required' });
                 }
+                
+                // ENHANCED: Check data freshness before fetching
+                const validation = await validateDataFreshness(1);
                 const quote = await getRealtimeQuote(symbol.toUpperCase());
-                return res.json({ success: true, data: quote });
+                
+                return res.json({ 
+                    success: true, 
+                    data: quote,
+                    data_validation: validation.details,
+                    data_fresh: validation.isValid
+                });
                 
             case 'quotes':
                 if (!symbols || !Array.isArray(symbols)) {
@@ -264,10 +295,16 @@ export default async function handler(req, res) {
                 return res.json({ success: true, data: overview });
                 
             case 'health':
+                // ENHANCED: Include data validation in health check
+                const healthValidation = await validateDataFreshness(24);
                 return res.json({ 
                     success: true, 
                     message: 'Unified market data API is running',
                     providers: ['finhub', 'fmp'],
+                    data_health: {
+                        is_fresh: healthValidation.isValid,
+                        validation_details: healthValidation.details
+                    },
                     timestamp: new Date()
                 });
                 

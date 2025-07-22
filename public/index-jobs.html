@@ -388,9 +388,9 @@
   <div class="jobs-container">
     <!-- Hero Section -->
     <div class="jobs-hero">
-      <h1 class="jobs-hero-value">$127.3M</h1>
+      <h1 class="jobs-hero-value" id="totalPortfolioValue">Loading...</h1>
       <p class="jobs-hero-label">Total Portfolio Value</p>
-      <p class="jobs-hero-change positive">↗ +$5.2M today</p>
+      <p class="jobs-hero-change" id="portfolioChange">Loading...</p>
     </div>
     
     <!-- Key Metrics Grid -->
@@ -398,20 +398,20 @@
       <div class="jobs-card" onclick="navigate('analyze', 'portfolio')">
         <div class="jobs-gesture-hint">Long press for details</div>
         <div class="jobs-metric-label">Daily P&L</div>
-        <div class="jobs-metric-value">+$847K</div>
-        <div class="jobs-metric-change positive">↗ +12.3%</div>
+        <div class="jobs-metric-value" id="dailyPnL">Loading...</div>
+        <div class="jobs-metric-change" id="pnlChange">Loading...</div>
       </div>
       
       <div class="jobs-card" onclick="navigate('analyze', 'risk')">
         <div class="jobs-metric-label">Risk Score</div>
-        <div class="jobs-metric-value">Low</div>
-        <div class="jobs-metric-change positive">98.7% healthy</div>
+        <div class="jobs-metric-value" id="riskScore">Loading...</div>
+        <div class="jobs-metric-change" id="riskHealth">Loading...</div>
       </div>
       
       <div class="jobs-card" onclick="navigate('analyze', 'treasury')">
         <div class="jobs-metric-label">Cash Position</div>
-        <div class="jobs-metric-value">$25.0M</div>
-        <div class="jobs-metric-change positive">↗ +4.1%</div>
+        <div class="jobs-metric-value" id="cashPosition">Loading...</div>
+        <div class="jobs-metric-change" id="cashChange">Loading...</div>
       </div>
     </div>
     
@@ -423,7 +423,7 @@
         <div class="jobs-action-card" onclick="handleAction('approve-trade')">
           <div>
             <div class="jobs-action-title">Approve Treasury Allocation</div>
-            <div class="jobs-action-subtitle">$5M reallocation awaiting approval</div>
+            <div class="jobs-action-subtitle" id="pending-allocation">Loading approval amount...</div>
           </div>
           <div style="font-size: 20px;">→</div>
         </div>
@@ -545,6 +545,102 @@
       if (diff < -100) {
         location.reload();
       }
+    });
+    
+    // Load real portfolio data
+    async function loadPortfolioData() {
+      try {
+        // Load portfolio summary
+        const response = await fetch('/api/portfolio-enhanced', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'get_portfolio_summary' })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load portfolio data');
+        }
+        
+        const data = await response.json();
+        
+        // Update portfolio value
+        if (data.total_value !== undefined) {
+          document.getElementById('totalPortfolioValue').textContent = 
+            `$${(data.total_value / 1000000).toFixed(1)}M`;
+        } else {
+          document.getElementById('totalPortfolioValue').textContent = 'No data';
+        }
+        
+        // Update portfolio change
+        if (data.daily_change !== undefined) {
+          const changeAmount = data.daily_change;
+          const changePercent = data.daily_change_percent || 0;
+          const changeText = `${changeAmount >= 0 ? '+' : ''}$${Math.abs(changeAmount / 1000).toFixed(0)}K today (${changePercent >= 0 ? '+' : ''}${changePercent.toFixed(2)}%)`;
+          document.getElementById('portfolioChange').textContent = changeText;
+          document.getElementById('portfolioChange').className = 
+            `jobs-hero-change ${changeAmount >= 0 ? 'positive' : 'negative'}`;
+        } else {
+          document.getElementById('portfolioChange').textContent = 'No change data';
+        }
+        
+        // Update daily P&L
+        if (data.daily_pnl !== undefined) {
+          document.getElementById('dailyPnL').textContent = 
+            `${data.daily_pnl >= 0 ? '+' : ''}$${Math.abs(data.daily_pnl / 1000).toFixed(0)}K`;
+          document.getElementById('pnlChange').textContent = 
+            data.pnl_trend || 'No trend data';
+        } else {
+          document.getElementById('dailyPnL').textContent = 'No data';
+          document.getElementById('pnlChange').textContent = '';
+        }
+        
+        // Update risk score
+        if (data.risk_score !== undefined) {
+          document.getElementById('riskScore').textContent = 
+            `${data.risk_score}/10`;
+          document.getElementById('riskHealth').textContent = 
+            data.risk_status || 'Unknown';
+        } else {
+          document.getElementById('riskScore').textContent = 'No data';
+          document.getElementById('riskHealth').textContent = '';
+        }
+        
+        // Update cash position
+        if (data.cash_position !== undefined) {
+          document.getElementById('cashPosition').textContent = 
+            `$${(data.cash_position / 1000000).toFixed(1)}M`;
+          document.getElementById('cashChange').textContent = 
+            data.cash_utilization || 'No utilization data';
+        } else {
+          document.getElementById('cashPosition').textContent = 'No data';
+          document.getElementById('cashChange').textContent = '';
+        }
+        
+        // Update pending allocation
+        if (data.pending_allocation !== undefined) {
+          document.getElementById('pending-allocation').textContent = 
+            `$${(data.pending_allocation / 1000000).toFixed(0)}M reallocation awaiting approval`;
+        } else {
+          document.getElementById('pending-allocation').textContent = 'No pending allocations';
+        }
+        
+      } catch (error) {
+        console.error('Error loading portfolio data:', error);
+        // Show error state
+        document.getElementById('totalPortfolioValue').textContent = 'Error loading data';
+        document.getElementById('portfolioChange').textContent = 'Unable to connect to database';
+        document.getElementById('dailyPnL').textContent = 'Error';
+        document.getElementById('riskScore').textContent = 'Error';
+        document.getElementById('cashPosition').textContent = 'Error';
+      }
+    }
+    
+    // Load data on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPortfolioData();
+      
+      // Refresh data every 30 seconds
+      setInterval(loadPortfolioData, 30000);
     });
   </script>
 </body>

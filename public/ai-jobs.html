@@ -821,27 +821,27 @@
       </div>
       
       <div class="jobs-overview-card">
-        <div class="jobs-overview-value" id="queries-today">1,247</div>
+        <div class="jobs-overview-value" id="queries-today">Loading...</div>
         <div class="jobs-overview-label">Queries Today</div>
       </div>
       
       <div class="jobs-overview-card">
-        <div class="jobs-overview-value processing" id="processing-queue">8</div>
+        <div class="jobs-overview-value processing" id="processing-queue">Loading...</div>
         <div class="jobs-overview-label">Processing Queue</div>
       </div>
       
       <div class="jobs-overview-card">
-        <div class="jobs-overview-value insights" id="insights-generated">342</div>
+        <div class="jobs-overview-value insights" id="insights-generated">Loading...</div>
         <div class="jobs-overview-label">Insights Generated</div>
       </div>
       
       <div class="jobs-overview-card">
-        <div class="jobs-overview-value" id="avg-response-time">0.8s</div>
+        <div class="jobs-overview-value" id="avg-response-time">Loading...</div>
         <div class="jobs-overview-label">Avg Response Time</div>
       </div>
       
       <div class="jobs-overview-card">
-        <div class="jobs-overview-value" id="data-sources">15</div>
+        <div class="jobs-overview-value" id="data-sources">Loading...</div>
         <div class="jobs-overview-label">Data Sources</div>
       </div>
     </div>
@@ -1235,51 +1235,100 @@
       // Scroll to bottom
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       
-      // Simulate AI response
-      setTimeout(() => {
-        const aiResponse = generateAIResponse(message, selectedAI);
+      // Get real AI response
+      getAIResponse(message, selectedAI).then(response => {
         const aiMessage = document.createElement('div');
         aiMessage.className = `jobs-message ai ${selectedAI === 'auto' ? 'supabase' : selectedAI}`;
         aiMessage.innerHTML = `
-          <div>${aiResponse}</div>
+          <div>${response}</div>
           <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
         `;
         messagesContainer.appendChild(aiMessage);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 1000);
+      }).catch(error => {
+        console.error('Error getting AI response:', error);
+        const errorMessage = document.createElement('div');
+        errorMessage.className = 'jobs-message ai error';
+        errorMessage.innerHTML = `
+          <div>Sorry, I couldn't process your request. Please try again.</div>
+          <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
+        `;
+        messagesContainer.appendChild(errorMessage);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      });
     }
     
-    // Generate AI response
-    function generateAIResponse(message, aiType) {
-      const responses = {
-        'grok': [
-          'Based on current market conditions and my analysis, here are the key insights...',
-          'Let me analyze this from multiple angles. The data suggests...',
-          'Interesting question! My reasoning indicates that...',
-          'From a strategic perspective, I recommend...'
-        ],
-        'perplexity': [
-          'I\'ve searched the latest financial news and research. Here\'s what I found...',
-          'According to recent reports from Bloomberg and Reuters...',
-          'Based on comprehensive web research and analysis...',
-          'The latest market data and expert opinions suggest...'
-        ],
-        'supabase': [
-          'Querying the Supabase database for relevant financial data...',
-          'I found the following information in our portfolio database...',
-          'Based on historical data in our system...',
-          'The database shows the following trends...'
-        ],
-        'auto': [
-          'I\'ve analyzed your query and selected the best AI system to help...',
-          'Using multiple AI sources to provide comprehensive insights...',
-          'Combining database analysis with external research...',
-          'Here\'s what our integrated AI systems found...'
-        ]
-      };
-      
-      const typeResponses = responses[aiType] || responses['auto'];
-      return typeResponses[Math.floor(Math.random() * typeResponses.length)];
+    // Get real AI response from API
+    async function getAIResponse(message, aiType) {
+      try {
+        // Store message in database
+        await fetch('/api/supabase-proxy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'insert',
+            table: 'chat_messages',
+            data: {
+              message: message,
+              ai_type: aiType,
+              user_id: getUserId(),
+              timestamp: new Date().toISOString()
+            }
+          })
+        });
+        
+        // Get AI response based on type
+        const response = await fetch('/api/unified', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'process_ai_query',
+            query: message,
+            ai_type: aiType
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to get AI response');
+        }
+        
+        const data = await response.json();
+        
+        // Store AI response
+        if (data.response) {
+          await fetch('/api/supabase-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'insert',
+              table: 'chat_messages',
+              data: {
+                message: data.response,
+                ai_type: aiType,
+                is_system_message: true,
+                timestamp: new Date().toISOString()
+              }
+            })
+          });
+        }
+        
+        return data.response || 'I processed your query but couldn\'t generate a specific response. Please try rephrasing your question.';
+        
+      } catch (error) {
+        console.error('Error processing AI query:', error);
+        // Fallback to a generic response
+        return 'I\'m currently unable to process your request. Please ensure you\'re connected to the database and try again.';
+      }
+    }
+    
+    function getUserId() {
+      // Get or create user ID
+      let userId = localStorage.getItem('ai_chat_user_id');
+      if (!userId) {
+        userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        localStorage.setItem('ai_chat_user_id', userId);
+      }
+      return userId;
     }
     
     // Data source toggle
@@ -1370,26 +1419,54 @@
     }
     
     
-    // Auto-refresh AI metrics
-    function refreshAIMetrics() {
-      const metrics = {
-        'queries-today': Math.floor(Math.random() * 100) + 1200,
-        'processing-queue': Math.floor(Math.random() * 10) + 5,
-        'insights-generated': Math.floor(Math.random() * 50) + 320,
-        'avg-response-time': `${(Math.random() * 0.5 + 0.6).toFixed(1)}s`,
-        'data-sources': Math.floor(Math.random() * 3) + 14
-      };
-      
-      Object.entries(metrics).forEach(([id, value]) => {
-        const element = document.getElementById(id);
-        if (element) {
-          element.textContent = value;
+    // Load real AI metrics from API
+    async function loadAIMetrics() {
+      try {
+        const response = await fetch('/api/unified', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'get_ai_metrics'
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to load AI metrics');
         }
-      });
+        
+        const data = await response.json();
+        
+        // Update UI with real data
+        if (data.metrics) {
+          updateElement('queries-today', data.metrics.queries_today || '0');
+          updateElement('processing-queue', data.metrics.processing_queue || '0');
+          updateElement('insights-generated', data.metrics.insights_generated || '0');
+          updateElement('avg-response-time', data.metrics.avg_response_time || 'N/A');
+          updateElement('data-sources', data.metrics.data_sources || '0');
+        }
+      } catch (error) {
+        console.error('Error loading AI metrics:', error);
+        // Show error state
+        updateElement('queries-today', 'No data');
+        updateElement('processing-queue', 'No data');
+        updateElement('insights-generated', 'No data');
+        updateElement('avg-response-time', 'No data');
+        updateElement('data-sources', 'No data');
+      }
     }
     
+    function updateElement(id, value) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
+      }
+    }
+    
+    // Load metrics on page load
+    loadAIMetrics();
+    
     // Refresh metrics every 30 seconds
-    setInterval(refreshAIMetrics, 30000);
+    setInterval(loadAIMetrics, 30000);
     
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -1414,19 +1491,6 @@
       });
     });
     
-    // Simulate chat activity
-    function simulateChatActivity() {
-      const processingElement = document.getElementById('processing-queue');
-      if (processingElement) {
-        const current = parseInt(processingElement.textContent);
-        const change = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
-        const newValue = Math.max(0, Math.min(20, current + change));
-        processingElement.textContent = newValue;
-      }
-    }
-    
-    // Update processing queue every 10 seconds
-    setInterval(simulateChatActivity, 10000);
   </script>
 </body>
 </html>

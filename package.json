@@ -9,7 +9,11 @@
     "agents:start": "node scripts/start-agents.js",
     "test": "node scripts/test-blockchain-integration.js",
     "register-agents": "node ai-assisted-agent-registration.js",
-    "test-compliance": "node test-compliance-live.js"
+    "test-compliance": "node test-compliance-live.js",
+    "test:rag": "node test-rag-pipeline.js",
+    "test:rag-api": "node test-rag-pipeline.js --api",
+    "deploy:rag": "node deploy-rag-curriculum.js",
+    "setup:rag-db": "echo 'Run database/rag-database-setup.sql in Supabase dashboard'"
   },
   "dependencies": {
     "@apollo/server": "^4.9.5",
@@ -21,6 +25,7 @@
     "canvas-confetti": "^1.6.0",
     "dataloader": "^2.2.2",
     "dotenv": "^17.2.0",
+    "formidable": "^3.5.1",
     "graphql": "^16.8.1",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tag": "^2.12.6",
@@ -30,6 +35,7 @@
     "node-cron": "^3.0.3",
     "node-fetch": "^3.3.2",
     "openai": "^4.20.1",
+    "pdfjs-dist": "^3.11.174",
     "pg": "^8.16.3",
     "socket.io": "^4.7.2",
     "typescript": "^5.3.3",

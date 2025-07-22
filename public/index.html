@@ -522,18 +522,18 @@
   <div class="jobs-container">
     <!-- Hero Section -->
     <div class="jobs-hero">
-      <h1 class="jobs-hero-value">$127.3M</h1>
+      <h1 class="jobs-hero-value" id="totalPortfolioValue">Loading...</h1>
       <p class="jobs-hero-label">Total Portfolio Value</p>
-      <p class="jobs-hero-change positive">↗ +$5.2M today</p>
+      <p class="jobs-hero-change" id="portfolioChange">Calculating...</p>
     </div>
     
     <!-- Key Metrics Grid -->
     <div class="jobs-grid">
       <div class="jobs-card" onclick="navigate('analyze', 'portfolio')">
         <div class="jobs-gesture-hint">Long press for details</div>
-        <div class="jobs-metric-label">Daily P&L</div>
-        <div class="jobs-metric-value">+$847K</div>
-        <div class="jobs-metric-change positive">↗ +12.3%</div>
+        <div class="jobs-metric-label">Total P&L</div>
+        <div class="jobs-metric-value" id="totalPnL">Loading...</div>
+        <div class="jobs-metric-change" id="pnlChange">Calculating...</div>
       </div>
       
       <div class="jobs-card" onclick="navigate('analyze', 'risk')">
@@ -542,28 +542,22 @@
         <div class="jobs-metric-change positive">98.7% healthy</div>
       </div>
       
-      <div class="jobs-card" onclick="navigate('analyze', 'treasury')">
-        <div class="jobs-metric-label">Cash Position</div>
-        <div class="jobs-metric-value">$25.0M</div>
-        <div class="jobs-metric-change positive">↗ +4.1%</div>
-      </div>
-      
       <div class="jobs-card" onclick="navigate('analyze', 'positions')">
         <div class="jobs-metric-label">Open Positions</div>
-        <div class="jobs-metric-value">247</div>
-        <div class="jobs-metric-change positive">↗ +8</div>
+        <div class="jobs-metric-value" data-metric="open-positions">Loading...</div>
+        <div class="jobs-metric-change" data-metric="positions-change">Loading...</div>
       </div>
       
       <div class="jobs-card" onclick="navigate('analyze', 'volatility')">
         <div class="jobs-metric-label">Volatility</div>
-        <div class="jobs-metric-value">12.3%</div>
-        <div class="jobs-metric-change negative">↘ -2.1%</div>
+        <div class="jobs-metric-value" data-metric="volatility">Loading...</div>
+        <div class="jobs-metric-change" data-metric="volatility-change">Loading...</div>
       </div>
       
       <div class="jobs-card" onclick="navigate('analyze', 'returns')">
         <div class="jobs-metric-label">YTD Return</div>
-        <div class="jobs-metric-value">+18.7%</div>
-        <div class="jobs-metric-change positive">↗ +1.2%</div>
+        <div class="jobs-metric-value" data-metric="ytd-return">Loading...</div>
+        <div class="jobs-metric-change" data-metric="ytd-change">Loading...</div>
       </div>
       
       <!-- News Impact Analysis Card -->
@@ -619,6 +613,115 @@
   
   
   <script>
+    // ENHANCED: System health and validation functions
+    let systemHealthData = {};
+    
+    async function validateSystemHealth() {
+      try {
+        const response = await fetch('/api/system-health', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'quick_status' })
+        });
+        
+        if (response.ok) {
+          systemHealthData = await response.json();
+          updateHealthIndicators();
+          return true;
+        }
+      } catch (error) {
+        console.warn('System health check failed:', error);
+      }
+      return false;
+    }
+    
+    async function validateMarketData() {
+      try {
+        const response = await fetch('/api/market-data-validator', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'health_check' })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          updateMarketHealthIndicator(data);
+          return data.status === 'fresh';
+        }
+      } catch (error) {
+        console.warn('Market data validation failed:', error);
+      }
+      return false;
+    }
+    
+    function updateHealthIndicators() {
+      // Add visual health indicators to the UI
+      const healthScore = systemHealthData.score || 0;
+      const status = systemHealthData.status || 'unknown';
+      
+      // Create or update health indicator in the nav
+      let healthIndicator = document.getElementById('health-indicator');
+      if (!healthIndicator) {
+        healthIndicator = document.createElement('div');
+        healthIndicator.id = 'health-indicator';
+        healthIndicator.style.cssText = `
+          position: fixed;
+          top: 10px;
+          right: 10px;
+          background: var(--jobs-white);
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          z-index: 1000;
+        `;
+        document.body.appendChild(healthIndicator);
+      }
+      
+      const statusColor = {
+        'healthy': 'var(--jobs-green)',
+        'warning': 'var(--jobs-orange)', 
+        'critical': 'var(--jobs-red)'
+      }[status] || 'var(--jobs-gray)';
+      
+      healthIndicator.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: ${statusColor};"></div>
+          <span>System: ${Math.round(healthScore)}%</span>
+        </div>
+      `;
+    }
+    
+    function updateMarketHealthIndicator(data) {
+      const status = data.status || 'unknown';
+      let marketIndicator = document.getElementById('market-indicator');
+      
+      if (!marketIndicator) {
+        marketIndicator = document.createElement('div');
+        marketIndicator.id = 'market-indicator';
+        marketIndicator.style.cssText = `
+          position: fixed;
+          top: 40px;
+          right: 10px;
+          background: var(--jobs-white);
+          border-radius: 8px;
+          padding: 8px 12px;
+          font-size: 12px;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+          z-index: 1000;
+        `;
+        document.body.appendChild(marketIndicator);
+      }
+      
+      const statusColor = status === 'fresh' ? 'var(--jobs-green)' : 'var(--jobs-red)';
+      marketIndicator.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: ${statusColor};"></div>
+          <span>Market: ${status}</span>
+        </div>
+      `;
+    }
+    
     // Check user role
     const userRole = localStorage.getItem('userRole') || 'Finance';
     if (userRole === 'Technology') {
@@ -697,9 +800,12 @@
       impactChange.className = 'jobs-metric-change';
       
       try {
-        console.log('🤖 Starting real-time news impact analysis...');
+        console.log('🤖 Starting enhanced real-time analysis...');
         
-        // Try deployed API endpoint first, fallback to simulated data
+        // ENHANCED: Start with data validation before analysis
+        await validateSystemHealth();
+        
+        // Try real API endpoint only - NO FALLBACKS
         let response;
         try {
           response = await fetch('/api/grok-portfolio-impact', {
@@ -714,53 +820,26 @@
             timeout: 10000
           });
         } catch (apiError) {
-          console.log('API not available, using simulation mode');
-          // Simulate realistic response for demo
-          const simulatedResponse = {
-            success: true,
-            real_news_analysis: true,
-            news_analyzed: 3,
-            combined_impact: {
-              total_dollar_impact: -247.5,
-              avg_confidence: 0.87,
-              news_recency: '4 - 18 hours old'
-            },
-            analyses: [
-              {
-                news_item: {
-                  title: 'Apple Stock Down 3.2% on Supply Chain Concerns',
-                  source: 'Reuters',
-                  age_hours: 4,
-                  market_impact: 'negative'
-                },
-                analysis: { total_impact: -180 }
-              },
-              {
-                news_item: {
-                  title: 'NVIDIA Announces New AI Partnership',
-                  source: 'TechCrunch', 
-                  age_hours: 12,
-                  market_impact: 'positive'
-                },
-                analysis: { total_impact: 95 }
-              },
-              {
-                news_item: {
-                  title: 'Fed Signals Potential Rate Cut Next Month',
-                  source: 'Bloomberg',
-                  age_hours: 18,
-                  market_impact: 'positive'
-                },
-                analysis: { total_impact: 162.5 }
-              }
-            ]
-          };
-          
-          // Simulate API response
-          response = {
-            ok: true,
-            json: async () => simulatedResponse
-          };
+          console.error('Real news impact API not available:', apiError);
+          // NO SIMULATION - Show real error state
+          const newsContainer = document.getElementById('newsImpactResults');
+          if (newsContainer) {
+            newsContainer.innerHTML = `
+              <div class="jobs-error-state" style="
+                text-align: center; 
+                padding: 2rem; 
+                background: rgba(255, 59, 48, 0.1); 
+                border: 1px solid #FF3B30; 
+                border-radius: 12px; 
+                color: #FF3B30;
+              ">
+                <div style="font-size: 48px; margin-bottom: 1rem;">⚠️</div>
+                <div style="font-size: 18px; font-weight: 600; margin-bottom: 0.5rem;">News Impact Analysis Unavailable</div>
+                <div style="font-size: 14px; opacity: 0.8;">Unable to connect to real news analysis API</div>
+              </div>
+            `;
+          }
+          return;
         }
         
         if (!response.ok) {
@@ -866,9 +945,88 @@
       }
     }
     
-    // Auto-load news impact on page load
+    // ENHANCED: Load real portfolio data using our new functions
+    async function loadPortfolioData() {
+      try {
+        const response = await fetch('/api/portfolio-enhanced', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'get_all_portfolios' })
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          updatePortfolioDisplay(data.portfolios);
+        } else {
+          // NO SIMULATION - Show real error state
+          showPortfolioError('Portfolio API returned error: ' + response.status);
+        }
+      } catch (error) {
+        console.error('Portfolio API not available:', error);
+        // NO SIMULATION - Show real error state
+        showPortfolioError('Unable to connect to portfolio API');
+      }
+    }
+    
+    function showPortfolioError(message) {
+      // Show error state for all portfolio-related elements
+      document.querySelectorAll('[data-metric="total-portfolio-value"], [data-metric="portfolio-change"], [data-metric="daily-pnl"], [data-metric="cash-position"], [data-metric="cash-change"], [data-metric="open-positions"], [data-metric="positions-change"], [data-metric="volatility"], [data-metric="volatility-change"], [data-metric="ytd-return"], [data-metric="ytd-change"]').forEach(el => {
+        el.textContent = 'No data';
+        el.style.color = '#FF3B30';
+        el.style.opacity = '0.7';
+      });
+      
+      console.error('Portfolio data error:', message);
+    }
+    
+    function updatePortfolioDisplay(portfolioData) {
+      const totalValue = portfolioData.total_value_all_portfolios || 0;
+      const totalPnL = portfolioData.total_unrealized_pnl || 0;
+      
+      // Format numbers
+      const formatCurrency = (amount) => {
+        if (Math.abs(amount) >= 1000000) {
+          return `$${(amount / 1000000).toFixed(1)}M`;
+        } else if (Math.abs(amount) >= 1000) {
+          return `$${(amount / 1000).toFixed(0)}K`;
+        } else {
+          return `$${amount.toFixed(0)}`;
+        }
+      };
+      
+      // Update hero section
+      document.getElementById('totalPortfolioValue').textContent = formatCurrency(totalValue);
+      
+      const changeElement = document.getElementById('portfolioChange');
+      const isPositive = totalPnL >= 0;
+      changeElement.textContent = `${isPositive ? '↗' : '↘'} ${isPositive ? '+' : ''}${formatCurrency(totalPnL)} today`;
+      changeElement.className = `jobs-hero-change ${isPositive ? 'positive' : 'negative'}`;
+      
+      // Update P&L card
+      document.getElementById('totalPnL').textContent = formatCurrency(totalPnL);
+      
+      const pnlChangeElement = document.getElementById('pnlChange');
+      const pnlPercent = totalValue > 0 ? ((totalPnL / totalValue) * 100).toFixed(1) : 0;
+      pnlChangeElement.textContent = `${isPositive ? '↗' : '↘'} ${isPositive ? '+' : ''}${pnlPercent}%`;
+      pnlChangeElement.className = `jobs-metric-change ${isPositive ? 'positive' : 'negative'}`;
+    }
+    
+    // Auto-load enhanced data on page load
     window.addEventListener('load', () => {
-      setTimeout(analyzeNewsImpact, 1000); // Load after 1 second
+      // Start health monitoring
+      validateSystemHealth();
+      validateMarketData();
+      
+      // Load portfolio data
+      setTimeout(loadPortfolioData, 500);
+      
+      // Load news impact
+      setTimeout(analyzeNewsImpact, 1000);
+      
+      // Setup periodic health checks
+      setInterval(validateSystemHealth, 30000); // Every 30 seconds
+      setInterval(validateMarketData, 60000);   // Every minute
+      setInterval(loadPortfolioData, 120000);   // Every 2 minutes
     });
   </script>
   

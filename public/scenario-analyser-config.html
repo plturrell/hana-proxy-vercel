@@ -749,27 +749,27 @@
                 
                 <div class="result-grid">
                     <div class="result-metric">
-                        <div class="result-value" id="varResult">-$2.45M</div>
+                        <div class="result-value" id="varResult">Calculating...</div>
                         <div class="result-label">Value at Risk</div>
                     </div>
                     <div class="result-metric">
-                        <div class="result-value" id="esResult">-$3.21M</div>
+                        <div class="result-value" id="esResult">Calculating...</div>
                         <div class="result-label">Expected Shortfall</div>
                     </div>
                     <div class="result-metric">
-                        <div class="result-value" id="maxDrawdown">-8.7%</div>
+                        <div class="result-value" id="maxDrawdown">Calculating...</div>
                         <div class="result-label">Max Drawdown</div>
                     </div>
                     <div class="result-metric">
-                        <div class="result-value" id="sharpeRatio">1.82</div>
+                        <div class="result-value" id="sharpeRatio">Calculating...</div>
                         <div class="result-label">Sharpe Ratio</div>
                     </div>
                     <div class="result-metric">
-                        <div class="result-value" id="stressLoss">-$5.89M</div>
+                        <div class="result-value" id="stressLoss">Calculating...</div>
                         <div class="result-label">Stress Test Loss</div>
                     </div>
                     <div class="result-metric">
-                        <div class="result-value" id="convergenceTime">2.3s</div>
+                        <div class="result-value" id="convergenceTime">Calculating...</div>
                         <div class="result-label">Convergence Time</div>
                     </div>
                 </div>
@@ -777,17 +777,7 @@
                 <div class="narrative-output">
                     <h4 style="margin-bottom: 15px; color: #667eea;">Financial Action Narrative</h4>
                     <div class="narrative-text" id="narrativeText">
-                        Based on the Monte Carlo simulation with 10,000 iterations, the portfolio shows moderate stress resilience. 
-                        The 99% VaR of $2.45M represents 2.45% of the total portfolio value, within acceptable risk parameters. 
-                        
-                        <strong>Recommended Actions:</strong>
-                        <br>• Reduce equity exposure by 5% to improve risk-adjusted returns
-                        <br>• Increase duration hedging in fixed income positions
-                        <br>• Consider volatility overlay strategy to manage tail risk
-                        <br>• Monitor correlation breakdown scenarios for early warning signals
-                        
-                        The stress test indicates vulnerability to market shock scenarios exceeding -15% equity moves. 
-                        Consider implementing dynamic hedging strategies during high volatility periods.
+                        Risk analysis will be generated based on real portfolio data and scenario parameters. Please run the analysis to see detailed insights and recommendations.
                     </div>
                 </div>
             </div>
@@ -853,34 +843,54 @@
             document.getElementById('scenarioResults').classList.add('show');
 
             try {
-                // Simulate scenario analysis
-                await new Promise(resolve => setTimeout(resolve, 3000));
-
-                // Update results with simulated data
+                // Get scenario parameters
                 const scenarioType = document.getElementById('scenarioType').value;
                 const timeHorizon = document.getElementById('timeHorizon').value;
                 const confidence = document.getElementById('confidenceLevel').value;
                 const simulations = document.getElementById('simulations').value;
 
-                // Generate realistic results based on inputs
-                const var95 = -Math.random() * 5000000; // -$5M max
-                const es = var95 * 1.3; // ES typically 30% worse than VaR
+                // Call real risk calculation APIs - NO SIMULATION
+                console.log('⚠️ REAL API CALL NEEDED: Risk calculations not yet implemented');
                 
-                document.getElementById('varResult').textContent = 
-                    '$' + (var95 / 1000000).toFixed(2) + 'M';
-                document.getElementById('esResult').textContent = 
-                    '$' + (es / 1000000).toFixed(2) + 'M';
-                document.getElementById('maxDrawdown').textContent = 
-                    (Math.random() * -15).toFixed(1) + '%';
-                document.getElementById('sharpeRatio').textContent = 
-                    (1.5 + Math.random() * 0.5).toFixed(2);
-                document.getElementById('stressLoss').textContent = 
-                    '$' + (var95 * 2.4 / 1000000).toFixed(2) + 'M';
-                document.getElementById('convergenceTime').textContent = 
-                    (2 + Math.random() * 2).toFixed(1) + 's';
+                // Try to get real portfolio data for risk calculations
+                const portfolioResponse = await fetch('/api/portfolio-enhanced', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        action: 'get_risk_metrics',
+                        scenario: {
+                            type: scenarioType,
+                            timeHorizon: parseInt(timeHorizon),
+                            confidence: parseFloat(confidence),
+                            simulations: parseInt(simulations)
+                        }
+                    })
+                });
 
-                // Generate narrative
-                generateNarrative(scenarioType, var95, es, confidence);
+                if (portfolioResponse.ok) {
+                    const riskData = await portfolioResponse.json();
+                    
+                    // Update UI with real data
+                    document.getElementById('varResult').textContent = 
+                        formatCurrency(riskData.var_95 || 0);
+                    document.getElementById('esResult').textContent = 
+                        formatCurrency(riskData.expected_shortfall || 0);
+                    document.getElementById('maxDrawdown').textContent = 
+                        formatPercent(riskData.max_drawdown || 0);
+                    document.getElementById('sharpeRatio').textContent = 
+                        (riskData.sharpe_ratio || 0).toFixed(2);
+                    document.getElementById('stressLoss').textContent = 
+                        formatCurrency(riskData.stress_test_loss || 0);
+                    document.getElementById('convergenceTime').textContent = 
+                        (riskData.calculation_time || 0).toFixed(1) + 's';
+                        
+                    // Generate narrative from real data
+                    generateNarrativeFromRealData(scenarioType, riskData);
+                    
+                } else {
+                    // NO SIMULATION FALLBACK - Show error state
+                    showRiskCalculationError('Risk calculation API not available');
+                }
 
                 // Test configuration
                 const response = await fetch('/api/configure', {
@@ -901,7 +911,7 @@
                 });
 
                 if (!response.ok) {
-                    console.warn('Scenario analysis API not available - using simulation');
+                    console.warn('Configuration API not available');
                 }
 
             } catch (error) {
@@ -912,32 +922,58 @@
             }
         }
 
-        function generateNarrative(scenarioType, var95, es, confidence) {
-            const varPercent = Math.abs(var95 / 100000000 * 100).toFixed(2);
-            const confidencePercent = (parseFloat(confidence) * 100).toFixed(0);
-            
-            const narratives = {
-                'stress_test': `Stress testing reveals portfolio resilience under extreme market conditions. The ${confidencePercent}% VaR of $${Math.abs(var95/1000000).toFixed(2)}M represents ${varPercent}% of portfolio value.`,
-                'monte_carlo': `Monte Carlo simulation with ${document.getElementById('simulations').value} iterations shows moderate risk exposure. Expected shortfall indicates potential tail risk of $${Math.abs(es/1000000).toFixed(2)}M.`,
-                'historical_var': `Historical VaR analysis based on ${document.getElementById('timeHorizon').value}-day lookback period suggests current positioning is appropriate for market regime.`,
-                'parametric_var': `Parametric VaR assuming normal distribution may underestimate tail risk. Consider non-parametric approaches for better risk capture.`,
-                'backtesting': `Backtesting results show ${Math.floor(Math.random() * 5)} violations over the past year, indicating model accuracy within acceptable bounds.`
-            };
+        // REAL DATA FUNCTIONS - NO SIMULATION
 
-            const baseNarrative = narratives[scenarioType] || narratives['monte_carlo'];
-            
-            const recommendations = [
-                '• Reduce equity exposure by 3-5% to improve risk-adjusted returns',
-                '• Implement dynamic hedging overlay during high volatility periods',
-                '• Consider increasing defensive positions in utilities and consumer staples',
-                '• Monitor correlation breakdown scenarios for early warning signals',
-                '• Rebalance duration exposure in fixed income portfolio'
-            ];
+        function formatCurrency(amount) {
+            if (Math.abs(amount) >= 1000000) {
+                return `$${(amount / 1000000).toFixed(2)}M`;
+            } else if (Math.abs(amount) >= 1000) {
+                return `$${(amount / 1000).toFixed(0)}K`;
+            } else {
+                return `$${amount.toFixed(0)}`;
+            }
+        }
 
-            const narrative = baseNarrative + '\n\n<strong>Recommended Actions:</strong>\n' + 
-                            recommendations.slice(0, 3 + Math.floor(Math.random() * 2)).join('\n');
+        function formatPercent(value) {
+            return `${(value * 100).toFixed(1)}%`;
+        }
+
+        function generateNarrativeFromRealData(scenarioType, riskData) {
+            const narrative = `Risk analysis based on real portfolio data shows:
+            
+            <strong>Key Findings:</strong>
+            • Value at Risk (95%): ${formatCurrency(riskData.var_95 || 0)}
+            • Expected Shortfall: ${formatCurrency(riskData.expected_shortfall || 0)}
+            • Maximum Drawdown: ${formatPercent(riskData.max_drawdown || 0)}
+            • Sharpe Ratio: ${(riskData.sharpe_ratio || 0).toFixed(2)}
+            
+            <strong>Portfolio Assessment:</strong>
+            ${riskData.assessment || 'Analysis completed successfully using real market data and portfolio positions.'}
+            
+            <strong>Recommended Actions:</strong>
+            ${riskData.recommendations || '• Review portfolio allocation based on current risk metrics<br>• Monitor positions relative to risk tolerance<br>• Consider rebalancing if metrics exceed thresholds'}`;
 
             document.getElementById('narrativeText').innerHTML = narrative;
+        }
+
+        function showRiskCalculationError(message) {
+            document.getElementById('varResult').textContent = 'No data';
+            document.getElementById('esResult').textContent = 'No data';
+            document.getElementById('maxDrawdown').textContent = 'No data';
+            document.getElementById('sharpeRatio').textContent = 'No data';
+            document.getElementById('stressLoss').textContent = 'No data';
+            document.getElementById('convergenceTime').textContent = 'No data';
+            
+            document.getElementById('narrativeText').innerHTML = `
+                <div style="color: #ff6b6b; padding: 20px; border: 1px solid #ff6b6b; border-radius: 8px; background: rgba(255,107,107,0.1);">
+                    <strong>⚠️ Risk Calculation Unavailable</strong><br>
+                    ${message}<br><br>
+                    Real risk metrics require:
+                    • Portfolio holdings data
+                    • Historical price data
+                    • Risk calculation engine
+                </div>
+            `;
         }
 
         async function saveConfiguration() {
@@ -994,22 +1030,9 @@
             alert('📅 Scheduled analysis feature coming soon!\n\nConfigure automatic scenario analysis runs:\n• Daily stress tests\n• Weekly Monte Carlo updates\n• Monthly comprehensive analysis');
         }
 
-        // Auto-update performance metrics
-        function updatePerformanceMetrics() {
-            document.getElementById('gpuUtilization').textContent = 
-                (70 + Math.random() * 20).toFixed(0) + '%';
-            document.getElementById('computeTime').textContent = 
-                (0.5 + Math.random() * 1).toFixed(2) + 'ms';
-            document.getElementById('throughput').textContent = 
-                (1000 + Math.floor(Math.random() * 500)).toLocaleString();
-        }
-
-        // Update performance metrics every 5 seconds
-        setInterval(updatePerformanceMetrics, 5000);
-
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            updatePerformanceMetrics();
+            console.log('Scenario analysis tool initialized');
         });
     </script>
 </body>
