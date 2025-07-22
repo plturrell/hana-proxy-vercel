@@ -1695,9 +1695,13 @@
       alert(message);
     }
     
-    // Check user role
+    // Check user role - default to showing control menu
+    const userRole = localStorage.getItem('userRole') || 'Technology';
     if (userRole === 'Technology') {
-      document.getElementById('control-menu').style.display = 'flex';
+      const controlMenu = document.getElementById('control-menu');
+      if (controlMenu) {
+        controlMenu.style.display = 'flex';
+      }
     }
     
     // Sidebar functionality
