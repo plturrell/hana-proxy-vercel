@@ -249,10 +249,13 @@ function initializeTooltips() {
       
       if (this._tooltip) {
         this._tooltip.style.opacity = '0';
+        const tooltipToRemove = this._tooltip;
         setTimeout(() => {
-          this._tooltip.remove();
-          delete this._tooltip;
+          if (tooltipToRemove && tooltipToRemove.parentNode) {
+            tooltipToRemove.remove();
+          }
         }, 200);
+        delete this._tooltip;
       }
     });
   });
