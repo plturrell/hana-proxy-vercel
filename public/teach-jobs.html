@@ -9,6 +9,7 @@
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
   <link href="teach-jobs-excellence.css" rel="stylesheet">
+  <link href="teach-jobs-harmony.css" rel="stylesheet">
   <script src="teach-jobs-excellence.js" defer></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
@@ -1151,7 +1152,8 @@
       </div>
       
       <div class="jobs-grid">
-        <div class="jobs-card" onclick="openCurriculumDetails('financial-ml-basics')">
+        <div class="jobs-card excellence-card" onclick="openCurriculumDetails('financial-ml-basics')" style="cursor: pointer; background: linear-gradient(135deg, rgba(52,199,89,0.05) 0%, rgba(255,255,255,0.02) 100%), #1C1C1E;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--excellence-gradient-success); opacity: 0.6; border-radius: 20px 20px 0 0;"></div>
           <div class="jobs-curriculum-header">
             <h3 class="jobs-curriculum-title">Financial ML Fundamentals</h3>
             <div class="jobs-curriculum-badge beginner">Beginner</div>
@@ -1183,20 +1185,21 @@
           </div>
           <div class="jobs-progress-container">
             <div class="jobs-progress-label">
-              <span class="jobs-progress-text">Course Progress</span>
-              <span class="jobs-progress-percentage">40%</span>
+              <span class="jobs-progress-text" style="font-weight: 500;">Course Progress</span>
+              <span class="jobs-progress-percentage" style="font-weight: 600; color: var(--excellence-green);">40%</span>
             </div>
-            <div class="jobs-progress-bar">
-              <div class="jobs-progress-fill" style="width: 40%"></div>
+            <div class="excellence-progress" data-progress="40">
+              <div class="excellence-progress-fill" style="width: 0;"></div>
             </div>
           </div>
           <div class="jobs-learning-actions">
-            <button class="jobs-action-button primary" onclick="event.stopPropagation(); continueCurriculum('financial-ml-basics')">Continue Learning</button>
-            <button class="jobs-action-button" onclick="event.stopPropagation(); viewCurriculum('financial-ml-basics')">View Curriculum</button>
+            <button class="jobs-action-button primary excellence-button-primary" onclick="event.stopPropagation(); continueCurriculum('financial-ml-basics')">Continue Learning</button>
+            <button class="jobs-action-button excellence-button" onclick="event.stopPropagation(); viewCurriculum('financial-ml-basics')">View Curriculum</button>
           </div>
         </div>
         
-        <div class="jobs-card" onclick="openCurriculumDetails('advanced-rl')">
+        <div class="jobs-card excellence-card" onclick="openCurriculumDetails('advanced-rl')" style="cursor: pointer; background: linear-gradient(135deg, rgba(255,149,0,0.05) 0%, rgba(255,255,255,0.02) 100%), #1C1C1E;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--excellence-gradient-warm); opacity: 0.6; border-radius: 20px 20px 0 0;"></div>
           <div class="jobs-curriculum-header">
             <h3 class="jobs-curriculum-title">Advanced Reinforcement Learning</h3>
             <div class="jobs-curriculum-badge advanced">Advanced</div>
@@ -1490,7 +1493,8 @@
 
       <div class="jobs-grid" style="grid-template-columns: 1fr 1fr;">
         <!-- Document Upload -->
-        <div class="jobs-card" style="height: auto;">
+        <div class="jobs-card excellence-card" style="height: auto; background: linear-gradient(135deg, rgba(0,122,255,0.05) 0%, rgba(255,255,255,0.02) 100%), #1C1C1E;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--excellence-gradient-hero); opacity: 0.8; border-radius: 20px 20px 0 0;"></div>
           <div class="jobs-learning-header">
             <h3 class="jobs-learning-title">Document Processing</h3>
             <div class="jobs-learning-status active" id="rag-status"></div>
@@ -1501,11 +1505,11 @@
           </div>
           
           <!-- File Upload -->
-          <div style="margin: var(--jobs-spacing-md) 0;">
+          <div id="document-upload-area" style="margin: var(--jobs-spacing-md) 0; border: 2px dashed var(--excellence-gray-600); border-radius: 16px; padding: 32px; text-align: center; transition: all 0.3s; cursor: pointer;" onclick="document.getElementById('document-upload').click()">
             <input type="file" id="document-upload" accept=".pdf,.txt,.md" style="display: none;" onchange="handleFileUpload(event)">
-            <button class="jobs-action-button primary" onclick="document.getElementById('document-upload').click()">
-              📄 Upload Document
-            </button>
+            <div style="font-size: 36px; margin-bottom: 12px;">📄</div>
+            <p style="font-weight: 500; margin-bottom: 8px;">Drop documents here or click to browse</p>
+            <p style="font-size: 13px; color: var(--excellence-gray-500);">Supports PDF, TXT, and Markdown files up to 50MB</p>
           </div>
 
           <!-- Upload Progress -->
