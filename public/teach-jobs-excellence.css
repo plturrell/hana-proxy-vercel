@@ -1,0 +1,387 @@
+/* Jobs/Ive Excellence + Nielsen Usability Principles */
+/* Version 2.0 - The Intersection of Beauty and Usability */
+
+:root {
+  /* Enhanced Color System with Depth */
+  --excellence-black: #000000;
+  --excellence-white: #FFFFFF;
+  --excellence-gray-50: #FAFAFA;
+  --excellence-gray-100: #F5F5F7;
+  --excellence-gray-200: #E8E8ED;
+  --excellence-gray-300: #D2D2D7;
+  --excellence-gray-400: #AEAEB2;
+  --excellence-gray-500: #8E8E93;
+  --excellence-gray-600: #636366;
+  --excellence-gray-700: #48484A;
+  --excellence-gray-800: #363638;
+  --excellence-gray-900: #1C1C1E;
+  
+  /* Refined System Colors */
+  --excellence-blue: #007AFF;
+  --excellence-blue-light: #64B5FF;
+  --excellence-blue-dark: #0051D5;
+  --excellence-green: #34C759;
+  --excellence-red: #FF3B30;
+  --excellence-orange: #FF9500;
+  --excellence-purple: #AF52DE;
+  --excellence-teal: #5AC8FA;
+  
+  /* Magical Gradients */
+  --excellence-gradient-hero: linear-gradient(135deg, #007AFF 0%, #5856D6 100%);
+  --excellence-gradient-success: linear-gradient(135deg, #34C759 0%, #30D158 100%);
+  --excellence-gradient-warm: linear-gradient(135deg, #FF9500 0%, #FF3B30 100%);
+  --excellence-gradient-cool: linear-gradient(135deg, #5AC8FA 0%, #007AFF 100%);
+  --excellence-gradient-subtle: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.6) 100%);
+  
+  /* Depth System */
+  --excellence-shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --excellence-shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.04);
+  --excellence-shadow-lg: 0 10px 15px rgba(0,0,0,0.08), 0 4px 6px rgba(0,0,0,0.04);
+  --excellence-shadow-xl: 0 20px 25px rgba(0,0,0,0.09), 0 10px 10px rgba(0,0,0,0.04);
+  --excellence-shadow-glow: 0 0 20px rgba(0,122,255,0.3);
+  
+  /* Enhanced Typography Scale */
+  --excellence-font-hero: 56px;
+  --excellence-font-title: 34px;
+  --excellence-font-headline: 28px;
+  --excellence-font-body-large: 19px;
+  --excellence-font-body: 17px;
+  --excellence-font-caption: 13px;
+  --excellence-font-micro: 11px;
+  
+  /* Refined Animation */
+  --excellence-ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --excellence-ease-in-out: cubic-bezier(0.45, 0, 0.55, 1);
+  --excellence-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --excellence-duration-fast: 200ms;
+  --excellence-duration-normal: 300ms;
+  --excellence-duration-slow: 500ms;
+}
+
+/* Enhanced Dark Mode */
+body.dark-mode {
+  --excellence-gradient-hero: linear-gradient(135deg, #0A84FF 0%, #5E5CE6 100%);
+  --excellence-gradient-subtle: linear-gradient(180deg, rgba(28,28,30,0.9) 0%, rgba(28,28,30,0.6) 100%);
+  --excellence-shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  --excellence-shadow-md: 0 4px 6px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+  --excellence-shadow-lg: 0 10px 15px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.3);
+  --excellence-shadow-glow: 0 0 30px rgba(10,132,255,0.4);
+}
+
+/* Magical Card Design */
+.excellence-card {
+  background: var(--excellence-white);
+  border-radius: 20px;
+  padding: 28px;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--excellence-duration-normal) var(--excellence-ease-out);
+  box-shadow: var(--excellence-shadow-md);
+  border: 1px solid var(--excellence-gray-200);
+}
+
+.excellence-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--excellence-gradient-hero);
+  opacity: 0;
+  transition: opacity var(--excellence-duration-normal);
+}
+
+.excellence-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--excellence-shadow-lg);
+}
+
+.excellence-card:hover::before {
+  opacity: 1;
+}
+
+/* Dark mode card */
+body.dark-mode .excellence-card {
+  background: var(--excellence-gray-900);
+  border-color: var(--excellence-gray-800);
+}
+
+/* Refined Navigation */
+.excellence-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 32px;
+  transition: all var(--excellence-duration-normal);
+}
+
+body.dark-mode .excellence-nav {
+  background: rgba(28, 28, 30, 0.8);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Beautiful Tabs */
+.excellence-tabs {
+  display: flex;
+  gap: 8px;
+  padding: 4px;
+  background: var(--excellence-gray-100);
+  border-radius: 12px;
+  position: relative;
+}
+
+.excellence-tab {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: var(--excellence-font-body);
+  font-weight: 500;
+  color: var(--excellence-gray-600);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--excellence-duration-fast);
+  position: relative;
+  z-index: 1;
+}
+
+.excellence-tab:hover {
+  color: var(--excellence-gray-900);
+}
+
+.excellence-tab.active {
+  color: var(--excellence-blue);
+}
+
+/* Sliding indicator */
+.excellence-tabs::after {
+  content: '';
+  position: absolute;
+  background: var(--excellence-white);
+  border-radius: 8px;
+  transition: all var(--excellence-duration-normal) var(--excellence-ease-out);
+  box-shadow: var(--excellence-shadow-sm);
+  /* Position dynamically with JS */
+}
+
+/* Elegant Buttons */
+.excellence-button {
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: var(--excellence-font-body);
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all var(--excellence-duration-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.excellence-button-primary {
+  background: var(--excellence-gradient-hero);
+  color: var(--excellence-white);
+  box-shadow: var(--excellence-shadow-md);
+}
+
+.excellence-button-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--excellence-shadow-lg);
+}
+
+.excellence-button-primary:active {
+  transform: translateY(0);
+}
+
+/* Ripple effect */
+.excellence-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.excellence-button:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Refined Progress Bar */
+.excellence-progress {
+  height: 6px;
+  background: var(--excellence-gray-200);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.excellence-progress-fill {
+  height: 100%;
+  background: var(--excellence-gradient-hero);
+  border-radius: 3px;
+  transition: width var(--excellence-duration-normal) var(--excellence-ease-out);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect */
+.excellence-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  to {
+    left: 100%;
+  }
+}
+
+/* Elegant Metrics */
+.excellence-metric {
+  text-align: center;
+  padding: 20px;
+  border-radius: 16px;
+  background: var(--excellence-gray-50);
+  transition: all var(--excellence-duration-fast);
+}
+
+.excellence-metric:hover {
+  background: var(--excellence-gradient-subtle);
+  transform: scale(1.02);
+}
+
+.excellence-metric-value {
+  font-size: var(--excellence-font-headline);
+  font-weight: 600;
+  background: var(--excellence-gradient-hero);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.excellence-metric-label {
+  font-size: var(--excellence-font-caption);
+  color: var(--excellence-gray-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Focus States (Nielsen: Visible System Status) */
+.excellence-button:focus,
+.excellence-tab:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+}
+
+/* Loading States (Nielsen: Visibility of System Status) */
+.excellence-loading {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--excellence-gray-300);
+  border-top-color: var(--excellence-blue);
+  border-radius: 50%;
+  animation: excellence-spin 0.8s linear infinite;
+}
+
+@keyframes excellence-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error States (Nielsen: Error Prevention) */
+.excellence-error {
+  background: var(--excellence-red);
+  color: var(--excellence-white);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: var(--excellence-font-caption);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Success States */
+.excellence-success {
+  background: var(--excellence-gradient-success);
+  color: var(--excellence-white);
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: excellence-slide-in 0.3s ease-out;
+}
+
+@keyframes excellence-slide-in {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+}
+
+/* Hover Affordances (Nielsen: Recognition Rather Than Recall) */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background: var(--excellence-gray-900);
+  color: var(--excellence-white);
+  font-size: var(--excellence-font-micro);
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  animation: excellence-fade-in 0.2s forwards;
+  animation-delay: 0.5s;
+  pointer-events: none;
+}
+
+@keyframes excellence-fade-in {
+  to { opacity: 1; }
+}
+
+/* Responsive Design (Nielsen: Flexibility) */
+@media (max-width: 768px) {
+  :root {
+    --excellence-font-hero: 40px;
+    --excellence-font-title: 28px;
+    --excellence-font-headline: 24px;
+  }
+  
+  .excellence-nav {
+    padding: 0 16px;
+  }
+  
+  .excellence-card {
+    padding: 20px;
+    border-radius: 16px;
+  }
+}

@@ -8,6 +8,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <link href="teach-jobs-excellence.css" rel="stylesheet">
+  <script src="teach-jobs-excellence.js" defer></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -910,18 +912,19 @@
   </style>
 </head>
 <body class="dark-mode">
-  <!-- Navigation with Hamburger -->
-  <nav class="jobs-nav">
+  <!-- Excellence Navigation -->
+  <nav class="jobs-nav excellence-nav">
     <div style="display: flex; align-items: center; gap: var(--jobs-spacing-md);">
-      <button class="jobs-hamburger" onclick="toggleSidebar()" id="hamburger-btn">
+      <button class="jobs-hamburger" onclick="toggleSidebar()" id="hamburger-btn" data-tooltip="Menu">
         <div class="jobs-hamburger-line"></div>
         <div class="jobs-hamburger-line"></div>
         <div class="jobs-hamburger-line"></div>
       </button>
-      <div class="jobs-nav-title">FinSight Intelligence</div>
+      <div class="jobs-nav-title" style="font-weight: 600; font-size: 19px;">FinSight Intelligence</div>
     </div>
-    <div class="jobs-nav-actions">
-      <button class="jobs-nav-button" onclick="toggleDarkMode()">◐</button>
+    <div class="jobs-nav-actions" style="display: flex; gap: 12px; align-items: center;">
+      <div class="excellence-loading" id="sync-indicator" style="display: none;"></div>
+      <button class="jobs-nav-button excellence-button" onclick="toggleDarkMode()" data-tooltip="Toggle theme" style="padding: 8px 16px; border-radius: 8px; background: var(--excellence-gray-100);">◐</button>
     </div>
   </nav>
   
@@ -967,14 +970,14 @@
       <p class="jobs-header-subtitle" id="main-subtitle">AI-powered teaching analytics and learning management</p>
     </div>
     
-  <!-- Section Navigation -->
-  <div class="jobs-section-nav">
-    <div class="jobs-section-tabs">
-      <div class="jobs-section-tab active" onclick="showSection('summary')">Summary</div>
-      <div class="jobs-section-tab" onclick="showSection('curriculum')">Curriculum</div>
-      <div class="jobs-section-tab" onclick="showSection('teach')">Teach</div>
-      <div class="jobs-section-tab" onclick="showSection('contextual')">Contextual</div>
-      <div class="jobs-section-tab" onclick="showSection('knowledge')">Knowledge</div>
+  <!-- Excellence Section Navigation -->
+  <div class="jobs-section-nav" style="padding: 20px 32px; background: rgba(255,255,255,0.02);">
+    <div class="excellence-tabs" style="max-width: 600px; margin: 0 auto;">
+      <button class="excellence-tab active" onclick="showSection('summary')" data-tooltip="View teaching overview">Summary</button>
+      <button class="excellence-tab" onclick="showSection('curriculum')" data-tooltip="Manage course content">Curriculum</button>
+      <button class="excellence-tab" onclick="showSection('teach')" data-tooltip="Active teaching tools">Teach</button>
+      <button class="excellence-tab" onclick="showSection('contextual')" data-tooltip="Context-aware insights">Contextual</button>
+      <button class="excellence-tab" onclick="showSection('knowledge')" data-tooltip="RAG document system">Knowledge</button>
     </div>
   </div>
   
@@ -1018,27 +1021,47 @@
 
       <!-- Detailed Learning Analytics -->
       <div class="jobs-grid">
-        <!-- Student Progress Card -->
-        <div class="jobs-card">
+        <!-- Excellence Student Progress Card -->
+        <div class="jobs-card excellence-card" style="background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%), #1C1C1E;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--excellence-gradient-hero); opacity: 0.8; border-radius: 20px 20px 0 0;"></div>
           <div class="jobs-card-header">
-            <h3 class="jobs-card-title">Student Progress</h3>
-            <a href="#" class="jobs-card-action" onclick="showConfig('progress-config')">View Details</a>
+            <h3 class="jobs-card-title" style="font-weight: 600;">Student Progress</h3>
+            <button class="excellence-button excellence-button-primary" onclick="showConfig('progress-config')" style="font-size: 13px; padding: 6px 16px;">View Details</button>
           </div>
-          <div class="jobs-metric-label">Average Progress</div>
-          <div class="jobs-metric-value" id="studentProgress">Loading...</div>
-          <div class="jobs-metric-change positive">↗ +2.1% this week</div>
-          <div style="margin-top: 16px;">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="font-size: 13px; color: var(--jobs-gray);">Finance Fundamentals</span>
-              <span style="font-size: 13px;" id="financeProgress">78%</span>
+          <div class="excellence-metric" style="margin: 20px 0;">
+            <div class="excellence-metric-value" id="studentProgress">75.8%</div>
+            <div class="excellence-metric-label">Average Progress</div>
+          </div>
+          <div class="jobs-metric-change positive" style="margin-bottom: 20px;">
+            <span style="background: var(--excellence-gradient-success); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">↗ +2.1% this week</span>
+          </div>
+          <div style="margin-top: 24px; space-y: 16px;">
+            <div style="margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 13px; color: var(--excellence-gray-400); font-weight: 500;">Finance Fundamentals</span>
+                <span style="font-size: 13px; font-weight: 600;" id="financeProgress">78%</span>
+              </div>
+              <div class="excellence-progress" data-progress="78">
+                <div class="excellence-progress-fill" style="width: 0;"></div>
+              </div>
             </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-              <span style="font-size: 13px; color: var(--jobs-gray);">Portfolio Analysis</span>
-              <span style="font-size: 13px;" id="portfolioProgress">82%</span>
+            <div style="margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 13px; color: var(--excellence-gray-400); font-weight: 500;">Portfolio Analysis</span>
+                <span style="font-size: 13px; font-weight: 600;" id="portfolioProgress">82%</span>
+              </div>
+              <div class="excellence-progress" data-progress="82">
+                <div class="excellence-progress-fill" style="width: 0;"></div>
+              </div>
             </div>
-            <div style="display: flex; justify-content: space-between;">
-              <span style="font-size: 13px; color: var(--jobs-gray);">Risk Management</span>
-              <span style="font-size: 13px;" id="riskProgress">71%</span>
+            <div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                <span style="font-size: 13px; color: var(--excellence-gray-400); font-weight: 500;">Risk Management</span>
+                <span style="font-size: 13px; font-weight: 600;" id="riskProgress">71%</span>
+              </div>
+              <div class="excellence-progress" data-progress="71">
+                <div class="excellence-progress-fill" style="width: 0;"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1608,7 +1631,7 @@
       });
       
       // Remove active class from all tabs
-      const tabs = document.querySelectorAll('.jobs-section-tab');
+      const tabs = document.querySelectorAll('.jobs-section-tab, .excellence-tab');
       tabs.forEach(tab => {
         tab.classList.remove('active');
       });

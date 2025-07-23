@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase - use the project with our news tables
 const supabaseUrl = 'https://fnsbxaywhsxqppncqksu.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZuc2J4YXl3aHN4cXBwbmNxa3N1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTczNzYzMTgyMiwiZXhwIjoyMDUzMjA3ODIyfQ.Y8TzjgqWECT-FgEjyLBkZRY2vVRvlgVSKVeRcciwKqA';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZuc2J4YXl3aHN4cXBwbmNxa3N1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MjQxMTk1NiwiZXhwIjoyMDY3OTg3OTU2fQ.viP4a-AKm2dyK56Po-ca53fOrEhz2mbd_h_O5jXGMZ4';
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Perplexity API configuration
@@ -157,6 +157,11 @@ async function fetchLatestNews(res) {
 
     // Process each article through the pipeline
     const processedArticles = await processArticlesPipeline(articles);
+    
+    const skippedCount = articles.length - processedArticles.length;
+    if (skippedCount > 0) {
+      console.log(`ℹ️ Skipped ${skippedCount} duplicate articles`);
+    }
 
     // Log the processing
     await logProcessingStatus(articles.length, processedArticles.length, dataSource);
@@ -165,6 +170,7 @@ async function fetchLatestNews(res) {
       success: true,
       articlesFound: articles.length,
       articlesProcessed: processedArticles.length,
+      duplicatesSkipped: skippedCount,
       dataSource,
       articles: processedArticles,
       timestamp: new Date().toISOString()
@@ -258,6 +264,34 @@ async function processArticlesPipeline(articles) {
   
   for (const article of articles) {
     try {
+      // 0. Check if article already exists by URL or title
+      const { data: existingByUrl } = await supabase
+        .from('news_articles_partitioned')
+        .select('article_id, title, created_at')
+        .eq('url', article.url || `https://perplexity.ai/search/${encodeURIComponent(article.headline || article.title)}`)
+        .limit(1)
+        .single();
+      
+      if (existingByUrl) {
+        console.log(`Article already exists by URL: ${existingByUrl.title}`);
+        continue; // Skip this article
+      }
+      
+      // Also check by exact title match within last 24 hours to catch duplicates
+      const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+      const { data: existingByTitle } = await supabase
+        .from('news_articles_partitioned')
+        .select('article_id, title, created_at')
+        .eq('title', article.headline || article.title)
+        .gte('created_at', oneDayAgo)
+        .limit(1)
+        .single();
+      
+      if (existingByTitle) {
+        console.log(`Article already exists by title (within 24h): ${existingByTitle.title}`);
+        continue; // Skip this article
+      }
+      
       // 1. Insert into main news table
       const newsArticle = {
         article_id: `realtime_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -278,7 +312,8 @@ async function processArticlesPipeline(articles) {
         created_at: new Date().toISOString(),
         metadata: {
           source_type: 'realtime_perplexity',
-          processing_timestamp: new Date().toISOString()
+          processing_timestamp: new Date().toISOString(),
+          content_hash: generateContentHash(article.headline || article.title, article.summary || article.content)
         }
       };
 
@@ -428,7 +463,7 @@ async function processEntityMentions(article) {
   }
 }
 
-async function logProcessingStatus(fetched, processed) {
+async function logProcessingStatus(fetched, processed, dataSource = 'unknown') {
   const status = {
     source: 'news_realtime_api',
     category: 'financial_news',
@@ -451,6 +486,18 @@ async function logProcessingStatus(fetched, processed) {
 }
 
 // Utility functions
+function generateContentHash(title, content) {
+  // Simple hash function for deduplication
+  const combined = `${title}:${content}`.toLowerCase().trim();
+  let hash = 0;
+  for (let i = 0; i < combined.length; i++) {
+    const char = combined.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
+
 function extractCategories(article) {
   const categories = [];
   const text = (article.headline + ' ' + article.summary).toLowerCase();
