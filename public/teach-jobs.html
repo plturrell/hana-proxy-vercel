@@ -2209,18 +2209,11 @@
         }
       } catch (error) {
         console.error('Status refresh error:', error);
-        // Show configuration needed message
-        document.getElementById('total-documents').textContent = 'Setup Required';
-        document.getElementById('total-chunks').textContent = 'Setup Required';
-        document.getElementById('storage-used').textContent = 'Setup Required';
-        document.getElementById('total-searches').textContent = 'Setup Required';
-        
-        // Show system needs setup
-        const ragStatus = document.getElementById('rag-status');
-        if (ragStatus) {
-          ragStatus.className = 'jobs-learning-status error';
-          ragStatus.textContent = 'Needs Setup';
-        }
+        // Set default values when no data
+        document.getElementById('total-documents').textContent = '0';
+        document.getElementById('total-chunks').textContent = '0';
+        document.getElementById('storage-used').textContent = '0 MB';
+        document.getElementById('total-searches').textContent = '0';
       }
     }
 
