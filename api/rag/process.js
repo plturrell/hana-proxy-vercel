@@ -60,7 +60,7 @@ async function handleDocumentUpload(req, res) {
     const result = await ragPipeline.processDocument(
       fileBuffer, 
       file.originalFilename || file.newFilename,
-      metadata
+      { ...metadata, fileSize: file.size }
     );
     
     // Clean up uploaded file
