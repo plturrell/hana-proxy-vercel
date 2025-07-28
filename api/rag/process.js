@@ -79,6 +79,19 @@ async function handleDocumentUpload(req, res) {
 }
 
 async function handleStatusCheck(req, res) {
+  // Check if documents list is requested
+  const { list } = req.query;
+  
+  if (list === 'documents') {
+    // Return document list
+    const documents = await ragPipeline.getDocuments();
+    return res.status(200).json({
+      documents: documents,
+      total: documents.length
+    });
+  }
+  
+  // Default: return status and statistics
   const stats = await ragPipeline.getStatistics();
   
   return res.status(200).json({
