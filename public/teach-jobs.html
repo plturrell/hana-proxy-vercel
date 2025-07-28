@@ -971,19 +971,16 @@
       <p class="jobs-header-subtitle" id="main-subtitle">AI-powered teaching analytics and learning management</p>
     </div>
     
-  <!-- Excellence Section Navigation -->
-  <div class="jobs-section-nav" style="padding: 20px 32px; background: rgba(255,255,255,0.02);">
-    <div class="excellence-tabs" style="max-width: 600px; margin: 0 auto;">
-      <button class="excellence-tab active" onclick="showSection('summary')" data-tooltip="View teaching overview">Summary</button>
-      <button class="excellence-tab" onclick="showSection('curriculum')" data-tooltip="Manage course content">Curriculum</button>
-      <button class="excellence-tab" onclick="showSection('teach')" data-tooltip="Active teaching tools">Teach</button>
-      <button class="excellence-tab" onclick="showSection('contextual')" data-tooltip="Context-aware insights">Contextual</button>
-      <button class="excellence-tab" onclick="showSection('knowledge')" data-tooltip="RAG document system">Knowledge</button>
+    <!-- Excellence Section Navigation -->
+    <div class="jobs-section-nav" style="padding: 20px 32px; background: rgba(255,255,255,0.02);">
+      <div class="excellence-tabs" style="max-width: 600px; margin: 0 auto;">
+        <button class="excellence-tab active" onclick="showSection('summary')" data-tooltip="View teaching overview">Summary</button>
+        <button class="excellence-tab" onclick="showSection('curriculum')" data-tooltip="Manage course content">Curriculum</button>
+        <button class="excellence-tab" onclick="showSection('teach')" data-tooltip="Active teaching tools">Teach</button>
+        <button class="excellence-tab" onclick="showSection('contextual')" data-tooltip="Context-aware insights">Contextual</button>
+        <button class="excellence-tab" onclick="showSection('knowledge')" data-tooltip="RAG document system">Knowledge</button>
+      </div>
     </div>
-  </div>
-  
-  <!-- Main Container -->
-  <div class="jobs-container">
     <!-- Summary Section -->
     <div id="summary" class="jobs-section active">
       
@@ -1628,6 +1625,8 @@
   <script>
     // Section switching function (matches analyze-jobs.html)
     function showSection(sectionName) {
+      console.log('Switching to section:', sectionName);
+      
       // Hide all sections
       const sections = document.querySelectorAll('.jobs-section');
       sections.forEach(section => {
@@ -1644,11 +1643,23 @@
       const selectedSection = document.getElementById(sectionName);
       if (selectedSection) {
         selectedSection.classList.add('active');
+        console.log('Section found and activated:', sectionName);
+      } else {
+        console.error('Section not found:', sectionName);
       }
       
-      // Add active class to clicked tab
-      const clickedTab = event.target;
-      clickedTab.classList.add('active');
+      // Add active class to clicked tab if event exists
+      if (event && event.target) {
+        const clickedTab = event.target;
+        clickedTab.classList.add('active');
+      } else {
+        // Find and activate the tab manually
+        tabs.forEach(tab => {
+          if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(sectionName)) {
+            tab.classList.add('active');
+          }
+        });
+      }
       
       // Update main title based on section
       const titles = {
@@ -1668,6 +1679,11 @@
       
       // Store active section in localStorage
       localStorage.setItem('activeSection', sectionName);
+      
+      // If switching to knowledge section, refresh RAG status
+      if (sectionName === 'knowledge') {
+        refreshRAGStatus();
+      }
     }
     
     // Load saved section on page load
