@@ -2315,34 +2315,48 @@
         const healthData = await healthResponse.json();
         
         // Get real learning metrics from Supabase
-        const metricsResponse = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'learning_metrics',
-            filters: { active: true },
-            limit: 100
-          })
-        });
-        
-        const metricsData = await metricsResponse.json();
-        const learners = metricsData.data?.length || 0;
+        let learners = 0;
+        try {
+          const metricsResponse = await fetch('/api/supabase-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'select',
+              table: 'learning_metrics',
+              filters: { active: true },
+              limit: 100
+            })
+          });
+          
+          if (metricsResponse.ok) {
+            const metricsData = await metricsResponse.json();
+            learners = metricsData.data?.length || 0;
+          }
+        } catch (error) {
+          console.log('Learning metrics not available yet');
+        }
         
         // Get real curriculum completion data
-        const curriculumResponse = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'curriculum_progress',
-            columns: 'user_id, module_completed, completion_rate, time_spent',
-            filters: { active: true }
-          })
-        });
-        
-        const curriculumData = await curriculumResponse.json();
-        const progressRecords = curriculumData.data || [];
+        let progressRecords = [];
+        try {
+          const curriculumResponse = await fetch('/api/supabase-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'select',
+              table: 'curriculum_progress',
+              columns: 'user_id, module_completed, completion_rate, time_spent',
+              filters: { active: true }
+            })
+          });
+          
+          if (curriculumResponse.ok) {
+            const curriculumData = await curriculumResponse.json();
+            progressRecords = curriculumData.data || [];
+          }
+        } catch (error) {
+          console.log('Curriculum progress not available yet');
+        }
         
         // Calculate real educational metrics
         const activeStudents = progressRecords.length;
@@ -2354,21 +2368,27 @@
         const skillMastery = activeStudents > 0 ? Math.round((masteredStudents / activeStudents) * 100) : 0;
         
         // Calculate engagement from actual session data
-        const sessionResponse = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'learning_sessions',
-            columns: 'duration, completed',
-            filters: { created_at: { gte: new Date(Date.now() - 7*24*60*60*1000).toISOString() } }
+        try {
+          const sessionResponse = await fetch('/api/supabase-proxy', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'select',
+              table: 'learning_sessions',
+              columns: 'duration, completed',
+              filters: { created_at: { gte: new Date(Date.now() - 7*24*60*60*1000).toISOString() } }
           })
-        });
-        
-        const sessionData = await sessionResponse.json();
-        const sessions = sessionData.data || [];
-        const avgSessionTime = sessions.length > 0 ? 
-          Math.round(sessions.reduce((a, s) => a + (s.duration || 0), 0) / sessions.length) : 0;
+          });
+          
+          if (sessionResponse.ok) {
+            const sessionData = await sessionResponse.json();
+            const sessions = sessionData.data || [];
+            const avgSessionTime = sessions.length > 0 ? 
+              Math.round(sessions.reduce((a, s) => a + (s.duration || 0), 0) / sessions.length) : 0;
+          }
+        } catch (error) {
+          console.log('Session data not available yet');
+        }
         
         // Update with real calculated data for the simplified cards
         document.getElementById('active-students').textContent = activeStudents;
