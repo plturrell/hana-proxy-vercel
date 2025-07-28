@@ -2368,6 +2368,8 @@
         const skillMastery = activeStudents > 0 ? Math.round((masteredStudents / activeStudents) * 100) : 0;
         
         // Calculate engagement from actual session data
+        let sessions = [];
+        let avgSessionTime = 0;
         try {
           const sessionResponse = await fetch('/api/supabase-proxy', {
             method: 'POST',
@@ -2382,8 +2384,8 @@
           
           if (sessionResponse.ok) {
             const sessionData = await sessionResponse.json();
-            const sessions = sessionData.data || [];
-            const avgSessionTime = sessions.length > 0 ? 
+            sessions = sessionData.data || [];
+            avgSessionTime = sessions.length > 0 ? 
               Math.round(sessions.reduce((a, s) => a + (s.duration || 0), 0) / sessions.length) : 0;
           }
         } catch (error) {
@@ -2449,11 +2451,15 @@
       } catch (error) {
         console.error('Failed to load summary data:', error);
         // Set realistic defaults on error
-        document.getElementById('active-learners').textContent = '0';
-        document.getElementById('learning-sessions').textContent = '0';
-        document.getElementById('completion-rate').textContent = '0%';
-        document.getElementById('avg-performance').textContent = '0%';
-        document.getElementById('response-time').textContent = 'N/A';
+        // Use correct element IDs that exist in the HTML
+        const activeStudentsEl = document.getElementById('active-students');
+        if (activeStudentsEl) activeStudentsEl.textContent = '0';
+        
+        const courseCompletionEl = document.getElementById('course-completion');
+        if (courseCompletionEl) courseCompletionEl.textContent = '0%';
+        
+        const skillMasteryEl = document.getElementById('skill-mastery');
+        if (skillMasteryEl) skillMasteryEl.textContent = '0%';
       }
     }
 
