@@ -129,6 +129,9 @@
     },
     "api/perplexity-news.js": {
       "maxDuration": 60
+    },
+    "api/teaching-status.js": {
+      "maxDuration": 10
     }
   },
   "crons": [
