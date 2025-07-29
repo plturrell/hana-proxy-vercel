@@ -15,9 +15,6 @@ export const config = {
 
 export default async function handler(req, res) {
   const { method } = req;
-  
-  // Add deployment timestamp for debugging
-  console.log('RAG Process handler called at:', new Date().toISOString());
 
   try {
     switch (method) {
@@ -82,19 +79,6 @@ async function handleDocumentUpload(req, res) {
 }
 
 async function handleStatusCheck(req, res) {
-  // Check if documents list is requested
-  const { list } = req.query;
-  
-  if (list === 'documents') {
-    // Return document list
-    const documents = await ragPipeline.getDocuments();
-    return res.status(200).json({
-      documents: documents,
-      total: documents.length
-    });
-  }
-  
-  // Default: return status and statistics
   const stats = await ragPipeline.getStatistics();
   
   return res.status(200).json({

@@ -2541,7 +2541,7 @@
       const listContent = document.getElementById('document-list-content');
       
       try {
-        const response = await fetch('/api/rag/process?list=documents');
+        const response = await fetch('/api/knowledge-docs');
         if (!response.ok) throw new Error('Failed to load documents');
         
         const data = await response.json();
