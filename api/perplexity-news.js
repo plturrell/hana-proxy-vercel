@@ -35,6 +35,7 @@ export default async function handler(req, res) {
                 temperature: 0.2,
                 max_tokens: 2000,
                 return_citations: true,
+                return_related_questions: false,
                 search_recency_filter: 'day'
             })
         });
