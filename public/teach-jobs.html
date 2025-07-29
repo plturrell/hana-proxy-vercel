@@ -12,6 +12,63 @@
   <link href="teach-jobs-harmony.css" rel="stylesheet">
   <script src="curriculum-learning-client.js"></script>
   <script src="teach-jobs-excellence.js" defer></script>
+  <script>
+    // Define showSection function early to ensure it's available
+    window.showSection = function(sectionName) {
+      console.log('Switching to section:', sectionName);
+      
+      // Hide all sections
+      const sections = document.querySelectorAll('.jobs-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Remove active class from all tabs
+      const tabs = document.querySelectorAll('.jobs-section-tab, .excellence-tab');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show requested section
+      const targetSection = document.getElementById(sectionName);
+      if (targetSection) {
+        targetSection.classList.add('active');
+      }
+      
+      // Make corresponding tab active
+      const targetTab = document.querySelector(`[onclick="showSection('${sectionName}')"]`);
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+      
+      // Update main title based on section
+      const titles = {
+        'summary': { title: 'Teaching Management', subtitle: 'AI-powered teaching analytics and learning management' },
+        'curriculum': { title: 'Curriculum Learning', subtitle: 'Structured learning programs and educational pathways' },
+        'teach': { title: 'Teaching Systems', subtitle: 'AI-powered teaching tools and learning management' },
+        'contextual': { title: 'Contextual Learning', subtitle: 'Context-aware and adaptive learning systems' },
+        'knowledge': { title: 'Knowledge Base', subtitle: 'RAG document intelligence and learning knowledge management' }
+      };
+      
+      if (titles[sectionName]) {
+        const mainTitle = document.getElementById('main-title');
+        const mainSubtitle = document.getElementById('main-subtitle');
+        if (mainTitle) mainTitle.textContent = titles[sectionName].title;
+        if (mainSubtitle) mainSubtitle.textContent = titles[sectionName].subtitle;
+      }
+      
+      // Store active section in localStorage
+      localStorage.setItem('activeSection', sectionName);
+      
+      // If switching to knowledge section, refresh RAG status and load documents
+      if (sectionName === 'knowledge' && typeof refreshRAGStatus === 'function') {
+        refreshRAGStatus();
+        if (typeof loadDocuments === 'function') {
+          loadDocuments();
+        }
+      }
+    };
+  </script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -1678,7 +1735,8 @@
   
   <script>
     // Section switching function (matches analyze-jobs.html)
-    function showSection(sectionName) {
+    // Commenting out duplicate - function is already defined in header
+    /*function showSection(sectionName) {
       console.log('Switching to section:', sectionName);
       
       // Hide all sections
@@ -1739,7 +1797,7 @@
         refreshRAGStatus();
         loadDocuments();
       }
-    }
+    }*/
     
     // Load saved section on page load
     document.addEventListener('DOMContentLoaded', function() {
@@ -2444,13 +2502,13 @@
         }
         
         // Calculate real educational metrics
-        const activeStudents = progressRecords.length;
+        activeStudents = progressRecords.length;
         const completionRates = progressRecords.map(r => r.completion_rate).filter(r => r > 0);
-        const avgCompletion = completionRates.length > 0 ? 
+        avgCompletion = completionRates.length > 0 ? 
           Math.round(completionRates.reduce((a, b) => a + b, 0) / completionRates.length) : 0;
         
         const masteredStudents = progressRecords.filter(r => r.completion_rate >= 80).length;
-        const skillMastery = activeStudents > 0 ? Math.round((masteredStudents / activeStudents) * 100) : 0;
+        skillMastery = activeStudents > 0 ? Math.round((masteredStudents / activeStudents) * 100) : 0;
         
         // Calculate engagement from actual session data
         let sessions = [];
