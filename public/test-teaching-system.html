@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Teaching System - Real Data</title>
+  <script src="curriculum-learning-client.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    .info { background: #d1ecf1; color: #0c5460; }
+    pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    button { padding: 8px 16px; margin: 5px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Teaching System Test - Real API Connections</h1>
+  
+  <div class="test-section">
+    <h2>1. Test Curriculum Learning API Connection</h2>
+    <button onclick="testConnection()">Test Connection</button>
+    <div id="connection-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>2. Get Agent Status</h2>
+    <button onclick="getAgentStatus()">Get Status</button>
+    <div id="status-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>3. Get Knowledge Domains</h2>
+    <button onclick="getDomains()">Get Domains</button>
+    <div id="domains-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>4. Get Agent Scores</h2>
+    <button onclick="getScores()">Get Agent Scores</button>
+    <div id="scores-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>5. Get Curricula</h2>
+    <button onclick="getCurricula()">Get Curricula</button>
+    <div id="curricula-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>6. Get Statistics</h2>
+    <button onclick="getStats()">Get Statistics</button>
+    <div id="stats-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>7. Create Test Curriculum</h2>
+    <input type="text" id="agent-id" placeholder="Agent ID" value="test.agent.001">
+    <select id="agent-type">
+      <option value="analytics">Analytics</option>
+      <option value="trading">Trading</option>
+      <option value="risk">Risk Management</option>
+    </select>
+    <button onclick="createTestCurriculum()">Create Curriculum</button>
+    <div id="create-result"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>8. Raw API Test</h2>
+    <button onclick="testRawAPI()">Test Raw API</button>
+    <div id="raw-result"></div>
+  </div>
+
+  <script>
+    const client = new CurriculumLearningClient();
+    
+    function showResult(elementId, data, isError = false) {
+      const element = document.getElementById(elementId);
+      const statusClass = isError ? 'error' : (data.success ? 'success' : 'info');
+      element.innerHTML = `
+        <div class="status ${statusClass}">
+          <strong>${isError ? 'Error' : (data.success ? 'Success' : 'Info')}:</strong>
+          <pre>${JSON.stringify(data, null, 2)}</pre>
+        </div>
+      `;
+    }
+    
+    async function testConnection() {
+      try {
+        const response = await fetch('/api/agents/curriculum-learning?action=status');
+        const data = await response.json();
+        showResult('connection-result', data);
+      } catch (error) {
+        showResult('connection-result', { error: error.message }, true);
+      }
+    }
+    
+    async function getAgentStatus() {
+      try {
+        const data = await client.getStatus();
+        showResult('status-result', data);
+      } catch (error) {
+        showResult('status-result', { error: error.message }, true);
+      }
+    }
+    
+    async function getDomains() {
+      try {
+        const data = await client.getDomains();
+        showResult('domains-result', data);
+      } catch (error) {
+        showResult('domains-result', { error: error.message }, true);
+      }
+    }
+    
+    async function getScores() {
+      try {
+        const data = await client.getAgentScores();
+        showResult('scores-result', data);
+      } catch (error) {
+        showResult('scores-result', { error: error.message }, true);
+      }
+    }
+    
+    async function getCurricula() {
+      try {
+        const data = await client.getCurricula();
+        showResult('curricula-result', data);
+      } catch (error) {
+        showResult('curricula-result', { error: error.message }, true);
+      }
+    }
+    
+    async function getStats() {
+      try {
+        const data = await client.getStatistics();
+        showResult('stats-result', data);
+      } catch (error) {
+        showResult('stats-result', { error: error.message }, true);
+      }
+    }
+    
+    async function createTestCurriculum() {
+      try {
+        const agentId = document.getElementById('agent-id').value;
+        const agentType = document.getElementById('agent-type').value;
+        const data = await client.createCurriculum(agentId, agentType, 'beginner');
+        showResult('create-result', data);
+      } catch (error) {
+        showResult('create-result', { error: error.message }, true);
+      }
+    }
+    
+    async function testRawAPI() {
+      try {
+        // Test if the API endpoint exists and responds
+        const response = await fetch('/api/agents/curriculum-learning', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const contentType = response.headers.get('content-type');
+        const responseText = await response.text();
+        
+        let data;
+        if (contentType && contentType.includes('application/json')) {
+          data = JSON.parse(responseText);
+        } else {
+          data = { 
+            status: response.status, 
+            statusText: response.statusText,
+            responseText: responseText.substring(0, 500)
+          };
+        }
+        
+        showResult('raw-result', {
+          url: '/api/agents/curriculum-learning',
+          status: response.status,
+          headers: Object.fromEntries(response.headers.entries()),
+          data: data
+        });
+      } catch (error) {
+        showResult('raw-result', { 
+          error: error.message,
+          stack: error.stack 
+        }, true);
+      }
+    }
+  </script>
+</body>
+</html>

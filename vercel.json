@@ -73,6 +73,9 @@
     "api/agents/curriculum-learning.js": {
       "maxDuration": 30
     },
+    "api/agents/curriculum-learning-real.js": {
+      "maxDuration": 30
+    },
     "api/agents/news-assessment-hedge.js": {
       "maxDuration": 30
     },
@@ -124,14 +127,8 @@
     "api/news-realtime.js": {
       "maxDuration": 60
     },
-    "api/rag/process.js": {
+    "api/perplexity-news.js": {
       "maxDuration": 60
-    },
-    "api/rag/documents.js": {
-      "maxDuration": 30
-    },
-    "api/rag/search.js": {
-      "maxDuration": 30
     }
   },
   "crons": [

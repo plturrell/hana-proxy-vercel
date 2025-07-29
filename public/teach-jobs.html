@@ -10,6 +10,7 @@
   <link href="apple-hybrid-safe.css" rel="stylesheet">
   <link href="teach-jobs-excellence.css" rel="stylesheet">
   <link href="teach-jobs-harmony.css" rel="stylesheet">
+  <script src="curriculum-learning-client.js"></script>
   <script src="teach-jobs-excellence.js" defer></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
@@ -1980,60 +1981,74 @@
     }
     
     
-    // Auto-refresh learning metrics using health endpoint
+    // Initialize curriculum learning client
+    const curriculumClient = new CurriculumLearningClient();
+    
+    // Auto-refresh learning metrics using real curriculum learning API
     async function refreshLearningMetrics() {
       try {
-        const response = await fetch('/api/health-check');
-        const healthData = await response.json();
+        // Fetch real data from curriculum learning agent
+        const [statusData, statsData, scoresData] = await Promise.all([
+          curriculumClient.getStatus(),
+          curriculumClient.getStatistics(),
+          curriculumClient.getAgentScores()
+        ]);
         
-        // Generate realistic metrics based on system health
-        const healthFactor = healthData.healthy ? 1.0 : 0.9;
-        const timeVariation = (new Date().getMinutes() % 10) / 10;
+        // Update metrics with real data
+        if (statusData.success) {
+          const activeLearners = statusData.knowledge_domains?.length || 0;
+          updateMetric('active-learners', activeLearners);
+        }
         
-        const baseMetrics = {
-          'active-learners': Math.floor((12 + timeVariation * 3) * healthFactor),
-          'avg-performance': Math.floor((94.2 + timeVariation * 2) * healthFactor),
-          'training-sessions': Math.floor((47 + timeVariation * 5) * healthFactor),
-          'completed-modules': Math.floor((128 + timeVariation * 10) * healthFactor),
-          'adaptation-rate': ((0.87 + timeVariation * 0.1) * healthFactor).toFixed(2),
-          'context-accuracy': Math.floor((96.1 + timeVariation * 2) * healthFactor)
-        };
-        
-        // Apply values to elements that exist
-        const metrics = {
-          'active-learners': baseMetrics['active-learners'],
-          'avg-performance': `${baseMetrics['avg-performance']}%`,
-          'training-sessions': baseMetrics['training-sessions'],
-          'completed-modules': baseMetrics['completed-modules'],
-          'adaptation-rate': baseMetrics['adaptation-rate'],
-          'context-accuracy': `${baseMetrics['context-accuracy']}%`
-        };
-        
-        Object.entries(metrics).forEach(([id, value]) => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.textContent = value;
+        if (statsData.success && statsData.statistics) {
+          const stats = statsData.statistics;
+          updateMetric('training-sessions', stats.training_sessions || 0);
+          updateMetric('completed-modules', stats.completed_modules || 0);
+          updateMetric('adaptation-rate', (stats.adaptation_rate || 0.87).toFixed(2));
+          
+          // Calculate average performance from compliance scores
+          if (stats.average_compliance) {
+            updateMetric('avg-performance', `${(stats.average_compliance * 100).toFixed(1)}%`);
           }
-        });
+          
+          // Context accuracy from validation success rate
+          if (stats.validation_success_rate) {
+            updateMetric('context-accuracy', `${(stats.validation_success_rate * 100).toFixed(1)}%`);
+          }
+        }
+        
+        if (scoresData.success && scoresData.agent_scores) {
+          // Calculate average performance across all agents
+          const scores = scoresData.agent_scores;
+          if (scores.length > 0) {
+            const avgScore = scores.reduce((sum, agent) => sum + agent.compliance_score, 0) / scores.length;
+            updateMetric('avg-performance', `${(avgScore * 100).toFixed(1)}%`);
+          }
+          
+          // Update active learners count
+          updateMetric('active-learners', scores.length);
+        }
         
       } catch (error) {
         console.error('Error loading learning metrics:', error);
-        // Use fallback baseline values
-        const fallbackMetrics = {
-          'active-learners': '12',
-          'avg-performance': '94.2%',
-          'training-sessions': '47',
-          'completed-modules': '128',
-          'adaptation-rate': '0.87',
-          'context-accuracy': '96.1%'
-        };
-        
-        Object.entries(fallbackMetrics).forEach(([id, value]) => {
-          const element = document.getElementById(id);
-          if (element) {
-            element.textContent = value;
-          }
-        });
+        // Use the curriculum learning API's cached data as fallback
+        const cachedStats = curriculumClient.getCached('statistics');
+        if (cachedStats && cachedStats.statistics) {
+          const stats = cachedStats.statistics;
+          updateMetric('active-learners', stats.total_agents || 0);
+          updateMetric('avg-performance', `${(stats.average_compliance || 0) * 100}%`);
+          updateMetric('training-sessions', stats.training_sessions || 0);
+          updateMetric('completed-modules', stats.completed_modules || 0);
+          updateMetric('adaptation-rate', (stats.adaptation_rate || 0.87).toFixed(2));
+          updateMetric('context-accuracy', `${(stats.validation_success_rate || 0) * 100}%`);
+        }
+      }
+    }
+    
+    function updateMetric(id, value) {
+      const element = document.getElementById(id);
+      if (element) {
+        element.textContent = value;
       }
     }
     
@@ -2368,33 +2383,42 @@
       }
     }
 
-    // Load Summary Data with Real Values
+    // Load Summary Data with Real Curriculum Learning Values
     async function loadSummaryData() {
       try {
-        // Get system health for base metrics
-        const healthResponse = await fetch('/api/health-check');
-        const healthData = await healthResponse.json();
+        // Get real data from curriculum learning API
+        const [curriculaData, validationsData, scoresData] = await Promise.all([
+          curriculumClient.getCurricula(),
+          curriculumClient.getValidations(null, 7), // Last 7 days
+          curriculumClient.getAgentScores()
+        ]);
         
-        // Get real learning metrics from Supabase
-        let learners = 0;
-        try {
-          const metricsResponse = await fetch('/api/supabase-proxy', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'select',
-              table: 'learning_metrics',
-              filters: { active: true },
-              limit: 100
-            })
-          });
+        // Calculate real metrics from curriculum data
+        let activeStudents = 0;
+        let avgCompletion = 0;
+        let skillMastery = 0;
+        
+        if (curriculaData.success && curriculaData.curricula) {
+          activeStudents = curriculaData.curricula.length;
           
-          if (metricsResponse.ok) {
-            const metricsData = await metricsResponse.json();
-            learners = metricsData.data?.length || 0;
+          // Calculate average completion from curriculum progress
+          const progressValues = curriculaData.curricula
+            .map(c => c.progress || 0)
+            .filter(p => p > 0);
+          
+          if (progressValues.length > 0) {
+            avgCompletion = Math.round(progressValues.reduce((a, b) => a + b, 0) / progressValues.length);
           }
-        } catch (error) {
-          console.log('Learning metrics not available yet');
+        }
+        
+        if (scoresData.success && scoresData.agent_scores) {
+          // Calculate skill mastery from compliance scores
+          const compliantAgents = scoresData.agent_scores.filter(a => a.compliance_score >= 0.8).length;
+          const totalAgents = scoresData.agent_scores.length;
+          
+          if (totalAgents > 0) {
+            skillMastery = Math.round((compliantAgents / totalAgents) * 100);
+          }
         }
         
         // Get real curriculum completion data
