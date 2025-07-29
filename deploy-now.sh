@@ -1,21 +1,18 @@
 #!/bin/bash
+# Vercel Direct Deployment Script
+# Created: January 29, 2025
 
-# Deploy script for Knowledge tab fixes
-echo "🚀 Deploying Knowledge tab fixes..."
+echo "🚀 Starting Vercel deployment..."
+echo "Teaching system ready for deployment!"
 
-# Navigate to project directory
-cd /Users/apple/projects/finsightexperience_perplexity/hana-proxy-vercel
+# Check if vercel CLI is installed
+if ! command -v vercel &> /dev/null; then
+    echo "⚠️  Vercel CLI not found. Installing..."
+    npm install -g vercel
+fi
 
-# Add all changes
-git add -A
-
-# Commit with descriptive message
-git commit -m "Fix Knowledge tab visibility - remove duplicate containers and fix environment variables"
-
-# Push to GitHub
-git push origin main
-
-# Force deploy to Vercel
+echo "📦 Deploying to Vercel..."
 vercel --prod --force
 
-echo "✅ Deployment complete!"
+echo "✅ Deployment command executed!"
+echo "Check https://vercel.com/dashboard for deployment status"
