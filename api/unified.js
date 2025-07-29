@@ -1585,9 +1585,9 @@ function generateRoleBasedBPMN() {
 async function handleRAGDocuments(req, res) {
   if (req.method === 'GET') {
     try {
-      // Get all documents from rag_documents table
+      // Get all documents from documents table
       const { data: documents, error } = await supabase
-        .from('rag_documents')
+        .from('documents')
         .select('*')
         .order('created_at', { ascending: false });
 
@@ -1603,7 +1603,7 @@ async function handleRAGDocuments(req, res) {
       // Get chunk counts
       const documentIds = documents.map(d => d.id);
       const { data: chunks } = await supabase
-        .from('rag_chunks')
+        .from('document_chunks')
         .select('document_id')
         .in('document_id', documentIds);
 
@@ -1618,10 +1618,10 @@ async function handleRAGDocuments(req, res) {
       // Format documents
       const formattedDocs = documents.map(doc => ({
         id: doc.id,
-        name: doc.filename || doc.name || 'Untitled',
-        filename: doc.filename || doc.name || 'Untitled',
-        size: formatFileSize(doc.file_size || 0),
-        file_size: doc.file_size || 0,
+        name: doc.title || 'Untitled',
+        filename: doc.title || 'Untitled',
+        size: formatFileSize(doc.file_size_bytes || 0),
+        file_size: doc.file_size_bytes || 0,
         chunks: chunkCounts[doc.id] || 0,
         created_at: doc.created_at,
         metadata: doc.metadata || {}

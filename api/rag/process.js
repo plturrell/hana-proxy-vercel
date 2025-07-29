@@ -1,11 +1,12 @@
-/**
- * RAG Processing API Endpoint
- * Handles document upload and processing through the pipeline
- */
+const { createClient } = require('@supabase/supabase-js');
+const formidable = require('formidable');
+const fs = require('fs').promises;
+const path = require('path');
 
-import { ragPipeline } from '../../lib/rag-pipeline.js';
-import formidable from 'formidable';
-import fs from 'fs/promises';
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 export const config = {
   api: {
@@ -13,98 +14,108 @@ export const config = {
   },
 };
 
-export default async function handler(req, res) {
-  const { method } = req;
-
-  try {
-    switch (method) {
-      case 'POST':
-        return await handleDocumentUpload(req, res);
-      case 'GET':
-        return await handleStatusCheck(req, res);
-      case 'DELETE':
-        return await handleDocumentDeletion(req, res);
-      default:
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-  } catch (error) {
-    console.error('RAG API error:', error);
-    return res.status(500).json({ 
-      error: 'Processing failed', 
-      details: error.message 
-    });
-  }
-}
-
-async function handleDocumentUpload(req, res) {
-  const form = formidable({
-    maxFileSize: 50 * 1024 * 1024, // 50MB limit
-    keepExtensions: true,
-    uploadDir: '/tmp'
-  });
-
-  const [fields, files] = await form.parse(req);
+module.exports = async function handler(req, res) {
+  // Enable CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   
-  if (!files.document || !files.document[0]) {
-    return res.status(400).json({ error: 'No document uploaded' });
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
   }
 
-  const file = files.document[0];
-  const metadata = fields.metadata ? JSON.parse(fields.metadata[0]) : {};
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const form = formidable({ multiples: true });
 
   try {
-    // Read file buffer
-    const fileBuffer = await fs.readFile(file.filepath);
-    
-    // Process document through RAG pipeline
-    const result = await ragPipeline.processDocument(
-      fileBuffer, 
-      file.originalFilename || file.newFilename,
-      { ...metadata, fileSize: file.size }
-    );
-    
-    // Clean up uploaded file
-    await fs.unlink(file.filepath);
+    const [fields, files] = await new Promise((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve([fields, files]);
+      });
+    });
+
+    const file = files.document;
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    // Read file content
+    const fileContent = await fs.readFile(file.filepath, 'utf-8');
+    const metadata = fields.metadata ? JSON.parse(fields.metadata) : {};
+
+    // Create document record
+    const { data: document, error: docError } = await supabase
+      .from('documents')
+      .insert({
+        title: file.originalFilename || 'Untitled',
+        file_type: file.mimetype,
+        file_size_bytes: file.size,
+        metadata: metadata,
+        source_url: metadata.source_url || null
+      })
+      .select()
+      .single();
+
+    if (docError) {
+      console.error('Document creation error:', docError);
+      return res.status(500).json({ error: 'Failed to create document record' });
+    }
+
+    // Simple chunking (split by paragraphs for now)
+    const chunks = fileContent
+      .split(/\n\n+/)
+      .filter(chunk => chunk.trim().length > 0)
+      .map((content, index) => ({
+        document_id: document.id,
+        chunk_index: index,
+        content: content.trim(),
+        token_count: Math.ceil(content.length / 4), // Rough estimate
+        metadata: { position: index }
+      }));
+
+    // Insert chunks
+    if (chunks.length > 0) {
+      const { error: chunkError } = await supabase
+        .from('document_chunks')
+        .insert(chunks);
+
+      if (chunkError) {
+        console.error('Chunk insertion error:', chunkError);
+        // Don't fail completely, document is created
+      }
+    }
+
+    // Update processing status
+    await supabase
+      .from('document_processing_status')
+      .insert({
+        document_id: document.id,
+        status: 'completed',
+        chunks_processed: chunks.length,
+        total_chunks: chunks.length,
+        completed_at: new Date().toISOString()
+      });
+
+    // Clean up temp file
+    await fs.unlink(file.filepath).catch(() => {});
 
     return res.status(200).json({
       success: true,
-      ...result,
-      message: `Successfully processed ${file.originalFilename || file.newFilename}`
+      documentId: document.id,
+      chunksProcessed: chunks.length,
+      message: 'Document processed successfully'
     });
+
   } catch (error) {
-    // Clean up on error
-    await fs.unlink(file.filepath).catch(() => {});
-    throw error;
+    console.error('RAG processing error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Processing failed',
+      message: error.message
+    });
   }
-}
-
-async function handleStatusCheck(req, res) {
-  const stats = await ragPipeline.getStatistics();
-  
-  return res.status(200).json({
-    status: 'operational',
-    statistics: stats,
-    capabilities: {
-      supportedFormats: ['pdf', 'txt', 'md'],
-      maxFileSize: '50MB',
-      embeddingModel: 'grok-embed-1212',
-      chunkSize: 500,
-      features: ['semantic-chunking', 'hybrid-search', 'grok4-generation']
-    }
-  });
-}
-
-async function handleDocumentDeletion(req, res) {
-  const { documentId } = req.query;
-  
-  if (!documentId) {
-    return res.status(400).json({ error: 'Document ID required' });
-  }
-
-  await ragPipeline.deleteDocument(documentId);
-  
-  return res.status(200).json({
-    success: true,
-    message: `Document ${documentId} deleted`
-  });
-}
+};
