@@ -1,0 +1,15 @@
+VERCEL PLEASE DEPLOY THIS!
+==========================
+
+If Vercel is not auto-deploying, please:
+
+1. Go to Vercel Dashboard
+2. Click on your project
+3. Go to Settings > Git
+4. Check if GitHub integration is connected
+5. If not, reconnect it
+6. Or manually click "Redeploy" on the latest deployment
+
+The teaching system is ready and waiting to be deployed!
+
+Last push: January 29, 2025 - 16:15 UTC
