@@ -1,7 +1,7 @@
 {
   "name": "hana-proxy-vercel",
-  "version": "1.0.2",
-  "description": "A2A Supabase-Based Blockchain Integration",
+  "version": "1.1.0",
+  "description": "A2A Supabase-Based Blockchain Integration with Teaching & Curriculum Learning System",
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
@@ -36,6 +36,7 @@
     "node-fetch": "^3.3.2",
     "openai": "^4.20.1",
     "pdfjs-dist": "^3.11.174",
+    "marked": "^11.1.1",
     "pg": "^8.16.3",
     "socket.io": "^4.7.2",
     "typescript": "^5.3.3",
