@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Base Manual Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f7;
+    }
+    .test-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button:hover {
+      background: #0051D5;
+    }
+    .status {
+      padding: 8px 16px;
+      border-radius: 6px;
+      display: inline-block;
+      margin-top: 10px;
+    }
+    .status.success {
+      background: #D1F2D1;
+      color: #1D6F1D;
+    }
+    .status.error {
+      background: #FFD6D6;
+      color: #8B0000;
+    }
+    .status.loading {
+      background: #FFF3CD;
+      color: #856404;
+    }
+    pre {
+      background: #F5F5F7;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 14px;
+    }
+    #documentList {
+      margin-top: 20px;
+    }
+    .document-item {
+      background: #F5F5F7;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Knowledge Base Manual Test</h1>
+  
+  <div class="test-card">
+    <h2>1. Test Document List API</h2>
+    <button onclick="testDocumentList()">Test Documents Endpoint</button>
+    <button onclick="testStatusEndpoint()">Test Status Endpoint</button>
+    <div id="apiStatus"></div>
+    <pre id="apiResponse" style="display: none;"></pre>
+  </div>
+
+  <div class="test-card">
+    <h2>2. Document List</h2>
+    <button onclick="loadDocuments()">Load Documents</button>
+    <div id="documentStatus"></div>
+    <div id="documentList"></div>
+  </div>
+
+  <div class="test-card">
+    <h2>3. Upload Test Document</h2>
+    <input type="file" id="fileInput" accept=".txt,.pdf,.md">
+    <button onclick="uploadDocument()">Upload Document</button>
+    <div id="uploadStatus"></div>
+  </div>
+
+  <div class="test-card">
+    <h2>4. Direct Links</h2>
+    <p>
+      <a href="/teach-jobs.html" target="_blank">Open Teach Interface</a> | 
+      <a href="/teach-jobs.html#knowledge" target="_blank">Open Knowledge Tab</a>
+    </p>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+
+    function showStatus(elementId, message, type) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div class="status ${type}">${message}</div>`;
+    }
+
+    function showResponse(data) {
+      const responseEl = document.getElementById('apiResponse');
+      responseEl.textContent = JSON.stringify(data, null, 2);
+      responseEl.style.display = 'block';
+    }
+
+    async function testDocumentList() {
+      showStatus('apiStatus', 'Testing document list endpoint...', 'loading');
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/rag/process?list=documents`);
+        const data = await response.json();
+        
+        if (data.documents !== undefined) {
+          showStatus('apiStatus', '✅ Document list API is working!', 'success');
+          showResponse(data);
+        } else {
+          showStatus('apiStatus', '⚠️ Got status response instead of documents', 'error');
+          showResponse(data);
+        }
+      } catch (error) {
+        showStatus('apiStatus', `❌ Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function testStatusEndpoint() {
+      showStatus('apiStatus', 'Testing status endpoint...', 'loading');
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/rag/process`);
+        const data = await response.json();
+        showStatus('apiStatus', '✅ Status endpoint working', 'success');
+        showResponse(data);
+      } catch (error) {
+        showStatus('apiStatus', `❌ Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function loadDocuments() {
+      showStatus('documentStatus', 'Loading documents...', 'loading');
+      const listEl = document.getElementById('documentList');
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/rag/process?list=documents`);
+        const data = await response.json();
+        
+        if (data.documents) {
+          showStatus('documentStatus', `Found ${data.documents.length} documents`, 'success');
+          
+          if (data.documents.length === 0) {
+            listEl.innerHTML = '<p style="color: #666;">No documents uploaded yet</p>';
+          } else {
+            listEl.innerHTML = data.documents.map(doc => `
+              <div class="document-item">
+                <div>
+                  <strong>${doc.name}</strong><br>
+                  <small>${doc.chunks} chunks • ${doc.size} • ${new Date(doc.created_at).toLocaleDateString()}</small>
+                </div>
+                <button onclick="deleteDocument('${doc.id}')">Delete</button>
+              </div>
+            `).join('');
+          }
+        } else {
+          showStatus('documentStatus', 'API not returning documents yet', 'error');
+          listEl.innerHTML = '<p style="color: #666;">Waiting for deployment...</p>';
+        }
+      } catch (error) {
+        showStatus('documentStatus', `Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function uploadDocument() {
+      const fileInput = document.getElementById('fileInput');
+      if (!fileInput.files[0]) {
+        showStatus('uploadStatus', 'Please select a file', 'error');
+        return;
+      }
+
+      showStatus('uploadStatus', 'Uploading...', 'loading');
+      
+      const formData = new FormData();
+      formData.append('document', fileInput.files[0]);
+      formData.append('metadata', JSON.stringify({
+        source: 'manual-test',
+        timestamp: new Date().toISOString()
+      }));
+
+      try {
+        const response = await fetch(`${API_BASE}/api/rag/process`, {
+          method: 'POST',
+          body: formData
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showStatus('uploadStatus', `✅ Upload successful! Document ID: ${data.documentId}`, 'success');
+          setTimeout(loadDocuments, 1000);
+        } else {
+          showStatus('uploadStatus', `❌ Upload failed: ${data.error}`, 'error');
+        }
+      } catch (error) {
+        showStatus('uploadStatus', `❌ Error: ${error.message}`, 'error');
+      }
+    }
+
+    async function deleteDocument(id) {
+      if (!confirm('Delete this document?')) return;
+      
+      try {
+        const response = await fetch(`${API_BASE}/api/rag/process?documentId=${id}`, {
+          method: 'DELETE'
+        });
+        
+        if (response.ok) {
+          loadDocuments();
+        }
+      } catch (error) {
+        alert('Delete failed: ' + error.message);
+      }
+    }
+
+    // Auto-test on load
+    window.onload = () => {
+      testDocumentList();
+    };
+  </script>
+</body>
+</html>
