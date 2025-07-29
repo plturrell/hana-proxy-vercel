@@ -1,6 +1,17 @@
 # Financial Analytics Platform - Supabase Production
 
+**UPDATED: January 29, 2025 - Teaching System Now Live!**
+
 A production-ready financial analytics platform with 32 enterprise-grade PostgreSQL functions deployed on Supabase and served through Vercel.
+
+## 🎓 NEW: Teaching & Curriculum Learning System
+
+The platform now includes a complete teaching system with real curriculum learning capabilities:
+
+- **Teaching Interface**: `/teach-jobs.html` - Full teaching management system
+- **Test System**: `/test-teaching-system.html` - Verify all API connections
+- **Curriculum API**: `/api/agents/curriculum-learning-real` - Real data, no mocks
+- **Live Data**: All teaching data from actual Supabase tables
 
 ## 🚀 Quick Start
 
