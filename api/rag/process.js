@@ -15,6 +15,9 @@ export const config = {
 
 export default async function handler(req, res) {
   const { method } = req;
+  
+  // Add deployment timestamp for debugging
+  console.log('RAG Process handler called at:', new Date().toISOString());
 
   try {
     switch (method) {
