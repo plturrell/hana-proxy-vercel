@@ -2541,21 +2541,13 @@
       const listContent = document.getElementById('document-list-content');
       
       try {
-        // Use the working supabase-proxy endpoint
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'rag_documents',
-            query: '*'
-          })
-        });
+        // Use the unified endpoint
+        const response = await fetch('/api/unified?action=rag_documents');
         
         if (!response.ok) throw new Error('Failed to load documents');
         
-        const result = await response.json();
-        const documents = result.data || [];
+        const data = await response.json();
+        const documents = data.documents || [];
         
         listLoading.style.display = 'none';
         
@@ -2566,22 +2558,15 @@
           listEmpty.style.display = 'none';
           listContent.style.display = 'block';
           
-          // Get chunk counts
-          const chunkCounts = await getChunkCounts(documents.map(d => d.id));
-          
-          listContent.innerHTML = documents.map(doc => {
-            const fileSize = formatFileSize(doc.file_size || 0);
-            const chunkCount = chunkCounts[doc.id] || 0;
-            
-            return `
+          listContent.innerHTML = documents.map(doc => `
             <div class="document-item" style="padding: var(--jobs-spacing-md); border: 1px solid var(--jobs-light-gray); border-radius: 8px; margin-bottom: var(--jobs-spacing-sm); cursor: pointer; transition: all 0.2s;"
                  onmouseover="this.style.background='rgba(0,122,255,0.05)'"
                  onmouseout="this.style.background='transparent'">
               <div style="display: flex; justify-content: space-between; align-items: start;">
                 <div style="flex: 1;">
-                  <h4 style="margin: 0 0 4px 0; font-weight: 500;">${doc.filename || doc.name || 'Untitled'}</h4>
+                  <h4 style="margin: 0 0 4px 0; font-weight: 500;">${doc.name}</h4>
                   <p style="margin: 0; font-size: 13px; color: var(--jobs-gray);">
-                    ${chunkCount} chunks • ${fileSize} • ${new Date(doc.created_at).toLocaleDateString()}
+                    ${doc.chunks} chunks • ${doc.size} • ${new Date(doc.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 <div style="display: flex; gap: 8px;">
@@ -2590,7 +2575,7 @@
                 </div>
               </div>
             </div>
-          `}).join('');
+          `).join('');
         }
       } catch (error) {
         console.error('Error loading documents:', error);
@@ -2747,47 +2732,6 @@
       await handleMultipleFiles(files);
     }
 
-    // Helper function to get chunk counts
-    async function getChunkCounts(documentIds) {
-      if (!documentIds || documentIds.length === 0) return {};
-      
-      try {
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'rag_chunks',
-            query: 'document_id'
-          })
-        });
-        
-        if (!response.ok) return {};
-        
-        const result = await response.json();
-        const chunks = result.data || [];
-        
-        // Count chunks per document
-        const counts = {};
-        chunks.forEach(chunk => {
-          counts[chunk.document_id] = (counts[chunk.document_id] || 0) + 1;
-        });
-        
-        return counts;
-      } catch (error) {
-        console.error('Error getting chunk counts:', error);
-        return {};
-      }
-    }
-
-    // Helper function to format file size
-    function formatFileSize(bytes) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
   </script>
   </div> <!-- Close main container -->
 </body>

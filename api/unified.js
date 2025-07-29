@@ -67,6 +67,10 @@ module.exports = async function handler(req, res) {
       return await handleBPMNExport(req, res);
     }
     
+    if (action === 'rag_documents') {
+      return await handleRAGDocuments(req, res);
+    }
+    
     return res.status(400).json({ error: 'Invalid action' });
   } catch (error) {
     console.error('API Error:', error);
@@ -1575,4 +1579,72 @@ function generateRoleBasedBPMN() {
     },
     agents: ['FX Analyzer', 'Credit Risk Agent', 'Portfolio Optimizer', 'Compliance Officer']
   };
+}
+
+// RAG Documents Handler
+async function handleRAGDocuments(req, res) {
+  if (req.method === 'GET') {
+    try {
+      // Get all documents from rag_documents table
+      const { data: documents, error } = await supabase
+        .from('rag_documents')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Supabase error:', error);
+        return res.status(200).json({ documents: [], total: 0 });
+      }
+
+      if (!documents || documents.length === 0) {
+        return res.status(200).json({ documents: [], total: 0 });
+      }
+
+      // Get chunk counts
+      const documentIds = documents.map(d => d.id);
+      const { data: chunks } = await supabase
+        .from('rag_chunks')
+        .select('document_id')
+        .in('document_id', documentIds);
+
+      // Count chunks per document
+      const chunkCounts = {};
+      if (chunks) {
+        chunks.forEach(chunk => {
+          chunkCounts[chunk.document_id] = (chunkCounts[chunk.document_id] || 0) + 1;
+        });
+      }
+
+      // Format documents
+      const formattedDocs = documents.map(doc => ({
+        id: doc.id,
+        name: doc.filename || doc.name || 'Untitled',
+        filename: doc.filename || doc.name || 'Untitled',
+        size: formatFileSize(doc.file_size || 0),
+        file_size: doc.file_size || 0,
+        chunks: chunkCounts[doc.id] || 0,
+        created_at: doc.created_at,
+        metadata: doc.metadata || {}
+      }));
+
+      return res.status(200).json({
+        documents: formattedDocs,
+        total: formattedDocs.length
+      });
+    } catch (error) {
+      console.error('RAG documents error:', error);
+      return res.status(200).json({ documents: [], total: 0 });
+    }
+  }
+  
+  return res.status(405).json({ error: 'Method not allowed' });
+}
+
+// Helper function to format file size
+function formatFileSize(bytes) {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
