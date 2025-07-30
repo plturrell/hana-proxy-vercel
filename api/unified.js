@@ -1585,6 +1585,12 @@ function generateRoleBasedBPMN() {
 async function handleRAGDocuments(req, res) {
   if (req.method === 'GET') {
     try {
+      // Check if supabase is configured
+      if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+        console.error('Supabase not configured');
+        return res.status(200).json({ documents: [], total: 0, error: 'Database not configured' });
+      }
+
       // Get all documents from documents table
       const { data: documents, error } = await supabase
         .from('documents')
@@ -1593,26 +1599,35 @@ async function handleRAGDocuments(req, res) {
 
       if (error) {
         console.error('Supabase error:', error);
-        return res.status(200).json({ documents: [], total: 0 });
+        // Check if table exists
+        if (error.code === '42P01') {
+          return res.status(200).json({ documents: [], total: 0, error: 'Documents table not found' });
+        }
+        return res.status(200).json({ documents: [], total: 0, error: error.message });
       }
 
       if (!documents || documents.length === 0) {
         return res.status(200).json({ documents: [], total: 0 });
       }
 
-      // Get chunk counts
+      // Get chunk counts - but don't fail if chunks table doesn't exist
       const documentIds = documents.map(d => d.id);
-      const { data: chunks } = await supabase
-        .from('document_chunks')
-        .select('document_id')
-        .in('document_id', documentIds);
+      let chunkCounts = {};
+      
+      try {
+        const { data: chunks, error: chunkError } = await supabase
+          .from('document_chunks')
+          .select('document_id')
+          .in('document_id', documentIds);
 
-      // Count chunks per document
-      const chunkCounts = {};
-      if (chunks) {
-        chunks.forEach(chunk => {
-          chunkCounts[chunk.document_id] = (chunkCounts[chunk.document_id] || 0) + 1;
-        });
+        // Count chunks per document if no error
+        if (!chunkError && chunks) {
+          chunks.forEach(chunk => {
+            chunkCounts[chunk.document_id] = (chunkCounts[chunk.document_id] || 0) + 1;
+          });
+        }
+      } catch (e) {
+        console.log('Chunk counting skipped:', e.message);
       }
 
       // Format documents
