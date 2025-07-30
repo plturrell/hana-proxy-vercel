@@ -181,16 +181,20 @@ module.exports = async function handler(req, res) {
 
     const responseTime = Date.now() - startTime;
 
-    // Log search for analytics
-    await supabase
-      .from('search_history')
-      .insert({
-        query,
-        query_embedding: queryEmbedding ? `[${queryEmbedding.join(',')}]` : null,
-        results_count: searchResults.length,
-        search_type: searchType,
-        response_time_ms: responseTime
-      });
+    // Log search for analytics (skip if table doesn't exist)
+    try {
+      await supabase
+        .from('search_history')
+        .insert({
+          query,
+          query_embedding: queryEmbedding ? `[${queryEmbedding.join(',')}]` : null,
+          results_count: searchResults.length,
+          search_type: searchType,
+          response_time_ms: responseTime
+        });
+    } catch (historyError) {
+      console.log('Search history logging skipped (table may not exist)');
+    }
 
     return res.status(200).json({
       success: true,

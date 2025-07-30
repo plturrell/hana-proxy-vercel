@@ -118,14 +118,18 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to create document record' });
     }
 
-    // Update processing status to processing
-    await supabase
-      .from('document_processing_status')
-      .insert({
-        document_id: document.id,
-        status: 'processing',
-        started_at: new Date().toISOString()
-      });
+    // Update processing status to processing (skip if table doesn't exist)
+    try {
+      await supabase
+        .from('document_processing_status')
+        .insert({
+          document_id: document.id,
+          status: 'processing',
+          started_at: new Date().toISOString()
+        });
+    } catch (statusError) {
+      console.log('Processing status tracking skipped (table may not exist)');
+    }
 
     // Intelligent chunking with overlap
     const textChunks = intelligentChunking(fileContent);
@@ -153,14 +157,13 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // Generate embeddings using local Hugging Face model with fallback
+    // Generate embeddings using simple HuggingFace API
     try {
       const baseUrl = process.env.VERCEL_URL 
         ? `https://${process.env.VERCEL_URL}`
         : 'http://localhost:3000';
       
-      // Try local embeddings first
-      let response = await fetch(`${baseUrl}/api/rag/embeddings-local`, {
+      const response = await fetch(`${baseUrl}/api/rag/embeddings-simple`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -169,40 +172,30 @@ module.exports = async function handler(req, res) {
         })
       });
 
-      if (!response.ok) {
-        console.warn('Local embedding generation failed, trying fallback...');
-        
-        // Try fallback embeddings
-        response = await fetch(`${baseUrl}/api/rag/embeddings-fallback`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            documentId: document.id,
-            chunks: chunks
-          })
-        });
-      }
-
       if (response.ok) {
         const data = await response.json();
         console.log(`Generated ${data.embeddingsGenerated} embeddings using ${data.model}`);
       } else {
-        console.error('All embedding generation methods failed');
+        console.error('Embedding generation failed');
       }
     } catch (error) {
       console.error('Embedding API error:', error);
     }
 
-    // Update processing status
-    await supabase
-      .from('document_processing_status')
-      .update({
-        status: 'completed',
-        chunks_processed: chunks.length,
-        total_chunks: chunks.length,
-        completed_at: new Date().toISOString()
-      })
-      .eq('document_id', document.id);
+    // Update processing status (skip if table doesn't exist)
+    try {
+      await supabase
+        .from('document_processing_status')
+        .update({
+          status: 'completed',
+          chunks_processed: chunks.length,
+          total_chunks: chunks.length,
+          completed_at: new Date().toISOString()
+        })
+        .eq('document_id', document.id);
+    } catch (statusError) {
+      console.log('Processing status update skipped (table may not exist)');
+    }
 
     // Clean up temp file
     await fs.unlink(file.filepath).catch(() => {});

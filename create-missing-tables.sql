@@ -1,109 +1,47 @@
--- Create missing database tables for real data APIs
+-- Create the missing tables that are needed for RAG system
 
--- Treasury yield curves table
-CREATE TABLE IF NOT EXISTS treasury_yield_curves (
-    curve_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    points JSONB NOT NULL,
-    curve_date TIMESTAMPTZ NOT NULL,
-    label TEXT NOT NULL,
+-- Document processing status table
+CREATE TABLE IF NOT EXISTS document_processing_status (
+    id BIGSERIAL PRIMARY KEY,
+    document_id BIGINT REFERENCES documents(id) ON DELETE CASCADE,
+    status TEXT CHECK (status IN ('pending', 'processing', 'completed', 'failed')) DEFAULT 'pending',
+    chunks_processed INTEGER DEFAULT 0,
+    total_chunks INTEGER,
+    error_message TEXT,
+    started_at TIMESTAMPTZ,
+    completed_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_treasury_yield_curves_date ON treasury_yield_curves(curve_date DESC);
-
--- Treasury liquidity metrics table
-CREATE TABLE IF NOT EXISTS treasury_liquidity_metrics (
-    metrics_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    total_liquidity BIGINT NOT NULL,
-    avg_bid_ask_spread DECIMAL(8,4) NOT NULL,
-    trading_volume BIGINT NOT NULL,
-    market_depth DECIMAL(5,2) NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_treasury_liquidity_timestamp ON treasury_liquidity_metrics(timestamp DESC);
-
--- Treasury funding metrics table
-CREATE TABLE IF NOT EXISTS treasury_funding_metrics (
-    metrics_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    total_funding BIGINT NOT NULL,
-    average_cost DECIMAL(5,2) NOT NULL,
-    maturity_profile JSONB NOT NULL,
-    concentration_limits JSONB NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_treasury_funding_timestamp ON treasury_funding_metrics(timestamp DESC);
-
--- Treasury market insights table
-CREATE TABLE IF NOT EXISTS treasury_market_insights (
-    insight_id UUID PRIMARY KEY,
-    title TEXT NOT NULL,
-    content TEXT NOT NULL,
-    source TEXT NOT NULL,
-    category TEXT NOT NULL,
-    related_indicators JSONB,
-    sentiment TEXT NOT NULL DEFAULT 'neutral',
-    confidence INTEGER DEFAULT 70,
-    timestamp TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
-CREATE INDEX IF NOT EXISTS idx_treasury_insights_timestamp ON treasury_market_insights(timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_treasury_insights_category ON treasury_market_insights(category);
-
--- Entity timeline events table
-CREATE TABLE IF NOT EXISTS entity_timeline_events (
-    event_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    entity_uri TEXT NOT NULL,
-    event_title TEXT NOT NULL,
-    event_description TEXT,
-    event_type TEXT NOT NULL DEFAULT 'announcement',
-    event_timestamp TIMESTAMPTZ NOT NULL,
+-- Search history table  
+CREATE TABLE IF NOT EXISTS search_history (
+    id BIGSERIAL PRIMARY KEY,
+    query TEXT NOT NULL,
+    query_embedding TEXT, -- Store as text since vector type may not be available
+    results_count INTEGER,
+    search_type TEXT CHECK (search_type IN ('vector', 'hybrid', 'fulltext')) DEFAULT 'hybrid',
+    response_time_ms INTEGER,
     metadata JSONB DEFAULT '{}',
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX IF NOT EXISTS idx_entity_timeline_uri ON entity_timeline_events(entity_uri);
-CREATE INDEX IF NOT EXISTS idx_entity_timeline_timestamp ON entity_timeline_events(event_timestamp DESC);
-CREATE INDEX IF NOT EXISTS idx_entity_timeline_type ON entity_timeline_events(event_type);
+-- Add indexes
+CREATE INDEX IF NOT EXISTS idx_processing_status_document ON document_processing_status(document_id);
+CREATE INDEX IF NOT EXISTS idx_processing_status_status ON document_processing_status(status);
+CREATE INDEX IF NOT EXISTS idx_search_history_created ON search_history(created_at DESC);
 
--- Market data snapshots table
-CREATE TABLE IF NOT EXISTS market_data_snapshots (
-    snapshot_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    volatility DECIMAL(5,3) NOT NULL,
-    news_volume DECIMAL(5,3) NOT NULL,
-    user_activity JSONB NOT NULL,
-    market_state JSONB NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Enable RLS
+ALTER TABLE document_processing_status ENABLE ROW LEVEL SECURITY;
+ALTER TABLE search_history ENABLE ROW LEVEL SECURITY;
 
-CREATE INDEX IF NOT EXISTS idx_market_snapshots_timestamp ON market_data_snapshots(timestamp DESC);
+-- Create permissive policies
+DROP POLICY IF EXISTS "Allow all access" ON document_processing_status;
+DROP POLICY IF EXISTS "Allow all access" ON search_history;
 
--- Enable RLS on all tables
-ALTER TABLE treasury_yield_curves ENABLE ROW LEVEL SECURITY;
-ALTER TABLE treasury_liquidity_metrics ENABLE ROW LEVEL SECURITY;
-ALTER TABLE treasury_funding_metrics ENABLE ROW LEVEL SECURITY;
-ALTER TABLE treasury_market_insights ENABLE ROW LEVEL SECURITY;
-ALTER TABLE entity_timeline_events ENABLE ROW LEVEL SECURITY;
-ALTER TABLE market_data_snapshots ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all access" ON document_processing_status FOR ALL USING (true);
+CREATE POLICY "Allow all access" ON search_history FOR ALL USING (true);
 
--- Create RLS policies for public read access
-CREATE POLICY IF NOT EXISTS "Public read access" ON treasury_yield_curves FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Public read access" ON treasury_liquidity_metrics FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Public read access" ON treasury_funding_metrics FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Public read access" ON treasury_market_insights FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Public read access" ON entity_timeline_events FOR SELECT USING (true);
-CREATE POLICY IF NOT EXISTS "Public read access" ON market_data_snapshots FOR SELECT USING (true);
-
--- Service role full access policies  
-CREATE POLICY IF NOT EXISTS "Service role full access" ON treasury_yield_curves FOR ALL USING (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role full access" ON treasury_liquidity_metrics FOR ALL USING (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role full access" ON treasury_funding_metrics FOR ALL USING (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role full access" ON treasury_market_insights FOR ALL USING (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role full access" ON entity_timeline_events FOR ALL USING (auth.role() = 'service_role');
-CREATE POLICY IF NOT EXISTS "Service role full access" ON market_data_snapshots FOR ALL USING (auth.role() = 'service_role');
-EOF < /dev/null
+-- Insert test data to verify
+INSERT INTO document_processing_status (document_id, status, total_chunks) 
+SELECT id, 'pending', 0 FROM documents LIMIT 1
+ON CONFLICT DO NOTHING;

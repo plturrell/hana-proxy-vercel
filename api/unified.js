@@ -222,10 +222,14 @@ module.exports = async function handler(req, res) {
 
   try {
     if (action === 'a2a_agents') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'agents.read');
       return await handleA2AAgents(req, res);
     }
     
     if (action === 'a2a_network') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'network.read');
       return await handleA2ANetwork(req, res);
     }
     
