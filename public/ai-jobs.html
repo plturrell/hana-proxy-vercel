@@ -735,6 +735,397 @@
     
     /* Bottom Tab Bar - Removed */
     
+    /* Modal Styles */
+    .service-modal, .query-modal, .history-modal, .integration-modal,
+    .summary-modal, .risk-modal, .market-modal, .templates-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .modal-content {
+      background: var(--jobs-white);
+      border-radius: 12px;
+      padding: var(--jobs-spacing-xl);
+      max-width: 600px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    
+    .modal-content.large {
+      max-width: 900px;
+    }
+    
+    body.dark-mode .modal-content {
+      background: #1C1C1E;
+      color: var(--jobs-white);
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: var(--jobs-spacing-sm);
+      margin-top: var(--jobs-spacing-lg);
+      justify-content: flex-end;
+    }
+    
+    .modal-actions button {
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      border: none;
+      background: var(--jobs-blue);
+      color: var(--jobs-white);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .modal-actions button:hover {
+      background: var(--jobs-purple);
+    }
+    
+    /* Loading States */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--jobs-spacing-lg);
+    }
+    
+    .loading::after {
+      content: '';
+      width: 32px;
+      height: 32px;
+      border: 3px solid var(--jobs-light-gray);
+      border-top-color: var(--jobs-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      padding: var(--jobs-spacing-md);
+      border-radius: 8px;
+      background: var(--jobs-black);
+      color: var(--jobs-white);
+      font-size: var(--jobs-font-size-caption);
+      z-index: 1100;
+      animation: slideIn 0.3s ease;
+    }
+    
+    .notification.error {
+      background: var(--jobs-red);
+    }
+    
+    .notification.success {
+      background: var(--jobs-green);
+    }
+    
+    .notification.info {
+      background: var(--jobs-blue);
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    
+    /* Metric Cards */
+    .metric-card, .risk-card {
+      background: var(--jobs-light-gray);
+      padding: var(--jobs-spacing-md);
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    body.dark-mode .metric-card,
+    body.dark-mode .risk-card {
+      background: #2C2C2E;
+    }
+    
+    .metric-value, .risk-value {
+      font-size: var(--jobs-font-size-headline);
+      font-weight: 600;
+      margin-top: var(--jobs-spacing-sm);
+    }
+    
+    .metric-value.positive {
+      color: var(--jobs-green);
+    }
+    
+    .metric-value.negative {
+      color: var(--jobs-red);
+    }
+    
+    /* Service Status */
+    .service-status {
+      padding: var(--jobs-spacing-sm);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      text-align: center;
+      margin: var(--jobs-spacing-md) 0;
+    }
+    
+    .service-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--jobs-spacing-sm);
+      margin: var(--jobs-spacing-md) 0;
+    }
+    
+    .service-metrics .metric {
+      background: var(--jobs-light-gray);
+      padding: var(--jobs-spacing-sm);
+      border-radius: 6px;
+      text-align: center;
+      font-size: var(--jobs-font-size-caption);
+    }
+    
+    body.dark-mode .service-metrics .metric {
+      background: #2C2C2E;
+    }
+    
+    /* Form Styles */
+    .form-group {
+      margin-bottom: var(--jobs-spacing-md);
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: var(--jobs-spacing-xs);
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+    }
+    
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: var(--jobs-spacing-sm);
+      border: 1px solid var(--jobs-light-gray);
+      border-radius: 6px;
+      font-size: var(--jobs-font-size-caption);
+      outline: none;
+    }
+    
+    body.dark-mode .form-group input,
+    body.dark-mode .form-group select,
+    body.dark-mode .form-group textarea {
+      background: #2C2C2E;
+      border-color: #38383A;
+      color: var(--jobs-white);
+    }
+    
+    /* Loading Dots Animation */
+    .loading-dots {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .loading-dots span {
+      width: 8px;
+      height: 8px;
+      background: var(--jobs-gray);
+      border-radius: 50%;
+      animation: loadingDot 1.4s infinite ease-in-out;
+    }
+    
+    .loading-dots span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+    
+    .loading-dots span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+    
+    @keyframes loadingDot {
+      0%, 80%, 100% {
+        transform: scale(0.6);
+        opacity: 0.5;
+      }
+      40% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    /* Response Metrics */
+    .response-metrics {
+      display: flex;
+      gap: var(--jobs-spacing-md);
+      margin-top: var(--jobs-spacing-xs);
+      font-size: 11px;
+      color: var(--jobs-gray);
+    }
+    
+    /* User Info */
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      margin-right: var(--jobs-spacing-md);
+    }
+    
+    .user-info img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .user-info span {
+      font-size: var(--jobs-font-size-caption);
+      font-weight: 500;
+    }
+    
+    /* Percentage Colors */
+    .percentage.positive {
+      color: var(--jobs-green);
+    }
+    
+    .percentage.negative {
+      color: var(--jobs-red);
+    }
+    
+    /* Currency Styling */
+    .currency {
+      font-weight: 600;
+      color: var(--jobs-blue);
+    }
+    
+    /* Pulse Animation */
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    
+    /* Typing Indicator */
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 8px;
+    }
+    
+    .typing-indicator span {
+      width: 6px;
+      height: 6px;
+      background: var(--jobs-gray);
+      border-radius: 50%;
+      animation: typing 1.4s infinite ease-in-out;
+    }
+    
+    .typing-indicator span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+    
+    .typing-indicator span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+    
+    @keyframes typing {
+      0%, 60%, 100% {
+        transform: translateY(0);
+      }
+      30% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    /* Enterprise Features */
+    .confidence-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--jobs-light-gray);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: var(--jobs-spacing-sm) 0;
+    }
+    
+    .confidence-fill {
+      height: 100%;
+      background: var(--jobs-green);
+      transition: width 0.5s ease;
+    }
+    
+    .signal-card {
+      padding: var(--jobs-spacing-md);
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    
+    .signal-card.buy {
+      background: rgba(52, 199, 89, 0.1);
+      border: 1px solid var(--jobs-green);
+    }
+    
+    .signal-card.sell {
+      background: rgba(255, 59, 48, 0.1);
+      border: 1px solid var(--jobs-red);
+    }
+    
+    .signal-card.hold {
+      background: rgba(255, 149, 0, 0.1);
+      border: 1px solid var(--jobs-orange);
+    }
+    
+    .stress-test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--jobs-spacing-sm);
+      margin: var(--jobs-spacing-md) 0;
+    }
+    
+    .stress-test-item {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--jobs-spacing-sm);
+      background: var(--jobs-light-gray);
+      border-radius: 6px;
+    }
+    
+    body.dark-mode .stress-test-item {
+      background: #2C2C2E;
+    }
+    
+    .impact.severe {
+      color: var(--jobs-red);
+      font-weight: 600;
+    }
+    
+    .impact.moderate {
+      color: var(--jobs-orange);
+      font-weight: 500;
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .jobs-ai-grid {
@@ -1211,11 +1602,17 @@
     }
     
     // Chat functionality
-    function sendMessage() {
+    async function sendMessage() {
       const input = document.getElementById('chat-input');
       const message = input.value.trim();
       
       if (!message) return;
+      
+      // Check authentication
+      if (!window.auth.isAuthenticated()) {
+        showNotification('Please log in to use AI services', 'error');
+        return;
+      }
       
       const messagesContainer = document.getElementById('chat-messages');
       const aiSelector = document.getElementById('ai-selector');
@@ -1232,16 +1629,36 @@
       
       // Clear input
       input.value = '';
+      input.style.height = 'auto';
       
       // Scroll to bottom
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
       
-      // Get real AI response
-      getAIResponse(message, selectedAI).then(response => {
-        const aiMessage = document.createElement('div');
-        aiMessage.className = `jobs-message ai ${selectedAI === 'auto' ? 'supabase' : selectedAI}`;
+      // Add AI message with loading state
+      const aiMessage = document.createElement('div');
+      const messageId = `msg-${Date.now()}`;
+      aiMessage.setAttribute('data-message-id', messageId);
+      aiMessage.className = `jobs-message ai ${selectedAI === 'auto' ? 'openai' : selectedAI}`;
+      aiMessage.innerHTML = `
+        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
+      `;
+      messagesContainer.appendChild(aiMessage);
+      
+      try {
+        // Get context for better responses
+        const context = {
+          portfolio: await getPortfolioContext(),
+          marketData: await getMarketContext(),
+          history: getRecentHistory()
+        };
+        
+        // Get AI response
+        const response = await window.AI.query(message, selectedAI.toLowerCase(), { context });
+        
+        // Update message with response
         aiMessage.innerHTML = `
-          <div>${response}</div>
+          <div>${formatAIResponse(response.response)}</div>
           <div class="jobs-message-time">${new Date().toLocaleTimeString()}</div>
         `;
         messagesContainer.appendChild(aiMessage);
@@ -1822,6 +2239,171 @@
       }
     });
     
+    // Helper Functions
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      
+      setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+    }
+    
+    function showLoadingModal(message) {
+      const modal = document.createElement('div');
+      modal.id = 'loading-modal';
+      modal.className = 'service-modal';
+      modal.innerHTML = `
+        <div class="modal-content" style="text-align: center;">
+          <div class="loading"></div>
+          <p>${message}</p>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    function closeLoadingModal() {
+      const modal = document.getElementById('loading-modal');
+      if (modal) modal.remove();
+    }
+    
+    function closeModal() {
+      const modals = document.querySelectorAll('.service-modal, .query-modal, .history-modal, .integration-modal, .summary-modal, .risk-modal, .market-modal, .templates-modal');
+      modals.forEach(modal => modal.remove());
+    }
+    
+    async function saveIntegration(event, integration) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      
+      try {
+        const response = await fetch(`/api/integrations/${integration.toLowerCase()}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          },
+          body: JSON.stringify(Object.fromEntries(formData))
+        });
+        
+        if (response.ok) {
+          showNotification('Configuration saved successfully', 'success');
+          closeModal();
+        } else {
+          throw new Error('Failed to save configuration');
+        }
+      } catch (error) {
+        showNotification('Error saving configuration: ' + error.message, 'error');
+      }
+    }
+    
+    async function testIntegration(integration) {
+      showLoadingModal('Testing connection...');
+      
+      try {
+        const response = await fetch(`/api/integrations/${integration.toLowerCase()}/test`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          }
+        });
+        
+        closeLoadingModal();
+        
+        if (response.ok) {
+          showNotification('Connection successful!', 'success');
+        } else {
+          throw new Error('Connection failed');
+        }
+      } catch (error) {
+        closeLoadingModal();
+        showNotification('Connection failed: ' + error.message, 'error');
+      }
+    }
+    
+    function configureService(service) {
+      openIntegration(service);
+    }
+    
+    async function viewServiceLogs(service) {
+      window.location.href = `/logs.html?service=${service}`;
+    }
+    
+    async function clearHistory(service) {
+      if (confirm(`Are you sure you want to clear all ${service} history?`)) {
+        try {
+          const response = await fetch(`/api/ai/${service.toLowerCase()}/history`, {
+            method: 'DELETE',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+            }
+          });
+          
+          if (response.ok) {
+            showNotification('History cleared successfully', 'success');
+            closeModal();
+          } else {
+            throw new Error('Failed to clear history');
+          }
+        } catch (error) {
+          showNotification('Error clearing history: ' + error.message, 'error');
+        }
+      }
+    }
+    
+    function viewFullResponse(id) {
+      window.open(`/response/${id}`, '_blank');
+    }
+    
+    function exportSummary(format) {
+      window.location.href = `/api/export/summary?format=${format}`;
+    }
+    
+    function exportRiskReport() {
+      window.location.href = '/api/export/risk-report';
+    }
+    
+    function exportPredictions() {
+      window.location.href = '/api/export/predictions';
+    }
+    
+    function runAdvancedRiskAnalysis() {
+      showLoadingModal('Running advanced analysis...');
+      setTimeout(() => {
+        closeLoadingModal();
+        showNotification('Advanced analysis complete', 'success');
+      }, 2000);
+    }
+    
+    function updatePredictionTimeframe() {
+      const timeframe = prompt('Enter prediction timeframe (days):', '30');
+      if (timeframe) {
+        predictMarket();
+      }
+    }
+    
+    function addMoreSymbols() {
+      const symbols = prompt('Enter symbols (comma-separated):', 'TSLA,NVDA,META');
+      if (symbols) {
+        predictMarket();
+      }
+    }
+    
+    function useTemplate(templateType) {
+      showLoadingModal(`Loading ${templateType} template...`);
+      setTimeout(() => {
+        closeLoadingModal();
+        window.location.href = `/reports/new?template=${templateType}`;
+      }, 1000);
+    }
+    
+    function createCustomTemplate() {
+      window.location.href = '/reports/template-builder';
+    }
+    
     // Initialize AI card animations
     document.querySelectorAll('.jobs-ai-card').forEach(card => {
       card.addEventListener('mouseenter', () => {
@@ -1831,6 +2413,208 @@
       card.addEventListener('mouseleave', () => {
         card.style.transform = 'translateY(0) scale(1)';
       });
+    });
+    
+    // Real-time Updates Setup
+    function setupRealtimeUpdates() {
+      // Listen for real-time metric updates via WebSocket
+      if (window.AI && window.AI.ws) {
+        window.AI.ws.addEventListener('message', (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            if (data.type === 'metrics-update') {
+              updateMetricsDisplay(data.metrics);
+            } else if (data.type === 'ai-response-stream') {
+              handleStreamingResponse(data);
+            }
+          } catch (error) {
+            console.error('WebSocket message error:', error);
+          }
+        });
+      }
+    }
+    
+    function updateMetricsDisplay(metrics) {
+      Object.entries(metrics).forEach(([key, value]) => {
+        const element = document.getElementById(key);
+        if (element) {
+          element.textContent = value;
+          // Add update animation
+          element.style.animation = 'pulse 0.5s ease';
+          setTimeout(() => {
+            element.style.animation = '';
+          }, 500);
+        }
+      });
+    }
+    
+    function handleStreamingResponse(data) {
+      const messageElement = document.querySelector(`[data-message-id="${data.messageId}"] .jobs-message`);
+      if (messageElement) {
+        if (data.chunk) {
+          messageElement.innerHTML += formatAIResponse(data.chunk);
+        }
+        if (data.complete) {
+          // Add completion indicator
+          messageElement.parentElement.classList.add('complete');
+        }
+      }
+    }
+    
+    // Listen for AI service events
+    window.addEventListener('ai-status-change', (e) => {
+      console.log('AI status:', e.detail);
+    });
+    
+    window.addEventListener('ai-metrics-update', (e) => {
+      const metrics = e.detail;
+      updateElement('queries-today', metrics.queriesToday || '0');
+      updateElement('processing-queue', metrics.processingQueue || '0');
+      updateElement('insights-generated', metrics.insightsGenerated || '0');
+      updateElement('avg-response-time', metrics.avgResponseTime ? metrics.avgResponseTime + 'ms' : 'N/A');
+      updateElement('data-sources', metrics.dataSources || '0');
+    });
+    
+    window.addEventListener('ai-service-status', (e) => {
+      const { service, status } = e.detail;
+      const statusElement = document.getElementById(`${service}-status`);
+      if (statusElement) {
+        statusElement.textContent = status;
+        statusElement.className = `service-status ${status}`;
+      }
+    });
+    
+    // Helper functions for portfolio and market context
+    async function getPortfolioContext() {
+      try {
+        const response = await fetch('/api/portfolio/current', {
+          headers: {
+            'Authorization': `Bearer ${window.auth.token}`
+          }
+        });
+        
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (error) {
+        console.error('Failed to get portfolio context:', error);
+      }
+      return null;
+    }
+    
+    async function getMarketContext() {
+      try {
+        const response = await fetch('/api/market/snapshot', {
+          headers: {
+            'Authorization': `Bearer ${window.auth.token}`
+          }
+        });
+        
+        if (response.ok) {
+          return await response.json();
+        }
+      } catch (error) {
+        console.error('Failed to get market context:', error);
+      }
+      return null;
+    }
+    
+    function getRecentHistory() {
+      const messages = document.querySelectorAll('#chat-messages .jobs-message');
+      const history = [];
+      
+      // Get last 10 messages for context
+      const recentMessages = Array.from(messages).slice(-20);
+      
+      for (let i = 0; i < recentMessages.length; i += 2) {
+        const userMsg = recentMessages[i];
+        const aiMsg = recentMessages[i + 1];
+        
+        if (userMsg && userMsg.classList.contains('user')) {
+          history.push({
+            role: 'user',
+            content: userMsg.querySelector('div').textContent
+          });
+        }
+        
+        if (aiMsg && aiMsg.classList.contains('ai')) {
+          history.push({
+            role: 'assistant',
+            content: aiMsg.querySelector('div').textContent
+          });
+        }
+      }
+      
+      return history;
+    }
+    
+    function formatAIResponse(response) {
+      // Format response with markdown support
+      let formatted = response;
+      
+      // Bold text
+      formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      
+      // Italic text
+      formatted = formatted.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      
+      // Code blocks
+      formatted = formatted.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+      
+      // Inline code
+      formatted = formatted.replace(/`(.*?)`/g, '<code>$1</code>');
+      
+      // Line breaks
+      formatted = formatted.replace(/\n/g, '<br>');
+      
+      // Stock tickers
+      formatted = formatted.replace(/\$([A-Z]{1,5})\b/g, '<a href="#" onclick="viewStock(\'$1\')">$$$1</a>');
+      
+      // Percentages with color
+      formatted = formatted.replace(/([-+]?\d+\.?\d*%)/g, (match) => {
+        const value = parseFloat(match);
+        const className = value >= 0 ? 'positive' : 'negative';
+        return `<span class="percentage ${className}">${match}</span>`;
+      });
+      
+      // Currency values
+      formatted = formatted.replace(/\$([\d,]+\.?\d*)/g, '<span class="currency">$$$1</span>');
+      
+      return formatted;
+    }
+    
+    function viewStock(symbol) {
+      window.open(`/stock/${symbol}`, '_blank');
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check authentication
+      if (!window.auth.isAuthenticated()) {
+        window.location.href = '/login.html?redirect=' + encodeURIComponent(window.location.href);
+        return;
+      }
+      
+      // Load initial metrics
+      await loadAIMetrics();
+      
+      // Setup real-time updates
+      setupRealtimeUpdates();
+      
+      // Refresh metrics every 30 seconds
+      setInterval(loadAIMetrics, 30000);
+      
+      // Display user info
+      const user = window.auth.getUser();
+      if (user) {
+        const userDisplay = document.createElement('div');
+        userDisplay.className = 'user-info';
+        userDisplay.innerHTML = `
+          <img src="${user.avatar || '/images/default-avatar.png'}" alt="${user.name}">
+          <span>${user.name}</span>
+        `;
+        document.querySelector('.jobs-nav-actions').prepend(userDisplay);
+      }
     });
     
   </script>

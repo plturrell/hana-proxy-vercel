@@ -5,23 +5,32 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
-// Generate embedding for search query
+// Generate embedding for search query using Grok-4
 async function generateQueryEmbedding(query) {
   try {
-    const response = await fetch('https://api.openai.com/v1/embeddings', {
+    const grokApiKey = process.env.GROK4_API_KEY || process.env.XAI_API_KEY;
+    const grokEndpoint = process.env.GROK4_ENDPOINT || 'https://api.x.ai/v1';
+    
+    if (!grokApiKey) {
+      console.error('Grok-4 API key not configured');
+      return null;
+    }
+
+    const response = await fetch(`${grokEndpoint}/embeddings`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${grokApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'text-embedding-ada-002',
-        input: query
+        model: 'grok-embedding',
+        input: query,
+        encoding_format: 'float'
       })
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      throw new Error(`Grok-4 API error: ${response.statusText}`);
     }
 
     const data = await response.json();
@@ -32,41 +41,50 @@ async function generateQueryEmbedding(query) {
   }
 }
 
-// Generate AI answer using GPT
+// Generate AI answer using Grok-4
 async function generateAnswer(query, context) {
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const grokApiKey = process.env.GROK4_API_KEY || process.env.XAI_API_KEY;
+    const grokEndpoint = process.env.GROK4_ENDPOINT || 'https://api.x.ai/v1';
+    
+    if (!grokApiKey) {
+      console.error('Grok-4 API key not configured');
+      return 'Unable to generate answer - AI service not configured.';
+    }
+
+    const response = await fetch(`${grokEndpoint}/chat/completions`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Authorization': `Bearer ${grokApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-4-turbo-preview',
+        model: 'grok-4',
         messages: [
           {
             role: 'system',
-            content: 'You are a helpful assistant that answers questions based on the provided context. If the context doesn\'t contain relevant information, say so.'
+            content: 'You are an expert financial assistant that answers questions based on the provided context. Be precise and cite specific information from the context. If the context doesn\'t contain relevant information, say so clearly.'
           },
           {
             role: 'user',
             content: `Context:\n${context}\n\nQuestion: ${query}`
           }
         ],
-        temperature: 0.7,
-        max_tokens: 500
+        temperature: 0.3,
+        max_tokens: 500,
+        response_format: { type: "text" }
       })
     });
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.statusText}`);
+      throw new Error(`Grok-4 API error: ${response.statusText}`);
     }
 
     const data = await response.json();
     return data.choices[0].message.content;
   } catch (error) {
     console.error('Answer generation error:', error);
-    return 'Unable to generate answer at this time.';
+    return 'Unable to generate answer at this time. Please check your Grok-4 configuration.';
   }
 }
 

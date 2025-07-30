@@ -130,13 +130,16 @@
     "api/perplexity-news.js": {
       "maxDuration": 60
     },
+    "api/perplexity-news-simple.js": {
+      "maxDuration": 60
+    },
     "api/teaching-status.js": {
       "maxDuration": 10
     }
   },
   "crons": [
     {
-      "path": "/api/news-realtime?action=fetch",
+      "path": "/api/perplexity-news-simple",
       "schedule": "*/5 * * * *"
     }
   ],

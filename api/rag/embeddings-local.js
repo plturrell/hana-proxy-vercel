@@ -1,50 +1,62 @@
 const { createClient } = require('@supabase/supabase-js');
+const { pipeline, env } = require('@xenova/transformers');
+
+// Configure Transformers.js to use local models
+env.localURL = '/models/';
+env.allowRemoteModels = true; // Fallback to HF if needed
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
-// Generate embeddings using Grok-4 API
+// Initialize the embedding pipeline
+let embeddingPipeline = null;
+
+async function getEmbeddingPipeline() {
+  if (!embeddingPipeline) {
+    // Use a small, fast embedding model that works well for documents
+    // all-MiniLM-L6-v2 is 90MB and produces 384-dimensional embeddings
+    embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
+      quantized: true // Use quantized model for smaller size
+    });
+  }
+  return embeddingPipeline;
+}
+
+// Generate embeddings locally using Transformers.js
 async function generateEmbedding(text) {
   try {
-    const grokApiKey = process.env.GROK4_API_KEY || process.env.XAI_API_KEY;
-    const grokEndpoint = process.env.GROK4_ENDPOINT || 'https://api.x.ai/v1';
+    const pipe = await getEmbeddingPipeline();
     
-    if (!grokApiKey) {
-      console.error('Grok-4 API key not configured');
-      // Return a placeholder vector - in production, handle this properly
-      return new Array(1536).fill(0);
-    }
-
-    // Grok-4 embedding endpoint
-    const response = await fetch(`${grokEndpoint}/embeddings`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${grokApiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'grok-embedding',
-        input: text,
-        encoding_format: 'float'
-      })
+    // Generate embeddings
+    const output = await pipe(text, { 
+      pooling: 'mean', 
+      normalize: true 
     });
-
-    if (!response.ok) {
-      throw new Error(`Grok-4 API error: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.data[0].embedding;
+    
+    // Convert to array and ensure it's the right dimension
+    const embedding = Array.from(output.data);
+    
+    // Pad to 1536 dimensions to match our database schema
+    // In production, you'd want to use the native dimension (384)
+    const paddedEmbedding = new Array(1536).fill(0);
+    embedding.forEach((val, idx) => {
+      if (idx < paddedEmbedding.length) {
+        paddedEmbedding[idx] = val;
+      }
+    });
+    
+    return paddedEmbedding;
   } catch (error) {
-    console.error('Grok-4 embedding generation error:', error);
+    console.error('Local embedding generation error:', error);
     // Return a zero vector as fallback
     return new Array(1536).fill(0);
   }
 }
 
 module.exports = async function handler(req, res) {
+  // Set longer timeout for model loading
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -63,6 +75,9 @@ module.exports = async function handler(req, res) {
     if (!documentId || !chunks || !Array.isArray(chunks)) {
       return res.status(400).json({ error: 'Invalid request body' });
     }
+
+    // Pre-load the model
+    await getEmbeddingPipeline();
 
     // Generate embeddings for all chunks
     const chunksWithEmbeddings = await Promise.all(
@@ -100,7 +115,8 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({
       success: true,
       embeddingsGenerated: chunks.length,
-      message: 'Embeddings generated successfully'
+      model: 'all-MiniLM-L6-v2',
+      message: 'Embeddings generated locally'
     });
 
   } catch (error) {
@@ -109,5 +125,16 @@ module.exports = async function handler(req, res) {
       error: 'Processing failed',
       message: error.message
     });
+  }
+};
+
+// Export config for Vercel
+module.exports.config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+    // Increase timeout for model loading
+    maxDuration: 60
   }
 };

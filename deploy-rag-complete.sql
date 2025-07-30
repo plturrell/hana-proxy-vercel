@@ -1,6 +1,6 @@
 -- =====================================================
--- COMPLETE RAG SYSTEM DEPLOYMENT
--- Production-ready with all features
+-- ENTERPRISE RAG SYSTEM WITH GROK-4
+-- Production-ready with Grok-4 embeddings and AI
 -- =====================================================
 
 -- Enable required extensions
