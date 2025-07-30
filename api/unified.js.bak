@@ -470,7 +470,7 @@ async function handleContractCode(req, res) {
       return res.json(contractCode);
       
     } catch (error) {
-      logger.error('Contract code error:', { error: error.message, stack: error.stack }, error);
+      console.error('Contract code error:', error);
       return res.status(500).json({ error: 'Unable to fetch contract code' });
     }
   }
@@ -507,7 +507,7 @@ async function handleTemplateDetails(req, res) {
       });
       
     } catch (error) {
-      logger.error('Template details error:', { error: error.message, stack: error.stack }, error);
+      console.error('Template details error:', error);
       return res.status(500).json({ error: error.message });
     }
   }
@@ -565,7 +565,7 @@ async function handleAIAgentSuggestions(req, res) {
       });
       
     } catch (error) {
-      logger.error('AI suggestions error:', { error: error.message, stack: error.stack }, error);
+      console.error('AI suggestions error:', error);
       return res.status(500).json({ error: error.message });
     }
   }
@@ -611,7 +611,7 @@ async function handleDeployCustomContract(req, res) {
           .single();
 
         if (retryError) {
-          logger.error('Retry deployment error:', { error: error.message, stack: error.stack }, retryError);
+          console.error('Retry deployment error:', retryError);
           return simulateDeployment(deploymentData, res);
         }
 
@@ -619,14 +619,14 @@ async function handleDeployCustomContract(req, res) {
       }
 
       if (error) {
-        logger.error('Deployment error:', { error: error.message, stack: error.stack }, error);
+        console.error('Deployment error:', error);
         return simulateDeployment(deploymentData, res);
       }
 
       return completeDeployment(deployment, res);
       
     } catch (error) {
-      logger.error('Deploy contract error:', { error: error.message, stack: error.stack }, error);
+      console.error('Deploy contract error:', error);
       return res.status(500).json({ error: error.message });
     }
   }
@@ -666,7 +666,7 @@ async function handleDeployedContracts(req, res) {
       });
       
     } catch (error) {
-      logger.error('Deployed contracts error:', { error: error.message, stack: error.stack }, error);
+      console.error('Deployed contracts error:', error);
       return res.json({
         contracts: [],
         total: 0,
@@ -1060,7 +1060,7 @@ async function completeDeployment(deployment, res) {
     .eq('id', deployment.id);
 
   if (error) {
-    logger.error('Update deployment error:', { error: error.message, stack: error.stack }, error);
+    console.error('Update deployment error:', error);
   }
 
   return res.json({
@@ -1116,7 +1116,7 @@ async function handleGrokExplanation(req, res) {
             throw new Error(`Grok API error: ${response.status}`);
           }
         } catch (error) {
-          logger.error('Grok API call failed:', { error: error.message, stack: error.stack }, error);
+          console.error('Grok API call failed:', error);
           return res.status(503).json({
             error: 'AI service unavailable',
             details: 'Grok API is not configured or unavailable'
@@ -1137,7 +1137,7 @@ async function handleGrokExplanation(req, res) {
       });
       
     } catch (error) {
-      logger.error('Grok explanation error:', { error: error.message, stack: error.stack }, error);
+      console.error('Grok explanation error:', error);
       return res.status(500).json({ 
         error: 'Failed to generate explanation',
         details: error.message 
@@ -1201,7 +1201,7 @@ async function handleGrokQA(req, res) {
             throw new Error(`Grok API error: ${response.status}`);
           }
         } catch (error) {
-          logger.error('Grok API call failed:', { error: error.message, stack: error.stack }, error);
+          console.error('Grok API call failed:', error);
           return res.status(503).json({
             error: 'AI service unavailable',
             details: 'Grok API is not configured or unavailable'
@@ -1223,7 +1223,7 @@ async function handleGrokQA(req, res) {
       });
       
     } catch (error) {
-      logger.error('Grok Q&A error:', { error: error.message, stack: error.stack }, error);
+      console.error('Grok Q&A error:', error);
       return res.status(500).json({ 
         error: 'Failed to generate answer',
         details: error.message 
@@ -1731,7 +1731,7 @@ async function handleRAGDocuments(req, res) {
         .order('created_at', { ascending: false });
 
       if (error) {
-        logger.error('Supabase error:', { error: error.message, stack: error.stack }, error);
+        console.error('Supabase error:', error);
         // Check if table exists
         if (error.code === '42P01') {
           return res.status(200).json({ documents: [], total: 0, error: 'Documents table not found' });
@@ -1780,7 +1780,7 @@ async function handleRAGDocuments(req, res) {
         total: formattedDocs.length
       });
     } catch (error) {
-      logger.error('RAG documents error:', { error: error.message, stack: error.stack }, error);
+      console.error('RAG documents error:', error);
       return res.status(200).json({ documents: [], total: 0 });
     }
   }
@@ -1811,7 +1811,7 @@ async function handleRAGSearch(req, res) {
       const data = await response.json();
       return res.status(response.status).json(data);
     } catch (error) {
-      logger.error('RAG search error:', { error: error.message, stack: error.stack }, error);
+      console.error('RAG search error:', error);
       return res.status(500).json({ 
         error: 'Search failed',
         message: error.message 
@@ -1839,7 +1839,7 @@ async function handleDeleteDocument(req, res) {
         .eq('id', documentId);
 
       if (error) {
-        logger.error('Delete error:', { error: error.message, stack: error.stack }, error);
+        console.error('Delete error:', error);
         return res.status(500).json({ error: 'Failed to delete document' });
       }
 
@@ -1848,7 +1848,7 @@ async function handleDeleteDocument(req, res) {
         message: 'Document deleted successfully'
       });
     } catch (error) {
-      logger.error('Delete document error:', { error: error.message, stack: error.stack }, error);
+      console.error('Delete document error:', error);
       return res.status(500).json({ 
         error: 'Delete failed',
         message: error.message 
