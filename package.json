@@ -4,7 +4,7 @@
   "description": "A2A Supabase-Based Blockchain Integration with Teaching & Curriculum Learning System",
   "type": "module",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "next dev",
     "deploy": "vercel --prod",
     "agents:start": "node scripts/start-agents.js",
     "test": "node scripts/test-blockchain-integration.js",

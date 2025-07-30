@@ -250,6 +250,8 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'ai_agent_suggestions') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'agents.suggest');
       return await handleAIAgentSuggestions(req, res);
     }
     
@@ -260,6 +262,8 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'deployed_contracts') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.read');
       return await handleDeployedContracts(req, res);
     }
     
@@ -280,10 +284,14 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'rag_documents') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.read');
       return await handleRAGDocuments(req, res);
     }
     
     if (action === 'rag_search') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.search');
       return await handleRAGSearch(req, res);
     }
     

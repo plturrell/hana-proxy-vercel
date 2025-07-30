@@ -18,6 +18,10 @@ export default async function handler(req, res) {
     try {
         console.log('Fetching news from Perplexity AI...');
         
+        if (!process.env.PERPLEXITY_API_KEY) {
+            throw new Error('PERPLEXITY_API_KEY not configured - cannot fetch real news data');
+        }
+        
         // Call Perplexity API to get real-time financial news
         const perplexityResponse = await fetch('https://api.perplexity.ai/chat/completions', {
             method: 'POST',

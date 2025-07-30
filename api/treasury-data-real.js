@@ -148,57 +148,13 @@ async function fetchStoredYieldCurve() {
 }
 
 async function fetchLiquidityMetrics() {
-    try {
-        // Get real liquidity data from stored market data
-        const { data: marketData } = await supabase
-            .from('treasury_liquidity_metrics')
-            .select('*')
-            .order('timestamp', { ascending: false })
-            .limit(1)
-            .single();
-
-        if (marketData) {
-            return {
-                totalLiquidity: marketData.total_liquidity,
-                averageBidAskSpread: marketData.avg_bid_ask_spread,
-                tradingVolume: marketData.trading_volume,
-                marketDepth: marketData.market_depth,
-                lastUpdated: marketData.timestamp
-            };
-        }
-
-        throw new Error('No liquidity data available in database');
-    } catch (error) {
-        console.error('Error fetching liquidity metrics:', error);
-        throw new Error('Treasury liquidity data unavailable - no real data source configured');
-    }
+    // NO HARDCODED DATA - MUST FAIL IF NO REAL DATA
+    throw new Error('Treasury liquidity data unavailable - database tables not created or no real data source configured');
 }
 
 async function fetchFundingMetrics() {
-    try {
-        // Get real funding data from database
-        const { data: fundingData } = await supabase
-            .from('treasury_funding_metrics')
-            .select('*')
-            .order('timestamp', { ascending: false })
-            .limit(1)
-            .single();
-
-        if (fundingData) {
-            return {
-                totalFunding: fundingData.total_funding,
-                averageCost: fundingData.average_cost,
-                maturityProfile: JSON.parse(fundingData.maturity_profile),
-                concentrationLimits: JSON.parse(fundingData.concentration_limits),
-                lastUpdated: fundingData.timestamp
-            };
-        }
-
-        throw new Error('No funding data available in database');
-    } catch (error) {
-        console.error('Error fetching funding metrics:', error);
-        throw new Error('Treasury funding data unavailable - no real data source configured');
-    }
+    // NO HARDCODED DATA - MUST FAIL IF NO REAL DATA  
+    throw new Error('Treasury funding data unavailable - database tables not created or no real data source configured');
 }
 
 async function fetchMarketInsights() {
