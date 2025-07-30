@@ -153,9 +153,13 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // Generate embeddings for chunks
+    // Generate embeddings using local Hugging Face model
     try {
-      const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/rag/embeddings`, {
+      const baseUrl = process.env.VERCEL_URL 
+        ? `https://${process.env.VERCEL_URL}`
+        : 'http://localhost:3000';
+      
+      const response = await fetch(`${baseUrl}/api/rag/embeddings-local`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -165,11 +169,14 @@ module.exports = async function handler(req, res) {
       });
 
       if (!response.ok) {
-        console.error('Embedding generation failed');
+        console.error('Local embedding generation failed');
         // Don't fail the whole process, embeddings can be generated later
+      } else {
+        const data = await response.json();
+        console.log(`Generated ${data.embeddingsGenerated} embeddings using ${data.model}`);
       }
     } catch (error) {
-      console.error('Embedding API error:', error);
+      console.error('Local embedding API error:', error);
     }
 
     // Update processing status

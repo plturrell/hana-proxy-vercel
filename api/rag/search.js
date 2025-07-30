@@ -5,36 +5,28 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
-// Generate embedding for search query using Grok-4
+// Generate embedding for search query using local Hugging Face model
 async function generateQueryEmbedding(query) {
   try {
-    const grokApiKey = process.env.GROK4_API_KEY || process.env.XAI_API_KEY;
-    const grokEndpoint = process.env.GROK4_ENDPOINT || 'https://api.x.ai/v1';
+    const baseUrl = process.env.VERCEL_URL 
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000';
     
-    if (!grokApiKey) {
-      console.error('Grok-4 API key not configured');
-      return null;
-    }
-
-    const response = await fetch(`${grokEndpoint}/embeddings`, {
+    const response = await fetch(`${baseUrl}/api/rag/query-embedding`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${grokApiKey}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({
-        model: 'grok-embedding',
-        input: query,
-        encoding_format: 'float'
-      })
+      body: JSON.stringify({ query })
     });
 
     if (!response.ok) {
-      throw new Error(`Grok-4 API error: ${response.statusText}`);
+      throw new Error(`Query embedding API error: ${response.statusText}`);
     }
 
     const data = await response.json();
-    return data.data[0].embedding;
+    console.log(`Query embedding generated using ${data.model}`);
+    return data.embedding;
   } catch (error) {
     console.error('Query embedding error:', error);
     return null;

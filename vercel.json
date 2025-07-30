@@ -135,6 +135,18 @@
     },
     "api/teaching-status.js": {
       "maxDuration": 10
+    },
+    "api/rag/embeddings-local.js": {
+      "maxDuration": 60
+    },
+    "api/rag/query-embedding.js": {
+      "maxDuration": 30
+    },
+    "api/rag/process.js": {
+      "maxDuration": 60
+    },
+    "api/rag/search.js": {
+      "maxDuration": 30
     }
   },
   "crons": [
