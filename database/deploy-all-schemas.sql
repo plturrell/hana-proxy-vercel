@@ -143,7 +143,78 @@ CREATE INDEX IF NOT EXISTS idx_agent_blockchain_type ON agent_blockchain_activit
 CREATE INDEX IF NOT EXISTS idx_agent_blockchain_status ON agent_blockchain_activities(status);
 
 -- =====================================================
--- 3. BLOCKCHAIN ENHANCEMENT SCHEMA
+-- 3. CONSENSUS AND VOTING SCHEMA
+-- =====================================================
+
+-- A2A Proposals table
+CREATE TABLE IF NOT EXISTS a2a_proposals (
+    proposal_id TEXT PRIMARY KEY,
+    proposer_id TEXT NOT NULL REFERENCES a2a_agents(agent_id),
+    proposal_type TEXT NOT NULL,
+    proposal_data JSONB NOT NULL,
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'approved', 'rejected', 'cancelled')),
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    resolved_at TIMESTAMPTZ,
+    metadata JSONB DEFAULT '{}'
+);
+
+CREATE INDEX IF NOT EXISTS idx_a2a_proposals_proposer ON a2a_proposals(proposer_id);
+CREATE INDEX IF NOT EXISTS idx_a2a_proposals_status ON a2a_proposals(status);
+CREATE INDEX IF NOT EXISTS idx_a2a_proposals_type ON a2a_proposals(proposal_type);
+
+-- A2A Votes table
+CREATE TABLE IF NOT EXISTS a2a_votes (
+    vote_id TEXT PRIMARY KEY,
+    proposal_id TEXT NOT NULL REFERENCES a2a_proposals(proposal_id),
+    voter_id TEXT NOT NULL REFERENCES a2a_agents(agent_id),
+    vote TEXT NOT NULL CHECK (vote IN ('approve', 'reject', 'abstain')),
+    voting_power INTEGER NOT NULL DEFAULT 100,
+    reasoning TEXT,
+    signature TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE(proposal_id, voter_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_a2a_votes_proposal ON a2a_votes(proposal_id);
+CREATE INDEX IF NOT EXISTS idx_a2a_votes_voter ON a2a_votes(voter_id);
+
+-- A2A Consensus Rounds table
+CREATE TABLE IF NOT EXISTS a2a_consensus_rounds (
+    round_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    proposal_id TEXT NOT NULL REFERENCES a2a_proposals(proposal_id),
+    voting_weights JSONB DEFAULT '{}',
+    blockchain_consensus BOOLEAN DEFAULT false,
+    consensus_algorithm TEXT DEFAULT 'weighted_voting',
+    required_participants INTEGER DEFAULT 3,
+    status TEXT DEFAULT 'active' CHECK (status IN ('active', 'approved', 'rejected', 'timeout')),
+    final_result JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    completed_at TIMESTAMPTZ,
+    UNIQUE(proposal_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_a2a_consensus_proposal ON a2a_consensus_rounds(proposal_id);
+CREATE INDEX IF NOT EXISTS idx_a2a_consensus_status ON a2a_consensus_rounds(status);
+
+-- A2A Contracts table
+CREATE TABLE IF NOT EXISTS a2a_contracts (
+    id TEXT PRIMARY KEY,
+    requester TEXT NOT NULL REFERENCES a2a_agents(agent_id),
+    provider TEXT NOT NULL REFERENCES a2a_agents(agent_id),
+    proposal JSONB NOT NULL,
+    terms JSONB NOT NULL,
+    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'accepted', 'rejected', 'completed', 'disputed')),
+    response JSONB,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_a2a_contracts_requester ON a2a_contracts(requester);
+CREATE INDEX IF NOT EXISTS idx_a2a_contracts_provider ON a2a_contracts(provider);
+CREATE INDEX IF NOT EXISTS idx_a2a_contracts_status ON a2a_contracts(status);
+
+-- =====================================================
+-- 4. BLOCKCHAIN ENHANCEMENT SCHEMA
 -- =====================================================
 
 -- Blockchain escrows table
