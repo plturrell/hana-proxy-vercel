@@ -481,11 +481,11 @@ async function handleA2ANetwork(req, res) {
       }
     } catch (error) {
       logger.error('Network fetch error', { error: error.message, stack: error.stack });
-      return res.status(500).json({ error: error.message });
+      throw new AppError('Network fetch failed', 500, 'NETWORK_ERROR', { originalError: error.message });
     }
   }
   
-  return res.status(405).json({ error: 'Method not allowed' });
+  throw new AppError('Method not allowed', 405, 'METHOD_NOT_ALLOWED');
 }
 
 // Smart Contract Templates Handler
