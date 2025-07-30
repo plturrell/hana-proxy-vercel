@@ -409,7 +409,7 @@ async function handleA2ANetwork(req, res) {
           .order('created_at', { ascending: false });
 
         if (error) {
-          return res.status(500).json({ error: error.message });
+          throw new AppError('Failed to fetch network connections', 500, 'NETWORK_FETCH_ERROR', { originalError: error.message });
         }
 
         // Process connections to get unique links with metadata

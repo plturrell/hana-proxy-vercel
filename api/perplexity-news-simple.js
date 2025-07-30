@@ -57,8 +57,9 @@ export default async function handler(req, res) {
         const content = perplexityData.choices[0].message.content;
         const citations = perplexityData.citations || [];
 
-        console.log('Perplexity API response:', content);
-        console.log('Citations:', citations);
+        console.log('Perplexity API response length:', content.length);
+        console.log('Citations count:', citations.length);
+        console.log('First 500 chars of content:', content.substring(0, 500));
 
         // Since Perplexity doesn't return structured JSON, parse the text response
         // and create articles from citations
@@ -76,9 +77,10 @@ export default async function handler(req, res) {
                     sentiment_score: 0 // Neutral for now
                 });
             }
-        } else {
+        } else if (content && content.length > 100) {
             // If no citations, create articles from content segments
             const sentences = content.split('.').filter(s => s.length > 50);
+            console.log('Found sentences:', sentences.length);
             for (let i = 0; i < Math.min(sentences.length, 5); i++) {
                 articles.push({
                     title: `Market Update: ${sentences[i].substring(0, 60)}...`,
@@ -88,6 +90,8 @@ export default async function handler(req, res) {
                     sentiment_score: 0
                 });
             }
+        } else {
+            console.log('No valid content or citations found');
         }
 
         if (!articles || articles.length === 0) {
