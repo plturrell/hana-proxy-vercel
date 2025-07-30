@@ -1,6 +1,10 @@
-const { createClient } = require('@supabase/supabase-js');
-const fs = require('fs').promises;
-const path = require('path');
+import { createClient } from '@supabase/supabase-js';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Initialize Supabase client
 const supabase = createClient(
@@ -159,8 +163,8 @@ async function deployRAGWithLocalEmbeddings() {
 }
 
 // Run deployment
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   deployRAGWithLocalEmbeddings();
 }
 
-module.exports = deployRAGWithLocalEmbeddings;
+export default deployRAGWithLocalEmbeddings;
