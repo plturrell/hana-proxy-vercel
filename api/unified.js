@@ -294,14 +294,20 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'rag_documents') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.read');
       return await handleRAGDocuments(req, res);
     }
     
     if (action === 'rag_search') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.search');
       return await handleRAGSearch(req, res);
     }
     
     if (action === 'delete_document') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.delete');
       return await handleDeleteDocument(req, res);
     }
     
