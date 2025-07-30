@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     }
 
     try {
-        console.log('Fetching real treasury data...');
+        console.log('FORCE REDEPLOY: Fetching real treasury data - NO FAKE DATA ALLOWED...');
 
         // 1. Fetch current yield curve data
         const yieldCurveData = await fetchYieldCurveData();
@@ -39,6 +39,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
             success: true,
             message: 'Treasury data updated successfully',
+            version: 'NO_FAKE_DATA_v2',
             data: {
                 yieldCurve: yieldCurveData,
                 liquidityMetrics,

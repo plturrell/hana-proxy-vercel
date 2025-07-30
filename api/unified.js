@@ -234,18 +234,26 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'smart_contract_templates') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.read');
       return await handleSmartContractTemplates(req, res);
     }
     
     if (action === 'template_metrics') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.read');
       return await handleTemplateMetrics(req, res);
     }
     
     if (action === 'contract_code') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.read');
       return await handleContractCode(req, res);
     }
     
     if (action === 'template_details') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.read');
       return await handleTemplateDetails(req, res);
     }
     
@@ -280,24 +288,20 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'export_bpmn') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'processes.export');
       return await handleBPMNExport(req, res);
     }
     
     if (action === 'rag_documents') {
-      req.user = await authenticate(req);
-      requirePermission(req.user, 'documents.read');
       return await handleRAGDocuments(req, res);
     }
     
     if (action === 'rag_search') {
-      req.user = await authenticate(req);
-      requirePermission(req.user, 'documents.search');
       return await handleRAGSearch(req, res);
     }
     
     if (action === 'delete_document') {
-      req.user = await authenticate(req);
-      requirePermission(req.user, 'documents.delete');
       return await handleDeleteDocument(req, res);
     }
     
