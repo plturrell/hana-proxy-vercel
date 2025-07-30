@@ -53,18 +53,37 @@ export default async function handler(req, res) {
         const content = perplexityData.choices[0].message.content;
         const citations = perplexityData.citations || [];
 
-        // Parse articles from response
-        let articles;
-        try {
-            const jsonMatch = content.match(/\[[\s\S]*\]/);
-            if (jsonMatch) {
-                articles = JSON.parse(jsonMatch[0]);
-            } else {
-                articles = JSON.parse(content);
+        console.log('Perplexity API response:', content);
+        console.log('Citations:', citations);
+
+        // Since Perplexity doesn't return structured JSON, parse the text response
+        // and create articles from citations
+        const articles = [];
+        
+        if (citations && citations.length > 0) {
+            // Create articles from citations
+            for (let i = 0; i < Math.min(citations.length, 7); i++) {
+                const citation = citations[i];
+                articles.push({
+                    title: `Financial News Update ${i + 1}`,
+                    content: content.substring(i * 200, (i + 1) * 200) + '...',
+                    url: citation,
+                    source: 'Perplexity AI',
+                    sentiment_score: 0 // Neutral for now
+                });
             }
-        } catch (e) {
-            console.error('Failed to parse Perplexity response:', e);
-            articles = [];
+        } else {
+            // If no citations, create articles from content segments
+            const sentences = content.split('.').filter(s => s.length > 50);
+            for (let i = 0; i < Math.min(sentences.length, 5); i++) {
+                articles.push({
+                    title: `Market Update: ${sentences[i].substring(0, 60)}...`,
+                    content: sentences[i].trim() + '.',
+                    url: '#',
+                    source: 'Perplexity AI',
+                    sentiment_score: 0
+                });
+            }
         }
 
         if (!articles || articles.length === 0) {

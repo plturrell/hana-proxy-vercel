@@ -1776,7 +1776,7 @@ async function handleRAGDocuments(req, res) {
     try {
       // Check if supabase is configured
       if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
-        console.error('Supabase not configured');
+        logger.error('Supabase not configured', { error: 'Missing SUPABASE_URL or SUPABASE_ANON_KEY' });
         return res.status(200).json({ documents: [], total: 0, error: 'Database not configured' });
       }
 

@@ -83,7 +83,7 @@ class AIServices {
     async analyzePortfolio(portfolioId) {
         return this.query(
             'Analyze portfolio performance and provide optimization recommendations',
-            'openai',
+            'grok',
             {
                 context: {
                     portfolioId,
