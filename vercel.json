@@ -1,151 +1,10 @@
 {
   "version": 2,
   "functions": {
-    "api/supabase-proxy.js": {
-      "maxDuration": 30
-    },
-    "api/visual-builder-real.js": {
-      "maxDuration": 30
-    },
-    "api/a2a-blockchain.js": {
-      "maxDuration": 60
-    },
-    "api/unified.js": {
-      "maxDuration": 30
-    },
-    "api/a2a-grok-autonomy.js": {
-      "maxDuration": 60
-    },
-    "api/autonomy-engine.js": {
-      "maxDuration": 30
-    },
-    "api/csn-generator.js": {
-      "maxDuration": 30
-    },
-    "api/compliance-unified.js": {
-      "maxDuration": 60
-    },
-    "api/llm-automation-real.js": {
-      "maxDuration": 60
-    },
-    "api/real-deployment.js": {
-      "maxDuration": 300
-    },
-    "api/real-market-data-feed.js": {
-      "maxDuration": 60
-    },
-    "api/process-execution-engine.js": {
-      "maxDuration": 300
-    },
-    "api/websocket-server.js": {
-      "maxDuration": 60
-    },
-    "api/market-data-finhub.js": {
-      "maxDuration": 30
-    },
-    "api/market-data-fmp.js": {
-      "maxDuration": 30
-    },
-    "api/market-data-unified.js": {
-      "maxDuration": 30
-    },
-    "api/fmp-key-manager.js": {
-      "maxDuration": 30
-    },
-    "api/graphql.js": {
-      "maxDuration": 60
-    },
-    "api/agents/news-intelligence.js": {
-      "maxDuration": 30
-    },
-    "api/agents/market-data.js": {
-      "maxDuration": 30
-    },
-    "api/agents/a2a-protocol-manager.js": {
-      "maxDuration": 30
-    },
-    "api/agents/ord-registry-manager.js": {
-      "maxDuration": 30
-    },
-    "api/agents/api-gateway.js": {
-      "maxDuration": 30
-    },
-    "api/agents/curriculum-learning.js": {
-      "maxDuration": 30
-    },
-    "api/agents/curriculum-learning-real.js": {
-      "maxDuration": 30
-    },
-    "api/agents/news-assessment-hedge.js": {
-      "maxDuration": 30
-    },
-    "api/functions/calculate.js": {
-      "maxDuration": 30
-    },
-    "api/functions/orchestrator.js": {
-      "maxDuration": 30
-    },
-    "api/functions/black_scholes.js": {
-      "maxDuration": 30
-    },
-    "api/functions/clustering.js": {
-      "maxDuration": 30
-    },
-    "api/functions/pearson_correlation.js": {
-      "maxDuration": 30
-    },
-    "api/functions/sharpe_ratio.js": {
-      "maxDuration": 30
-    },
-    "api/functions/value_at_risk.js": {
-      "maxDuration": 30
-    },
-    "api/functions/kelly_criterion.js": {
-      "maxDuration": 30
-    },
-    "api/functions/monte_carlo.js": {
-      "maxDuration": 30
-    },
-    "api/functions/regression.js": {
-      "maxDuration": 30
-    },
-    "api/functions/time_series_analysis.js": {
-      "maxDuration": 30
-    },
-    "api/functions/outlier_detection.js": {
-      "maxDuration": 30
-    },
-    "api/functions/technical_indicators.js": {
-      "maxDuration": 30
-    },
-    "api/grok-portfolio-impact.js": {
-      "maxDuration": 60
-    },
-    "api/news-intelligence-verify.js": {
-      "maxDuration": 60
-    },
-    "api/news-realtime.js": {
-      "maxDuration": 60
-    },
-    "api/perplexity-news.js": {
-      "maxDuration": 60
-    },
-    "api/perplexity-news-simple.js": {
-      "maxDuration": 60
-    },
-    "api/teaching-status.js": {
-      "maxDuration": 10
-    },
-    "api/treasury-data-real.js": {
-      "maxDuration": 60
-    },
-    "api/market-data-real.js": {
-      "maxDuration": 60
-    },
-    "api/entity-timeline.js": {
-      "maxDuration": 60
-    },
     "api/rag/embeddings-local.js": {
+      "maxDuration": 60
+    },
+    "api/rag/embeddings-fallback.js": {
       "maxDuration": 60
     },
     "api/rag/query-embedding.js": {
@@ -155,6 +14,30 @@
       "maxDuration": 60
     },
     "api/rag/search.js": {
+      "maxDuration": 30
+    },
+    "api/real-deployment.js": {
+      "maxDuration": 300
+    },
+    "api/process-execution-engine.js": {
+      "maxDuration": 300
+    },
+    "api/llm-automation-real.js": {
+      "maxDuration": 60
+    },
+    "api/compliance-unified.js": {
+      "maxDuration": 60
+    },
+    "api/a2a-grok-autonomy.js": {
+      "maxDuration": 60
+    },
+    "api/a2a-blockchain.js": {
+      "maxDuration": 60
+    },
+    "api/graphql.js": {
+      "maxDuration": 60
+    },
+    "api/agents/curriculum-learning-real.js": {
       "maxDuration": 30
     }
   },
