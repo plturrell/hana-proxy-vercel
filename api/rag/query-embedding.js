@@ -1,14 +1,21 @@
-const { pipeline, env } = require('@xenova/transformers');
-
-// Configure Transformers.js
-env.localURL = '/models/';
-env.allowRemoteModels = true;
+// Dynamically import transformers for serverless compatibility
+let transformers = null;
+async function getTransformers() {
+  if (!transformers) {
+    transformers = await import('@xenova/transformers');
+    // Configure for serverless environment
+    transformers.env.allowRemoteModels = true;
+    transformers.env.cacheDir = '/tmp/.transformers-cache';
+  }
+  return transformers;
+}
 
 // Initialize the embedding pipeline
 let embeddingPipeline = null;
 
 async function getEmbeddingPipeline() {
   if (!embeddingPipeline) {
+    const { pipeline } = await getTransformers();
     embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
       quantized: true
     });

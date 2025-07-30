@@ -1383,6 +1383,41 @@
                   0 5px 10px rgba(255, 255, 255, 0.05);
     }
     
+    /* Shortcut Key Styling */
+    .shortcut-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--jobs-spacing-sm) 0;
+      border-bottom: 1px solid var(--jobs-light-gray);
+    }
+    
+    .shortcut-item:last-child {
+      border-bottom: none;
+    }
+    
+    .shortcut-key,
+    kbd {
+      background: var(--jobs-light-gray);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode .shortcut-key,
+    body.dark-mode kbd {
+      background: #2C2C2E;
+      border-color: #38383A;
+    }
+    
+    .shortcuts-list {
+      margin: var(--jobs-spacing-lg) 0;
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .jobs-ai-grid {
@@ -2851,6 +2886,107 @@
       window.open(`/stock/${symbol}`, '_blank');
     }
     
+    // Nielsen Excellence Features
+    function showShortcuts() {
+      const modal = document.createElement('div');
+      modal.className = 'service-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2>Keyboard Shortcuts</h2>
+          <div class="shortcuts-list">
+            <div class="shortcut-item">
+              <span>Quick Actions</span>
+              <kbd class="shortcut-key">⌘K</kbd>
+            </div>
+            <div class="shortcut-item">
+              <span>Toggle Dark Mode</span>
+              <kbd class="shortcut-key">⌘D</kbd>
+            </div>
+            <div class="shortcut-item">
+              <span>Focus Chat Input</span>
+              <kbd class="shortcut-key">/</kbd>
+            </div>
+            <div class="shortcut-item">
+              <span>Send Message</span>
+              <kbd class="shortcut-key">⌘↵</kbd>
+            </div>
+            <div class="shortcut-item">
+              <span>Show Help</span>
+              <kbd class="shortcut-key">?</kbd>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button onclick="closeModal()">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    function startOnboarding() {
+      const steps = [
+        { target: '.jobs-overview-grid', title: 'AI Metrics', content: 'Monitor real-time AI performance' },
+        { target: '.jobs-chat-container', title: 'AI Chat', content: 'Chat with multiple AI services' },
+        { target: '.help-button', title: 'Help', content: 'Get help anytime' }
+      ];
+      
+      let currentStep = 0;
+      
+      function showStep(index) {
+        if (index >= steps.length) {
+          document.getElementById('tour-overlay').classList.remove('active');
+          showNotification('Tour complete!', 'success');
+          return;
+        }
+        
+        const step = steps[index];
+        const target = document.querySelector(step.target);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          showNotification(`${step.title}: ${step.content}`, 'info');
+        }
+        
+        setTimeout(() => showStep(index + 1), 3000);
+      }
+      
+      document.getElementById('tour-overlay').classList.add('active');
+      showStep(0);
+    }
+    
+    // Enhanced Keyboard Support
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        showSpotlight();
+      }
+      
+      if ((e.metaKey || e.ctrlKey) && e.key === 'd') {
+        e.preventDefault();
+        toggleDarkMode();
+      }
+      
+      if (e.key === '/' && !e.target.matches('input, textarea')) {
+        e.preventDefault();
+        const chatInput = document.getElementById('chat-input');
+        if (chatInput) chatInput.focus();
+      }
+      
+      if (e.key === '?' && !e.target.matches('input, textarea')) {
+        e.preventDefault();
+        showShortcuts();
+      }
+      
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && e.target.matches('#chat-input')) {
+        e.preventDefault();
+        sendMessage();
+      }
+      
+      if (e.key === 'Escape') {
+        closeModal();
+        document.getElementById('tour-overlay').classList.remove('active');
+      }
+    });
+    
     // Initialize on page load
     document.addEventListener('DOMContentLoaded', async () => {
       // Check authentication
@@ -2879,8 +3015,39 @@
         `;
         document.querySelector('.jobs-nav-actions').prepend(userDisplay);
       }
+      
+      // Show onboarding for first-time users
+      if (!localStorage.getItem('onboarding-seen')) {
+        setTimeout(() => {
+          if (confirm('Welcome! Would you like a quick tour?')) {
+            startOnboarding();
+          }
+          localStorage.setItem('onboarding-seen', 'true');
+        }, 2000);
+      }
+      
+      // Show keyboard hint
+      setTimeout(() => {
+        document.getElementById('shortcuts-hint').classList.add('show');
+        setTimeout(() => {
+          document.getElementById('shortcuts-hint').classList.remove('show');
+        }, 3000);
+      }, 5000);
     });
     
   </script>
+  <!-- Help Button -->
+  <button class="help-button" onclick="startOnboarding()" aria-label="Help and onboarding">
+    ?
+  </button>
+  
+  <!-- Keyboard Shortcuts Hint -->
+  <div class="shortcuts-hint" id="shortcuts-hint">
+    Press ⌘K for quick actions
+  </div>
+  
+  <!-- Tour Overlay (initially hidden) -->
+  <div class="tour-overlay" id="tour-overlay"></div>
+
 </body>
 </html>

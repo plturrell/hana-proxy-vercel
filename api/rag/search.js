@@ -102,8 +102,14 @@ module.exports = async function handler(req, res) {
 
     const startTime = Date.now();
 
-    // Generate query embedding
-    const queryEmbedding = await generateQueryEmbedding(query);
+    // Generate query embedding using local model
+    let queryEmbedding = null;
+    try {
+      queryEmbedding = await generateQueryEmbedding(query);
+    } catch (error) {
+      console.error('Query embedding generation failed:', error);
+      // Continue with text-only search
+    }
     
     let searchResults = [];
 

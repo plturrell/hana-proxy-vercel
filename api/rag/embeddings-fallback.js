@@ -1,53 +1,33 @@
 const { createClient } = require('@supabase/supabase-js');
 
-// Dynamically import transformers for serverless compatibility
-let transformers = null;
-async function getTransformers() {
-  if (!transformers) {
-    transformers = await import('@xenova/transformers');
-    // Configure for serverless environment
-    transformers.env.allowRemoteModels = true;
-    transformers.env.cacheDir = '/tmp/.transformers-cache';
-  }
-  return transformers;
-}
-
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
 
-// Initialize the embedding pipeline
-let embeddingPipeline = null;
-
-async function getEmbeddingPipeline() {
-  if (!embeddingPipeline) {
-    const { pipeline } = await getTransformers();
-    // Use a small, fast embedding model that works well for documents
-    // all-MiniLM-L6-v2 is 90MB and produces 384-dimensional embeddings
-    embeddingPipeline = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2', {
-      quantized: true // Use quantized model for smaller size
-    });
-  }
-  return embeddingPipeline;
-}
-
-// Generate embeddings locally using Transformers.js
-async function generateEmbedding(text) {
+// Simple fallback embedding using sentence transformers API
+async function generateFallbackEmbedding(text) {
   try {
-    const pipe = await getEmbeddingPipeline();
-    
-    // Generate embeddings
-    const output = await pipe(text, { 
-      pooling: 'mean', 
-      normalize: true 
+    // Use Hugging Face Inference API as fallback
+    const response = await fetch('https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        inputs: text,
+        options: { wait_for_model: true }
+      })
     });
+
+    if (!response.ok) {
+      throw new Error(`HF API error: ${response.statusText}`);
+    }
+
+    const embedding = await response.json();
     
-    // Convert to array and ensure it's the right dimension
-    const embedding = Array.from(output.data);
-    
-    // Pad to 1536 dimensions to match our database schema
-    // In production, you'd want to use the native dimension (384)
+    // Pad to 1536 dimensions to match database schema
     const paddedEmbedding = new Array(1536).fill(0);
     embedding.forEach((val, idx) => {
       if (idx < paddedEmbedding.length) {
@@ -57,14 +37,13 @@ async function generateEmbedding(text) {
     
     return paddedEmbedding;
   } catch (error) {
-    console.error('Local embedding generation error:', error);
-    // Return a zero vector as fallback
+    console.error('Fallback embedding error:', error);
+    // Return a zero vector as final fallback
     return new Array(1536).fill(0);
   }
 }
 
 module.exports = async function handler(req, res) {
-  // Set longer timeout for model loading
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -84,13 +63,10 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid request body' });
     }
 
-    // Pre-load the model
-    await getEmbeddingPipeline();
-
-    // Generate embeddings for all chunks
+    // Generate embeddings for all chunks using HF API
     const chunksWithEmbeddings = await Promise.all(
       chunks.map(async (chunk) => {
-        const embedding = await generateEmbedding(chunk.content);
+        const embedding = await generateFallbackEmbedding(chunk.content);
         return {
           ...chunk,
           embedding: `[${embedding.join(',')}]` // Format for PostgreSQL vector type
@@ -123,12 +99,12 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({
       success: true,
       embeddingsGenerated: chunks.length,
-      model: 'all-MiniLM-L6-v2',
-      message: 'Embeddings generated locally'
+      model: 'all-MiniLM-L6-v2 (HF API)',
+      message: 'Embeddings generated using Hugging Face API'
     });
 
   } catch (error) {
-    console.error('Embeddings API error:', error);
+    console.error('Fallback embeddings API error:', error);
     return res.status(500).json({
       error: 'Processing failed',
       message: error.message
@@ -142,7 +118,6 @@ module.exports.config = {
     bodyParser: {
       sizeLimit: '10mb',
     },
-    // Increase timeout for model loading
     maxDuration: 60
   }
 };

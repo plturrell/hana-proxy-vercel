@@ -142,6 +142,9 @@
     "api/market-data-real.js": {
       "maxDuration": 60
     },
+    "api/entity-timeline.js": {
+      "maxDuration": 60
+    },
     "api/rag/embeddings-local.js": {
       "maxDuration": 60
     },

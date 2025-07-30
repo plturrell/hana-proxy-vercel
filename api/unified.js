@@ -1,22 +1,106 @@
 const { createClient } = require('@supabase/supabase-js');
 const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
+
+// Enterprise imports
+const { logger, auditLogger } = require('../lib/logger');
+const { AppError, ValidationError, asyncHandler } = require('../lib/error-handler');
+
+// Rate limiting
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const RATE_LIMIT_MAX = 100; // 100 requests per window
+
+// Security configuration
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
-  process.env.SUPABASE_ANON_KEY
+  process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
 );
 
-module.exports = async function handler(req, res) {
-  // Enable CORS
-  res.setHeader('Access-Control-Allow-Origin', '*');
+// Rate limiting middleware
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const userLimit = rateLimitMap.get(ip) || { count: 0, windowStart: now };
+  
+  // Reset window if expired
+  if (now - userLimit.windowStart > RATE_LIMIT_WINDOW) {
+    userLimit.count = 0;
+    userLimit.windowStart = now;
+  }
+  
+  userLimit.count++;
+  rateLimitMap.set(ip, userLimit);
+  
+  return userLimit.count <= RATE_LIMIT_MAX;
+}
+
+// CORS middleware
+function setCORSHeaders(req, res) {
+  const origin = req.headers.origin;
+  
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  } else if (process.env.NODE_ENV === 'development') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Correlation-ID');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+}
+
+module.exports = async function handler(req, res) {
+  const startTime = Date.now();
+  const correlationId = req.headers['x-correlation-id'] || uuidv4();
+  const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
+  
+  // Set correlation ID header
+  res.setHeader('X-Correlation-ID', correlationId);
+  
+  // Set CORS headers
+  setCORSHeaders(req, res);
   
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
+  // Rate limiting
+  if (!checkRateLimit(clientIP)) {
+    logger.warn('Rate limit exceeded', { 
+      ip: clientIP, 
+      correlationId,
+      path: req.url 
+    });
+    return res.status(429).json({ 
+      error: 'Rate limit exceeded',
+      retryAfter: Math.ceil(RATE_LIMIT_WINDOW / 1000)
+    });
+  }
+
   const { action } = req.query;
+
+  // Log request
+  logger.info('API request received', {
+    method: req.method,
+    action,
+    ip: clientIP,
+    userAgent: req.headers['user-agent'],
+    correlationId
+  });
 
   try {
     if (action === 'a2a_agents') {
@@ -79,10 +163,51 @@ module.exports = async function handler(req, res) {
       return await handleDeleteDocument(req, res);
     }
     
-    return res.status(400).json({ error: 'Invalid action' });
+    return res.status(400).json({ 
+      error: 'Invalid action',
+      correlationId,
+      supportedActions: [
+        'a2a_agents', 'a2a_network', 'smart_contract_templates', 
+        'template_metrics', 'contract_code', 'template_details',
+        'ai_agent_suggestions', 'deploy_custom_contract', 'deployed_contracts',
+        'grok_explanation', 'grok_qa', 'export_bpmn', 'rag_documents',
+        'rag_search', 'delete_document'
+      ]
+    });
   } catch (error) {
-    console.error('API Error:', error);
-    return res.status(500).json({ error: error.message });
+    const duration = Date.now() - startTime;
+    
+    logger.error('API Error', {
+      error: error.message,
+      stack: error.stack,
+      action,
+      method: req.method,
+      ip: clientIP,
+      correlationId,
+      duration: `${duration}ms`
+    });
+
+    // Don't expose internal errors in production
+    const message = process.env.NODE_ENV === 'production' 
+      ? 'An internal error occurred' 
+      : error.message;
+
+    return res.status(error.statusCode || 500).json({ 
+      error: message,
+      correlationId,
+      timestamp: new Date().toISOString()
+    });
+  } finally {
+    // Log response
+    const duration = Date.now() - startTime;
+    logger.info('API request completed', {
+      method: req.method,
+      action,
+      statusCode: res.statusCode,
+      duration: `${duration}ms`,
+      ip: clientIP,
+      correlationId
+    });
   }
 }
 
@@ -207,7 +332,7 @@ async function handleA2ANetwork(req, res) {
         });
       }
     } catch (error) {
-      console.error('Network fetch error:', error);
+      logger.error('Network fetch error', { error: error.message, stack: error.stack });
       return res.status(500).json({ error: error.message });
     }
   }
@@ -252,7 +377,7 @@ async function handleSmartContractTemplates(req, res) {
         source: 'database'
       });
     } catch (error) {
-      console.error('Templates error:', error);
+      logger.error('Templates error', { error: error.message, stack: error.stack });
       return res.json({
         templates: getDefaultTemplates(),
         source: 'fallback'
