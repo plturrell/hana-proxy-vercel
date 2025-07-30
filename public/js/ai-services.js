@@ -4,25 +4,25 @@ class AIServices {
         this.services = {
             grok: {
                 endpoint: '/api/ai/grok',
-                model: 'grok-beta',
+                model: 'grok-4-latest',  // Latest Grok 4 model from xAI
                 capabilities: ['analysis', 'prediction', 'research']
             },
             perplexity: {
                 endpoint: '/api/ai/perplexity',
-                model: 'pplx-70b-online',
+                model: 'sonar',  // Real Perplexity model - lightweight search model
                 capabilities: ['search', 'news', 'market-data']
             },
-            openai: {
-                endpoint: '/api/ai/openai',
-                model: 'gpt-4-turbo',
-                capabilities: ['strategy', 'risk', 'optimization']
+            supabase: {
+                endpoint: '/api/supabase-proxy',
+                model: 'database-query',  // This is database endpoint, not AI model
+                capabilities: ['knowledge-base', 'documents', 'search']
             }
         };
         
         this.state = {
             loading: false,
             error: null,
-            activeService: 'openai',
+            activeService: 'grok',
             history: [],
             metrics: {}
         };

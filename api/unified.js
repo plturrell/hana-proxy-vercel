@@ -5,6 +5,9 @@ const { v4: uuidv4 } = require('uuid');
 // Enterprise imports
 const { logger, auditLogger } = require('../lib/logger');
 const { AppError, ValidationError, asyncHandler } = require('../lib/error-handler');
+const { AuthService } = require('../lib/auth');
+const { sanitizers } = require('../lib/validation');
+const validator = require('validator');
 
 // Rate limiting
 const rateLimitMap = new Map();
@@ -13,6 +16,113 @@ const RATE_LIMIT_MAX = 100; // 100 requests per window
 
 // Security configuration
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'];
+
+// Authentication middleware
+async function authenticate(req) {
+  const token = req.headers.authorization?.split(' ')[1];
+  
+  if (!token) {
+    throw new AppError('No token provided', 401, 'AUTHENTICATION_REQUIRED');
+  }
+
+  try {
+    const decoded = await AuthService.verifyToken(token);
+    
+    // Get fresh user data
+    const { data: user } = await supabase
+      .from('users')
+      .select('*')
+      .eq('id', decoded.userId)
+      .eq('status', 'active')
+      .single();
+
+    if (!user) {
+      throw new AppError('User not found', 401, 'USER_NOT_FOUND');
+    }
+
+    return {
+      ...user,
+      permissions: decoded.permissions || []
+    };
+  } catch (error) {
+    logger.error('Authentication failed', { error: error.message });
+    throw new AppError('Authentication failed', 401, 'AUTHENTICATION_FAILED');
+  }
+}
+
+// Authorization helper
+function requirePermission(user, permission) {
+  if (!user) {
+    throw new AppError('Authentication required', 401, 'AUTHENTICATION_REQUIRED');
+  }
+  
+  if (user.role === 'admin') {
+    return true; // Admins have all permissions
+  }
+  
+  if (!user.permissions.includes(permission)) {
+    throw new AppError(`Permission required: ${permission}`, 403, 'INSUFFICIENT_PERMISSIONS');
+  }
+  
+  return true;
+}
+
+// Input validation helpers
+function validateInput(data, rules) {
+  const errors = [];
+  
+  for (const [field, rule] of Object.entries(rules)) {
+    const value = data[field];
+    
+    if (rule.required && (!value || value === '')) {
+      errors.push({ field, message: `${field} is required` });
+      continue;
+    }
+    
+    if (value && rule.type === 'string' && typeof value !== 'string') {
+      errors.push({ field, message: `${field} must be a string` });
+    }
+    
+    if (value && rule.type === 'email' && !validator.isEmail(value)) {
+      errors.push({ field, message: `${field} must be a valid email` });
+    }
+    
+    if (value && rule.type === 'url' && !validator.isURL(value)) {
+      errors.push({ field, message: `${field} must be a valid URL` });
+    }
+    
+    if (value && rule.maxLength && value.length > rule.maxLength) {
+      errors.push({ field, message: `${field} must be less than ${rule.maxLength} characters` });
+    }
+    
+    if (value && rule.minLength && value.length < rule.minLength) {
+      errors.push({ field, message: `${field} must be at least ${rule.minLength} characters` });
+    }
+  }
+  
+  if (errors.length > 0) {
+    throw new ValidationError('Validation failed', errors);
+  }
+  
+  return true;
+}
+
+// Sanitize input data
+function sanitizeInput(data) {
+  const sanitized = {};
+  
+  for (const [key, value] of Object.entries(data)) {
+    if (typeof value === 'string') {
+      sanitized[key] = sanitizers.text(value);
+    } else if (typeof value === 'object' && value !== null) {
+      sanitized[key] = sanitizeInput(value);
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  
+  return sanitized;
+}
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -92,6 +202,14 @@ module.exports = async function handler(req, res) {
   }
 
   const { action } = req.query;
+  
+  // Sanitize query parameters
+  const sanitizedQuery = sanitizeInput(req.query);
+  
+  // Sanitize body for POST requests
+  if (req.method === 'POST' && req.body) {
+    req.body = sanitizeInput(req.body);
+  }
 
   // Log request
   logger.info('API request received', {
@@ -132,6 +250,8 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'deploy_custom_contract') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'contracts.deploy');
       return await handleDeployCustomContract(req, res);
     }
     
@@ -140,10 +260,14 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'grok_explanation') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'ai.use');
       return await handleGrokExplanation(req, res);
     }
     
     if (action === 'grok_qa') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'ai.use');
       return await handleGrokQA(req, res);
     }
     
@@ -160,6 +284,8 @@ module.exports = async function handler(req, res) {
     }
     
     if (action === 'delete_document') {
+      req.user = await authenticate(req);
+      requirePermission(req.user, 'documents.delete');
       return await handleDeleteDocument(req, res);
     }
     
@@ -352,11 +478,12 @@ async function handleSmartContractTemplates(req, res) {
         .order('name');
 
       if (error && error.code === '42P01') {
-        // Table doesn't exist, create it and return default templates
+        // Table doesn't exist, create it
         await createSmartContractTemplatesTable();
         return res.json({
-          templates: getDefaultTemplates(),
-          source: 'default'
+          templates: [],
+          source: 'database',
+          message: 'Templates table created. Please add templates through the admin interface.'
         });
       }
 
@@ -364,11 +491,12 @@ async function handleSmartContractTemplates(req, res) {
         return res.status(500).json({ error: error.message });
       }
 
-      // If no templates in DB, return defaults
+      // If no templates in DB, return empty
       if (!templates || templates.length === 0) {
         return res.json({
-          templates: getDefaultTemplates(),
-          source: 'default'
+          templates: [],
+          source: 'database',
+          message: 'No templates found. Please configure templates in the database.'
         });
       }
 
@@ -378,9 +506,9 @@ async function handleSmartContractTemplates(req, res) {
       });
     } catch (error) {
       logger.error('Templates error', { error: error.message, stack: error.stack });
-      return res.json({
-        templates: getDefaultTemplates(),
-        source: 'fallback'
+      return res.status(500).json({
+        error: 'Failed to fetch templates',
+        message: 'Database connection failed'
       });
     }
   }
@@ -419,16 +547,9 @@ async function handleTemplateMetrics(req, res) {
       });
     } catch (error) {
       logger.error('Metrics error', { error: error.message, stack: error.stack });
-      // Return deterministic fallback values based on template_id
-      const hash = crypto.createHash('sha256').update(template_id || 'default').digest('hex');
-      const deploymentCount = parseInt(hash.substring(0, 3), 16) % 1000 + 50;
-      const gasEstimate = parseInt(hash.substring(3, 6), 16) % 300 + 100;
-      
-      return res.json({
-        templateId: template_id,
-        deployments: deploymentCount,
-        gasEstimate: gasEstimate + 'k',
-        successRate: '99.8%'
+      return res.status(500).json({
+        error: 'Failed to fetch template metrics',
+        templateId: template_id
       });
     }
   }
@@ -498,12 +619,11 @@ async function handleTemplateDetails(req, res) {
         return res.json({ template });
       }
 
-      // Fallback to default template
-      const defaultTemplates = getDefaultTemplates();
-      const foundTemplate = defaultTemplates.find(t => t.id === template_id);
-      
-      return res.json({
-        template: foundTemplate || { id: template_id, name: 'Unknown Template' }
+      // No template found
+      return res.status(404).json({
+        error: 'Template not found',
+        templateId: template_id,
+        message: 'Template does not exist in the database'
       });
       
     } catch (error) {
@@ -679,38 +799,6 @@ async function handleDeployedContracts(req, res) {
 }
 
 // Helper Functions
-function getDefaultTemplates() {
-  return [
-    {
-      id: 'gnosis-safe',
-      name: 'Multi-Person Approval',
-      description: 'Any major decision requires agreement from multiple team members. Prevents unauthorized actions and ensures consensus before important changes happen.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'compound-timelock',
-      name: 'Review Period Enforcement',
-      description: 'All changes must wait a set period before taking effect. Gives stakeholders time to review, discuss, and potentially veto proposed actions.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'automated-workflow',
-      name: 'If-This-Then-That Logic',
-      description: 'Automatically trigger actions when specific conditions are met. Like email rules but for business processes. Reduces manual work and human error.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'permission-management',
-      name: 'Role-Based Access',
-      description: 'Different team members get different permissions based on their role. Managers can approve, employees can propose, auditors can only view.',
-      verified: true,
-      status: 'active'
-    }
-  ];
-}
 
 async function getVerifiedContractCode(templateId) {
   const codeExamples = {
@@ -1239,38 +1327,6 @@ async function handleGrokQA(req, res) {
 // Removed fake Q&A response generator - now using real Grok API
 
 // Helper function to get default templates
-function getDefaultTemplates() {
-  return [
-    {
-      id: 'gnosis-safe',
-      name: 'Multi-Person Approval',
-      description: 'Any major decision requires agreement from multiple team members. Prevents unauthorized actions and ensures consensus before important changes happen.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'compound-timelock',
-      name: 'Review Period Enforcement', 
-      description: 'All changes must wait a set period before taking effect. Gives stakeholders time to review, discuss, and potentially veto proposed actions.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'automated-workflow',
-      name: 'If-This-Then-That Logic',
-      description: 'Automatically trigger actions when specific conditions are met. Like email rules but for business processes. Reduces manual work and human error.',
-      verified: true,
-      status: 'active'
-    },
-    {
-      id: 'permission-management',
-      name: 'Role-Based Access',
-      description: 'Different team members get different permissions based on their role. Managers can approve, employees can propose, auditors can only view.',
-      verified: true,
-      status: 'active'
-    }
-  ];
-}
 
 // Helper function to get verified contract code
 async function getVerifiedContractCode(templateId) {
