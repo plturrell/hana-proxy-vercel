@@ -1223,33 +1223,6 @@
       transform: scale(0.95);
     }
     
-    /* Demo Disclaimer Styles */
-    .jobs-demo-disclaimer {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-top: 12px;
-      padding: 8px 16px;
-      background: rgba(255, 149, 0, 0.1);
-      border: 1px solid rgba(255, 149, 0, 0.3);
-      border-radius: 8px;
-      font-size: 14px;
-    }
-    
-    .demo-badge {
-      background: #ff9500;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-weight: 600;
-      font-size: 12px;
-      text-transform: uppercase;
-    }
-    
-    .demo-text {
-      color: var(--jobs-text-secondary);
-    }
-    
     /* Focus Indicators for Accessibility */
     button:focus,
     input:focus,
@@ -1529,10 +1502,6 @@
     <div class="jobs-header">
       <h1 class="jobs-header-title">AI Intelligence</h1>
       <p class="jobs-header-subtitle">Powered by Grok-4 and Perplexity AI with Supabase integration</p>
-      <div class="jobs-demo-disclaimer">
-        <span class="demo-badge">Demo Mode</span>
-        <span class="demo-text">Some features and data are simulated for demonstration purposes</span>
-      </div>
     </div>
     
     <!-- AI Overview -->
@@ -2306,7 +2275,29 @@
       showLoadingModal('Generating Portfolio Summary...');
       
       try {
-        const response = await window.AI.analyzePortfolio(1);
+        // Call real portfolio analysis API
+        const response = await fetch('/api/portfolio/analysis', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${window.auth?.getToken()}`
+          },
+          body: JSON.stringify({ portfolioId: 'default' })
+        });
+        
+        const portfolio = response.ok ? await response.json() : {
+          metrics: {
+            totalValue: 0,
+            totalReturn: 0,
+            riskScore: 0
+          },
+          analysis: "Portfolio analysis requires connected portfolio data.",
+          recommendations: [
+            "Connect your portfolio to enable personalized analysis",
+            "Market data available from Financial Modeling Prep and Finnhub APIs",
+            "Risk metrics calculated using standard financial formulas"
+          ]
+        };
         
         const modal = document.createElement('div');
         modal.className = 'summary-modal';
@@ -2316,26 +2307,26 @@
             <div class="summary-metrics">
               <div class="metric-card">
                 <h4>Total Value</h4>
-                <div class="metric-value">$${response.metrics.totalValue.toLocaleString()}</div>
+                <div class="metric-value">$${portfolio.metrics.totalValue.toLocaleString()}</div>
               </div>
               <div class="metric-card">
                 <h4>Return</h4>
-                <div class="metric-value ${response.metrics.totalReturn > 0 ? 'positive' : 'negative'}">
-                  ${response.metrics.totalReturn > 0 ? '+' : ''}${(response.metrics.totalReturn * 100).toFixed(2)}%
+                <div class="metric-value ${portfolio.metrics.totalReturn > 0 ? 'positive' : 'negative'}">
+                  ${portfolio.metrics.totalReturn > 0 ? '+' : ''}${(portfolio.metrics.totalReturn * 100).toFixed(2)}%
                 </div>
               </div>
               <div class="metric-card">
                 <h4>Risk Score</h4>
-                <div class="metric-value">${response.metrics.riskScore}/100</div>
+                <div class="metric-value">${portfolio.metrics.riskScore}/100</div>
               </div>
             </div>
             <div class="summary-analysis">
-              <h3>AI Analysis</h3>
-              <p>${response.analysis}</p>
+              <h3>Analysis</h3>
+              <p>${portfolio.analysis}</p>
             </div>
             <div class="summary-recommendations">
               <h3>Recommendations</h3>
-              ${response.recommendations.map(r => `<div class="recommendation">${r}</div>`).join('')}
+              ${portfolio.recommendations.map(r => `<div class="recommendation">${r}</div>`).join('')}
             </div>
             <div class="modal-actions">
               <button onclick="exportSummary('pdf')">Export PDF</button>
@@ -2356,7 +2347,18 @@
       showLoadingModal('Calculating Risk Metrics...');
       
       try {
-        const response = await window.AI.assessRisk(1);
+        // Call real risk assessment API
+        const response = await fetch('/api/risk/assessment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ portfolioId: 'demo-portfolio' })
+        });
+        
+        if (!response.ok) {
+          throw new Error('Risk assessment failed');
+        }
+        
+        const riskData = await response.json();
         
         const modal = document.createElement('div');
         modal.className = 'risk-modal';
@@ -2366,37 +2368,36 @@
             <div class="risk-metrics">
               <div class="risk-card">
                 <h4>Value at Risk (95%)</h4>
-                <div class="risk-value">$${response.metrics.var.toLocaleString()}</div>
+                <div class="risk-value">${riskData.value_at_risk}</div>
               </div>
               <div class="risk-card">
                 <h4>Sharpe Ratio</h4>
-                <div class="risk-value">${response.metrics.sharpeRatio.toFixed(2)}</div>
+                <div class="risk-value">${riskData.sharpe_ratio}</div>
               </div>
               <div class="risk-card">
                 <h4>Beta</h4>
-                <div class="risk-value">${response.metrics.beta.toFixed(2)}</div>
+                <div class="risk-value">${riskData.beta}</div>
               </div>
               <div class="risk-card">
                 <h4>Max Drawdown</h4>
-                <div class="risk-value">${(response.metrics.maxDrawdown * 100).toFixed(2)}%</div>
+                <div class="risk-value">${riskData.max_drawdown}</div>
               </div>
             </div>
-            <div class="stress-test-results">
-              <h3>Stress Test Results</h3>
-              <div class="stress-test-grid">
-                ${Object.entries(response.stressTestResults).map(([scenario, impact]) => `
-                  <div class="stress-test-item">
-                    <span class="scenario">${scenario}</span>
-                    <span class="impact ${impact < -0.1 ? 'severe' : 'moderate'}">
-                      ${(impact * 100).toFixed(1)}%
-                    </span>
+            <div class="risk-factors">
+              <h3>Risk Factors</h3>
+              <div class="factors-grid">
+                ${riskData.risk_factors.map(factor => `
+                  <div class="risk-factor">
+                    <span class="factor-name">${factor.factor}</span>
+                    <span class="factor-level ${factor.level.toLowerCase()}">${factor.level}</span>
+                    <span class="factor-impact">Impact: ${factor.impact}</span>
                   </div>
                 `).join('')}
               </div>
             </div>
-            <div class="risk-analysis">
-              <h3>Risk Analysis</h3>
-              <p>${response.analysis}</p>
+            <div class="risk-recommendations">
+              <h3>Recommendations</h3>
+              ${riskData.recommendations.map(r => `<div class="recommendation">${r}</div>`).join('')}
             </div>
             <div class="modal-actions">
               <button onclick="runAdvancedRiskAnalysis()">Advanced Analysis</button>

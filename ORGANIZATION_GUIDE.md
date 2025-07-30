@@ -32,6 +32,8 @@ This document describes the reorganized structure of the project files.
 - **`supabase-migration/`** - Consolidated into organized `/migrations/` structure
 - **`supabase-migrations/`** - Consolidated into organized `/migrations/` structure
 - **All `*.bak` files** - Removed 17 backup files from various directories
+- **Legacy Exasol configuration** - Removed from environment files
+- **Multiple `.env` files** - Consolidated to single `.env.local` for Vercel
 
 ## Benefits of This Organization
 
