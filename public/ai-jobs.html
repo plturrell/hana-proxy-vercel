@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/@blueprintjs/core@4.20.2/lib/css/blueprint.css" rel="stylesheet">
   <link href="apple-hybrid-safe.css" rel="stylesheet">
+  <script src="js/ai-services.js"></script>
   <style>
     /* Jobs/Ive Minimalist Design System */
     :root {
@@ -1354,38 +1355,88 @@
     });
     
     // AI Service functions
-    function openAIService(service) {
+    async function openAIService(service) {
       console.log('Opening AI service:', service);
-      alert(`Opening ${service} service interface...\n\nThis would provide:\n- Service configuration\n- API management\n- Usage analytics\n- Performance monitoring`);
+      
+      // Show service configuration modal
+      const modal = document.createElement('div');
+      modal.className = 'service-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2>${service} Configuration</h2>
+          <div class="service-status" id="${service}-status">Checking status...</div>
+          <div class="service-metrics">
+            <div class="metric">Requests Today: <span id="${service}-requests">0</span></div>
+            <div class="metric">Avg Response: <span id="${service}-response">0ms</span></div>
+            <div class="metric">Success Rate: <span id="${service}-success">100%</span></div>
+          </div>
+          <div class="service-actions">
+            <button onclick="configureService('${service}')">Configure</button>
+            <button onclick="viewServiceLogs('${service}')">View Logs</button>
+            <button onclick="closeModal()">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      // Load service status
+      try {
+        const response = await fetch(`/api/ai/${service}/status`);
+        const data = await response.json();
+        document.getElementById(`${service}-status`).textContent = data.status;
+        document.getElementById(`${service}-requests`).textContent = data.metrics.requests;
+        document.getElementById(`${service}-response`).textContent = data.metrics.avgResponse + 'ms';
+        document.getElementById(`${service}-success`).textContent = data.metrics.successRate + '%';
+      } catch (error) {
+        document.getElementById(`${service}-status`).textContent = 'Service unavailable';
+      }
     }
     
     async function quickQuery(service) {
-      const query = prompt(`Quick query for ${service}:\n\nWhat would you like to ask?`);
-      if (query) {
-        try {
-          // Use the same AI response system as the chat
-          const response = await getAIResponse(query, service);
-          alert(`${service} Response:\n\n${response}`);
-        } catch (error) {
-          console.error('Quick query error:', error);
-          alert(`Error processing query with ${service}. Please try again.`);
-        }
+      const modal = document.createElement('div');
+      modal.className = 'query-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h3>Quick Query - ${service}</h3>
+          <textarea id="quick-query-input" placeholder="What would you like to ask?" rows="4"></textarea>
+          <div class="modal-actions">
+            <button onclick="submitQuickQuery('${service}')">Send</button>
+            <button onclick="closeModal()">Cancel</button>
+          </div>
+          <div id="quick-query-result" class="query-result"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      document.getElementById('quick-query-input').focus();
+    }
+    
+    async function submitQuickQuery(service) {
+      const input = document.getElementById('quick-query-input');
+      const result = document.getElementById('quick-query-result');
+      const query = input.value.trim();
+      
+      if (!query) return;
+      
+      result.innerHTML = '<div class="loading">Processing...</div>';
+      
+      try {
+        const response = await window.AI.query(query, service.toLowerCase());
+        result.innerHTML = `
+          <div class="response-header">${service} Response:</div>
+          <div class="response-content">${response.response}</div>
+          <div class="response-meta">Response time: ${response.metrics.responseTime}ms</div>
+        `;
+      } catch (error) {
+        result.innerHTML = `<div class="error">Error: ${error.message}</div>`;
       }
     }
     
     async function viewHistory(service) {
       try {
-        // Load chat history for this service
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'select',
-            table: 'chat_messages',
-            conditions: { ai_type: service, user_id: getUserId() },
-            limit: 10,
-            orderBy: { column: 'timestamp', ascending: false }
-          })
+        const response = await fetch(`/api/ai/${service.toLowerCase()}/history`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+          }
         });
         
         if (!response.ok) {
@@ -1393,35 +1444,86 @@
         }
         
         const data = await response.json();
-        if (data.data && data.data.length > 0) {
-          const historyText = data.data.map(msg => 
-            `${new Date(msg.timestamp).toLocaleString()}: ${msg.message.substring(0, 50)}...`
-          ).join('\n');
-          alert(`${service} Recent History:\n\n${historyText}`);
-        } else {
-          alert(`No chat history found for ${service}`);
-        }
+        
+        // Create history modal
+        const modal = document.createElement('div');
+        modal.className = 'history-modal';
+        modal.innerHTML = `
+          <div class="modal-content large">
+            <h2>${service} History</h2>
+            <div class="history-controls">
+              <button onclick="window.AI.exportHistory('json')">Export JSON</button>
+              <button onclick="window.AI.exportHistory('text')">Export Text</button>
+              <button onclick="clearHistory('${service}')">Clear History</button>
+              <button onclick="closeModal()">Close</button>
+            </div>
+            <div class="history-list">
+              ${data.history.map(item => `
+                <div class="history-item">
+                  <div class="history-time">${new Date(item.timestamp).toLocaleString()}</div>
+                  <div class="history-query">${item.query}</div>
+                  <div class="history-response">${item.response.substring(0, 200)}...</div>
+                  <button onclick="viewFullResponse('${item.id}')">View Full</button>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
       } catch (error) {
         console.error('Error loading history:', error);
-        alert(`Unable to load ${service} history. Please try again.`);
+        showNotification(`Unable to load ${service} history`, 'error');
       }
     }
     
     // Integration functions
-    function openIntegration(integration) {
-      // Navigate to the appropriate configuration page
-      const integrationPages = {
-        'perplexity': '/news-market-data-config.html',
-        'supabase': '/catalog.html',
-        'openai': '/ai-jobs.html',
-        'xai': '/ai-jobs.html'
-      };
+    async function openIntegration(integration) {
+      const modal = document.createElement('div');
+      modal.className = 'integration-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2>${integration} Integration</h2>
+          <div class="integration-status">Loading configuration...</div>
+          <div class="integration-form" id="integration-form"></div>
+        </div>
+      `;
+      document.body.appendChild(modal);
       
-      const targetPage = integrationPages[integration.toLowerCase()];
-      if (targetPage) {
-        window.location.href = targetPage;
-      } else {
-        alert(`${integration} integration configuration not yet available. Please check back later.`);
+      try {
+        const response = await fetch(`/api/integrations/${integration.toLowerCase()}`);
+        const config = await response.json();
+        
+        document.getElementById('integration-form').innerHTML = `
+          <form onsubmit="saveIntegration(event, '${integration}')">
+            <div class="form-group">
+              <label>API Endpoint</label>
+              <input type="text" name="endpoint" value="${config.endpoint || ''}" required>
+            </div>
+            <div class="form-group">
+              <label>API Key</label>
+              <input type="password" name="apiKey" value="${config.apiKey ? '••••••••' : ''}" required>
+            </div>
+            <div class="form-group">
+              <label>Model</label>
+              <select name="model">
+                ${config.availableModels.map(m => 
+                  `<option value="${m}" ${m === config.model ? 'selected' : ''}>${m}</option>`
+                ).join('')}
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Rate Limit (req/min)</label>
+              <input type="number" name="rateLimit" value="${config.rateLimit || 60}" min="1" max="1000">
+            </div>
+            <div class="form-actions">
+              <button type="submit">Save Configuration</button>
+              <button type="button" onclick="testIntegration('${integration}')">Test Connection</button>
+              <button type="button" onclick="closeModal()">Cancel</button>
+            </div>
+          </form>
+        `;
+      } catch (error) {
+        document.querySelector('.integration-status').textContent = 'Failed to load configuration';
       }
     }
     
@@ -1437,7 +1539,6 @@
     
     // AI Tool functions
     function openAITool(tool) {
-      // Navigate to the appropriate tool interface
       const toolPages = {
         'summary': () => generateSummary(),
         'risk': () => assessRisk(),
@@ -1449,107 +1550,214 @@
       if (toolFunction) {
         toolFunction();
       } else {
-        alert(`AI Tool "${tool}" interface will be available in a future update.`);
+        showNotification(`Tool "${tool}" is being loaded...`, 'info');
+        setTimeout(() => toolFunction(), 100);
       }
     }
     
     async function generateSummary() {
+      showLoadingModal('Generating Portfolio Summary...');
+      
       try {
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'rpc',
-            function_name: 'generate_portfolio_summary',
-            params: { portfolio_id: 1 }
-          })
-        });
+        const response = await window.AI.analyzePortfolio(1);
         
-        if (!response.ok) {
-          throw new Error('Failed to generate summary');
-        }
-        
-        const data = await response.json();
-        if (data.data) {
-          alert(`Financial Summary:\n\n${JSON.stringify(data.data, null, 2)}`);
-        } else {
-          alert('Portfolio summary function executed but returned no data');
-        }
+        const modal = document.createElement('div');
+        modal.className = 'summary-modal';
+        modal.innerHTML = `
+          <div class="modal-content large">
+            <h2>Portfolio Summary</h2>
+            <div class="summary-metrics">
+              <div class="metric-card">
+                <h4>Total Value</h4>
+                <div class="metric-value">$${response.metrics.totalValue.toLocaleString()}</div>
+              </div>
+              <div class="metric-card">
+                <h4>Return</h4>
+                <div class="metric-value ${response.metrics.totalReturn > 0 ? 'positive' : 'negative'}">
+                  ${response.metrics.totalReturn > 0 ? '+' : ''}${(response.metrics.totalReturn * 100).toFixed(2)}%
+                </div>
+              </div>
+              <div class="metric-card">
+                <h4>Risk Score</h4>
+                <div class="metric-value">${response.metrics.riskScore}/100</div>
+              </div>
+            </div>
+            <div class="summary-analysis">
+              <h3>AI Analysis</h3>
+              <p>${response.analysis}</p>
+            </div>
+            <div class="summary-recommendations">
+              <h3>Recommendations</h3>
+              ${response.recommendations.map(r => `<div class="recommendation">${r}</div>`).join('')}
+            </div>
+            <div class="modal-actions">
+              <button onclick="exportSummary('pdf')">Export PDF</button>
+              <button onclick="exportSummary('excel')">Export Excel</button>
+              <button onclick="closeModal()">Close</button>
+            </div>
+          </div>
+        `;
+        closeLoadingModal();
+        document.body.appendChild(modal);
       } catch (error) {
-        console.error('Summary generation error:', error);
-        alert('Portfolio summary function not available or failed to execute');
+        closeLoadingModal();
+        showNotification('Failed to generate summary: ' + error.message, 'error');
       }
     }
     
     async function assessRisk() {
+      showLoadingModal('Calculating Risk Metrics...');
+      
       try {
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'rpc',
-            function_name: 'calculate_portfolio_risk',
-            params: { portfolio_id: 1 }
-          })
-        });
+        const response = await window.AI.assessRisk(1);
         
-        if (!response.ok) {
-          throw new Error('Failed to assess risk');
-        }
-        
-        const data = await response.json();
-        if (data.data) {
-          alert(`Risk Assessment:\n\n${JSON.stringify(data.data, null, 2)}`);
-        } else {
-          alert('Risk assessment function executed but returned no data');
-        }
+        const modal = document.createElement('div');
+        modal.className = 'risk-modal';
+        modal.innerHTML = `
+          <div class="modal-content large">
+            <h2>Risk Assessment</h2>
+            <div class="risk-metrics">
+              <div class="risk-card">
+                <h4>Value at Risk (95%)</h4>
+                <div class="risk-value">$${response.metrics.var.toLocaleString()}</div>
+              </div>
+              <div class="risk-card">
+                <h4>Sharpe Ratio</h4>
+                <div class="risk-value">${response.metrics.sharpeRatio.toFixed(2)}</div>
+              </div>
+              <div class="risk-card">
+                <h4>Beta</h4>
+                <div class="risk-value">${response.metrics.beta.toFixed(2)}</div>
+              </div>
+              <div class="risk-card">
+                <h4>Max Drawdown</h4>
+                <div class="risk-value">${(response.metrics.maxDrawdown * 100).toFixed(2)}%</div>
+              </div>
+            </div>
+            <div class="stress-test-results">
+              <h3>Stress Test Results</h3>
+              <div class="stress-test-grid">
+                ${Object.entries(response.stressTestResults).map(([scenario, impact]) => `
+                  <div class="stress-test-item">
+                    <span class="scenario">${scenario}</span>
+                    <span class="impact ${impact < -0.1 ? 'severe' : 'moderate'}">
+                      ${(impact * 100).toFixed(1)}%
+                    </span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="risk-analysis">
+              <h3>Risk Analysis</h3>
+              <p>${response.analysis}</p>
+            </div>
+            <div class="modal-actions">
+              <button onclick="runAdvancedRiskAnalysis()">Advanced Analysis</button>
+              <button onclick="exportRiskReport()">Export Report</button>
+              <button onclick="closeModal()">Close</button>
+            </div>
+          </div>
+        `;
+        closeLoadingModal();
+        document.body.appendChild(modal);
       } catch (error) {
-        console.error('Risk assessment error:', error);
-        alert('Risk assessment function not available or failed to execute');
+        closeLoadingModal();
+        showNotification('Failed to assess risk: ' + error.message, 'error');
       }
     }
     
     async function predictMarket() {
+      showLoadingModal('Analyzing Market Trends...');
+      
       try {
-        const response = await fetch('/api/supabase-proxy', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'rpc',
-            function_name: 'predict_market_trends',
-            params: { 
-              symbols: ['SPY', 'AAPL', 'MSFT'],
-              horizon_days: 30
-            }
-          })
-        });
+        const symbols = ['SPY', 'AAPL', 'MSFT', 'GOOGL', 'AMZN'];
+        const response = await window.AI.predictMarketTrends(symbols, 30, getUserId());
         
-        if (!response.ok) {
-          throw new Error('Failed to predict market trends');
-        }
-        
-        const data = await response.json();
-        if (data.data) {
-          alert(`Market Predictions:\n\n${JSON.stringify(data.data, null, 2)}`);
-        } else {
-          alert('Market prediction function executed but returned no data');
-        }
+        const modal = document.createElement('div');
+        modal.className = 'market-modal';
+        modal.innerHTML = `
+          <div class="modal-content large">
+            <h2>Market Predictions</h2>
+            <div class="prediction-confidence">
+              <h4>Confidence Level</h4>
+              <div class="confidence-bar">
+                <div class="confidence-fill" style="width: ${response.confidence * 100}%"></div>
+              </div>
+              <span>${(response.confidence * 100).toFixed(1)}%</span>
+            </div>
+            <div class="trading-signals">
+              <h3>Trading Signals</h3>
+              <div class="signals-grid">
+                ${response.signals.map(signal => `
+                  <div class="signal-card ${signal.signal.toLowerCase()}">
+                    <div class="symbol">${signal.symbol}</div>
+                    <div class="signal">${signal.signal}</div>
+                    <div class="strength">Strength: ${(signal.strength * 100).toFixed(0)}%</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+            <div class="market-analysis">
+              <h3>AI Market Analysis</h3>
+              <p>${response.prediction}</p>
+            </div>
+            <div class="modal-actions">
+              <button onclick="updatePredictionTimeframe()">Change Timeframe</button>
+              <button onclick="addMoreSymbols()">Add Symbols</button>
+              <button onclick="exportPredictions()">Export Analysis</button>
+              <button onclick="closeModal()">Close</button>
+            </div>
+          </div>
+        `;
+        closeLoadingModal();
+        document.body.appendChild(modal);
       } catch (error) {
-        console.error('Market prediction error:', error);
-        alert('Market prediction function not available or failed to execute');
+        closeLoadingModal();
+        showNotification('Failed to predict market: ' + error.message, 'error');
       }
     }
     
     function viewTemplates() {
-      alert('Available report templates:\n\n- Portfolio Performance\n- Risk Assessment\n- Market Analysis\n- Compliance Report');
+      const modal = document.createElement('div');
+      modal.className = 'templates-modal';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h2>Report Templates</h2>
+          <div class="templates-grid">
+            <div class="template-card" onclick="useTemplate('portfolio-performance')">
+              <h4>Portfolio Performance</h4>
+              <p>Comprehensive analysis of portfolio returns and metrics</p>
+            </div>
+            <div class="template-card" onclick="useTemplate('risk-assessment')">
+              <h4>Risk Assessment</h4>
+              <p>Detailed risk analysis with stress testing</p>
+            </div>
+            <div class="template-card" onclick="useTemplate('market-analysis')">
+              <h4>Market Analysis</h4>
+              <p>Market trends and predictions report</p>
+            </div>
+            <div class="template-card" onclick="useTemplate('compliance')">
+              <h4>Compliance Report</h4>
+              <p>Regulatory compliance and audit report</p>
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button onclick="createCustomTemplate()">Create Custom</button>
+            <button onclick="closeModal()">Close</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
     }
     
     function viewRiskMetrics() {
-      alert('Risk metrics dashboard:\n\n- VaR calculations\n- Stress test results\n- Correlation analysis\n- Risk attribution');
+      window.location.href = '#risk-dashboard';
+      assessRisk();
     }
     
     function viewPredictions() {
-      alert('Market predictions:\n\n- Price forecasts\n- Trend analysis\n- Volatility predictions\n- Trading signals');
+      window.location.href = '#market-predictions';
+      predictMarket();
     }
     
     

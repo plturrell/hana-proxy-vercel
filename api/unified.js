@@ -71,6 +71,14 @@ module.exports = async function handler(req, res) {
       return await handleRAGDocuments(req, res);
     }
     
+    if (action === 'rag_search') {
+      return await handleRAGSearch(req, res);
+    }
+    
+    if (action === 'delete_document') {
+      return await handleDeleteDocument(req, res);
+    }
+    
     return res.status(400).json({ error: 'Invalid action' });
   } catch (error) {
     console.error('API Error:', error);
@@ -1662,4 +1670,66 @@ function formatFileSize(bytes) {
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// RAG Search Handler
+async function handleRAGSearch(req, res) {
+  if (req.method === 'POST') {
+    try {
+      // Forward to the dedicated search endpoint
+      const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/rag/search`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req.body)
+      });
+
+      const data = await response.json();
+      return res.status(response.status).json(data);
+    } catch (error) {
+      console.error('RAG search error:', error);
+      return res.status(500).json({ 
+        error: 'Search failed',
+        message: error.message 
+      });
+    }
+  }
+  
+  return res.status(405).json({ error: 'Method not allowed' });
+}
+
+// Delete Document Handler
+async function handleDeleteDocument(req, res) {
+  if (req.method === 'POST') {
+    try {
+      const { documentId } = req.body;
+
+      if (!documentId) {
+        return res.status(400).json({ error: 'Document ID required' });
+      }
+
+      // Delete document (chunks will cascade delete)
+      const { error } = await supabase
+        .from('documents')
+        .delete()
+        .eq('id', documentId);
+
+      if (error) {
+        console.error('Delete error:', error);
+        return res.status(500).json({ error: 'Failed to delete document' });
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: 'Document deleted successfully'
+      });
+    } catch (error) {
+      console.error('Delete document error:', error);
+      return res.status(500).json({ 
+        error: 'Delete failed',
+        message: error.message 
+      });
+    }
+  }
+  
+  return res.status(405).json({ error: 'Method not allowed' });
 }

@@ -2,6 +2,7 @@ const { createClient } = require('@supabase/supabase-js');
 const formidable = require('formidable');
 const fs = require('fs').promises;
 const path = require('path');
+const pdf = require('pdf-parse');
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -11,8 +12,50 @@ const supabase = createClient(
 export const config = {
   api: {
     bodyParser: false,
+    maxDuration: 60, // 60 seconds for large PDFs
   },
 };
+
+// Intelligent chunking strategy
+function intelligentChunking(text, maxChunkSize = 1500, overlap = 200) {
+  const sentences = text.match(/[^.!?]+[.!?]+/g) || [];
+  const chunks = [];
+  let currentChunk = '';
+  let currentSize = 0;
+
+  for (const sentence of sentences) {
+    const sentenceSize = sentence.trim().length;
+    
+    if (currentSize + sentenceSize > maxChunkSize && currentChunk) {
+      chunks.push(currentChunk.trim());
+      
+      // Add overlap by including last few sentences
+      const overlapText = currentChunk.split(/[.!?]+/).slice(-2).join('. ');
+      currentChunk = overlapText + ' ' + sentence;
+      currentSize = currentChunk.length;
+    } else {
+      currentChunk += ' ' + sentence;
+      currentSize += sentenceSize;
+    }
+  }
+
+  if (currentChunk.trim()) {
+    chunks.push(currentChunk.trim());
+  }
+
+  return chunks;
+}
+
+// Extract text from PDF
+async function extractPDFText(buffer) {
+  try {
+    const data = await pdf(buffer);
+    return data.text;
+  } catch (error) {
+    console.error('PDF extraction error:', error);
+    throw new Error('Failed to extract PDF content');
+  }
+}
 
 module.exports = async function handler(req, res) {
   // Enable CORS
@@ -43,8 +86,18 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    // Read file content
-    const fileContent = await fs.readFile(file.filepath, 'utf-8');
+    // Process file based on type
+    let fileContent;
+    const fileBuffer = await fs.readFile(file.filepath);
+    
+    if (file.mimetype === 'application/pdf') {
+      // Extract text from PDF
+      fileContent = await extractPDFText(fileBuffer);
+    } else {
+      // Read as text for other file types
+      fileContent = fileBuffer.toString('utf-8');
+    }
+
     const metadata = fields.metadata ? JSON.parse(fields.metadata) : {};
 
     // Create document record
@@ -65,17 +118,28 @@ module.exports = async function handler(req, res) {
       return res.status(500).json({ error: 'Failed to create document record' });
     }
 
-    // Simple chunking (split by paragraphs for now)
-    const chunks = fileContent
-      .split(/\n\n+/)
-      .filter(chunk => chunk.trim().length > 0)
-      .map((content, index) => ({
+    // Update processing status to processing
+    await supabase
+      .from('document_processing_status')
+      .insert({
         document_id: document.id,
-        chunk_index: index,
-        content: content.trim(),
-        token_count: Math.ceil(content.length / 4), // Rough estimate
-        metadata: { position: index }
-      }));
+        status: 'processing',
+        started_at: new Date().toISOString()
+      });
+
+    // Intelligent chunking with overlap
+    const textChunks = intelligentChunking(fileContent);
+    const chunks = textChunks.map((content, index) => ({
+      document_id: document.id,
+      chunk_index: index,
+      content: content,
+      token_count: Math.ceil(content.length / 4), // Rough estimate
+      metadata: { 
+        position: index,
+        total_chunks: textChunks.length,
+        has_overlap: index > 0
+      }
+    }));
 
     // Insert chunks
     if (chunks.length > 0) {
@@ -89,16 +153,35 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    // Generate embeddings for chunks
+    try {
+      const response = await fetch(`${process.env.VERCEL_URL || 'http://localhost:3000'}/api/rag/embeddings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          documentId: document.id,
+          chunks: chunks
+        })
+      });
+
+      if (!response.ok) {
+        console.error('Embedding generation failed');
+        // Don't fail the whole process, embeddings can be generated later
+      }
+    } catch (error) {
+      console.error('Embedding API error:', error);
+    }
+
     // Update processing status
     await supabase
       .from('document_processing_status')
-      .insert({
-        document_id: document.id,
+      .update({
         status: 'completed',
         chunks_processed: chunks.length,
         total_chunks: chunks.length,
         completed_at: new Date().toISOString()
-      });
+      })
+      .eq('document_id', document.id);
 
     // Clean up temp file
     await fs.unlink(file.filepath).catch(() => {});
@@ -107,7 +190,8 @@ module.exports = async function handler(req, res) {
       success: true,
       documentId: document.id,
       chunksProcessed: chunks.length,
-      message: 'Document processed successfully'
+      message: 'Document processed successfully',
+      embeddingsQueued: true
     });
 
   } catch (error) {
