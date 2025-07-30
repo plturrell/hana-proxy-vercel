@@ -288,17 +288,19 @@
     
     /* Main Container */
     .jobs-container {
-      padding-top: 48px;
+      padding: var(--jobs-spacing-xxl) var(--jobs-spacing-xl);
+      padding-top: 24px;
       min-height: 100vh;
-      padding-bottom: var(--jobs-spacing-lg);
+      max-width: 1400px;
+      margin: 0 auto;
     }
     
     /* Header */
     .jobs-header {
       text-align: center;
-      padding: var(--jobs-spacing-xl) var(--jobs-spacing-lg);
+      padding: var(--jobs-spacing-xxl) var(--jobs-spacing-lg);
       max-width: 1200px;
-      margin: 0 auto;
+      margin: 0 auto calc(var(--jobs-spacing-xxl) * 1.5);
     }
     
     .jobs-header-title {
@@ -1126,6 +1128,261 @@
       font-weight: 500;
     }
     
+    /* Tooltip System for Nielsen Excellence */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .tooltip::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 1000;
+    }
+    
+    .tooltip::before {
+      content: '';
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: rgba(0, 0, 0, 0.9);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .tooltip:hover::after,
+    .tooltip:hover::before {
+      opacity: 1;
+    }
+    
+    /* Breadcrumb Navigation */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: var(--jobs-spacing-sm);
+      font-size: var(--jobs-font-size-caption);
+      color: var(--jobs-gray);
+    }
+    
+    .breadcrumb a {
+      color: var(--jobs-blue);
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    
+    .breadcrumb a:hover {
+      opacity: 0.7;
+    }
+    
+    .breadcrumb-separator {
+      color: var(--jobs-gray);
+      margin: 0 var(--jobs-spacing-xs);
+    }
+    
+    /* Help Button */
+    .help-button {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--jobs-blue), var(--jobs-purple));
+      color: white;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .help-button:hover {
+      transform: scale(1.1) translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0, 122, 255, 0.4);
+    }
+    
+    .help-button:active {
+      transform: scale(0.95);
+    }
+    
+    /* Focus Indicators for Accessibility */
+    button:focus,
+    input:focus,
+    textarea:focus,
+    select:focus,
+    a:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.3);
+      border-radius: 8px;
+    }
+    
+    /* Enhanced Touch Targets (44x44 minimum) */
+    button,
+    .jobs-nav-button,
+    .jobs-hamburger,
+    .jobs-overview-card,
+    .jobs-ai-card {
+      min-height: 44px;
+      cursor: pointer;
+    }
+    
+    .jobs-nav-button,
+    .jobs-hamburger {
+      min-width: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Keyboard Shortcuts */
+    .shortcuts-hint {
+      position: fixed;
+      bottom: 100px;
+      right: 32px;
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: var(--jobs-spacing-sm) var(--jobs-spacing-md);
+      border-radius: 8px;
+      font-size: 12px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .shortcuts-hint.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Onboarding Tour Styles */
+    .tour-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 2000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .tour-overlay.active {
+      opacity: 1;
+    }
+    
+    .tour-highlight {
+      position: relative;
+      z-index: 2001;
+      border-radius: 12px;
+      animation: pulseHighlight 2s infinite;
+    }
+    
+    @keyframes pulseHighlight {
+      0% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 122, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 122, 255, 0); }
+    }
+    
+    .tour-tooltip {
+      position: absolute;
+      background: var(--jobs-white);
+      border-radius: 16px;
+      padding: var(--jobs-spacing-lg);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      max-width: 320px;
+      z-index: 2002;
+    }
+    
+    body.dark-mode .tour-tooltip {
+      background: #1C1C1E;
+      color: var(--jobs-white);
+    }
+    
+    /* Status Indicators */
+    .status-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--jobs-spacing-xs);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--jobs-green);
+      animation: pulse 2s infinite;
+    }
+    
+    .status-dot.warning {
+      background: var(--jobs-orange);
+    }
+    
+    .status-dot.error {
+      background: var(--jobs-red);
+    }
+    
+    /* Progress Indicators */
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--jobs-light-gray);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--jobs-blue), var(--jobs-purple));
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+    
+    /* Enhanced Card Shadows for Depth */
+    .jobs-overview-card,
+    .jobs-ai-card {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 
+                  0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+    
+    .jobs-overview-card:hover,
+    .jobs-ai-card:hover {
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1), 
+                  0 5px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Dark Mode Enhancements */
+    body.dark-mode .jobs-overview-card,
+    body.dark-mode .jobs-ai-card {
+      box-shadow: 0 1px 3px rgba(255, 255, 255, 0.05), 
+                  0 1px 2px rgba(255, 255, 255, 0.02);
+    }
+    
+    body.dark-mode .jobs-overview-card:hover,
+    body.dark-mode .jobs-ai-card:hover {
+      box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1), 
+                  0 5px 10px rgba(255, 255, 255, 0.05);
+    }
+    
     /* Responsive Design */
     @media (max-width: 768px) {
       .jobs-ai-grid {
@@ -1197,6 +1454,13 @@
     </div>
   </div>
   
+  <!-- Breadcrumb Navigation -->
+  <nav class="breadcrumb" style="margin-top: 72px; padding: 0 var(--jobs-spacing-xl); max-width: 1400px; margin-left: auto; margin-right: auto;">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-separator">›</span>
+    <span>AI Services</span>
+  </nav>
+  
   <!-- Main Container -->
   <div class="jobs-container">
     <!-- Header -->
@@ -1207,12 +1471,12 @@
     
     <!-- AI Overview -->
     <div class="jobs-overview-grid">
-      <div class="jobs-overview-card">
+      <div class="jobs-overview-card tooltip" data-tooltip="Real-time status of all AI services">
         <div class="jobs-overview-value online" id="ai-status">Online</div>
         <div class="jobs-overview-label">AI Status</div>
       </div>
       
-      <div class="jobs-overview-card">
+      <div class="jobs-overview-card tooltip" data-tooltip="Total AI queries processed today">
         <div class="jobs-overview-value" id="queries-today">Loading...</div>
         <div class="jobs-overview-label">Queries Today</div>
       </div>

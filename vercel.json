@@ -136,6 +136,12 @@
     "api/teaching-status.js": {
       "maxDuration": 10
     },
+    "api/treasury-data-real.js": {
+      "maxDuration": 60
+    },
+    "api/market-data-real.js": {
+      "maxDuration": 60
+    },
     "api/rag/embeddings-local.js": {
       "maxDuration": 60
     },
