@@ -369,7 +369,7 @@ async function handleA2AAgents(req, res) {
       .order('agent_name');
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      throw new AppError('Failed to fetch agents', 500, 'AGENTS_FETCH_ERROR', { originalError: error.message });
     }
 
     return res.json({
@@ -379,7 +379,7 @@ async function handleA2AAgents(req, res) {
     });
   }
   
-  return res.status(405).json({ error: 'Method not allowed' });
+  throw new AppError('Method not allowed', 405, 'METHOD_NOT_ALLOWED');
 }
 
 // A2A Network Handler - Fetch real network connections
