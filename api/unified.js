@@ -173,7 +173,7 @@ function setCORSHeaders(req, res) {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
 }
 
-module.exports = async function handler(req, res) {
+module.exports = asyncHandler(async function handler(req, res) {
   const startTime = Date.now();
   const correlationId = req.headers['x-correlation-id'] || uuidv4();
   const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'unknown';
