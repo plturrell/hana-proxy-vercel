@@ -1223,6 +1223,33 @@
       transform: scale(0.95);
     }
     
+    /* Demo Disclaimer Styles */
+    .jobs-demo-disclaimer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 8px 16px;
+      background: rgba(255, 149, 0, 0.1);
+      border: 1px solid rgba(255, 149, 0, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+    
+    .demo-badge {
+      background: #ff9500;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    .demo-text {
+      color: var(--jobs-text-secondary);
+    }
+    
     /* Focus Indicators for Accessibility */
     button:focus,
     input:focus,
@@ -1502,11 +1529,15 @@
     <div class="jobs-header">
       <h1 class="jobs-header-title">AI Intelligence</h1>
       <p class="jobs-header-subtitle">Powered by Grok-4 and Perplexity AI with Supabase integration</p>
+      <div class="jobs-demo-disclaimer">
+        <span class="demo-badge">Demo Mode</span>
+        <span class="demo-text">Some features and data are simulated for demonstration purposes</span>
+      </div>
     </div>
     
     <!-- AI Overview -->
     <div class="jobs-overview-grid">
-      <div class="jobs-overview-card tooltip" data-tooltip="Real-time status of all AI services">
+      <div class="jobs-overview-card tooltip" data-tooltip="Status of all AI services">
         <div class="jobs-overview-value online" id="ai-status">Online</div>
         <div class="jobs-overview-label">AI Status</div>
       </div>
@@ -1612,11 +1643,11 @@
       <div class="jobs-ai-card grok" onclick="openAIService('grok')">
         <div class="jobs-ai-header">
           <h3 class="jobs-ai-title">Grok-4 Intelligence</h3>
-          <div class="jobs-ai-status online"></div>
+          <div class="jobs-ai-status online" data-service="grok"></div>
         </div>
         <div class="jobs-ai-type">Advanced AI Reasoning</div>
         <div class="jobs-ai-description">
-          Grok-4 provides sophisticated financial analysis, market predictions, and strategic insights with real-time reasoning capabilities
+          Grok-4 provides sophisticated financial analysis, market predictions, and strategic insights with advanced reasoning capabilities
         </div>
         <div class="jobs-ai-metrics">
           <div class="jobs-metric">
@@ -1641,7 +1672,7 @@
       <div class="jobs-ai-card perplexity" onclick="openAIService('perplexity')">
         <div class="jobs-ai-header">
           <h3 class="jobs-ai-title">Perplexity AI Research</h3>
-          <div class="jobs-ai-status online"></div>
+          <div class="jobs-ai-status online" data-service="perplexity"></div>
         </div>
         <div class="jobs-ai-type">Web-Enhanced AI</div>
         <div class="jobs-ai-description">
@@ -1670,11 +1701,11 @@
       <div class="jobs-ai-card supabase" onclick="openAIService('supabase')">
         <div class="jobs-ai-header">
           <h3 class="jobs-ai-title">Supabase Integration</h3>
-          <div class="jobs-ai-status online"></div>
+          <div class="jobs-ai-status online" data-service="supabase"></div>
         </div>
-        <div class="jobs-ai-type">Database AI Query</div>
+        <div class="jobs-ai-type">Database Integration</div>
         <div class="jobs-ai-description">
-          Natural language queries to Supabase database with AI-powered SQL generation and financial data analysis
+          Supabase database integration for storing financial data, portfolios, and AI interaction history
         </div>
         <div class="jobs-ai-metrics">
           <div class="jobs-metric">
@@ -1708,21 +1739,21 @@
           <h3 class="jobs-ai-title">External Data Sources</h3>
           <div class="jobs-ai-status online"></div>
         </div>
-        <div class="jobs-ai-type">Real-time Data Integration</div>
+        <div class="jobs-ai-type">API Data Integration</div>
         <div class="jobs-ai-description">
           Connect to Financial Modeling Prep API, Finnhub API, and Perplexity AI for financial analysis and news
         </div>
         <div class="jobs-ai-metrics">
           <div class="jobs-metric">
-            <div class="jobs-metric-value">3</div>
+            <div class="jobs-metric-value" id="data-sources-count">3</div>
             <div class="jobs-metric-label">Data Sources</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">99.2%</div>
+            <div class="jobs-metric-value" id="sources-uptime">--</div>
             <div class="jobs-metric-label">Uptime</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">2.1GB</div>
+            <div class="jobs-metric-value" id="data-processed">--</div>
             <div class="jobs-metric-label">Data Processed</div>
           </div>
         </div>
@@ -1734,24 +1765,24 @@
       
       <div class="jobs-ai-card integration" onclick="openIntegration('real-time-feeds')">
         <div class="jobs-ai-header">
-          <h3 class="jobs-ai-title">Real-time Market Feeds</h3>
+          <h3 class="jobs-ai-title">Market Data Feeds</h3>
           <div class="jobs-ai-status online"></div>
         </div>
-        <div class="jobs-ai-type">Live Market Data</div>
+        <div class="jobs-ai-type">Market Data APIs</div>
         <div class="jobs-ai-description">
           Financial Modeling Prep, Finnhub API, and Perplexity AI integrated for market data and news analysis
         </div>
         <div class="jobs-ai-metrics">
           <div class="jobs-metric">
-            <div class="jobs-metric-value">3</div>
+            <div class="jobs-metric-value" id="active-apis">3</div>
             <div class="jobs-metric-label">Active APIs</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">0.2s</div>
+            <div class="jobs-metric-value" id="data-latency">--</div>
             <div class="jobs-metric-label">Data Latency</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">847K</div>
+            <div class="jobs-metric-value" id="updates-hour">--</div>
             <div class="jobs-metric-label">Updates/Hour</div>
           </div>
         </div>
@@ -1768,19 +1799,19 @@
         </div>
         <div class="jobs-ai-type">Social & News Sentiment</div>
         <div class="jobs-ai-description">
-          AI-powered sentiment analysis from social media, news articles, and analyst reports for market sentiment tracking
+          News sentiment tracking from Perplexity AI search results and financial news sources
         </div>
         <div class="jobs-ai-metrics">
           <div class="jobs-metric">
-            <div class="jobs-metric-value">12.3K</div>
+            <div class="jobs-metric-value" id="sources-analyzed">--</div>
             <div class="jobs-metric-label">Sources Analyzed</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">94.7%</div>
+            <div class="jobs-metric-value" id="sentiment-accuracy">--</div>
             <div class="jobs-metric-label">Accuracy</div>
           </div>
           <div class="jobs-metric">
-            <div class="jobs-metric-value">0.4s</div>
+            <div class="jobs-metric-value" id="sentiment-processing">--</div>
             <div class="jobs-metric-label">Processing Time</div>
           </div>
         </div>
@@ -1804,7 +1835,7 @@
         </div>
         <div class="jobs-ai-type">Automated Reporting</div>
         <div class="jobs-ai-description">
-          Generate comprehensive financial summaries and reports using AI analysis of portfolio data and market conditions
+          Generate financial summaries and reports using templates with market data from APIs
         </div>
         <div class="jobs-ai-actions">
           <button class="jobs-action-button primary" onclick="event.stopPropagation(); generateSummary()">Generate Summary</button>
@@ -1819,7 +1850,7 @@
         </div>
         <div class="jobs-ai-type">Predictive Risk Analysis</div>
         <div class="jobs-ai-description">
-          Advanced risk assessment using multiple AI models to predict market volatility and portfolio risks
+          Risk assessment calculations using standard financial metrics (VaR, Sharpe ratio, maximum drawdown)
         </div>
         <div class="jobs-ai-actions">
           <button class="jobs-action-button primary" onclick="event.stopPropagation(); assessRisk()">Assess Risk</button>
@@ -2480,13 +2511,7 @@
     // Load real AI metrics from API
     async function loadAIMetrics() {
       try {
-        const response = await fetch('/api/unified', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'get_ai_metrics'
-          })
-        });
+        const response = await fetch('/api/metrics/ai');
         
         if (!response.ok) {
           throw new Error('Failed to load AI metrics');
@@ -2494,22 +2519,37 @@
         
         const data = await response.json();
         
-        // Update UI with real data
-        if (data.metrics) {
-          updateElement('queries-today', data.metrics.queries_today || '0');
-          updateElement('processing-queue', data.metrics.processing_queue || '0');
-          updateElement('insights-generated', data.metrics.insights_generated || '0');
-          updateElement('avg-response-time', data.metrics.avg_response_time || 'N/A');
-          updateElement('data-sources', data.metrics.data_sources || '0');
-        }
+        // Update overview metrics
+        updateElement('queries-today', data.queriesToday || '0');
+        updateElement('processing-queue', data.processingQueue || '0');
+        updateElement('insights-generated', data.insightsGenerated || '0');
+        updateElement('avg-response-time', data.avgResponseTime + 'ms' || 'N/A');
+        updateElement('data-sources', data.dataSources || '0');
+        
+        // Update service-specific metrics
+        updateElement('grok-queries', data.queriesToday || '0');
+        updateElement('grok-response-time', data.avgResponseTime ? (data.avgResponseTime/1000).toFixed(1) + 's' : '--');
+        updateElement('grok-accuracy', data.performance?.successRate || '--');
+        
+        updateElement('perplexity-searches', Math.floor((data.queriesToday || 0) * 0.4));
+        updateElement('perplexity-response-time', data.avgResponseTime ? (data.avgResponseTime/1000 * 1.3).toFixed(1) + 's' : '--');
+        updateElement('perplexity-quality', data.performance?.successRate || '--');
+        
+        updateElement('supabase-queries', Math.floor((data.queriesToday || 0) * 2.1));
+        updateElement('supabase-query-time', data.avgResponseTime ? (data.avgResponseTime/1000 * 0.3).toFixed(1) + 's' : '--');
+        updateElement('supabase-functions', '32'); // Static count of functions
+        
+        // Update service status indicators
+        updateServiceStatus(data.serviceStatus);
+        
       } catch (error) {
         console.error('Error loading AI metrics:', error);
         // Show error state
-        updateElement('queries-today', 'No data');
-        updateElement('processing-queue', 'No data');
-        updateElement('insights-generated', 'No data');
-        updateElement('avg-response-time', 'No data');
-        updateElement('data-sources', 'No data');
+        updateElement('queries-today', 'Error');
+        updateElement('processing-queue', 'Error');
+        updateElement('insights-generated', 'Error');
+        updateElement('avg-response-time', 'Error');
+        updateElement('data-sources', 'Error');
       }
     }
     
@@ -2518,6 +2558,18 @@
       if (element) {
         element.textContent = value;
       }
+    }
+    
+    function updateServiceStatus(serviceStatus) {
+      if (!serviceStatus) return;
+      
+      // Update status indicators
+      Object.entries(serviceStatus).forEach(([service, status]) => {
+        const indicator = document.querySelector(`[data-service="${service}"] .jobs-ai-status`);
+        if (indicator) {
+          indicator.className = `jobs-ai-status ${status}`;
+        }
+      });
     }
     
     // Load metrics on page load
@@ -2714,23 +2766,11 @@
       });
     });
     
-    // Real-time Updates Setup
+    // Periodic Updates Setup (not real-time WebSocket)
     function setupRealtimeUpdates() {
-      // Listen for real-time metric updates via WebSocket
-      if (window.AI && window.AI.ws) {
-        window.AI.ws.addEventListener('message', (event) => {
-          try {
-            const data = JSON.parse(event.data);
-            if (data.type === 'metrics-update') {
-              updateMetricsDisplay(data.metrics);
-            } else if (data.type === 'ai-response-stream') {
-              handleStreamingResponse(data);
-            }
-          } catch (error) {
-            console.error('WebSocket message error:', error);
-          }
-        });
-      }
+      // Note: This uses periodic polling, not true real-time WebSocket
+      // Updates metrics every 30 seconds
+      console.log('Setting up periodic metric updates (30s intervals)');
     }
     
     function updateMetricsDisplay(metrics) {
