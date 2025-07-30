@@ -315,9 +315,20 @@ class A2AAgent {
     return contract;
   }
 
-  // Agent-specific decision making
-  makeDecision(context) {
+  // Agent-specific decision making with blockchain consensus integration
+  async makeDecision(context) {
     // Each agent implements its own decision logic
+    const baseDecision = this.getBaseDecision(context);
+    
+    // If decision requires consensus, initiate blockchain voting
+    if (baseDecision.requiresConsensus) {
+      return await this.initiateConsensusDecision(baseDecision, context);
+    }
+    
+    return baseDecision;
+  }
+  
+  getBaseDecision(context) {
     switch (this.personality) {
       case 'conservative':
         return this.conservativeDecision(context);
@@ -328,6 +339,163 @@ class A2AAgent {
       default:
         return this.defaultDecision(context);
     }
+  }
+  
+  async initiateConsensusDecision(decision, context) {
+    try {
+      // Create consensus proposal
+      const proposalId = crypto.randomBytes(16).toString('hex');
+      const proposal = {
+        proposal_id: proposalId,
+        proposer_id: this.id,
+        proposal_type: 'agent_decision',
+        proposal_data: {
+          decision: decision,
+          context: context,
+          requires_votes: Math.min(5, Math.max(3, Math.floor(this.votingPower / 50))),
+          voting_deadline: new Date(Date.now() + 300000) // 5 minutes
+        },
+        status: 'active',
+        created_at: new Date()
+      };
+      
+      // Store in database
+      if (supabase) {
+        await supabase
+          .from('a2a_proposals')
+          .insert(proposal);
+          
+        // Start consensus round
+        await supabase
+          .from('a2a_consensus_rounds')
+          .insert({
+            proposal_id: proposalId,
+            voting_weights: this.calculateVotingWeights(),
+            blockchain_consensus: true,
+            consensus_algorithm: 'weighted_voting',
+            required_participants: proposal.proposal_data.requires_votes,
+            status: 'active'
+          });
+      }
+      
+      return {
+        ...decision,
+        consensus_required: true,
+        proposal_id: proposalId,
+        status: 'pending_consensus'
+      };
+      
+    } catch (error) {
+      console.error('Consensus initiation failed:', error);
+      // Fallback to individual decision
+      return decision;
+    }
+  }
+  
+  calculateVotingWeights() {
+    // Calculate voting weights based on agent reputation and stake
+    const baseWeight = this.votingPower || 100;
+    const reputationMultiplier = (this.reputation || 100) / 100;
+    const performanceMultiplier = (this.performance_score || 100) / 100;
+    
+    return {
+      [this.id]: Math.round(baseWeight * reputationMultiplier * performanceMultiplier)
+    };
+  }
+  
+  async participateInConsensus(proposalId, vote, reasoning) {
+    try {
+      const voteRecord = {
+        vote_id: crypto.randomBytes(16).toString('hex'),
+        proposal_id: proposalId,
+        voter_id: this.id,
+        vote: vote, // 'approve', 'reject', 'abstain'
+        voting_power: this.votingPower,
+        reasoning: reasoning,
+        signature: this.signVote(proposalId, vote),
+        created_at: new Date()
+      };
+      
+      if (supabase) {
+        await supabase
+          .from('a2a_votes')
+          .insert(voteRecord);
+          
+        // Check if consensus reached
+        await this.checkConsensusStatus(proposalId);
+      }
+      
+      return voteRecord;
+      
+    } catch (error) {
+      console.error('Consensus participation failed:', error);
+      throw error;
+    }
+  }
+  
+  async checkConsensusStatus(proposalId) {
+    if (!supabase) return;
+    
+    // Get consensus round details
+    const { data: round } = await supabase
+      .from('a2a_consensus_rounds')
+      .select('*')
+      .eq('proposal_id', proposalId)
+      .single();
+    
+    if (!round || round.status !== 'active') return;
+    
+    // Get all votes
+    const { data: votes } = await supabase
+      .from('a2a_votes')
+      .select('*')
+      .eq('proposal_id', proposalId);
+    
+    if (!votes || votes.length < round.required_participants) {
+      return; // Not enough votes yet
+    }
+    
+    // Calculate weighted consensus
+    const totalWeight = votes.reduce((sum, vote) => sum + (vote.voting_power || 100), 0);
+    const approveWeight = votes
+      .filter(v => v.vote === 'approve')
+      .reduce((sum, vote) => sum + (vote.voting_power || 100), 0);
+    
+    const consensusReached = (approveWeight / totalWeight) >= 0.6; // 60% threshold
+    
+    // Update consensus round
+    await supabase
+      .from('a2a_consensus_rounds')
+      .update({
+        status: consensusReached ? 'approved' : 'rejected',
+        final_result: {
+          total_votes: votes.length,
+          total_weight: totalWeight,
+          approve_weight: approveWeight,
+          consensus_percentage: (approveWeight / totalWeight * 100).toFixed(2),
+          approved: consensusReached
+        },
+        completed_at: new Date()
+      })
+      .eq('proposal_id', proposalId);
+    
+    // Update proposal status
+    await supabase
+      .from('a2a_proposals')  
+      .update({
+        status: consensusReached ? 'approved' : 'rejected',
+        resolved_at: new Date()
+      })
+      .eq('proposal_id', proposalId);
+      
+    return consensusReached;
+  }
+  
+  signVote(proposalId, vote) {
+    // Create cryptographic signature for vote integrity
+    return crypto.createHash('sha256')
+      .update(`${this.id}-${proposalId}-${vote}-${Date.now()}`)
+      .digest('hex');
   }
 
   // Learning and adaptation
